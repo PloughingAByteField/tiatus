@@ -22,7 +22,6 @@
 		<sonar.jacoco.jar>${basedir}/lib/jacocoagent.jar</sonar.jacoco.jar>
 	</properties>
 
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -71,6 +70,13 @@
 		</dependencies>
 
 	</dependencyManagement>
+
+	<modules>
+		<module>entities</module>
+        <module>dao</module>
+        <module>service</module>
+        <module>server</module>
+	</modules>
 
 	<build>
 		<plugins>
