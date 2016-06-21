@@ -11,41 +11,57 @@
 	<url>https://github.com/PloughingAByteField/tiatus</url>
 
 	<properties>
-		<slf4j.version>1.7.5</slf4j.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<slf4j.version>1.7.7</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<hibernate.version>5.0.9.Final</hibernate.version>
-		<jacoco.version>0.7.6.201602180812</jacoco.version>
+		<jacoco.version>0.7.7.201606060606</jacoco.version>
 		<surefire.version>2.18.1</surefire.version>
+		<h2.version>1.3.174</h2.version>
 		<coverage.reports.dir>${basedir}/target/coverage-reports</coverage.reports.dir>
 		<sonar.jacoco.reportPath>${coverage.reports.dir}/jacoco-unit.exec</sonar.jacoco.reportPath>
 		<sonar.jacoco.itReportPath>${coverage.reports.dir}/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.jacoco.jar>${basedir}/lib/jacocoagent.jar</sonar.jacoco.jar>
+		<failsafeArgLine></failsafeArgLine>
+		<surefireArgLine></surefireArgLine>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>7.0</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
-				<version>5.0.9.Final</version>
+				<version>${hibernate.version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>5.0.9.Final</version>
+				<version>${hibernate.version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${slf4j.version}</version>
+				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
@@ -66,7 +82,17 @@
 				<groupId>javax.enterprise</groupId>
 				<artifactId>cdi-api</artifactId>
 				<version>1.1</version>
+				<scope>provided</scope>
 			</dependency>
+
+
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>${h2.version}</version>
+				<scope>test</scope>
+			</dependency>
+
 		</dependencies>
 
 	</dependencyManagement>
@@ -100,23 +126,49 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>${jacoco.version}</version>
-				<configuration>
-					<destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
-					<dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
-				</configuration>
 				<executions>
 					<execution>
-						<id>jacoco-initialize</id>
+						<id>jacoco initialize</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
+						<configuration>
+							<destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+							<propertyName>surefireArgLine</propertyName>
+						</configuration>
 					</execution>
 					<execution>
-						<id>jacoco-site</id>
-						<phase>package</phase>
+						<id>jacoco report</id>
+						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
+						<configuration>
+							<dataFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</dataFile>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>pre-integration-test</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+						<configuration>
+							<destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+							<propertyName>failsafeArgLine</propertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-integration-test</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -126,11 +178,15 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${surefire.version}</version>
 				<configuration>
+					<argLine>@{surefireArgLine}</argLine>
 					<includes>
-						<include>**/*.class</include>
+						<include>**/*Test.java</include>
 					</includes>
+					<excludes>
+						<exclude>**/*ITest.java</exclude>
+					</excludes>
 					<!-- Ignore integration tests that are annotated with IntegrationTest-->
-					<excludedGroups>org.tiatus.api.test.annotation.IntegrationTest</excludedGroups>
+					<!--<excludedGroups>org.tiatus.api.test.annotation.IntegrationTest</excludedGroups>-->
 				</configuration>
 			</plugin>
 
@@ -145,7 +201,8 @@
 					</dependency>
 				</dependencies>
 				<configuration>
-					<groups>org.tiatus.api.test.annotation.IntegrationTest</groups>
+
+					<!--<groups>org.tiatus.api.test.annotation.IntegrationTest</groups>-->
 				</configuration>
 				<executions>
 					<execution>
@@ -153,9 +210,7 @@
 							<goal>integration-test</goal>
 						</goals>
 						<configuration>
-							<includes>
-								<include>**/*.class</include>
-							</includes>
+							<argLine>@{failsafeArgLine}</argLine>
 						</configuration>
 					</execution>
 				</executions>
