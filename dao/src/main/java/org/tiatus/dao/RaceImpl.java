@@ -1,9 +1,11 @@
 package org.tiatus.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,13 +13,14 @@ import java.util.List;
  */
 public class RaceImpl implements Race {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RaceImpl.class);
+
     @PersistenceContext(unitName = "primary")
     protected EntityManager em;
 
     @Override
     public List<org.tiatus.entity.Race> getRaces() {
-//        Query query = em.createQuery("FROM Race order by raceOrder");
-//        return query.getResultList();
-        return new ArrayList<>();
+        Query query = em.createQuery("FROM Race order by raceOrder");
+        return query.getResultList();
     }
 }

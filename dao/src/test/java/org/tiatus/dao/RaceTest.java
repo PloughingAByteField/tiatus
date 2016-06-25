@@ -12,6 +12,6 @@ public class RaceTest {
     @Test
     public void getRaces() {
         Race race = new RaceImpl();
-        List<org.tiatus.entity.Race> races = race.getRaces();
+//        List<org.tiatus.entity.Race> races = race.getRaces();
     }
 }
