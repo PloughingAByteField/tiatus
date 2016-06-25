@@ -11,13 +11,17 @@ import java.io.Serializable;
  */
 public class UseExistingOrGenerateIdGenerator extends SequenceStyleGenerator {
     @Override
-    public Serializable generate(SessionImplementor session, Object object) throws HibernateException {
-        if (object == null) throw new HibernateException(new NullPointerException()) ;
+    public Serializable generate(SessionImplementor session, Object object) {
+        if (object == null) {
+            throw new HibernateException(new NullPointerException()) ;
+        }
+
         Serializable id = session.getEntityPersister(null, object).getClassMetadata().getIdentifier(object, session);
 
         if (id == null) {
             id = super.generate(session, object);
         }
+
         return id;
     }
 }
