@@ -3,6 +3,7 @@ package org.tiatus.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,9 +14,10 @@ public class RaceImpl implements Race {
     @PersistenceContext(unitName = "primary")
     protected EntityManager em;
 
+    @Override
     public List<org.tiatus.entity.Race> getRaces() {
 //        Query query = em.createQuery("FROM Race order by raceOrder");
 //        return query.getResultList();
-        return null;
+        return new ArrayList<>();
     }
 }

@@ -1,5 +1,7 @@
 package org.tiatus.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -110,23 +112,27 @@ public class Race {
         if (!(o instanceof Race)) return false;
 
         Race race = (Race) o;
-
-        if (active != race.active) return false;
-        if (closed != race.closed) return false;
-        if (raceOrder != race.raceOrder) return false;
-        if (id != null ? !id.equals(race.id) : race.id != null) return false;
-        if (name != null ? !name.equals(race.name) : race.name != null) return false;
-
-        return true;
+        return new EqualsBuilder()
+                .append(this.id, race.id)
+                .append(this.name, race.name)
+                .append(this.active, race.active)
+                .append(this.closed, race.closed)
+                .append(this.raceOrder, race.raceOrder)
+                .append(this.startTime, race.startTime)
+                .append(this.drawLocked, race.drawLocked)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (active ? 1 : 0);
-        result = 31 * result + (closed ? 1 : 0);
-        result = 31 * result + raceOrder;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder()
+                .append(this.id)
+                .append(this.name)
+                .append(this.active)
+                .append(this.closed)
+                .append(this.raceOrder)
+                .append(this.startTime)
+                .append(this.drawLocked)
+                .toHashCode();
     }
 }

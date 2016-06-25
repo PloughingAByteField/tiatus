@@ -23,8 +23,8 @@
 		<sonar.jacoco.reportPath>${coverage.reports.dir}/jacoco-unit.exec</sonar.jacoco.reportPath>
 		<sonar.jacoco.itReportPath>${coverage.reports.dir}/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.jacoco.jar>${basedir}/lib/jacocoagent.jar</sonar.jacoco.jar>
-		<failsafeArgLine></failsafeArgLine>
-		<surefireArgLine></surefireArgLine>
+		<failsafeArgLine />
+		<surefireArgLine />
 	</properties>
 
 	<dependencyManagement>
@@ -91,6 +91,12 @@
 				<artifactId>h2</artifactId>
 				<version>${h2.version}</version>
 				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>3.4</version>
 			</dependency>
 
 		</dependencies>
