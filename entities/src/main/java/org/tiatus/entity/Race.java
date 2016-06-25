@@ -108,8 +108,12 @@ public class Race {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Race)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Race)) {
+            return false;
+        }
 
         Race race = (Race) o;
         return new EqualsBuilder()
