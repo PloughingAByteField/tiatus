@@ -2,6 +2,8 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.dao.DaoEntityExistsException;
+import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RaceDao;
 import org.tiatus.entity.Race;
 
@@ -19,8 +21,18 @@ public class RaceServiceImpl implements RaceService {
     @Inject
     private RaceDao dao;
 
-    public void addRace(Race race) {
+    public Race addRace(Race race) throws ServiceException {
         LOG.debug("Adding race " + race);
-        dao.addRace(race);
+        try {
+            return dao.addRace(race);
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException();
+
+        } catch (DaoEntityExistsException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException();
+        }
     }
 }

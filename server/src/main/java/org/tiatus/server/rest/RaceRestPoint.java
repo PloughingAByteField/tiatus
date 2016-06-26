@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Race;
 import org.tiatus.service.RaceService;
+import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -36,7 +37,14 @@ public class RaceRestPoint {
     @Produces("application/json")
     public Response addRace(Race race) {
         LOG.debug("Adding race " + race);
-        service.addRace(race);
-        return Response.ok().build();
+        try {
+            Race saved = service.addRace(race);
+            return Response.ok(saved).build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception");
+            return Response.serverError().build();
+        }
+
     }
 }

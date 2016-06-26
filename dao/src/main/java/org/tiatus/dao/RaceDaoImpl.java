@@ -6,7 +6,6 @@ import org.tiatus.entity.Race;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -36,14 +35,16 @@ public class RaceDaoImpl implements RaceDao {
     }
 
     @Override
-    public void addRace(Race race) throws DaoException, DaoEntityExistsException{
+    public Race addRace(Race race) throws DaoException, DaoEntityExistsException{
         LOG.debug("Adding race " + race);
         try {
             Race existing = em.find(Race.class, race.getId());
             if (existing == null) {
                 tx.begin();
-                em.merge(race);
+                Race merged = em.merge(race);
                 tx.commit();
+
+                return merged;
             } else {
                 LOG.warn("Failed to add race due to existing race with same id " + race.getId());
                 throw new DaoEntityExistsException();
