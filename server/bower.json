@@ -1,0 +1,30 @@
+{
+    "name": "frontend-project",
+    "version": "0.0.1",
+    "appPath": "src/main/webapp",
+    "dependencies": {
+        "modernizr": "2.7.1",
+        "jquery": "2.1.1",
+        "angular": "1.5.7",
+        "angular-resource": "1.5.7",
+        "angular-route": "1.5.7",
+        "angular-messages": "1.5.7",
+        "angular-mocks": "1.5.7",
+        "angular-cookies": "1.5.7",
+        "angular-sanitize": "1.5.7",
+        "angular-material": "0.7.0",
+        "angular-translate": "~2.11.0",
+        "angular-websocket": "1.0.14",
+        "angular-translate-loader-partial": "~2.11.0",
+        "angular-translate-loader-static-files": "~2.11.0",
+        "angular-translate-storage-local": "~2.11.0",
+        "ng-idle" : "1.1.1",
+        "ng-table": "~1.0.0",
+        "angular-file-saver": "~1.0.3",
+        "angular-ui-bootstrap" : "1.0.3",
+        "angular-local-storage" : "0.2.1"
+    },
+    "resolutions": {
+        "angular": "1.5.7"
+    }
+}
