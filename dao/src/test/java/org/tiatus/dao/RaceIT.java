@@ -70,7 +70,7 @@ public class RaceIT {
     }
 
 
-    @Test (expected = DaoEntityExistsException.class)
+    @Test (expected = DaoException.class)
     public void addExitingRace() throws Exception {
         List<org.tiatus.entity.Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());

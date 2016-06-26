@@ -35,7 +35,7 @@ public class RaceDaoImpl implements RaceDao {
     }
 
     @Override
-    public Race addRace(Race race) throws DaoException, DaoEntityExistsException{
+    public Race addRace(Race race) throws DaoException {
         LOG.debug("Adding race " + race);
         try {
             Race existing = null;
@@ -49,12 +49,13 @@ public class RaceDaoImpl implements RaceDao {
 
                 return merged;
             } else {
-                LOG.warn("Failed to add race due to existing race with same id " + race.getId());
-                throw new DaoEntityExistsException();
+                String message = "Failed to add race due to existing race with same id " + race.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to persist race", e);
-            throw new DaoException();
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -66,7 +67,7 @@ public class RaceDaoImpl implements RaceDao {
             tx.commit();
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to delete race", e);
-            throw new DaoException();
+            throw new DaoException(e.getMessage());
         }
 
     }
@@ -79,7 +80,7 @@ public class RaceDaoImpl implements RaceDao {
             tx.commit();
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to update race", e);
-            throw new DaoException();
+            throw new DaoException(e.getMessage());
         }
     }
 }

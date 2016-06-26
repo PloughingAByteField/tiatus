@@ -42,7 +42,7 @@ public class RaceRestPoint {
             return Response.ok(saved).build();
 
         } catch (ServiceException e) {
-            LOG.warn("Got service exception");
+            LOG.warn("Got service exception " + e.getMessage());
             return Response.serverError().build();
         }
 
