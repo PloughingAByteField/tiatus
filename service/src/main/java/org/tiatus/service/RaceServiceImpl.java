@@ -27,7 +27,7 @@ public class RaceServiceImpl implements RaceService {
             return dao.addRace(race);
 
         } catch (DaoException e) {
-            LOG.warn("Got dao exception " + e.getMessage());
+            LOG.warn("Got dao exception " + e);
             throw new ServiceException(e.getMessage());
         }
     }
