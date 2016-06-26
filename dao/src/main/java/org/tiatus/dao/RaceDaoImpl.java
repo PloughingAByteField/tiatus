@@ -38,7 +38,10 @@ public class RaceDaoImpl implements RaceDao {
     public Race addRace(Race race) throws DaoException, DaoEntityExistsException{
         LOG.debug("Adding race " + race);
         try {
-            Race existing = em.find(Race.class, race.getId());
+            Race existing = null;
+            if (race.getId() != null) {
+                existing = em.find(Race.class, race.getId());
+            }
             if (existing == null) {
                 tx.begin();
                 Race merged = em.merge(race);
