@@ -10,7 +10,7 @@ psql
 CREATE USER tiatus WITH PASSWORD 'tiatus';
 CREATE DATABASE tiatus;
 GRANT ALL PRIVILEGES ON DATABASE tiatus to tiatus;
-
+CREATE SEQUENCE race_id_sequence;
 
 load postgres driver into wildfly 10 and add data source for the app
 ./jboss-cli.sh
