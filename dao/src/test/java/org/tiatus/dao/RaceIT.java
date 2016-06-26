@@ -32,7 +32,7 @@ public class RaceIT {
         em.close();
     }
 
-//    @Test
+    @Test
     public void getRaces() {
         List<org.tiatus.entity.Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
