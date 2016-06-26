@@ -9,8 +9,8 @@ import java.util.List;
  */
 public interface RaceDao {
     List<Race> getRaces();
-    void addRace(Race race);
-    void removeRace(Race race);
-    void updateRace(Race race);
+    void addRace(Race race) throws DaoException, DaoEntityExistsException;
+    void removeRace(Race race) throws DaoException;
+    void updateRace(Race race) throws DaoException;
 
 }

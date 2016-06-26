@@ -6,6 +6,7 @@ import org.tiatus.entity.Race;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -35,37 +36,46 @@ public class RaceDaoImpl implements RaceDao {
     }
 
     @Override
-    public void addRace(Race race) {
+    public void addRace(Race race) throws DaoException, DaoEntityExistsException{
         LOG.debug("Adding race " + race);
         try {
-            tx.begin();
-            em.merge(race);
-            tx.commit();
+            Race existing = em.find(Race.class, race.getId());
+            if (existing == null) {
+                tx.begin();
+                em.merge(race);
+                tx.commit();
+            } else {
+                LOG.warn("Failed to add race due to existing race with same id " + race.getId());
+                throw new DaoEntityExistsException();
+            }
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to persist race", e);
+            throw new DaoException();
         }
     }
 
     @Override
-    public void removeRace(Race race) {
+    public void removeRace(Race race) throws DaoException {
         try {
             tx.begin();
             em.remove(em.contains(race) ? race : em.merge(race));
             tx.commit();
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to delete race", e);
+            throw new DaoException();
         }
 
     }
 
     @Override
-    public void updateRace(Race race) {
+    public void updateRace(Race race) throws DaoException {
         try {
             tx.begin();
             em.merge(race);
             tx.commit();
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to update race", e);
+            throw new DaoException();
         }
     }
 }

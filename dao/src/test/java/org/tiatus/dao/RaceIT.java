@@ -55,7 +55,7 @@ public class RaceIT {
     }
 
     @Test
-    public void addRace() {
+    public void addRace() throws Exception {
         List<org.tiatus.entity.Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         org.tiatus.entity.Race newRace = new org.tiatus.entity.Race();
@@ -67,5 +67,18 @@ public class RaceIT {
         races = dao.getRaces();
         Assert.assertTrue(!races.isEmpty());
         Assert.assertTrue(races.size() == 1);
+    }
+
+
+    @Test (expected = DaoEntityExistsException.class)
+    public void addExitingRace() throws Exception {
+        List<org.tiatus.entity.Race> races = dao.getRaces();
+        Assert.assertTrue(races.isEmpty());
+        org.tiatus.entity.Race newRace = new org.tiatus.entity.Race();
+        newRace.setId(new Long(1));
+        newRace.setName("Race 1");
+        dao.tx = new EntityUserTransaction(em);
+        dao.addRace(newRace);
+        dao.addRace(newRace);
     }
 }
