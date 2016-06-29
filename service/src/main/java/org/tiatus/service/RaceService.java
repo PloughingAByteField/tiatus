@@ -7,4 +7,5 @@ import org.tiatus.entity.Race;
  */
 public interface RaceService {
     Race addRace(Race race) throws ServiceException;
+    void deleteRace(Race race) throws ServiceException;
 }

@@ -22,7 +22,6 @@ public class RaceRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
 
-    @Inject
     private RaceService service;
 
     @PermitAll
@@ -42,9 +41,18 @@ public class RaceRestPoint {
             return Response.ok(saved).build();
 
         } catch (ServiceException e) {
-            LOG.warn("Got service exception " + e);
+            LOG.warn("Got service exception" + e);
+            return Response.serverError().build();
+
+        } catch (Exception e) {
+            LOG.warn("Got general exception " + e);
             return Response.serverError().build();
         }
+    }
 
+    @Inject
+    // sonar want constructor injection which jaxrs does not support
+    public void setService(RaceService service) {
+        this.service = service;
     }
 }

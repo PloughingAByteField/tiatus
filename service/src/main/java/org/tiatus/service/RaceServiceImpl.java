@@ -17,8 +17,12 @@ public class RaceServiceImpl implements RaceService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceService.class);
 
+    private final RaceDao dao;
+
     @Inject
-    private RaceDao dao;
+    public RaceServiceImpl(RaceDao dao) {
+       this.dao = dao;
+    }
 
     @Override
     public Race addRace(Race race) throws ServiceException {
@@ -27,8 +31,13 @@ public class RaceServiceImpl implements RaceService {
             return dao.addRace(race);
 
         } catch (DaoException e) {
-            LOG.warn("Got dao exception " + e);
-            throw new ServiceException(e.getMessage());
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public void deleteRace(Race race) throws ServiceException {
+        LOG.debug("Delete race " + race);
     }
 }
