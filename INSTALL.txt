@@ -1,0 +1,22 @@
+This server has been configured with a JPA persistence unit called java:/datasources/TiatusDS
+
+It has been tested on Wildfly-10.0 and PostgresSQL 9.4 and these are used for integration testing via docker images.
+
+Before deployment of the application to Wildfly, a database needs to be created and the corresponding datasource created in Wildfly
+
+With PostgreSQL installled and running, in template0 run the following
+
+CREATE USER tiatus WITH PASSWORD 'tiatus';
+CREATE DATABASE tiatus;
+GRANT ALL PRIVILEGES ON DATABASE tiatus to tiatus;
+
+Then run a fresh Wildfly instance and connect to the jboss-cli and connect to ths server
+Install the jdbc driver
+
+module add --name=org.postgres --resources=Downloads/postgresql-9.4.1208.jar --dependencies=javax.api,javax.transaction.api
+
+/subsystem=datasources/jdbc-driver=postgres:add(driver-name="postgres",driver-module-name="org.postgres",driver-class-name=org.postgresql.Driver)
+
+And finally create the datasource
+
+data-source add --jndi-name=java:/datasources/TiatusDS --name=TiatusPool --connection-url=jdbc:postgresql://localhost/tiatus --driver-name=postgres --user-name=tiatus --password=tiatus
