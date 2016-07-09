@@ -6,11 +6,6 @@
 http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 		  version="3.0">
 
-    <servlet-mapping>
-        <servlet-name>javax.ws.rs.core.Application</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
-    </servlet-mapping>
-
 	 <!--<servlet>-->
 	 	<!--<servlet-name>LoginServlet</servlet-name>-->
 	 	<!--<servlet-class>ie.galwayheadoftheriver.splittiming.server.login.LoginServlet</servlet-class>-->
