@@ -8,10 +8,7 @@ import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 /**
@@ -24,7 +21,9 @@ public class RaceRestPoint {
 
     private RaceService service;
 
+
     @PermitAll
+    @GET
     @Produces("application/json")
     public Response getRaces() {
         return Response.ok().build();
