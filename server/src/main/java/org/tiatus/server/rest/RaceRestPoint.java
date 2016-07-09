@@ -7,6 +7,7 @@ import org.tiatus.service.RaceService;
 import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -47,6 +48,14 @@ public class RaceRestPoint {
             LOG.warn("Got general exception " + e);
             return Response.serverError().build();
         }
+    }
+
+    @RolesAllowed({"role1", "role2"})
+    @GET
+    @Path("other")
+    @Produces("application/json")
+    public Response getRacesOther() {
+        return Response.ok().build();
     }
 
     @Inject
