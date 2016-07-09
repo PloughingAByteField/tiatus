@@ -38,7 +38,7 @@ public class Race {
     @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
             strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
             parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence", value = "race_id_sequence")
+                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "race_id_sequence")
     })
     @Column(name = "id")
     private Long id;
