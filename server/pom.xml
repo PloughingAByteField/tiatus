@@ -179,7 +179,7 @@
                             </run>
                         </image>
                         <image>
-                            <alias>wildlfy</alias>
+                            <alias>wildfly</alias>
                             <name>jreynolds/wildfly-tiatus</name>
                             <build>
                                 <dockerFileDir>wildfly</dockerFileDir>
