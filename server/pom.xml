@@ -78,6 +78,12 @@
             <artifactId>jmockit</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -139,6 +145,100 @@
                         </configuration>
                     </execution>
 
+                </executions>
+            </plugin>
+
+            <plugin>
+                <!-- need to create jreynolds/postgres-tiatus image -->
+                <!-- The Docker Maven plugin is used to create docker image with the fat jar -->
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker.maven.plugin.fabric8.version}</version>
+                <configuration>
+                    <logDate>default</logDate>
+                    <autoPull>true</autoPull>
+                    <images>
+                        <image>
+                            <alias>postgres</alias>
+                            <name>jreynolds/postgresql-tiatus</name>
+                            <build>
+                                <dockerFileDir>postgresql</dockerFileDir>
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>5432:5432</port>
+                                </ports>
+                                <wait>
+                                    <log>database system is ready to accept connections</log>
+                                    <time>20000</time>
+                                </wait>
+                                <log>
+                                    <prefix>DB</prefix>
+                                    <color>yellow</color>
+                                </log>
+                            </run>
+                        </image>
+                        <image>
+                            <alias>wildlfy</alias>
+                            <name>jreynolds/wildfly-tiatus</name>
+                            <build>
+                                <dockerFileDir>wildfly</dockerFileDir>
+                                <assembly>
+                                    <mode>dir</mode>
+                                    <inline xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                            xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+                                            xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+                                        <id>server-it</id>
+                                        <dependencySets>
+                                            <dependencySet>
+                                                <useProjectArtifact>true</useProjectArtifact>
+                                                <includes>
+                                                    <include>${project.groupId}:${project.artifactId}</include>
+                                                </includes>
+                                                <outputDirectory>.</outputDirectory>
+                                                <outputFileNameMapping>${project.build.finalName}.${artifact.extension}</outputFileNameMapping>
+                                            </dependencySet>
+                                        </dependencySets>
+                                    </inline>
+                                </assembly>
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>8080:8080</port>
+                                    <port>9990:9990</port>
+                                </ports>
+                                <wait>
+                                    <log>started in</log>
+                                    <time>60000</time>
+                                </wait>
+                                <log>
+                                    <prefix>Wildfly</prefix>
+                                    <color>yellow</color>
+                                </log>
+                                <links>
+                                    <link>postgres:db</link>
+                                </links>
+                            </run>
+                        </image>
+                    </images>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>start</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>stop</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
