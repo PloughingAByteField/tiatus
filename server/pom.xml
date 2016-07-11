@@ -166,7 +166,7 @@
                             </build>
                             <run>
                                 <ports>
-                                    <port>5432:5432</port>
+                                    <port>6432:5432</port>
                                 </ports>
                                 <wait>
                                     <log>database system is ready to accept connections</log>
@@ -204,7 +204,7 @@
                             </build>
                             <run>
                                 <ports>
-                                    <port>8080:8080</port>
+                                    <port>7080:8080</port>
                                     <port>9990:9990</port>
                                 </ports>
                                 <wait>
