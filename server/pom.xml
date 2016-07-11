@@ -220,15 +220,44 @@
                                 </links>
                             </run>
                         </image>
+                        <image>
+                            <alias>protractor</alias>
+                            <name>jreynolds/protractor-headless</name>
+                            <build>
+                                <from>webnicer/protractor-headless</from>
+                            </build>
+                            <run>
+                                <log>
+                                    <prefix>Protractor</prefix>
+                                    <color>yellow</color>
+                                </log>
+
+                                <privileged>true</privileged>
+                                <shmSize>256000000</shmSize>
+                                <net>host</net>
+                                <volumes>
+                                    <bind>
+                                        <volume>${project.basedir}/src/test/e2e:/protractor</volume>
+                                    </bind>
+                                </volumes>
+                                <cmd>protractor.conf.js</cmd>
+                            </run>
+                        </image>
                     </images>
                 </configuration>
 
                 <executions>
                     <execution>
-                        <id>start</id>
+                        <id>build</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>start</id>
+                        <phase>integration-test</phase>
+                        <goals>
                             <goal>start</goal>
                         </goals>
                     </execution>
