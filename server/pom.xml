@@ -170,7 +170,7 @@
                                 </ports>
                                 <wait>
                                     <log>database system is ready to accept connections</log>
-                                    <time>20000</time>
+                                    <time>60000</time>
                                 </wait>
                                 <log>
                                     <prefix>DB</prefix>
@@ -209,7 +209,7 @@
                                 </ports>
                                 <wait>
                                     <log>started in</log>
-                                    <time>60000</time>
+                                    <time>120000</time>
                                 </wait>
                                 <log>
                                     <prefix>Wildfly</prefix>
