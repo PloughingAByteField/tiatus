@@ -88,6 +88,20 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.11</version>
+                <executions>
+                    <execution>
+                        <id>get-local-ip</id>
+                        <goals>
+                            <goal>local-ip</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.0</version>
@@ -132,6 +146,19 @@
                         </goals>
                         <configuration>
                             <arguments>--no-color</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>grunt protractor</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+
+                        <configuration>
+                            <arguments>--no-color protractor --baseUrl=http://${local.ip}:7080</arguments>
+                            <!--<arguments>&#45;&#45;gruntfile Gruntfile_protractor.js</arguments>-->
                         </configuration>
                     </execution>
 
@@ -209,7 +236,7 @@
                                 </ports>
                                 <wait>
                                     <log>started in</log>
-                                    <time>120000</time>
+                                    <time>300000</time>
                                 </wait>
                                 <log>
                                     <prefix>Wildfly</prefix>
@@ -221,26 +248,32 @@
                             </run>
                         </image>
                         <image>
-                            <alias>protractor</alias>
-                            <name>jreynolds/protractor-headless</name>
+                            <alias>selenium</alias>
+                            <name>jreynolds/selenium</name>
                             <build>
-                                <from>webnicer/protractor-headless</from>
+                                <from>elgalu/selenium</from>
                             </build>
                             <run>
                                 <log>
-                                    <prefix>Protractor</prefix>
+                                    <prefix>Selenium</prefix>
                                     <color>yellow</color>
                                 </log>
 
-                                <privileged>true</privileged>
-                                <shmSize>256000000</shmSize>
-                                <net>host</net>
-                                <volumes>
-                                    <bind>
-                                        <volume>${project.basedir}/src/test/e2e:/protractor</volume>
-                                    </bind>
-                                </volumes>
-                                <cmd>protractor.conf.js</cmd>
+                                <!-- Add only if chrome crashes -->
+                                <!--<privileged>true</privileged>-->
+                                <!--<shmSize>256000000</shmSize>-->
+
+                                <ports>
+                                    <port>4444:24444</port>
+                                    <port>5900:25900</port>
+                                </ports>
+
+                                <!-- add if we need to upload files -->
+                                <!--<volumes>-->
+                                    <!--<bind>-->
+                                        <!--<volume>${project.basedir}/src/test/e2e:/protractor</volume>-->
+                                    <!--</bind>-->
+                                <!--</volumes>-->
                             </run>
                         </image>
                     </images>
@@ -252,12 +285,6 @@
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>build</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>start</id>
-                        <phase>integration-test</phase>
-                        <goals>
                             <goal>start</goal>
                         </goals>
                     </execution>

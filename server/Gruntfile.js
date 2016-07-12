@@ -26,12 +26,25 @@ module.exports = function (grunt) {
                     config: '.jsbeautifyrc'
                 }
             }
+        },
+        protractor: {
+            options: {
+                configFile: "src/test/e2e/protractor.conf.js", args: {
+                    baseUrl: grunt.option('baseUrl')
+                }
+            },
+
+            all: {   // Grunt requires at least one target to run so you can simply put 'all: {}' here too.
+            }
         }
     });
+
+
 
     // Load the plugin that provides the "uglify" task.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-jsbeautifier');
+    grunt.loadNpmTasks('grunt-protractor-runner');
 
     // Default task(s).
     grunt.registerTask('default', ['uglify', 'jsbeautifier:beautify']);
