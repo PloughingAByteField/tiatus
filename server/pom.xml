@@ -261,6 +261,7 @@
 
                                 <env>
                                     <VIDEO>true</VIDEO>
+                                    <WAIT_TIMEOUT>60s</WAIT_TIMEOUT>
                                 </env>
 
                                 <!-- Add only if chrome crashes -->
