@@ -176,8 +176,6 @@
             </plugin>
 
             <plugin>
-                <!-- need to create jreynolds/postgres-tiatus image -->
-                <!-- The Docker Maven plugin is used to create docker image with the fat jar -->
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>${docker.maven.plugin.fabric8.version}</version>
