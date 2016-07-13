@@ -259,14 +259,14 @@
                                     <color>yellow</color>
                                 </log>
 
-                                <env>
-                                    <VIDEO>true</VIDEO>
-                                    <WAIT_TIMEOUT>60s</WAIT_TIMEOUT>
-                                </env>
+                                <!--<env>-->
+                                    <!--<VIDEO>true</VIDEO>-->
+                                    <!--<WAIT_TIMEOUT>60s</WAIT_TIMEOUT>-->
+                                <!--</env>-->
 
                                 <!-- Add only if chrome crashes -->
-                                <privileged>true</privileged>
-                                <shmSize>256000000</shmSize>
+                                <!--<privileged>true</privileged>-->
+                                <!--<shmSize>256000000</shmSize>-->
 
                                 <ports>
                                     <port>4444:24444</port>
