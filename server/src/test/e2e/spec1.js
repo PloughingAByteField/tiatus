@@ -18,4 +18,8 @@ describe('angularjs homepage todo list', function() {
     browser.get('test.html');
 
   });
+    it('should fail', function() {
+      browser.get('test1.html');
+
+    });
 });

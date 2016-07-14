@@ -29,6 +29,8 @@ module.exports = function (grunt) {
         },
         protractor: {
             options: {
+                keepAlive: true,
+                noColor: false,
                 configFile: "src/test/e2e/protractor.conf.js", args: {
                     baseUrl: grunt.option('baseUrl')
                 }
