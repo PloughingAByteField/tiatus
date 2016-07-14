@@ -22,7 +22,8 @@
     "karma-chrome-launcher": "~1.0.1",
     "karma-phantomjs-launcher": "~1.0.1",
     "karma-coverage": "~1.0.0",
-    "karma-junit-reporter": "~1.0.0"
+    "karma-junit-reporter": "~1.0.0",
+    "jasmine-reporters": "~2.2.0"
   },
   "engines": {
     "node": ">=4.4.6"
