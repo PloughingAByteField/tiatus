@@ -14,6 +14,17 @@
     <name>server</name>
     <packaging>war</packaging>
 
+    <properties>
+        <sonar.javascript.coveragePlugin>lcov</sonar.javascript.coveragePlugin>
+        <sonar.javascript.lcov.reportPath>target/coverage/lcov.info</sonar.javascript.lcov.reportPath>
+        <!--<sonar.exclusions>src/main/webapp/js/**,-->
+            <!--src/main/webapp/css/bootstrap/*.*,-->
+            <!--src/main/webapp/css/ng-table/*.*-->
+        <!--</sonar.exclusions>-->
+        <sonar.tests>src/test/javascript/management,src/test/e2e,src/test/java</sonar.tests>
+        <sonar.genericcoverage.unitTestReportPaths>target/js/protractor.xml,target/js/TESTS.xml</sonar.genericcoverage.unitTestReportPaths>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -158,7 +169,6 @@
 
                         <configuration>
                             <arguments>--no-color protractor --baseUrl=http://${local.ip}:7080</arguments>
-                            <!--<arguments>&#45;&#45;gruntfile Gruntfile_protractor.js</arguments>-->
                         </configuration>
                     </execution>
 

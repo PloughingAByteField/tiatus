@@ -36,12 +36,31 @@ module.exports = function(config) {
       
     ],
 
+    sonarQubeUnitReporter: {
+      outputFile: 'target/js/TESTS.xml',
+      useBrowserName: false,
+      filenameFormatter: function(unformattedPath) {
+        var pathSplit = unformattedPath.split('.');
+        var path = '';
+        if (pathSplit.length > 2) {
+            for (i = 0; i < pathSplit.length - 2; i++) {
+                path = path +  pathSplit[i] + "/";
+            }
+            path = path + pathSplit[pathSplit.length - 2] + "." + pathSplit[pathSplit.length - 1];
+        } else {
+            path = unformattedPath;
+        }
+
+        return path;
+      }
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'junit', 'coverage'],
+    reporters: ['progress', 'sonarqubeUnit', 'coverage'],
 
     junitReporter: {
+//        useBrowserName: false ,
         outputDir: 'target/jsunit'
     },
 
@@ -67,7 +86,6 @@ module.exports = function(config) {
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
 
@@ -85,7 +103,6 @@ module.exports = function(config) {
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,
-
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit

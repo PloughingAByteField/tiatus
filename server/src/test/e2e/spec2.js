@@ -1,4 +1,4 @@
-describe('src.test.e2e.spec1.js', function() {
+describe('src.test.e2e.spec2.js', function() {
   it('should add a todo', function() {
     browser.get('https://angularjs.org');
 
