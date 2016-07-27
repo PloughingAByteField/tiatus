@@ -27,6 +27,7 @@ module.exports = function(config) {
         'bower_components/angular-mocks/angular-mocks.js',
         'bower_components/ng-idle/angular-idle.js',
         'bower_components/ng-table/dist/ng-table.js',
+        'src/main/webapp/management/js/race/*.js',
         'src/test/javascript/management/race/*.js'
     ],
 
@@ -65,7 +66,7 @@ module.exports = function(config) {
     },
 
     preprocessors: {
-
+        'src/main/webapp/management/js/race/*.js': ['coverage']
     },
 
     coverageReporter: {
