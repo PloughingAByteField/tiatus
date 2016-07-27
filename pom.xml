@@ -226,6 +226,9 @@
 							<value>org.sonar.java.jacoco.JUnitListener</value>
 						</property>
 					</properties>
+					<!--  place in surefire-reports dir so it can be picked up the sonar SurefireSensor which is used by the JacocoItSensor for analysis --> 
+					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+
 					<!--<groups>org.tiatus.api.test.annotation.IntegrationTest</groups>-->
 				</configuration>
 				<executions>
