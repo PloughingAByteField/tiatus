@@ -24,28 +24,49 @@ module.exports = function(config) {
         'bower_components/angular-translate-loader-partial/angular-translate-loader-partial.js',
         'bower_components/angular-translate-storage-local/angular-translate-storage-local.js',
         'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
+        'bower_components/angular-mocks/angular-mocks.js',
         'bower_components/ng-idle/angular-idle.js',
         'bower_components/ng-table/dist/ng-table.js',
-        'bower_components/angular-mocks/angular-mocks.js'
+        'src/main/webapp/management/js/race/*.js',
+        'src/test/javascript/management/race/*.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-      
+
     ],
 
+    sonarQubeUnitReporter: {
+      outputFile: 'target/js/TESTS.xml',
+      useBrowserName: false,
+      filenameFormatter: function(unformattedPath) {
+        var pathSplit = unformattedPath.split('.');
+        var path = '';
+        if (pathSplit.length > 2) {
+            for (i = 0; i < pathSplit.length - 2; i++) {
+                path = path +  pathSplit[i] + "/";
+            }
+            path = path + pathSplit[pathSplit.length - 2] + "." + pathSplit[pathSplit.length - 1];
+        } else {
+            path = unformattedPath;
+        }
+
+        return path;
+      }
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'junit', 'coverage'],
+    reporters: ['progress', 'sonarqubeUnit', 'coverage'],
 
     junitReporter: {
+//        useBrowserName: false ,
         outputDir: 'target/jsunit'
     },
 
     preprocessors: {
-
+        'src/main/webapp/management/js/race/*.js': ['coverage']
     },
 
     coverageReporter: {
