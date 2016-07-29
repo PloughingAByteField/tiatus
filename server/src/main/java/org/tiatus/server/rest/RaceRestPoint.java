@@ -41,11 +41,11 @@ public class RaceRestPoint {
             return Response.ok(saved).build();
 
         } catch (ServiceException e) {
-            LOG.warn("Got service exception" + e);
+            LOG.warn("Got service exception: ", e.getSuppliedException());
             return Response.serverError().build();
 
         } catch (Exception e) {
-            LOG.warn("Got general exception " + e);
+            LOG.warn("Got general exception ", e);
             return Response.serverError().build();
         }
     }

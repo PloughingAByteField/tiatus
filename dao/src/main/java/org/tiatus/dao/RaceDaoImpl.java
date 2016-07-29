@@ -54,8 +54,8 @@ public class RaceDaoImpl implements RaceDao {
                 throw new DaoException(message);
             }
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist race", e);
-            throw new DaoException(e.getMessage());
+            LOG.warn("Failed to persist race", e.getMessage());
+            throw new DaoException(e);
         }
     }
 

@@ -121,7 +121,8 @@
         <module>dao</module>
         <module>service</module>
         <module>server</module>
-	</modules>
+        <module>api</module>
+    </modules>
 
 	<build>
 		<plugins>
