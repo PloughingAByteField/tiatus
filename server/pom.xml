@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.tiatus</groupId>
         <artifactId>tiatus</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>server</artifactId>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.tiatus</groupId>
             <artifactId>service</artifactId>
-            <version>0.0.1</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
