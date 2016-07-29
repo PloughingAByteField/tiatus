@@ -40,7 +40,7 @@ public class RaceRestPoint {
             Race saved = service.addRace(race);
             return Response.ok(saved).build();
 
-        } catch (ServiceException e) {
+        } catch (ServiceException e) { // NOSONAR as we are using nested exception
             LOG.warn("Got service exception: ", e.getSuppliedException());
             return Response.serverError().build();
 
