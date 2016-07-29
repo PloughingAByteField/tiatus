@@ -18,8 +18,4 @@ describe('src.test.e2e.spec1.js', function() {
     browser.get('test.html');
 
   });
-    it('should fail', function() {
-      browser.get('test1.html');
-
-    });
 });
