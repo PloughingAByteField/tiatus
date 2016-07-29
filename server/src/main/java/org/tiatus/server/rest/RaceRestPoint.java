@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
  * Created by johnreynolds on 19/06/2016.
  */
 @Path("race")
+@SuppressWarnings("squid:S1166")
 public class RaceRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
@@ -40,7 +41,7 @@ public class RaceRestPoint {
             Race saved = service.addRace(race);
             return Response.ok(saved).build();
 
-        } catch (ServiceException e) { // NOSONAR as we are using nested exception
+        } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
             return Response.serverError().build();
 
