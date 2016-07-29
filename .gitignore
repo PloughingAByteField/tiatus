@@ -1,2 +1,6 @@
 .idea
 *.iml
+/server/etc/
+/server/node/
+/server/node_modules/
+/server/bower_components/
