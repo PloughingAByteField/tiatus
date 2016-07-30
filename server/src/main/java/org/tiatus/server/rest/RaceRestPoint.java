@@ -10,12 +10,15 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 
 /**
  * Created by johnreynolds on 19/06/2016.
  */
-@Path("race")
+@Path("races")
 @SuppressWarnings("squid:S1166")
 public class RaceRestPoint {
 
@@ -35,11 +38,11 @@ public class RaceRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addRace(Race race) {
+    public Response addRace(@Context UriInfo uriInfo, Race race) {
         LOG.debug("Adding race " + race);
         try {
             Race saved = service.addRace(race);
-            return Response.ok(saved).build();
+            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());

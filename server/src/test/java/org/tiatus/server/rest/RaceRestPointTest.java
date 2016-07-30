@@ -139,7 +139,7 @@ public class RaceRestPointTest {
 
         String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
 
-        MockHttpRequest request = MockHttpRequest.post("race");
+        MockHttpRequest request = MockHttpRequest.post("races");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         request.content(payload.getBytes());
@@ -147,12 +147,12 @@ public class RaceRestPointTest {
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
 
-        Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        Assert.assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
     }
 
     @Test
     public void getRaces() throws Exception {
-        MockHttpRequest request = MockHttpRequest.get("race");
+        MockHttpRequest request = MockHttpRequest.get("races");
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
         Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -160,7 +160,7 @@ public class RaceRestPointTest {
 
     @Test
     public void checkAddRaceAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "race", "POST");
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races", "POST");
         if (endPointDetail == null) {
             System.out.println("Failed to find end point for POST:race");
             throw new Exception();
@@ -184,7 +184,7 @@ public class RaceRestPointTest {
 
     @Test
     public void checkGetOtherRaceAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "race/other", "GET");
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races/other", "GET");
         if (endPointDetail == null) {
             System.out.println("Failed to find end point for POST:race");
             throw new Exception();
