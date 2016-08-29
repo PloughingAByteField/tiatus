@@ -1,5 +1,7 @@
 package org.tiatus.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -51,5 +53,25 @@ public class UserRole {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof UserRole)) return false;
+
+        UserRole userRole = (UserRole) o;
+
+        return new EqualsBuilder()
+                .append(role, userRole.role)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(role)
+                .toHashCode();
     }
 }

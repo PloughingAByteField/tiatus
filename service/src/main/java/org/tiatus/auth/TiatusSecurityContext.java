@@ -1,5 +1,8 @@
 package org.tiatus.auth;
 
+import org.tiatus.entity.Role;
+import org.tiatus.entity.UserRole;
+
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
@@ -21,9 +24,13 @@ public class TiatusSecurityContext implements SecurityContext {
     }
 
     @Override
-    public boolean isUserInRole(String role) {
+    public boolean isUserInRole(String roleString) {
         if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
-            return user.getUser().getRoles().contains(role);
+            UserRole userRole = new UserRole();
+            Role role = new Role();
+            role.setRole(roleString);
+            userRole.setRole(role);
+            return user.getUser().getRoles().contains(userRole);
         }
         return false;
     }
