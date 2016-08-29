@@ -151,6 +151,50 @@ public class RaceRestPointTest {
     }
 
     @Test
+    public void addRaceServiceException() throws Exception {
+        new MockUp<RaceServiceImpl>() {
+            @Mock
+            public Race addRace(Race race) throws ServiceException {
+                throw new ServiceException(new Exception("exception"));
+            }
+        };
+
+        String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
+
+        MockHttpRequest request = MockHttpRequest.post("races");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void addRaceGeneralException() throws Exception {
+        new MockUp<RaceServiceImpl>() {
+            @Mock
+            public Race addRace(Race race) throws Exception {
+                throw new Exception("exception");
+            }
+        };
+
+        String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
+
+        MockHttpRequest request = MockHttpRequest.post("races");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
     public void getRaces() throws Exception {
         MockHttpRequest request = MockHttpRequest.get("races");
         MockHttpResponse response = new MockHttpResponse();

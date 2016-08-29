@@ -6,6 +6,9 @@
     <persistence-unit name="primary"  transaction-type="JTA">
         <jta-data-source>java:/datasources/TiatusDS</jta-data-source>
         <class>org.tiatus.entity.Race</class>
+        <class>org.tiatus.entity.User</class>
+        <class>org.tiatus.entity.Role</class>
+        <class>org.tiatus.entity.UserRole</class>
         <properties>
             <!-- Properties for Hibernate -->
             <property name="hibernate.hbm2ddl.auto" value="update" />

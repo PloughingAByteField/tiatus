@@ -42,15 +42,15 @@ public class RaceRestPoint {
         LOG.debug("Adding race " + race);
         try {
             Race saved = service.addRace(race);
-            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
+            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
-            return Response.serverError().build();
+            throw new InternalServerErrorException();
 
         } catch (Exception e) {
             LOG.warn("Got general exception ", e);
-            return Response.serverError().build();
+            throw new InternalServerErrorException();
         }
     }
 
