@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
         filterName="LoginServlet",
         urlPatterns={"/*"},
         initParams = {
-            @WebInitParam(name = "pass-through", value = "/login.html,/rest/login,/public,/results")
+            @WebInitParam(name = "pass-through", value = "/rest/login,/public,/results")
         }
 )
 public class LoggedInFilter implements Filter {
@@ -30,9 +30,11 @@ public class LoggedInFilter implements Filter {
 
     private List<String> skipUrls = new ArrayList<>();
 
+    public static final String LOGIN_URL = "/login.html";
 
     @Override
     public void init(FilterConfig config) throws ServletException {
+        skipUrls.add(LOGIN_URL);
         String urls = config.getInitParameter("pass-through");
         StringTokenizer token = new StringTokenizer(urls, ",");
         while (token.hasMoreTokens()) {
@@ -55,7 +57,7 @@ public class LoggedInFilter implements Filter {
                 LOG.debug("logged in");
             } else {
                 LOG.debug("not logged in");
-                response.sendRedirect("/login.html");
+                response.sendRedirect(LOGIN_URL);
                 return;
             }
         }

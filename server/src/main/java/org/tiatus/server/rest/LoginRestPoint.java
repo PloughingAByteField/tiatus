@@ -33,11 +33,11 @@ public class LoginRestPoint {
             session.setAttribute("principal", securityContext.getUserPrincipal());
 
             // get user type and figure where to redirect to
-            String page = "timing/timing.html";
+            String page = "/timing/timing.html";
             if (securityContext.isUserInRole("ADMIN")) {
-                page = "management/management.html";
+                page = "/management/management.html";
             } else if (securityContext.isUserInRole("ADJUDICATOR")) {
-                page = "adjudicator/adjudicator.html";
+                page = "/adjudicator/adjudicator.html";
             }
 
             URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), p + "/" + page, null, null);

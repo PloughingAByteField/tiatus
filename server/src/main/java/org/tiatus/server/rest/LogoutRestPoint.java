@@ -2,6 +2,7 @@ package org.tiatus.server.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.server.filter.LoggedInFilter;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ public class LogoutRestPoint {
                 session.invalidate();
             }
 
-            URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), p + "/login.html", null, null);
+            URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), p + LoggedInFilter.LOGIN_URL, null, null);
             LOG.debug("Redirecting to " + redirect);
             return Response.temporaryRedirect(redirect).build();
 
