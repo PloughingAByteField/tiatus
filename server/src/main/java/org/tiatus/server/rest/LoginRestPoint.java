@@ -2,6 +2,7 @@ package org.tiatus.server.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.server.role.Role;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.ServletContext;
@@ -34,13 +35,13 @@ public class LoginRestPoint {
 
             // get user type and figure where to redirect to
             String page = "/timing/timing.html";
-            if (securityContext.isUserInRole("ADMIN")) {
+            if (securityContext.isUserInRole(Role.ADMIN)) {
                 page = "/management/management.html";
-            } else if (securityContext.isUserInRole("ADJUDICATOR")) {
+            } else if (securityContext.isUserInRole(Role.ADJUDICATOR)) {
                 page = "/adjudicator/adjudicator.html";
             }
 
-            URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), p + "/" + page, null, null);
+            URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), p + page, null, null);
             LOG.debug("Redirecting to " + redirect);
             return Response.temporaryRedirect(redirect).build();
 

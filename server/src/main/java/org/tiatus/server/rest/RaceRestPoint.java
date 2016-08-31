@@ -3,6 +3,7 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Race;
+import org.tiatus.server.role.Role;
 import org.tiatus.service.RaceService;
 import org.tiatus.service.ServiceException;
 
@@ -54,7 +55,7 @@ public class RaceRestPoint {
         }
     }
 
-    @RolesAllowed({"role1", "role2"})
+    @RolesAllowed({Role.ADJUDICATOR, Role.ADMIN})
     @GET
     @Path("other")
     @Produces("application/json")
