@@ -9,9 +9,12 @@ import org.tiatus.entity.User;
 import org.tiatus.entity.UserRole;
 
 import javax.annotation.Priority;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.util.HashSet;
@@ -25,18 +28,23 @@ import java.util.Set;
 public class AuthenticationFilter implements ContainerRequestFilter {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationFilter.class);
 
+    @Context
+    HttpServletRequest servletRequest;
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-
         LOG.debug("in filter");
 
         // are we already logged in the session
-
-        // do we have the auth details - in post
-        String scheme = requestContext.getUriInfo().getRequestUri().getScheme();
-        UserPrincipal user = getUser(null, null);
-        requestContext.getRequest();
-        requestContext.setSecurityContext(new TiatusSecurityContext(user, scheme));
+        HttpSession session = servletRequest.getSession();
+        if (session != null && session.getAttribute("principal") == null) {
+            LOG.debug("Creating new user principal");
+            // do we have the auth details - in post
+            String scheme = requestContext.getUriInfo().getRequestUri().getScheme();
+            UserPrincipal user = getUser(null, null);
+            requestContext.getRequest();
+            requestContext.setSecurityContext(new TiatusSecurityContext(user, scheme));
+        }
     }
 
     private UserPrincipal getUser(String userName, String password) {
