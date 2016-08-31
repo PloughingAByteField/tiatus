@@ -43,7 +43,7 @@ public class LoginRestPoint {
 
             URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), p + page, null, null);
             LOG.debug("Redirecting to " + redirect);
-            return Response.temporaryRedirect(redirect).build();
+            return Response.seeOther(redirect).build();
 
         } catch (Exception e) {
             LOG.warn("Got general exception ", e);
