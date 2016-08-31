@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.tiatus.entity.Race;
+import org.tiatus.server.role.Role;
 import org.tiatus.service.RaceServiceImpl;
 import org.tiatus.service.ServiceException;
 
@@ -249,7 +250,7 @@ public class RaceRestPointTest {
             throw new Exception();
         }
 
-        List<String> expectedRoles = new ArrayList<>(Arrays.asList("role2", "role1"));
+        List<String> expectedRoles = new ArrayList<>(Arrays.asList(Role.ADMIN, Role.ADJUDICATOR));
         if (! endPointDetail.getRolesAllowed().containsAll(expectedRoles)) {
             System.out.println("End point does not have expected roles");
             throw new Exception();
