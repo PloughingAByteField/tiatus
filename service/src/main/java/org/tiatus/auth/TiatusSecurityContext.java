@@ -25,14 +25,7 @@ public class TiatusSecurityContext implements SecurityContext {
 
     @Override
     public boolean isUserInRole(String roleString) {
-        if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
-            UserRole userRole = new UserRole();
-            Role role = new Role();
-            role.setRole(roleString);
-            userRole.setRole(role);
-            return user.getUser().getRoles().contains(userRole);
-        }
-        return false;
+        return isUserInRole(user, roleString);
     }
 
     @Override
@@ -43,5 +36,23 @@ public class TiatusSecurityContext implements SecurityContext {
     @Override
     public String getAuthenticationScheme() {
         return null;
+    }
+
+    public static boolean isUserInRole(UserPrincipal user, String roleString) {
+        if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
+            Role role = new Role();
+            role.setRole(roleString);
+            return isUserInRole(user, role);
+        }
+        return false;
+    }
+
+    public static boolean isUserInRole(UserPrincipal user, Role role) {
+        if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
+            UserRole userRole = new UserRole();
+            userRole.setRole(role);
+            return user.getUser().getRoles().contains(userRole);
+        }
+        return false;
     }
 }

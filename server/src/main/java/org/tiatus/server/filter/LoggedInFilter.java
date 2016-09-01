@@ -2,6 +2,9 @@ package org.tiatus.server.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.auth.TiatusSecurityContext;
+import org.tiatus.auth.UserPrincipal;
+import org.tiatus.server.role.Role;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -10,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -55,6 +57,37 @@ public class LoggedInFilter implements Filter {
 
             if (session != null && session.getAttribute("principal") != null) {
                 LOG.debug("logged in");
+                // are we requesting something we are allowed to request
+                UserPrincipal p = (UserPrincipal)session.getAttribute("principal");
+                StringTokenizer token = new StringTokenizer(requestedUrl, "/");
+                String root = "";
+                if (token.hasMoreTokens()) {
+                    root = token.nextToken();
+                }
+
+                boolean logoutUser = false;
+                if (! root.equals("rest")) {
+                    if (TiatusSecurityContext.isUserInRole(p, Role.ADMIN)) {
+                        if (! root.equals("management")) {
+                            logoutUser = true;
+                        }
+                    } else if (TiatusSecurityContext.isUserInRole(p, Role.ADJUDICATOR)) {
+                        if (! root.equals("adjudicator")) {
+                            logoutUser = true;
+                        }
+                    } else if (TiatusSecurityContext.isUserInRole(p, Role.TIMING)) {
+                        if (! root.equals("timing")) {
+                            logoutUser = true;
+                        }
+                    }
+                }
+
+                if (logoutUser) {
+                    LOG.warn("Logging out user for invalid page access to " + requestedUrl);
+                    session.invalidate();
+                    response.sendRedirect(LOGIN_URL);
+                    return;
+                }
             } else {
                 LOG.debug("not logged in");
                 response.sendRedirect(LOGIN_URL);
