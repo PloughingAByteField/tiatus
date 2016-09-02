@@ -15,7 +15,7 @@ import javax.inject.Inject;
 @Default
 public class RaceServiceImpl implements RaceService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RaceService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RaceServiceImpl.class);
 
     private final RaceDao dao;
 

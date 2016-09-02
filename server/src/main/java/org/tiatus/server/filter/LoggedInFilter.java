@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.tiatus.auth.TiatusSecurityContext;
 import org.tiatus.auth.UserPrincipal;
 import org.tiatus.server.role.Role;
+import org.tiatus.service.UserService;
 
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
@@ -24,7 +26,7 @@ import java.util.StringTokenizer;
         filterName="LoginServlet",
         urlPatterns={"/*"},
         initParams = {
-            @WebInitParam(name = "pass-through", value = "/rest/login,/public,/results")
+            @WebInitParam(name = "pass-through", value = "/rest/login,/public,/results,/favicon.ico")
         }
 )
 public class LoggedInFilter implements Filter {
@@ -33,6 +35,14 @@ public class LoggedInFilter implements Filter {
     private List<String> skipUrls = new ArrayList<>();
 
     public static final String LOGIN_URL = "/login.html";
+    public static final String SETUP_URL = "/setup/setup.html";
+
+    private UserService userService = null;
+
+    @Inject
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -89,8 +99,13 @@ public class LoggedInFilter implements Filter {
                     return;
                 }
             } else {
-                LOG.debug("not logged in");
-                response.sendRedirect(LOGIN_URL);
+                if (isSetup()) {
+                    LOG.debug("not logged in");
+                    response.sendRedirect(LOGIN_URL);
+                } else {
+                    LOG.debug("not setup");
+                    response.sendRedirect(SETUP_URL);
+                }
                 return;
             }
         }
@@ -102,6 +117,10 @@ public class LoggedInFilter implements Filter {
 
     }
 
+    private boolean isSetup() {
+        return userService.hasAdminUser();
+    }
+
     private boolean checkUrl(String url) {
         if (skipUrls.contains(url)){
             return true;
@@ -111,6 +130,10 @@ public class LoggedInFilter implements Filter {
         if (token.hasMoreTokens()) {
             String root = "/" + token.nextToken();
             if (skipUrls.contains(root)) {
+                return true;
+            }
+
+            if (root.equals("/setup") && !isSetup()) {
                 return true;
             }
         }
