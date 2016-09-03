@@ -5,6 +5,7 @@
     <script src="/public/js/angular/angular.min.js"></script>
     <script src="/public/js/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="/public/js/angular-cookies/angular-cookies.min.js"></script>
+    <script src="/public/js/angular-messages/angular-messages.min.js"></script>
     <script src="/public/js/angular-translate/angular-translate.min.js"></script>
     <script src="/public/js/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
     <script src="/public/js/angular-translate-loader-partial/angular-translate-loader-partial.min.js"></script>
@@ -19,9 +20,24 @@
     <form name="ctrl.addUserForm" data-ng-submit="ctrl.addUserForm.$valid" novalidate>
         <div class="form-group">
             <label>{{ 'USER_NAME' | translate }}:</label>
-            <input type="text" placeholder="Enter user name here" name="name" id="username" ng-model="ctrl.user.name" not-existing-race-name required ng-minlength="5" ng-maxlength="256">
+            <input type="text" placeholder="{{'ENTER_USERNAME' | translate}}" name="name" id="username" ng-model="ctrl.user.name" required ng-minlength="5" ng-maxlength="256">
+            <div class="errors" ng-messages="ctrl.addUserForm.name.$error">
+                <p ng-message="minlength">{{ 'USERNAME_TOO_SHORT' | translate }}</p>
+                <p ng-message="maxlength">{{ 'USERNAME_TOO_LONG' | translate }}</p>
+                <p ng-message="required">{{ 'USERNAME_IS_REQUIRED' | translate }}</p>
+                <!--<p ng-message="raceNameExists">{{ 'RACE_NAME_ALREADY_EXISTS' | translate }}</p>-->
+            </div>
+        </div>
+
+        <div class="form-group">
             <label>{{ 'PASSWORD' | translate }}:</label>
-            <input type="text" placeholder="Enter user password here" name="name" id="password" ng-model="ctrl.user.password"  required ng-minlength="8" ng-maxlength="16">
+            <input type="password" placeholder="{{'ENTER_PASSWORD' | translate}}" name="password" id="password" ng-model="ctrl.user.password" required ng-minlength="8" ng-maxlength="20">
+            <div class="errors" ng-messages="ctrl.addUserForm.password.$error">
+                <p ng-message="minlength">{{ 'PASSWORD_TOO_SHORT' | translate }}</p>
+                <p ng-message="maxlength">{{ 'PASSWORD_TOO_LONG' | translate }}</p>
+                <p ng-message="required">{{ 'PASSWORD_IS_REQUIRED' | translate }}</p>
+                <!--<p ng-message="raceNumberExists">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</p>-->
+            </div>
         </div>
         <button data-ng-click="ctrl.addUser(ctrl.user)" ng-disabled="ctrl.addUserForm.$invalid">{{ 'CREATE_USER' | translate }}</button>
     </form>

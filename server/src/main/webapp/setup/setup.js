@@ -1,6 +1,7 @@
 angular.module('setupApp', [
     'pascalprecht.translate',
     'ngSanitize',
+    'ngMessages',
     'ngCookies'
 ]);
 
