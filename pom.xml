@@ -117,12 +117,13 @@
 	</dependencyManagement>
 
 	<modules>
+		<module>flyway</module>
 		<module>entities</module>
         <module>dao</module>
         <module>service</module>
         <module>server</module>
         <module>api</module>
-    </modules>
+	</modules>
 
 	<build>
 		<plugins>
