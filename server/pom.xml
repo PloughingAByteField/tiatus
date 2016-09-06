@@ -16,10 +16,7 @@
     <properties>
         <sonar.javascript.coveragePlugin>lcov</sonar.javascript.coveragePlugin>
         <sonar.javascript.lcov.reportPath>target/coverage/lcov.info</sonar.javascript.lcov.reportPath>
-        <!--<sonar.exclusions>src/main/webapp/js/**,-->
-            <!--src/main/webapp/css/bootstrap/*.*,-->
-            <!--src/main/webapp/css/ng-table/*.*-->
-        <!--</sonar.exclusions>-->
+        <sonar.exclusions>src/main/webapp/public/js/**</sonar.exclusions>
         <sonar.tests>src/test/javascript/management,src/test/e2e,src/test/java</sonar.tests>
         <sonar.genericcoverage.unitTestReportPaths>target/js/protractor.xml,target/js/TESTS.xml</sonar.genericcoverage.unitTestReportPaths>
     </properties>
