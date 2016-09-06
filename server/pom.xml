@@ -313,9 +313,12 @@
                 <version>4.0.3</version>
                 <configuration>
                     <baselineOnMigrate>true</baselineOnMigrate>
-                    <url>jdbc:postgresql://localhost:6432/tiatus</url>
+                    <url>jdbc:postgresql://${local.ip}:6432/tiatus</url>
                     <user>tiatus</user>
                     <password>tiatus</password>
+                    <locations>
+                        <location>filesystem:../flyway/src/main/resources/db/migration</location>
+                    </locations>
                 </configuration>
                 <executions>
                     <execution>
@@ -335,6 +338,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
