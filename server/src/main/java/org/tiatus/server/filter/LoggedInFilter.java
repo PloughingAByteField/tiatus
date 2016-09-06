@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.auth.TiatusSecurityContext;
 import org.tiatus.auth.UserPrincipal;
-import org.tiatus.server.role.Role;
+import org.tiatus.role.Role;
 import org.tiatus.service.UserService;
 
 import javax.inject.Inject;
@@ -36,6 +36,7 @@ public class LoggedInFilter implements Filter {
 
     public static final String LOGIN_URL = "/login.html";
     public static final String SETUP_URL = "/setup/setup.html";
+    public static final String SETUP_REST_URL = "/rest/setup/user";
 
     private UserService userService = null;
 
@@ -47,6 +48,8 @@ public class LoggedInFilter implements Filter {
     @Override
     public void init(FilterConfig config) throws ServletException {
         skipUrls.add(LOGIN_URL);
+        skipUrls.add(SETUP_URL);
+        skipUrls.add(SETUP_REST_URL);
         String urls = config.getInitParameter("pass-through");
         StringTokenizer token = new StringTokenizer(urls, ",");
         while (token.hasMoreTokens()) {
@@ -122,7 +125,11 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean checkUrl(String url) {
-        if (skipUrls.contains(url)){
+        if (skipUrls.contains(url)) {
+            if (url.equals(SETUP_REST_URL) && isSetup()) {
+                LOG.warn("tried to access setup rest url after setup");
+                return false;
+            }
             return true;
         }
 

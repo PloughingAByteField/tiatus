@@ -16,7 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.tiatus.entity.Race;
-import org.tiatus.server.role.Role;
+import org.tiatus.role.Role;
 import org.tiatus.service.RaceServiceImpl;
 import org.tiatus.service.ServiceException;
 

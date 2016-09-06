@@ -2,10 +2,10 @@ package org.tiatus.server.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tiatus.server.role.Role;
+import org.tiatus.role.Role;
+import org.tiatus.server.filter.LoggedInFilter;
 
 import javax.annotation.security.PermitAll;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
@@ -30,6 +30,11 @@ public class LoginRestPoint {
             String p = httpServletRequest.getContextPath();
             URI base = uriInfo.getBaseUri();
             HttpSession session = httpServletRequest.getSession();
+            if (securityContext.getUserPrincipal() == null) {
+                LOG.warn("not logged in");
+                URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), LoggedInFilter.LOGIN_URL, null, null);
+                return Response.seeOther(redirect).build();
+            }
             session.setAttribute("userId", securityContext.getUserPrincipal().getName());
             session.setAttribute("principal", securityContext.getUserPrincipal());
 

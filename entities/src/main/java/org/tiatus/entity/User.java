@@ -1,5 +1,7 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "app_user")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
     @Id
@@ -18,7 +21,7 @@ public class User {
     @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
             strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
             parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "user_id_sequence")
+                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "app_user_id_sequence")
             })
     @Column(name = "id")
     private Long id;
@@ -35,7 +38,8 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="user")
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user")
+    @JsonManagedReference(value="user-role")
     private Set<UserRole> roles = new HashSet<>();
 
     public Long getId() {

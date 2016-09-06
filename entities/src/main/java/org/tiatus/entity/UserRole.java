@@ -1,5 +1,6 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,8 +11,7 @@ import javax.persistence.*;
  * Created by johnreynolds on 26/08/2016.
  */
 @Entity
-@Table(name = "user_role")
-//@Table(name = "user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
+@Table(name = "user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
 public class UserRole {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "UseExistingOrGenerateIdGenerator")
@@ -23,12 +23,13 @@ public class UserRole {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="ROLE_ID", nullable=false, updatable=false)
     private Role role;
 
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="USER_ID", nullable=false, updatable=false)
+    @JsonBackReference(value="user-role")
     private User user;
 
     public Long getId() {

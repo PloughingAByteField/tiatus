@@ -36,7 +36,9 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         LOG.debug("In AuthorizationFilter");
         SecurityContext sc = requestContext.getSecurityContext();
-
+        if (sc.getUserPrincipal() == null) {
+            return;
+        }
         Method method = resourceInfo.getResourceMethod();
 
         if (method.isAnnotationPresent(DenyAll.class)) {
