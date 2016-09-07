@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.*;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class RaceDaoImpl implements RaceDao {
 
     @Override
     public List<Race> getRaces() {
-        Query query = em.createQuery("FROM Race order by raceOrder");
+        TypedQuery<Race> query = em.createQuery("FROM Race order by raceOrder", Race.class);
         return query.getResultList();
     }
 
