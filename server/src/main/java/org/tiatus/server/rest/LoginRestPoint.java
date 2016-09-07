@@ -2,6 +2,7 @@ package org.tiatus.server.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.auth.UserPrincipal;
 import org.tiatus.role.Role;
 import org.tiatus.server.filter.LoggedInFilter;
 
@@ -35,8 +36,9 @@ public class LoginRestPoint {
                 URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), LoggedInFilter.LOGIN_URL, null, null);
                 return Response.seeOther(redirect).build();
             }
-            session.setAttribute("userId", securityContext.getUserPrincipal().getName());
-            session.setAttribute("principal", securityContext.getUserPrincipal());
+            UserPrincipal principal = (UserPrincipal)securityContext.getUserPrincipal();
+            session.setAttribute("userId", principal.getName());
+            session.setAttribute("principal", principal);
 
             // get user type and figure where to redirect to
             String page = "/timing/timing.html";
