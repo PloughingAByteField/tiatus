@@ -3,12 +3,13 @@ package org.tiatus.auth;
 import org.tiatus.entity.User;
 
 import javax.security.auth.Subject;
+import java.io.Serializable;
 import java.security.Principal;
 
 /**
  * Created by johnreynolds on 26/08/2016.
  */
-public class UserPrincipal implements Principal {
+public class UserPrincipal implements Principal, Serializable {
 
     private User user;
 

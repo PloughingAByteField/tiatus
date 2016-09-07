@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "app_user")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "UseExistingOrGenerateIdGenerator")

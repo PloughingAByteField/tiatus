@@ -9,7 +9,6 @@ import org.tiatus.entity.UserRole;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
 import java.util.List;
@@ -22,20 +21,17 @@ public class UserDaoImpl implements UserDao {
     private static final Logger LOG = LoggerFactory.getLogger(RaceDaoImpl.class);
 
     @PersistenceContext(unitName = "primary")
-    protected EntityManager em;
+    private EntityManager em;
 
     @Resource
-    protected UserTransaction tx;
+    private UserTransaction tx;
 
     @Override
     public boolean hasAdminUser() {
         TypedQuery<UserRole> query = em.createQuery("FROM UserRole where role = :role" , UserRole.class);
         Role admin = getRoleForRole("ADMIN");
         List<UserRole> users = query.setParameter("role", admin).getResultList();
-        if (users != null && !users.isEmpty()) {
-            return true;
-        }
-        return false;
+        return users != null && !users.isEmpty();
     }
 
     @Override

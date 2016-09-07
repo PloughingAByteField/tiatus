@@ -35,8 +35,8 @@ public class LoggedInFilter implements Filter {
     private List<String> skipUrls = new ArrayList<>();
 
     public static final String LOGIN_URL = "/login.html";
-    public static final String SETUP_URL = "/setup/setup.html";
-    public static final String SETUP_REST_URL = "/rest/setup/user";
+    private static final String SETUP_URL = "/setup/setup.html";
+    private static final String SETUP_REST_URL = "/rest/setup/user";
 
     private UserService userService = null;
 
@@ -78,23 +78,7 @@ public class LoggedInFilter implements Filter {
                     root = token.nextToken();
                 }
 
-                boolean logoutUser = false;
-                if (! root.equals("rest")) {
-                    if (TiatusSecurityContext.isUserInRole(p, Role.ADMIN)) {
-                        if (! root.equals("management")) {
-                            logoutUser = true;
-                        }
-                    } else if (TiatusSecurityContext.isUserInRole(p, Role.ADJUDICATOR)) {
-                        if (! root.equals("adjudicator")) {
-                            logoutUser = true;
-                        }
-                    } else if (TiatusSecurityContext.isUserInRole(p, Role.TIMING)) {
-                        if (! root.equals("timing")) {
-                            logoutUser = true;
-                        }
-                    }
-                }
-
+                boolean logoutUser = isInvalidAccess(root, p);
                 if (logoutUser) {
                     LOG.warn("Logging out user for invalid page access to " + requestedUrl);
                     session.invalidate();
@@ -115,9 +99,25 @@ public class LoggedInFilter implements Filter {
         chain.doFilter(request, response);
     }
 
+    private boolean isInvalidAccess(String root, UserPrincipal p) {
+        if (! "rest".equals(root)) {
+            if (TiatusSecurityContext.isUserInRole(p, Role.ADMIN) && !"management".equals(root)) {
+                return true;
+
+            } else if (TiatusSecurityContext.isUserInRole(p, Role.ADJUDICATOR) && ! "adjudicator".equals(root)) {
+                return true;
+
+            } else if (TiatusSecurityContext.isUserInRole(p, Role.TIMING) && ! "timing".equals(root)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public void destroy() {
-
+        // nothing to destroy
     }
 
     private boolean isSetup() {
@@ -125,11 +125,12 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean checkUrl(String url) {
+        if (isSetup() && url.equals(SETUP_REST_URL)) {
+            LOG.warn("tried to access setup rest url after setup");
+            return false;
+        }
+
         if (skipUrls.contains(url)) {
-            if (url.equals(SETUP_REST_URL) && isSetup()) {
-                LOG.warn("tried to access setup rest url after setup");
-                return false;
-            }
             return true;
         }
 
@@ -140,7 +141,7 @@ public class LoggedInFilter implements Filter {
                 return true;
             }
 
-            if (root.equals("/setup") && !isSetup()) {
+            if ("/setup".equals(root) && !isSetup()) {
                 return true;
             }
         }

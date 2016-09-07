@@ -5,13 +5,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by johnreynolds on 26/08/2016.
  */
 @Entity
 @Table(name = "role")
-public class Role {
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "UseExistingOrGenerateIdGenerator")
     @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
@@ -23,7 +24,7 @@ public class Role {
     private Long id;
 
     @Column(name = "role", unique = true)
-    private String role;
+    private String roleName;
 
     public Long getId() {
         return id;
@@ -33,31 +34,35 @@ public class Role {
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleName(String role) {
+        this.roleName = role;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof Role)) return false;
+        if (!(o instanceof Role)) {
+            return false;
+        }
 
         Role role1 = (Role) o;
 
         return new EqualsBuilder()
-                .append(role, role1.role)
+                .append(roleName, role1.roleName)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(role)
+                .append(roleName)
                 .toHashCode();
     }
 }

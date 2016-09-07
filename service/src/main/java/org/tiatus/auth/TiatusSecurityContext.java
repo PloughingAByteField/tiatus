@@ -11,11 +11,9 @@ import java.security.Principal;
  */
 public class TiatusSecurityContext implements SecurityContext {
     private UserPrincipal user;
-    private String scheme;
 
-    public TiatusSecurityContext(UserPrincipal user, String scheme) {
+    public TiatusSecurityContext(UserPrincipal user) {
         this.user = user;
-        this.scheme = scheme;
     }
 
     @Override
@@ -41,13 +39,13 @@ public class TiatusSecurityContext implements SecurityContext {
     public static boolean isUserInRole(UserPrincipal user, String roleString) {
         if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
             Role role = new Role();
-            role.setRole(roleString);
+            role.setRoleName(roleString);
             return isUserInRole(user, role);
         }
         return false;
     }
 
-    public static boolean isUserInRole(UserPrincipal user, Role role) {
+    private static boolean isUserInRole(UserPrincipal user, Role role) {
         if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
             UserRole userRole = new UserRole();
             userRole.setRole(role);

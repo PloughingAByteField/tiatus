@@ -12,7 +12,7 @@
         vm.addUser = function(user) {
             $log.debug("got user " + user.user_name + " password " + user.password);
 
-            User.save(user).$promise.then(function(response) {
+            User.save(user).$promise.then(function() {
                 vm.user = {};
                 vm.addUserForm.$setPristine();
                 vm.addUserForm.$setUntouched();

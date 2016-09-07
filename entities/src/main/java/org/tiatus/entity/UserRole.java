@@ -6,13 +6,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by johnreynolds on 26/08/2016.
  */
 @Entity
 @Table(name = "user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
-public class UserRole {
+public class UserRole implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "UseExistingOrGenerateIdGenerator")
     @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
@@ -58,9 +59,13 @@ public class UserRole {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (!(o instanceof UserRole)) return false;
+        if (!(o instanceof UserRole)) {
+            return false;
+        }
 
         UserRole userRole = (UserRole) o;
 

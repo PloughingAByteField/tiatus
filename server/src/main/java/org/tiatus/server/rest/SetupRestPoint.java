@@ -34,7 +34,6 @@ public class SetupRestPoint {
         LOG.debug("Adding user " + user);
         try {
             service.addUser(user);
-//            return Response.created(URI.create(uriInfo.getPath() + "/"+ user.getId())).build();
             return Response.created(URI.create(uriInfo.getPath() + "/"+ user.getId())).entity(user).build();
 
         } catch (ServiceException e) {

@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Created by johnreynolds on 02/09/2016.
  */
-public class UserServiceImpl implements UserService {
+class UserServiceImpl implements UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             Role role = dao.getRoleForRole(org.tiatus.role.Role.ADMIN);
             userRole.setRole(role);
             userRole.setUser(user);
-            Set<UserRole> userRoleList = new HashSet<UserRole>();
+            Set<UserRole> userRoleList = new HashSet<>();
             userRoleList.add(userRole);
             user.setRoles(userRoleList);
             dao.addUser(user);

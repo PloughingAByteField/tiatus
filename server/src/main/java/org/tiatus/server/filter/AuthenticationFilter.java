@@ -4,9 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.auth.TiatusSecurityContext;
 import org.tiatus.auth.UserPrincipal;
-import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
-import org.tiatus.entity.UserRole;
 import org.tiatus.service.UserService;
 
 import javax.annotation.Priority;
@@ -14,7 +12,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Priorities;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.*;
@@ -25,8 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.Set;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED_TYPE;
 
@@ -69,7 +64,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // are we already logged in the session
         HttpSession session = servletRequest.getSession();
         if (session != null){
-            String scheme = requestContext.getUriInfo().getRequestUri().getScheme();
             UserPrincipal user;
             if (session.getAttribute("principal") == null) {
                 LOG.debug("Creating new user principal");
@@ -79,7 +73,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 user = (UserPrincipal)session.getAttribute("principal");
             }
             if (user != null) {
-                requestContext.setSecurityContext(new TiatusSecurityContext(user, scheme));
+                requestContext.setSecurityContext(new TiatusSecurityContext(user));
             }
         }
     }

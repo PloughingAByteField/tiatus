@@ -5,13 +5,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by johnreynolds on 19/06/2016.
  */
 @Entity
 @Table(name = "race")
-public class Race {
+public class Race implements Serializable {
 
     private static final long serialVersionUID = 5540680572499312363L;
 
