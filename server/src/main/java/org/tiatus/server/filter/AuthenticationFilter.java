@@ -39,7 +39,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Context
     private Providers providers;
 
-    @Inject
     private UserService userService;
 
     @Override
@@ -98,5 +97,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
         baos.flush();
         return new ByteArrayInputStream(baos.toByteArray());
+    }
+
+    @Inject
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

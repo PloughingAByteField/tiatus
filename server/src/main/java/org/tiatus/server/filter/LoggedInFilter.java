@@ -78,7 +78,7 @@ public class LoggedInFilter implements Filter {
                     root = token.nextToken();
                 }
 
-                boolean logoutUser = isInvalidAccess(root, p);
+                boolean logoutUser = ! isValidAccess(root, p);
                 if (logoutUser) {
                     LOG.warn("Logging out user for invalid page access to " + requestedUrl);
                     session.invalidate();
@@ -99,20 +99,42 @@ public class LoggedInFilter implements Filter {
         chain.doFilter(request, response);
     }
 
-    private boolean isInvalidAccess(String root, UserPrincipal p) {
-        if (! "rest".equals(root)) {
-            if (TiatusSecurityContext.isUserInRole(p, Role.ADMIN) && !"management".equals(root)) {
-                return true;
+    private boolean isValidAccess(String root, UserPrincipal p) {
+        if ("rest".equals(root)) {
+            return true;
+        }
 
-            } else if (TiatusSecurityContext.isUserInRole(p, Role.ADJUDICATOR) && ! "adjudicator".equals(root)) {
-                return true;
+        String userRole = getUserRole(p);
+        return checkAccess(userRole, root);
+    }
 
-            } else if (TiatusSecurityContext.isUserInRole(p, Role.TIMING) && ! "timing".equals(root)) {
-                return true;
-            }
+    private boolean checkAccess(String userRole, String root) {
+        if (userRole.equals(Role.ADMIN) && "management".equals(root)) {
+            return true;
+        }
+
+        if (userRole.equals(Role.ADJUDICATOR) && "adjudicator".equals(root)) {
+            return true;
+        }
+
+        if (userRole.equals(Role.TIMING) && "timing".equals(root)) {
+            return true;
         }
 
         return false;
+    }
+
+    private String getUserRole(UserPrincipal p) {
+        if (TiatusSecurityContext.isUserInRole(p, Role.ADMIN)) {
+            return Role.ADMIN;
+
+        } else if (TiatusSecurityContext.isUserInRole(p, Role.ADJUDICATOR)) {
+            return Role.ADJUDICATOR;
+
+        } else if (TiatusSecurityContext.isUserInRole(p, Role.TIMING)) {
+            return Role.TIMING;
+        }
+        return "";
     }
 
     @Override
@@ -134,6 +156,10 @@ public class LoggedInFilter implements Filter {
             return true;
         }
 
+        return checkBasePath(url);
+    }
+
+    private boolean checkBasePath(String url) {
         StringTokenizer token = new StringTokenizer(url, "/");
         if (token.hasMoreTokens()) {
             String root = "/" + token.nextToken();
