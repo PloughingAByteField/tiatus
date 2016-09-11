@@ -25,7 +25,7 @@
         <div class="form-group">
             <label>{{ 'USER_NAME' | translate }}:</label>
             <input type="text" placeholder="{{'ENTER_USERNAME' | translate}}" name="name" id="username" data-ng-model="ctrl.user.userName" required data-ng-minlength="5" data-ng-maxlength="256">
-            <div class="errors" data-ng-messages="ctrl.addUserForm.name.$error">
+            <div class="errors" id="nameError" data-ng-messages="ctrl.addUserForm.name.$error">
                 <p data-ng-message="minlength">{{ 'USERNAME_TOO_SHORT' | translate }}</p>
                 <p data-ng-message="maxlength">{{ 'USERNAME_TOO_LONG' | translate }}</p>
                 <p data-ng-message="required">{{ 'USERNAME_IS_REQUIRED' | translate }}</p>
@@ -35,7 +35,7 @@
         <div class="form-group">
             <label>{{ 'PASSWORD' | translate }}:</label>
             <input type="password" placeholder="{{'ENTER_PASSWORD' | translate}}" name="password" id="password" data-ng-model="ctrl.user.password" required data-ng-minlength="8" data-ng-maxlength="20">
-            <div class="errors" data-ng-messages="ctrl.addUserForm.password.$error">
+            <div class="errors" id="passwordError" data-ng-messages="ctrl.addUserForm.password.$error">
                 <p data-ng-message="minlength">{{ 'PASSWORD_TOO_SHORT' | translate }}</p>
                 <p data-ng-message="maxlength">{{ 'PASSWORD_TOO_LONG' | translate }}</p>
                 <p data-ng-message="required">{{ 'PASSWORD_IS_REQUIRED' | translate }}</p>
