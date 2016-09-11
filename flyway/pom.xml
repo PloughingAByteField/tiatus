@@ -22,6 +22,7 @@
                         <version>4.0.3</version>
                         <configuration>
                             <baselineOnMigrate>true</baselineOnMigrate>
+                            <skip>${flyway.skip}</skip>
                         </configuration>
                         <executions>
                             <execution>

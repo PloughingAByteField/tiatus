@@ -188,6 +188,7 @@
                 <configuration>
                     <logDate>default</logDate>
                     <autoPull>true</autoPull>
+                    <skip>${docker.skip}</skip>
                     <images>
                         <image>
                             <alias>postgres</alias>
@@ -319,6 +320,7 @@
                     <locations>
                         <location>filesystem:../flyway/src/main/resources/db/migration</location>
                     </locations>
+                    <skip>${docker.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>

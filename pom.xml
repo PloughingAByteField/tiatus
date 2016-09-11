@@ -25,6 +25,8 @@
 		<sonar.jacoco.itReportPath>${coverage.reports.dir}/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<failsafeArgLine />
 		<surefireArgLine />
+		<docker.skip>false</docker.skip>
+		<flyway.skip>false</flyway.skip>
 	</properties>
 
 	<dependencyManagement>
