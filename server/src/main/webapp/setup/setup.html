@@ -18,9 +18,9 @@
     <style type="text/css" media="all">@import "setup.css";</style>
     <title>Setup</title>
 </head>
-<body>
+<body data-ng-app="setupApp">
 <h1>setup</h1>
-<div data-ng-app="setupApp" data-ng-controller="userController as ctrl">
+<div data-ng-controller="userController as ctrl">
     <form name="ctrl.addUserForm" data-ng-submit="ctrl.addUserForm.$valid" novalidate>
         <div class="form-group">
             <label>{{ 'USER_NAME' | translate }}:</label>
@@ -41,7 +41,7 @@
                 <p data-ng-message="required">{{ 'PASSWORD_IS_REQUIRED' | translate }}</p>
             </div>
         </div>
-        <button data-ng-click="ctrl.addUser(ctrl.user)" data-ng-disabled="ctrl.addUserForm.$invalid">{{ 'CREATE_USER' | translate }}</button>
+        <button id="create" data-ng-click="ctrl.addUser(ctrl.user)" data-ng-disabled="ctrl.addUserForm.$invalid">{{ 'CREATE_USER' | translate }}</button>
     </form>
     <hr>
 </div>
