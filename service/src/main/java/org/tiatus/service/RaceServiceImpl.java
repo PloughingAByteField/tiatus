@@ -19,6 +19,10 @@ public class RaceServiceImpl implements RaceService {
 
     private final RaceDao dao;
 
+    /**
+     * Constructor for service
+     * @param dao object injected by cdi
+     */
     @Inject
     public RaceServiceImpl(RaceDao dao) {
        this.dao = dao;

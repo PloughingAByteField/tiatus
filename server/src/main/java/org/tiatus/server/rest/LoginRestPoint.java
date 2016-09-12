@@ -24,6 +24,13 @@ public class LoginRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
 
+    /**
+     * Check to see if user has been logged in and redirect to the correct location
+     * @param uriInfo details on location
+     * @param httpServletRequest servlet request
+     * @param securityContext security context
+     * @return response to correct location or to login page
+     */
     @PermitAll
     @POST
     public Response login(@Context UriInfo uriInfo, @Context HttpServletRequest httpServletRequest, @Context SecurityContext securityContext) {

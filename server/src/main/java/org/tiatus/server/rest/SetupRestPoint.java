@@ -25,12 +25,18 @@ public class SetupRestPoint {
 
     private UserService service;
 
+    /**
+     * Add an admin user via setup page
+     * @param uriInfo location details
+     * @param user user to add
+     * @return response contain success or failure code
+     */
     @PermitAll
     @POST
     @Path("user")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addRace(@Context UriInfo uriInfo, User user) {
+    public Response addUser(@Context UriInfo uriInfo, User user) {
         LOG.debug("Adding user " + user);
         try {
             service.addUser(user);

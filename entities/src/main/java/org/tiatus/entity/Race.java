@@ -45,7 +45,7 @@ public class Race implements Serializable {
     private Long id;
 
     @PrePersist
-    public void setupDefaults() {
+    protected void setupDefaults() {
         closed = false;
         active = false;
         drawLocked = false;

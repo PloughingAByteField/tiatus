@@ -6,6 +6,18 @@ import org.tiatus.entity.Race;
  * Created by johnreynolds on 25/06/2016.
  */
 public interface RaceService {
+    /**
+     * Add race
+     * @param race to create
+     * @return created race
+     * @throws ServiceException on error
+     */
     Race addRace(Race race) throws ServiceException;
+
+    /**
+     * Remove a race
+     * @param race to remove
+     * @throws ServiceException on error
+     */
     void deleteRace(Race race) throws ServiceException;
 }

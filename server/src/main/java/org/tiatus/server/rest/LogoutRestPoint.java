@@ -24,6 +24,13 @@ public class LogoutRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
 
+    /**
+     * Logout and redirect a user back to login page
+     * @param uriInfo location infor
+     * @param httpServletRequest servlet request
+     * @param securityContext security context
+     * @return user to login page
+     */
     @PermitAll
     @GET
     public Response login(@Context UriInfo uriInfo, @Context HttpServletRequest httpServletRequest, @Context SecurityContext securityContext) {

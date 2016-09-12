@@ -49,7 +49,7 @@ public class TiatusSecurityContext implements SecurityContext {
      * Check if supplied UserPrincipal contains the supplied role
      * @param user The UserPrincipal to be checked.
      * @param roleString The role that is being checked for.
-     * @return boolean Success
+     * @return a <code>boolean</code> if user contains the role
      */
     public static boolean isUserInRole(UserPrincipal user, String roleString) {
         if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
