@@ -96,10 +96,8 @@ public class RaceRestPointTest {
                         if (annotation.annotationType().equals(RolesAllowed.class)) {
                             RolesAllowed allowed = (RolesAllowed) annotation;
                             String[] allowedValues = allowed.value();
-                            if (allowedValues != null) {
-                                for (String value : allowedValues) {
-                                    detail.addRoleAllowed(value);
-                                }
+                            for (String value : allowedValues) {
+                                detail.addRoleAllowed(value);
                             }
 
                         } else if (annotation.annotationType().equals(DenyAll.class)) {
@@ -204,6 +202,30 @@ public class RaceRestPointTest {
     }
 
     @Test
+    public void checkGetRaceAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races", "GET");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for GET:race");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for GET:race is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("getRaces")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (endPointDetail.isAllowAll() == null || !endPointDetail.isAllowAll()) {
+            System.out.println("End point is not allowed all");
+            throw new Exception();
+        }
+    }
+
+    @Test
     public void checkAddRaceAnnotations() throws Exception {
         EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races", "POST");
         if (endPointDetail == null) {
@@ -221,41 +243,9 @@ public class RaceRestPointTest {
             throw new Exception();
         }
 
-        if (endPointDetail.isAllowAll() == null || endPointDetail.isAllowAll() == false) {
-            System.out.println("End point is not allowed all");
-            throw new Exception();
-        }
-    }
-
-    @Test
-    public void checkGetOtherRaceAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races/other", "GET");
-        if (endPointDetail == null) {
-            System.out.println("Failed to find end point for POST:race");
-            throw new Exception();
-        }
-
-        if (!EndPointDetail.isValid(endPointDetail)) {
-            System.out.println("End point for POST:race is not valid");
-            throw new Exception();
-        }
-
-        if (!endPointDetail.getMethodName().equals("getRacesOther")) {
-            System.out.println("End point method name has changed");
-            throw new Exception();
-        }
-
-        if (endPointDetail.getRolesAllowed().isEmpty()) {
-            System.out.println("End point does not have roles allowed");
-            throw new Exception();
-        }
-
-        List<String> expectedRoles = new ArrayList<>(Arrays.asList(Role.ADMIN, Role.ADJUDICATOR));
-        if (! endPointDetail.getRolesAllowed().containsAll(expectedRoles)) {
+        if (!endPointDetail.getRolesAllowed().contains(Role.ADMIN)) {
             System.out.println("End point does not have expected roles");
             throw new Exception();
         }
     }
-
-
 }

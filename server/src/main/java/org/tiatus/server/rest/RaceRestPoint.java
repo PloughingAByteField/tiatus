@@ -27,7 +27,10 @@ public class RaceRestPoint {
 
     private RaceService service;
 
-
+    /**
+     * Get races
+     * @return response containing list of races
+     */
     @PermitAll
     @GET
     @Produces("application/json")
@@ -35,7 +38,13 @@ public class RaceRestPoint {
         return Response.ok().build();
     }
 
-    @PermitAll
+    /**
+     * Add race, restricted to Admin users
+     * @param uriInfo location details
+     * @param race to add
+     * @return response containg uri of newly created race or an error code
+     */
+    @RolesAllowed({Role.ADMIN})
     @POST
     @Consumes("application/json")
     @Produces("application/json")
@@ -53,14 +62,6 @@ public class RaceRestPoint {
             LOG.warn("Got general exception ", e);
             throw new InternalServerErrorException();
         }
-    }
-
-    @RolesAllowed({Role.ADJUDICATOR, Role.ADMIN})
-    @GET
-    @Path("other")
-    @Produces("application/json")
-    public Response getRacesOther() {
-        return Response.ok().build();
     }
 
     @Inject
