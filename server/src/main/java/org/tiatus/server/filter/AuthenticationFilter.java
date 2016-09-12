@@ -50,15 +50,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             return;
         }
 
-        ByteArrayInputStream resettableIS = toResettableStream(requestContext.getEntityStream());
-
-        Form form = providers.getMessageBodyReader(Form.class, Form.class, new Annotation[0], APPLICATION_FORM_URLENCODED_TYPE)
-                .readFrom(Form.class, Form.class, new Annotation[0], APPLICATION_FORM_URLENCODED_TYPE, null, resettableIS);
-
+        Form form = getForm(requestContext);
         MultivaluedMap<String, String> parameters = form.asMap();
-
-        resettableIS.reset();
-        requestContext.setEntityStream(resettableIS);
 
         // are we already logged in the session
         HttpSession session = servletRequest.getSession();
@@ -98,6 +91,17 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
         baos.flush();
         return new ByteArrayInputStream(baos.toByteArray());
+    }
+
+    private Form getForm(ContainerRequestContext requestContext) throws IOException {
+        ByteArrayInputStream resettableIS = toResettableStream(requestContext.getEntityStream());
+
+        Form form = providers.getMessageBodyReader(Form.class, Form.class, new Annotation[0], APPLICATION_FORM_URLENCODED_TYPE)
+                .readFrom(Form.class, Form.class, new Annotation[0], APPLICATION_FORM_URLENCODED_TYPE, null, resettableIS);
+
+        resettableIS.reset();
+        requestContext.setEntityStream(resettableIS);
+        return form;
     }
 
     @Inject

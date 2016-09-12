@@ -15,12 +15,16 @@ import java.util.Set;
 /**
  * Created by johnreynolds on 02/09/2016.
  */
-class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private UserDao dao = null;
 
+    /**
+     * Constructor for service
+     * @param dao is injected by CDI
+     */
     @Inject
     public UserServiceImpl(UserDao dao) {
         this.dao = dao;
