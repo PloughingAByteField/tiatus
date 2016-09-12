@@ -274,6 +274,54 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<configuration>
+					<detectLinks />
+					<includeDependencySources>true</includeDependencySources>
+					<docencoding>UTF-8</docencoding>
+					<doctitle>${project.name} API</doctitle>
+					<windowtitle>${project.name} API</windowtitle>
+					<splitindex>true</splitindex>
+					<outputDirectory>${project.build.directory}/javadoc</outputDirectory>
+					<failOnError>false</failOnError>
+					<links>
+						<link>http://docs.oracle.com/javaee/7/api/</link>
+						<link>http://docs.oracle.com/javase/8/docs/api/</link>
+					</links>
+				</configuration>
+				<executions>
+					<execution>
+						<id>javadoc-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- create source jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.0.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<!-- produce source artifact for project main sources -->
+							<goal>jar-no-fork</goal>
+							<!-- produce test source artifact for project test sources -->
+							<goal>test-jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 

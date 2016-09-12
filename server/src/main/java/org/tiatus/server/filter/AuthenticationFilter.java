@@ -63,6 +63,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         // are we already logged in the session
         HttpSession session = servletRequest.getSession();
         if (session != null){
+            String scheme = requestContext.getUriInfo().getRequestUri().getScheme();
             UserPrincipal user;
             if (session.getAttribute("principal") == null) {
                 LOG.debug("Creating new user principal");
@@ -72,7 +73,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 user = (UserPrincipal)session.getAttribute("principal");
             }
             if (user != null) {
-                requestContext.setSecurityContext(new TiatusSecurityContext(user));
+                requestContext.setSecurityContext(new TiatusSecurityContext(user, scheme));
             }
         }
     }

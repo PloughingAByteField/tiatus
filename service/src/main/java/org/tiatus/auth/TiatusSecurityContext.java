@@ -7,13 +7,22 @@ import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 
 /**
- * Created by johnreynolds on 26/08/2016.
+ * SecurityContext to hold UserPrincipal used for checking a users roles
  */
 public class TiatusSecurityContext implements SecurityContext {
     private UserPrincipal user;
+    private boolean secure = false;
 
-    public TiatusSecurityContext(UserPrincipal user) {
+    /**
+     * Construct TiatusSecurityContext for a user.
+     * @param user UserPrincipal containing the users roles.
+     * @param scheme The protocol used. HTTPS will mark connection as secure
+     */
+    public TiatusSecurityContext(UserPrincipal user, String scheme) {
         this.user = user;
+        if ("https".equalsIgnoreCase(scheme)) {
+            this.secure = true;
+        }
     }
 
     @Override
@@ -28,7 +37,7 @@ public class TiatusSecurityContext implements SecurityContext {
 
     @Override
     public boolean isSecure() {
-        return false;
+        return secure;
     }
 
     @Override
@@ -36,6 +45,12 @@ public class TiatusSecurityContext implements SecurityContext {
         return null;
     }
 
+    /**
+     * Check if supplied UserPrincipal contains the supplied role
+     * @param user The UserPrincipal to be checked.
+     * @param roleString The role that is being checked for.
+     * @return boolean Success
+     */
     public static boolean isUserInRole(UserPrincipal user, String roleString) {
         if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
             Role role = new Role();
