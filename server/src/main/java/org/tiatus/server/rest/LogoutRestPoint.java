@@ -12,7 +12,6 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
@@ -28,12 +27,11 @@ public class LogoutRestPoint {
      * Logout and redirect a user back to login page
      * @param uriInfo location infor
      * @param httpServletRequest servlet request
-     * @param securityContext security context
      * @return user to login page
      */
     @PermitAll
     @GET
-    public Response login(@Context UriInfo uriInfo, @Context HttpServletRequest httpServletRequest, @Context SecurityContext securityContext) {
+    public Response logout(@Context UriInfo uriInfo, @Context HttpServletRequest httpServletRequest) {
         try {
             String p = httpServletRequest.getContextPath();
             URI base = uriInfo.getBaseUri();

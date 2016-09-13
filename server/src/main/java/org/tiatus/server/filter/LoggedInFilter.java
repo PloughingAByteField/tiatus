@@ -35,8 +35,8 @@ public class LoggedInFilter implements Filter {
     private List<String> skipUrls = new ArrayList<>();
 
     public static final String LOGIN_URL = "/login.html";
-    private static final String SETUP_URL = "/setup/setup.html";
-    private static final String SETUP_REST_URL = "/rest/setup/user";
+    public static final String SETUP_URL = "/setup/setup.html";
+    public static final String SETUP_REST_URL = "/rest/setup/user";
 
     private UserService userService = null;
 
