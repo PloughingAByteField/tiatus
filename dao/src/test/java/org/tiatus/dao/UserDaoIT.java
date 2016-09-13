@@ -1,5 +1,7 @@
 package org.tiatus.dao;
 
+import mockit.Mock;
+import mockit.MockUp;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,6 +14,7 @@ import org.tiatus.entity.UserRole;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.transaction.NotSupportedException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -102,6 +105,21 @@ public class UserDaoIT {
 
         User fetchedUser = dao.getUser("bad", "pass");
         Assert.assertNull(fetchedUser);
+    }
+
+    @Test (expected = DaoException.class)
+    public void testDaoExceptionWithException() throws Exception {
+        User user = new User();
+        user.setId(new Long(1));
+        EntityManager em = new MockUp<EntityManager>(){
+            @Mock
+            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
+                throw new NotSupportedException();
+            }
+        }.getMockInstance();
+        dao.em = em;
+
+        dao.addUser(user);
     }
 
     private User createUser(Role role, String username, String password) {

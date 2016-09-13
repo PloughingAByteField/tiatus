@@ -1,5 +1,7 @@
 package org.tiatus.dao;
 
+import mockit.Mock;
+import mockit.MockUp;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.transaction.NotSupportedException;
 import java.util.List;
 
 /**
@@ -71,7 +74,7 @@ public class RaceIT {
 
 
     @Test (expected = DaoException.class)
-    public void addExitingRace() throws Exception {
+    public void addExistingRace() throws Exception {
         List<org.tiatus.entity.Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         org.tiatus.entity.Race newRace = new org.tiatus.entity.Race();
@@ -79,6 +82,24 @@ public class RaceIT {
         newRace.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(newRace);
+        dao.addRace(newRace);
+    }
+
+    @Test (expected = DaoException.class)
+    public void testDaoExceptionWithException() throws Exception {
+        List<org.tiatus.entity.Race> races = dao.getRaces();
+        Assert.assertTrue(races.isEmpty());
+        org.tiatus.entity.Race newRace = new org.tiatus.entity.Race();
+        newRace.setId(new Long(1));
+        newRace.setName("Race 1");
+        EntityManager em = new MockUp<EntityManager>(){
+            @Mock
+            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
+                throw new NotSupportedException();
+            }
+        }.getMockInstance();
+        dao.em = em;
+
         dao.addRace(newRace);
     }
 }
