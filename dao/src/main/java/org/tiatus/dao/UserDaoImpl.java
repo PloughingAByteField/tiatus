@@ -21,10 +21,10 @@ public class UserDaoImpl implements UserDao {
     private static final Logger LOG = LoggerFactory.getLogger(RaceDaoImpl.class);
 
     @PersistenceContext(unitName = "primary")
-    private EntityManager em;
+    protected EntityManager em;
 
     @Resource
-    private UserTransaction tx;
+    protected UserTransaction tx;
 
     @Override
     public boolean hasAdminUser() {
