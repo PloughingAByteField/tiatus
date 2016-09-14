@@ -1,7 +1,7 @@
 (function() {
     angular.module('setupApp').controller('userController', UserController);
 
-    function UserController($scope, $log, User, $window) {
+    function UserController($scope, $log, User, Redirect) {
         $log.debug("userController");
 
         var vm = this;
@@ -17,7 +17,7 @@
                 vm.addUserForm.$setPristine();
                 vm.addUserForm.$setUntouched();
 
-                $window.location.href = "/";
+                Redirect.redirect("/");
 
             }, function(errResponse) {
                 $log.warn("Failed to add user", errResponse);

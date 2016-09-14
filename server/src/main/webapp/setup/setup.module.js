@@ -6,7 +6,8 @@
         'ngSanitize',
         'ngMessages',
         'ngCookies',
-        'UserService'
+        'UserService',
+        'RedirectService'
     ]);
 
     angular.module('setupApp').config(function($translateProvider) {
