@@ -62,7 +62,7 @@ public class TiatusSecurityContext implements SecurityContext {
     }
 
     private static boolean isUserInRole(UserPrincipal user, Role role) {
-        if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
+        if (user != null && user.getUser() != null && user.getUser().getRoles() != null && !user.getUser().getRoles().isEmpty()) {
            Optional<UserRole> rolePresent = user.getUser().getRoles().stream().filter(r -> r.getRole().getRoleName().equals(role.getRoleName())).findFirst();
            return rolePresent.isPresent();
         }
