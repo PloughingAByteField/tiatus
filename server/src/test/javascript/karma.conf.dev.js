@@ -21,13 +21,15 @@ module.exports = function(config) {
         'bower_components/angular-cookies/angular-cookies.js',
         'bower_components/angular-sanitize/angular-sanitize.js',
         'bower_components/angular-translate/angular-translate.js',
+        'bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js',
         'bower_components/angular-translate-loader-partial/angular-translate-loader-partial.js',
         'bower_components/angular-translate-storage-local/angular-translate-storage-local.js',
         'bower_components/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
         'bower_components/angular-mocks/angular-mocks.js',
-        'bower_components/ng-idle/angular-idle.js',
-        'bower_components/ng-table/dist/ng-table.js',
+        'src/main/webapp/setup/setup.module.js',
+        'src/main/webapp/setup/**/*.js',
         'src/main/webapp/management/js/race/*.js',
+        'src/test/javascript/setup/*.spec.js',
         'src/test/javascript/management/race/*.js'
     ],
 
@@ -66,7 +68,8 @@ module.exports = function(config) {
     },
 
     preprocessors: {
-        'src/main/webapp/management/js/race/*.js': ['coverage']
+        'src/main/webapp/management/js/race/*.js': ['coverage'],
+        'src/main/webapp/setup/**/*.js': ['coverage']
     },
 
     coverageReporter: {
