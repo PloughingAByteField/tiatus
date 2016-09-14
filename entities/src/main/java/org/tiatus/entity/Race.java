@@ -112,6 +112,7 @@ public class Race implements Serializable {
         if (this == o) {
             return true;
         }
+
         if (!(o instanceof Race)) {
             return false;
         }

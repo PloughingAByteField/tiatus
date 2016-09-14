@@ -71,6 +71,7 @@ public class UserRole implements Serializable {
 
         return new EqualsBuilder()
                 .append(role, userRole.role)
+                .append(user, userRole.user)
                 .isEquals();
     }
 
@@ -78,6 +79,7 @@ public class UserRole implements Serializable {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(role)
+                .append(user)
                 .toHashCode();
     }
 }

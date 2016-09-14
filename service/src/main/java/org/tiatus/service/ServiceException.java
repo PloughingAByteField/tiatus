@@ -5,7 +5,7 @@ import org.tiatus.api.exception.EnclosingException;
 /**
  * Wrap an exception or message for passing up the boundaries
  */
-public class ServiceException extends EnclosingException {
+    public class ServiceException extends EnclosingException {
 
     /**
      * Constructor to wrap the exception

@@ -5,6 +5,7 @@ import org.tiatus.entity.UserRole;
 
 import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
+import java.util.Optional;
 
 /**
  * SecurityContext to hold UserPrincipal used for checking a users roles
@@ -62,9 +63,8 @@ public class TiatusSecurityContext implements SecurityContext {
 
     private static boolean isUserInRole(UserPrincipal user, Role role) {
         if (user != null && user.getUser() != null && user.getUser().getRoles() != null) {
-            UserRole userRole = new UserRole();
-            userRole.setRole(role);
-            return user.getUser().getRoles().contains(userRole);
+           Optional<UserRole> rolePresent = user.getUser().getRoles().stream().filter(r -> r.getRole().getRoleName().equals(role.getRoleName())).findFirst();
+           return rolePresent.isPresent();
         }
         return false;
     }
