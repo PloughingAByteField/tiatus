@@ -36,6 +36,9 @@ public class LoginRestPoint {
     public Response login(@Context UriInfo uriInfo, @Context HttpServletRequest httpServletRequest, @Context SecurityContext securityContext) {
         try {
             String p = httpServletRequest.getContextPath();
+            if (p.isEmpty()) {
+                p = "/";
+            }
             URI base = uriInfo.getBaseUri();
             HttpSession session = httpServletRequest.getSession();
             if (securityContext.getUserPrincipal() == null) {
