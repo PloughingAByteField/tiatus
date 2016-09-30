@@ -41,5 +41,11 @@
     });
 
     angular.module('managementApp').controller('appController', function($scope, $rootScope) {
+    // create service for these
+        $scope.pageTitle = "hello there";
+        $scope.titleImage = "/public/images/stopwatch.svg";
+        $scope.favIcon = "/public/images/favicon.ico";
+//        $scope.favIcon = "/tiatus/config/images/favicon.ico";
+        $scope.eventTitle = "Tiatus";
     });
 })();

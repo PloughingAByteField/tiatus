@@ -1,0 +1,29 @@
+TiatusContainer {
+    position: relative;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -4em;
+}
+
+
+#Event #EventHeader {
+    padding: 15px 20px 20px 15%;
+    color: white;
+    background-color: black;
+    vertical-align: middle;
+}
+
+#Event #EventLogo {
+    top: 10px;
+    text-align: center;
+    position: absolute;
+    left: 2%;
+}
+
+#Content {
+    padding: 10px;
+    padding-bottom: 160px;
+    margin: 10px 50px 50px 260px;
+}
+
