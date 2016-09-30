@@ -1,18 +1,44 @@
 <!doctype html>
 <html>
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <head>
+        <link rel="shortcut icon" href="/public/images/favicon.ico" type="image/x-icon" />
+        <script src="/public/js/angular/angular.min.js"></script>
+        <script src="/public/js/angular-route/angular-route.min.js"></script>
+        <script src="/public/js/angular-resource/angular-resource.min.js"></script>
+        <script src="/public/js/angular-sanitize/angular-sanitize.min.js"></script>
+        <script src="/public/js/angular-cookies/angular-cookies.min.js"></script>
+        <script src="/public/js/angular-messages/angular-messages.min.js"></script>
+        <script src="/public/js/angular-translate/angular-translate.min.js"></script>
+        <script src="/public/js/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+        <script src="/public/js/angular-translate-loader-partial/angular-translate-loader-partial.min.js"></script>
+        <script src="/public/js/angular-translate-storage-local/angular-translate-storage-local.min.js"></script>
+        <script src="/public/js/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
+        <link rel="stylesheet" href="/public/js/ng-table/dist/ng-table.min.css" />
+        <script src="/public/js/ng-table/dist/ng-table.min.js"></script>
+        <style type="text/css" media="all">@import "/public/js/ng-table/dist/ng-table.min.css";</style>
+        <style type="text/css" media="all">@import "/public/js/bootstrap/dist/css/bootstrap.min.css";</style>
+        <style type="text/css" media="all">@import "/public/js/bootstrap/dist/css/bootstrap-theme.min.css";</style>
+        <script src="/public/js/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="/common/js/race.service.js"></script>
+        <script src="race/race.controller.js"></script>
+        <script src="management.module.js"></script>
+        <script src="management.config.js"></script>
+        <style type="text/css" media="all">@import "/tiatus/config/css/custom.css";</style>
     <title>Management</title>
     <link rel="shortcut icon" href="/public/images/favicon.ico" type="image/x-icon" />
 </head>
-<body data-ng-app>
+<body data-ng-app="managementApp" data-ng-controller="appController">
 <h1>test</h1>
+<div data-ng-view></div>
 <div>
     <label>Name:</label>
     <input type="text" data-ng-model="yourName" placeholder="Enter a name here">
     <hr>
     <h1>Hello {{yourName}}!</h1>
     <a href="/rest/logout">logout</a>
+    <a href="#race" title="{{ 'MENU_RACES_TITLE' | translate}}">{{ 'MENU_RACES' | translate}}</a>
+    <a href="#/" title="{{ 'BACK_TITLE' | translate}}">{{ 'BACK' | translate}}</a>
 </div>
 </body>
 </html>
