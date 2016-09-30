@@ -37,6 +37,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(User user) throws ServiceException {
+        // do we have an existing user
+        if (hasAdminUser()) {
+            LOG.warn("Already have an admin user ");
+            throw new ServiceException("Existing user");
+        }
+
         LOG.debug("Adding admin user " + user.getUserName());
         try {
             UserRole userRole = new UserRole();

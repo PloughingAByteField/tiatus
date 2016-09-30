@@ -51,6 +51,11 @@ public class UserServiceImplTest {
     public void testAddUser() throws Exception {
         new MockUp<UserDaoImpl>() {
             @Mock
+            public boolean hasAdminUser() {
+                return false;
+            }
+
+            @Mock
             public void addUser(User user) throws DaoException {
             }
 
@@ -67,11 +72,37 @@ public class UserServiceImplTest {
     public void testAddUserException() throws Exception {
         new MockUp<UserDaoImpl>() {
             @Mock
+            public boolean hasAdminUser() {
+                return false;
+            }
+
+            @Mock
             public void addUser(User user) throws DaoException {
                 throw new DaoException("message");
             }
 
             @Mock
+            public Role getRoleForRole(String role) {
+                return new Role();
+            }
+        };
+        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
+        service.addUser(new User());
+    }
+
+    @Test (expected = ServiceException.class)
+    public void testAddUserExistingUser() throws Exception {
+        new MockUp<UserDaoImpl>() {
+            @Mock
+            public boolean hasAdminUser() {
+                return true;
+            }
+
+            @Mock (invocations = 0)
+            public void addUser(User user) throws DaoException {
+            }
+
+            @Mock (invocations = 0)
             public Role getRoleForRole(String role) {
                 return new Role();
             }
