@@ -3,15 +3,20 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.User;
+import org.tiatus.role.Role;
 import org.tiatus.service.ServiceException;
 import org.tiatus.service.UserService;
 
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -50,6 +55,23 @@ public class SetupRestPoint {
             LOG.warn("Got general exception ", e);
             throw new InternalServerErrorException();
         }
+    }
+
+    @RolesAllowed({Role.ADMIN})
+    @POST
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response addConfig() {
+        File file = new File("/www/tiatus/config/css/custom.css");
+        try {
+            FileOutputStream fop = new FileOutputStream(file);
+            fop.write("hello".getBytes());
+            fop.close();
+        } catch (IOException e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
+        return Response.ok().build();
     }
 
     @Inject
