@@ -40,25 +40,21 @@
             <div id="EventHeader">{{ eventTitle }}</div>
 
             <div id="EventLogo">
-                <img border="0" src="{{ titleImage }}" width="80" />
+                <img border="0" src="{{ titleImage }}" width="100" />
             </div>
         </div>
 
         <div id="Content">
             <div data-ng-view></div>
             <div class="Spacer"><br /> </div>
-
-            <a href="/rest/logout">logout</a>
-            <a href="#race" title="{{ 'MENU_RACES_TITLE' | translate}}">{{ 'MENU_RACES' | translate}}</a>
-            <a href="#/" title="{{ 'BACK_TITLE' | translate}}">{{ 'BACK' | translate}}</a>
         </div>
 
         <!-- make these services -->
-        <div id="LeftMenu" ng-include="'menu.inc'">
+        <div id="LeftMenu">
+            <li data-ng-repeat="link in links"><a href="#{{ link.href }}" title="{{ link.title }}">{{ link.title }}</a></li>
         </div>
 
-        <div id="Footer" ng-include="'footer.inc'">
-        </div>
+        <div id="Footer" />
     </div>
 </body>
 </html>

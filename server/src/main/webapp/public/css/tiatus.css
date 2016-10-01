@@ -12,6 +12,8 @@ TiatusContainer {
     color: white;
     background-color: black;
     vertical-align: middle;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 30px;
 }
 
 #Event #EventLogo {
@@ -27,3 +29,13 @@ TiatusContainer {
     margin: 10px 50px 50px 260px;
 }
 
+#LeftMenu {
+    position: absolute;
+    top: 140px;
+    left: 05px;
+}
+
+#LeftMenu li {
+    padding: 5px;
+    list-style: none;
+}
