@@ -7,6 +7,9 @@ import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RaceDaoImpl;
 import org.tiatus.entity.Race;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by johnreynolds on 14/09/2016.
  */
@@ -48,5 +51,23 @@ public class RaceServiceImplTest {
         RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
         Race race = new Race();
         service.deleteRace(race);
+    }
+
+    @Test
+    public void testGetRaces() throws Exception {
+        new MockUp<RaceDaoImpl>() {
+            @Mock
+            public List<Race> getRaces() {
+                List<Race> races = new ArrayList<>();
+                Race race = new Race();
+                race.setId(1L);
+                race.setRaceOrder(1);
+                race.setName("Race 1");
+                races.add(race);
+                return races;
+            }
+        };
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        service.getRaces();
     }
 }
