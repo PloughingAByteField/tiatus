@@ -100,7 +100,7 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean isValidAccess(String root, UserPrincipal p) {
-        if ("rest".equals(root)) {
+        if ("rest".equals(root) || "common".equals(root)) {
             return true;
         }
 
@@ -109,10 +109,6 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean checkAccess(String userRole, String root) {
-        if ("common".equals(root)) {
-            return true;
-        }
-
         if (userRole.equals(Role.ADMIN) && "management".equals(root)) {
             return true;
         }

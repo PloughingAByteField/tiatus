@@ -66,6 +66,33 @@ public class RaceRestPoint {
         }
     }
 
+    /**
+     * Remove race, restricted to Admin users
+     * @param id of race to remove
+     * @return response with 204
+     */
+    @RolesAllowed({Role.ADMIN})
+    @DELETE
+    @Path("{id}")
+    @Produces("application/json")
+    public Response removeRace(@PathParam("id") String id) {
+        LOG.debug("Removing race with id " + id);
+        try {
+            Race race = new Race();
+            race.setId(Long.parseLong(id));
+            service.deleteRace(race);
+            return Response.noContent().build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception: ", e.getSuppliedException());
+            throw new InternalServerErrorException();
+
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
+    }
+
     @Inject
     // sonar want constructor injection which jaxrs does not support
     public void setService(RaceService service) {

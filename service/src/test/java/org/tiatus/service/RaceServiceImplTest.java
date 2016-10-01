@@ -48,6 +48,23 @@ public class RaceServiceImplTest {
 
     @Test
     public void testDeleteRace() throws Exception {
+        new MockUp<RaceDaoImpl>() {
+            @Mock
+            public void removeRace(Race race) throws DaoException {}
+        };
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        Race race = new Race();
+        service.deleteRace(race);
+    }
+
+    @Test (expected = ServiceException.class)
+    public void testDeleteRaceException() throws Exception {
+        new MockUp<RaceDaoImpl>() {
+            @Mock
+            public void removeRace(Race race) throws DaoException {
+                throw new DaoException("message");
+            }
+        };
         RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
         Race race = new Race();
         service.deleteRace(race);

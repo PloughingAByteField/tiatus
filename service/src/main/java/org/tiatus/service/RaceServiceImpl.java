@@ -43,7 +43,13 @@ public class RaceServiceImpl implements RaceService {
 
     @Override
     public void deleteRace(Race race) throws ServiceException {
-        LOG.debug("Delete race " + race);
+        LOG.debug("Delete race " + race.getId());
+        try {
+            dao.removeRace(race);
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
     }
 
     @Override

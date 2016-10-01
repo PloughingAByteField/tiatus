@@ -166,6 +166,53 @@ public class RaceDaoTest {
 
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
+            public Race find(Class<Race> entityClass, Object primaryKey) {
+                Race race = new Race();
+                race.setId(1L);
+                return race;
+            }
+
+            @Mock
+            public boolean contains(Object entity) {
+                return false;
+            }
+
+            @Mock
+            public <T> T merge(T entity) {
+                return entity;
+            }
+        }.getMockInstance();
+
+        RaceDaoImpl dao = new RaceDaoImpl();
+        dao.em = em;
+        dao.tx = tx;
+        Race race = new Race();
+        race.setId(1L);
+        dao.removeRace(race);
+    }
+
+    @Test
+    public void testRemoveRaceNoRace() throws Exception {
+        UserTransaction tx = new MockUp<UserTransaction>() {
+            @Mock
+            void begin() throws NotSupportedException, SystemException {
+
+            }
+
+            @Mock
+            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
+
+            }
+
+        }.getMockInstance();
+
+        EntityManager em = new MockUp<EntityManager>() {
+            @Mock
+            public Race find(Class<Race> entityClass, Object primaryKey) {
+                return null;
+            }
+
+            @Mock
             public boolean contains(Object entity) {
                 return false;
             }
@@ -200,6 +247,13 @@ public class RaceDaoTest {
         }.getMockInstance();
 
         EntityManager em = new MockUp<EntityManager>() {
+            @Mock
+            public Race find(Class<Race> entityClass, Object primaryKey) {
+                Race race = new Race();
+                race.setId(1L);
+                return race;
+            }
+
             @Mock
             public boolean contains(Object entity) {
                 return false;

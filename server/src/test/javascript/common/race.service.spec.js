@@ -1,4 +1,4 @@
-describe("src.test.javascript.management.race.service.spec.js", function() {
+describe("src.test.javascript.common.js.race.service.spec.js", function() {
 
     beforeEach(module('managementApp'));
 

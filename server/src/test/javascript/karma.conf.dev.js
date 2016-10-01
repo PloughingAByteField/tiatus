@@ -72,7 +72,8 @@ module.exports = function(config) {
     },
 
     preprocessors: {
-        'src/main/webapp/management/js/race/*.js': ['coverage'],
+        'src/main/webapp/common/**/*.js': ['coverage'],
+        'src/main/webapp/management/**/*.js': ['coverage'],
         'src/main/webapp/setup/**/*.js': ['coverage']
     },
 

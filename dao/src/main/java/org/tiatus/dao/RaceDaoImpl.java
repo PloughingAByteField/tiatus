@@ -62,9 +62,17 @@ public class RaceDaoImpl implements RaceDao {
     @Override
     public void removeRace(Race race) throws DaoException {
         try {
-            tx.begin();
-            em.remove(em.contains(race) ? race : em.merge(race));
-            tx.commit();
+            Race existing = null;
+            if (race.getId() != null) {
+                existing = em.find(Race.class, race.getId());
+            }
+            if (existing != null) {
+                tx.begin();
+                em.remove(em.contains(race) ? race : em.merge(race));
+                tx.commit();
+            } else {
+                LOG.warn("No such race of id " + race.getId());
+            }
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to delete race", e);
             throw new DaoException(e.getMessage());

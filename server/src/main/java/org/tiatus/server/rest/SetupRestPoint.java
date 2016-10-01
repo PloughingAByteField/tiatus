@@ -57,6 +57,10 @@ public class SetupRestPoint {
         }
     }
 
+    /**
+     * Add customization
+     * @return response contain success or failure code
+     */
     @RolesAllowed({Role.ADMIN})
     @POST
     @Consumes("application/json")

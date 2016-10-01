@@ -131,7 +131,6 @@ public class RaceRestPointTest {
         new MockUp<RaceServiceImpl>() {
             @Mock
             public Race addRace(Race race) throws ServiceException {
-                System.out.println("in mock");
                 return race;
             }
         };
@@ -186,6 +185,63 @@ public class RaceRestPointTest {
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void deleteRace() throws Exception {
+        new MockUp<RaceServiceImpl>() {
+            @Mock
+            public void deleteRace(Race race) throws ServiceException {
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.delete("races/1");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    }
+
+    @Test
+    public void deleteRaceServiceException() throws Exception {
+        new MockUp<RaceServiceImpl>() {
+            @Mock
+            public void deleteRace(Race race) throws ServiceException {
+                throw new ServiceException(new Exception("exception"));
+            }
+        };
+
+
+        MockHttpRequest request = MockHttpRequest.delete("races/1");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void deleteRaceGeneralException() throws Exception {
+        new MockUp<RaceServiceImpl>() {
+            @Mock
+            public void deleteRace(Race race) throws Exception {
+                throw new Exception("exception");
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.delete("races/1");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
 
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
@@ -252,6 +308,30 @@ public class RaceRestPointTest {
         }
 
         if (!endPointDetail.getMethodName().equals("addRace")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getRolesAllowed().contains(Role.ADMIN)) {
+            System.out.println("End point does not have expected roles");
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void checkDeleteRaceAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races/{id}", "DELETE");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for DELETE:race");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for DELETE:race is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("removeRace")) {
             System.out.println("End point method name has changed");
             throw new Exception();
         }

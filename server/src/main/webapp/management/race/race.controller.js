@@ -1,5 +1,5 @@
 (function() {
-    'use strict';
+    'use strict'; // NOSONAR
 
     angular.module('RaceController', ['ngTable', 'ui.bootstrap']).controller('raceController', RaceController);
 
