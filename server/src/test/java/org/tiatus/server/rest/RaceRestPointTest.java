@@ -195,6 +195,19 @@ public class RaceRestPointTest {
 
     @Test
     public void getRaces() throws Exception {
+        new MockUp<RaceServiceImpl>() {
+            @Mock
+            public List<Race> getRaces() {
+                List<Race> races = new ArrayList<>();
+                Race race = new Race();
+                race.setId(1L);
+                race.setRaceOrder(1);
+                race.setName("Race 1");
+                races.add(race);
+                return races;
+            }
+        };
+
         MockHttpRequest request = MockHttpRequest.get("races");
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);

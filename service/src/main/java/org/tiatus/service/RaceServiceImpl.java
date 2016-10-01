@@ -8,6 +8,7 @@ import org.tiatus.entity.Race;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Created by johnreynolds on 25/06/2016.
@@ -43,5 +44,10 @@ public class RaceServiceImpl implements RaceService {
     @Override
     public void deleteRace(Race race) throws ServiceException {
         LOG.debug("Delete race " + race);
+    }
+
+    @Override
+    public List<Race> getRaces() {
+        return dao.getRaces();
     }
 }

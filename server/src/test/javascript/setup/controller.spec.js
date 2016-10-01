@@ -1,4 +1,4 @@
-describe("src.test.javascript.setup.controller.js", function() {
+describe("src.test.javascript.setup.controller.spec.js", function() {
 
     beforeEach(module('setupApp', function ($provide, $translateProvider) {
         $provide.factory('customLoader', function ($q) {

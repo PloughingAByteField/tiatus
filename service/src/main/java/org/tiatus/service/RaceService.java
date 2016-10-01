@@ -2,6 +2,8 @@ package org.tiatus.service;
 
 import org.tiatus.entity.Race;
 
+import java.util.List;
+
 /**
  * Created by johnreynolds on 25/06/2016.
  */
@@ -20,4 +22,11 @@ public interface RaceService {
      * @throws ServiceException on error
      */
     void deleteRace(Race race) throws ServiceException;
+
+    /**
+     * Get races
+     * @return list of races
+     * @throws ServiceException on error
+     */
+    List<Race> getRaces();
 }

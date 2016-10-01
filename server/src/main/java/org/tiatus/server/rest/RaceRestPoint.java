@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.List;
 
 /**
  * Created by johnreynolds on 19/06/2016.
@@ -35,7 +36,8 @@ public class RaceRestPoint {
     @GET
     @Produces("application/json")
     public Response getRaces() {
-        return Response.ok().build();
+        List<Race> races = service.getRaces();
+        return Response.ok(races).build();
     }
 
     /**
