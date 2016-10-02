@@ -1,4 +1,13 @@
 describe('src.test.e2e.setup_spec.js', function() {
+ it('should get to setup', function() {
+    browser.get('/');
+    return browser.driver.wait(function() {
+        return browser.driver.getCurrentUrl().then(function(url) {
+            return /setup/.test(url);
+        });
+    }, 5000);
+
+  });
   it('should check both inputs are required and button disabled', function() {
     browser.get('setup/setup.html');
     var nameError = element(by.id('nameError'));

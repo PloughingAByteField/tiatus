@@ -2,10 +2,10 @@
     'use strict'; // NOSONAR
 
     angular.module('managementApp').config(function($translateProvider) {
-        $translateProvider.useStaticFilesLoader({
-            prefix: 'lang/',
-            suffix: '.json'
+        $translateProvider.useLoader('$translatePartialLoader', {
+            urlTemplate: 'lang/{part}/{lang}.json'
         });
+
         $translateProvider.useLocalStorage();
         $translateProvider.preferredLanguage('en');
         $translateProvider.fallbackLanguage('en');
@@ -16,37 +16,37 @@
     angular.module('managementApp').config(function($routeProvider) {
     		$routeProvider
     			.when('/', {
-    				templateUrl : 'mgmt.html'
-//                    resolve: {
-//                        specificTranslations: function($translatePartialLoader, $translate) {
-//                            $translatePartialLoader.addPart('common');
-//                            $translatePartialLoader.addPart('management');
-//                            return $translate.refresh();
-//                        }
-//                    }
+    				templateUrl : 'home/home.html',
+    				title: 'HOME_TITLE',
+                    resolve: {
+                        specificTranslations: function($translatePartialLoader, $translate) {
+                            $translatePartialLoader.addPart('common');
+                            $translatePartialLoader.addPart('home');
+                            return $translate.refresh();
+                        }
+                    }
     			})
 
     			.when('/race', {
-    				templateUrl : 'race/race.html'
-//                    resolve: {
-//                        specificTranslations: function($translatePartialLoader, $translate) {
-//                            $translatePartialLoader.addPart('common');
-//                            $translatePartialLoader.addPart('race');
-//                            return $translate.refresh();
-//                        }
-//                    }
+    				templateUrl : 'race/race.html',
+    				title: 'RACES_TITLE',
+                    resolve: {
+                        specificTranslations: function($translatePartialLoader, $translate) {
+                            $translatePartialLoader.addPart('common');
+                            $translatePartialLoader.addPart('race');
+                            return $translate.refresh();
+                        }
+                    }
     			})
 
             .otherwise({redirectTo: '/'});
     });
 
-    angular.module('managementApp').controller('appController', function($scope, $rootScope) {
-    // create service for these
-        $scope.pageTitle = "hello there";
-        $scope.titleImage = "/public/images/stopwatch.svg";
-        $scope.favIcon = "/public/images/favicon.ico";
-//        $scope.favIcon = "/tiatus/config/images/favicon.ico";
-        $scope.eventTitle = "Tiatus";
-        $scope.links = [{title: 'home', href: '#/'}, {title: 'race', href: '#/race'}, {title: 'logout', href: '/rest/logout'}]
-    });
+    angular.module('managementApp').run(['$rootScope', '$route', '$translate', function($rootScope, $route, $translate) {
+        $rootScope.$on('$routeChangeSuccess', function() {
+            $translate($route.current.title).then(function (title) {
+                document.title = title ;
+            });
+        });
+    }]);
 })();

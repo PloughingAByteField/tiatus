@@ -6,16 +6,16 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
     }));
 
     beforeEach(module('managementApp', function ($provide, $translateProvider) {
+
+        $provide.factory('customLoader', function ($q) {
+            return function () {
+                var deferred = $q.defer();
+                deferred.resolve({});
+                return deferred.promise;
+            };
+        });
     
-      $provide.factory('customLoader', function ($q) {
-        return function () {
-          var deferred = $q.defer();
-          deferred.resolve({});
-          return deferred.promise;
-        };
-      });
-    
-      $translateProvider.useLoader('customLoader');
+        $translateProvider.useLoader('customLoader');
     }));
 
     describe('raceController', function(){
@@ -23,21 +23,23 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
         describe('getRaces', function(){
             var scope, deferred, Race;
 
-            beforeEach(inject(function($rootScope, $controller, $q, _Race_) {
-                    Race = _Race_;
-                    deferredSave = $q.defer();
-                    deferredQuery = $q.defer();
-                    deferredRemove = $q.defer();
-                    spyOn(Race, 'query').and.returnValue({$promise: deferredQuery.promise});
-                    spyOn(Race, 'save').and.returnValue({ $promise: deferredSave.promise });
-                    spyOn(Race, 'remove').and.returnValue({ $promise: deferredRemove.promise });
-                    scope = $rootScope.$new();
-                    ctrl = $controller('raceController', {$scope: scope, Race: Race});
-                    ctrl.races = [];
+            beforeEach(inject(function($rootScope, $controller, $q, _Race_, $httpBackend) {
+                Race = _Race_;
+                deferredSave = $q.defer();
+                deferredQuery = $q.defer();
+                deferredRemove = $q.defer();
+                spyOn(Race, 'query').and.returnValue({$promise: deferredQuery.promise});
+                spyOn(Race, 'save').and.returnValue({ $promise: deferredSave.promise });
+                spyOn(Race, 'remove').and.returnValue({ $promise: deferredRemove.promise });
+                scope = $rootScope.$new();
+                ctrl = $controller('raceController', {$scope: scope, Race: Race});
+                ctrl.races = [];
+                $httpBackend.whenGET('home/home.html').respond();
             }));
 
 
             it('should fetch 2 races from mocked backend', function() {
+
                 expect(ctrl.races.length).toBe(0);
                 deferredQuery.resolve([{id: 1, name: 'Race 1'}, {id: 2, name: 'Race 2'}]);
                 scope.$apply();
@@ -68,7 +70,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
         describe('addRace', function(){
             var scope, deferred, Race;
 
-            beforeEach(inject(function($rootScope, $controller, $q, _Race_) {
+            beforeEach(inject(function($rootScope, $controller, $q, _Race_, $httpBackend) {
                     Race = _Race_;
                     deferredSave = $q.defer();
                     deferredQuery = $q.defer();
@@ -79,6 +81,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
                     scope = $rootScope.$new();
                     ctrl = $controller('raceController', {$scope: scope, Race: Race});
                     ctrl.races = [];
+                    $httpBackend.whenGET('home/home.html').respond();
             }));
 
             it('should add new race to races', function() {
@@ -143,7 +146,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
        describe('removeRace', function(){
             var scope, deferred, Race;
 
-            beforeEach(inject(function($rootScope, $controller, $q, _Race_) {
+            beforeEach(inject(function($rootScope, $controller, $q, _Race_, $httpBackend) {
                     Race = _Race_;
                     deferredSave = $q.defer();
                     deferredQuery = $q.defer();
@@ -154,6 +157,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
                     scope = $rootScope.$new();
                     ctrl = $controller('raceController', {$scope: scope, Race: Race});
                     ctrl.races = [];
+                    $httpBackend.whenGET('home/home.html').respond();
             }));
 
             it('should remove a race from races', function() {

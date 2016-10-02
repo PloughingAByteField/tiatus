@@ -1,4 +1,4 @@
-<div ng-controller="raceController as ctrl">
+<div data-ng-controller="raceController as ctrl">
     <h1>{{ 'RACE' | translate }}</h1>
 
     <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert != null" ng-class="'alert-' + ctrl.alert.type">
@@ -37,9 +37,9 @@
     <div class="Spacer"> </div>
     <div class="Spacer"> </div>
 
-    <div ng-show="ctrl.races.$resolved">
-        <table ng-table class="table table-condensed table-bordered table-striped" >
-            <tr ng-repeat="race in ctrl.races">
+    <div data-ng-show="ctrl.races.$resolved">
+        <table id="races" data-ng-table class="table table-condensed table-bordered table-striped" >
+            <tr data-ng-repeat="race in ctrl.races">
                 <td data-title="'RACE_NAME' | translate">{{race.name}}</td>
                 <td data-title="'RACE_ORDER' | translate">{{race.raceOrder}}</td>
                 <td><button class="btn primary" ng-click="ctrl.removeRace(race)">{{ 'REMOVE_RACE' | translate }}</button></td>

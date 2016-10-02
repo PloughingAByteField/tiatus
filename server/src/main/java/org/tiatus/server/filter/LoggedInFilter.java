@@ -87,10 +87,10 @@ public class LoggedInFilter implements Filter {
                 }
             } else {
                 if (isSetup()) {
-                    LOG.debug("not logged in");
+                    LOG.debug("not logged in when fetching " + requestedUrl);
                     response.sendRedirect(LOGIN_URL);
                 } else {
-                    LOG.debug("not setup");
+                    LOG.debug("not setup when fetching " + requestedUrl);
                     response.sendRedirect(SETUP_URL);
                 }
                 return;
@@ -147,6 +147,10 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean checkUrl(String url) {
+        if (url.matches("\\/login/*.*")) {
+            return true;
+        }
+
         if (isSetup() && url.equals(SETUP_REST_URL)) {
             LOG.warn("tried to access setup rest url after setup");
             return false;

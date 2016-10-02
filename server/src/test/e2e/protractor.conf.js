@@ -3,8 +3,9 @@ exports.config = {
   allScriptsTimeout: 11000,
   seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: [
-    'setup_spec.js',
-    '*.js'
+    'setup/*.js',
+    'login/*.js',
+    'management/**/*.js'
   ],
 
   capabilities: {

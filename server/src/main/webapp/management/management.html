@@ -19,13 +19,15 @@
     <style type="text/css" media="all">@import "/public/js/bootstrap/dist/css/bootstrap-theme.min.css";</style>
     <script src="/public/js/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="/common/js/race.service.js"></script>
+    <script src="home/home.controller.js"></script>
     <script src="race/race.controller.js"></script>
     <script src="management.module.js"></script>
     <script src="management.config.js"></script>
+    <script src="management.controller.js"></script>
     <style type="text/css" media="all">@import "/public/css/tiatus.css";</style>
     <style type="text/css" media="all">@import "/tiatus/config/css/custom.css";</style>
-    <title>{{ pageTitle }}</title>
-    <link rel="shortcut icon" href="{{ favIcon }}" type="image/x-icon" />
+    <title>Management</title>
+    <link rel="shortcut icon" data-ng-href="{{ favIcon }}" type="image/x-icon" />
 
     <style>
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -40,7 +42,7 @@
             <div class="event-header">{{ eventTitle }}</div>
 
             <div class="event-logo">
-                <img border="0" alt="Logo" src="{{ titleImage }}" width="100" />
+                <img border="0" alt="Logo" data-ng-src="{{ titleImage }}" width="100" />
             </div>
         </div>
 

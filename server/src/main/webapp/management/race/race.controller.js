@@ -3,11 +3,13 @@
 
     angular.module('RaceController', ['ngTable', 'ui.bootstrap']).controller('raceController', RaceController);
 
-    function RaceController($filter, $log, $timeout, Race, $translate) {
+    function RaceController($filter, $log, $timeout, Race, $translate, $scope) {
         var vm = this;
 
         vm.addRaceForm = {};
         vm.race = {};
+
+        $scope.$parent.pageTitle = "Races";
 
         Race.query().$promise.then(function(data) {
             vm.races = data;
