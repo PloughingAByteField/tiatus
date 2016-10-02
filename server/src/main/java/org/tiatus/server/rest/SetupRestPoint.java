@@ -67,10 +67,8 @@ public class SetupRestPoint {
     @Produces("application/json")
     public Response addConfig() {
         File file = new File("/www/tiatus/config/css/custom.css");
-        try {
-            FileOutputStream fop = new FileOutputStream(file);
+        try (FileOutputStream fop = new FileOutputStream(file)){
             fop.write("hello".getBytes());
-            fop.close();
         } catch (IOException e) {
             LOG.warn("Got general exception ", e);
             throw new InternalServerErrorException();

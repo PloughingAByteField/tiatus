@@ -1,13 +1,12 @@
-TiatusContainer {
+.tiatus-container {
     position: relative;
     min-height: 100%;
-    height: auto !important;
+    height: auto;
     height: 100%;
     margin: 0 auto -4em;
 }
 
-
-#Event #EventHeader {
+.event-header {
     padding: 15px 20px 20px 15%;
     color: white;
     background-color: black;
@@ -16,26 +15,26 @@ TiatusContainer {
     font-size: 30px;
 }
 
-#Event #EventLogo {
+.event-logo {
     top: 10px;
     text-align: center;
     position: absolute;
     left: 2%;
 }
 
-#Content {
+.content {
     padding: 10px;
     padding-bottom: 160px;
     margin: 10px 50px 50px 260px;
 }
 
-#LeftMenu {
+.left-menu {
     position: absolute;
     top: 140px;
     left: 05px;
 }
 
-#LeftMenu li {
+.left-menu li {
     padding: 5px;
     list-style: none;
 }

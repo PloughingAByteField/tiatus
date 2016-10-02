@@ -34,27 +34,29 @@
     </style>
 </head>
 <body data-ng-cloak>
-    <div class="TiatusContainer">
+    <div class="tiatus-container">
         <div class="Spacer"><br /> </div>
-        <div id="Event">
-            <div id="EventHeader">{{ eventTitle }}</div>
+        <div>
+            <div class="event-header">{{ eventTitle }}</div>
 
-            <div id="EventLogo">
-                <img border="0" src="{{ titleImage }}" width="100" />
+            <div class="event-logo">
+                <img border="0" alt="Logo" src="{{ titleImage }}" width="100" />
             </div>
         </div>
 
-        <div id="Content">
+        <div class="content">
             <div data-ng-view></div>
             <div class="Spacer"><br /> </div>
         </div>
 
         <!-- make these services -->
-        <div id="LeftMenu">
-            <li data-ng-repeat="link in links"><a href="{{ link.href }}" title="{{ link.title }}">{{ link.title }}</a></li>
+        <div class="left-menu">
+            <ul>
+                <li data-ng-repeat="link in links"><a href="{{ link.href }}" title="{{ link.title }}">{{ link.title }}</a></li>
+            </ul>
         </div>
 
-        <div id="Footer" />
+        <div id="footer"></div>
     </div>
 </body>
 </html>
