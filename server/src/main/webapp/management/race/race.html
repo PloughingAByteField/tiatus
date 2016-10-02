@@ -30,7 +30,7 @@
                     <p ng-message="raceNumberExists">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</p>
                 </div>
             </div>
-            <button data-ng-click="ctrl.addRace(ctrl.race)" ng-disabled="ctrl.addRaceForm.$invalid">{{ 'CREATE_RACE' | translate }}</button>
+            <button id="createRace" data-ng-click="ctrl.addRace(ctrl.race)" ng-disabled="ctrl.addRaceForm.$invalid">{{ 'CREATE_RACE' | translate }}</button>
         </form>
     </div>
 
