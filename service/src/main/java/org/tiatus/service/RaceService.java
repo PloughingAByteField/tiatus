@@ -26,7 +26,6 @@ public interface RaceService {
     /**
      * Get races
      * @return list of races
-     * @throws ServiceException on error
      */
     List<Race> getRaces();
 }

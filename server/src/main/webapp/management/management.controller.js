@@ -1,9 +1,8 @@
 (function() {
     'use strict'; // NOSONAR
 
-    angular.module('managementApp').controller('appController', function($scope, $rootScope) {
+    angular.module('managementApp').controller('appController', function($scope) {
     // create service for these
-        $scope.pageTitle = "managementX";
         $scope.titleImage = "/public/images/stopwatch.svg";
         $scope.favIcon = "/public/images/favicon.ico";
 //        $scope.favIcon = "/tiatus/config/images/favicon.ico";
