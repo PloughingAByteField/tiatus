@@ -1,0 +1,60 @@
+<div data-ng-controller="eventController as ctrl">
+    <h1>{{ 'EVENT' | translate }}</h1>
+
+    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert != null" ng-class="'alert-' + ctrl.alert.type">
+        {{ctrl.alert.msg}}
+    </div>
+
+    <p>{{ 'ADD_EVENT' | translate }}</p>
+    <form name="ctrl.addEventForm" novalidate>
+        <div class="form-group">
+            <label>{{ 'EVENT_NAME' | translate }}</label>
+            <input class="ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength ng-touched" type="text" name="name" id="name" ng-model="ctrl.event.name" not-existing-event-name required ng-minlength="3" ng-maxlength="25"/>
+            <div class="errors" ng-messages="ctrl.addEventForm.name.$error" ng-if="(ctrl.addEventForm.name.$dirty && ctrl.addEventForm.name.$invalid)">
+                <p ng-message="minlength">{{ 'EVENT_NAME_TOO_SHORT' | translate }}</p>
+                <p ng-message="maxlength">{{ 'EVENT_NAME_TOO_LONG' | translate }}</p>
+                <p ng-message="required">{{ 'EVENT_NAME_REQUIRED' | translate }}</p>
+                <p ng-message="eventNameExists">{{ 'EVENT_NAME_ALREADY_EXISTS' | translate }}</p>
+            </div>
+            <label>{{ 'WEIGHTED_EVENT' | translate }}</label><input type="checkbox" name="weighted" id="weighted" ng-model="ctrl.event.weighted"/>
+        </div>
+        <button data-ng-click="ctrl.createEvent(ctrl.event)" ng-disabled="ctrl.addEventForm.$invalid">{{ 'CREATE_EVENT' | translate }}</button>
+    </form>
+
+    <div class="Spacer"><br /> </div>
+
+    <div ng-show="races.$resolved">
+        <select name="race" ng-model="currentRace" ng-options="race.id as race.name for race in races" ng-change="raceChanged()">
+        </select>
+    </div>
+
+    <div class="Spacer"><br /> </div>
+
+    <div ng-controller="eventDropOnAssignedController">
+        <div>{{ 'ASSIGNED_EVENTS' | translate }}</div>
+        <div ng-show="assigned.$resolved">
+            <div id="assignedEvents" ng-class="{'draw-container': !areAssignedEventsForCurrentRace()}" dnd-list="assignedToRace" dnd-inserter="angular.noop" dnd-drop="dropOnAssigned(event, index, item)">
+                    <div ng-repeat="raceEvent in assignedToRace" id="assignedEvent-{{raceEvent.event.id}}" class="assigned-event"  dnd-draggable="raceEvent" dnd-moved="angular.noop">
+                        <div id="{{raceEvent.raceEventOrder}}" class="number" >{{ 'EVENT_RACE_ORDER' | translate }}{{raceEvent.raceEventOrder}}</div>
+                        <div id="{{raceEvent.event.id}}" class="event" >{{ 'EVENT_EVENT' | translate }}</span> {{raceEvent.event.name}}</div>
+                        <div id="{{raceEvent.event.weighted}}" class="event" >{{ 'EVENT_WEIGHTED' | translate }}</span>{{raceEvent.event.weighted}}</div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="Spacer"><br /> </div>
+
+    <div ng-controller="eventDropOnUnassignedController">
+        <div>{{ 'UNASSIGNED_EVENTS' | translate }}</div>
+        <div ng-show="unassigned.$resolved">
+            <div id="unassignedEvents" ng-class="{'draw-container': !unassigned.length}" dnd-list="unassigned" dnd-drop="dropOnUnassigned(event, index, item)" dnd-inserter="angular.noop">
+                    <div ng-repeat="event in unassigned" id="unassignedEvent-{{event.id}}" class="unassigned-event" dnd-draggable="event" dnd-moved="angular.noop">
+                        <div class="event" ><span>{{ 'EVENT_EVENT' | translate }}</span>{{event.name}}</div>
+                        <div id="{{event.weighted}}" class="event" >{{ 'EVENT_WEIGHTED' | translate }}</span> {{event.weighted}}</div>
+                        <button id="{{event.id}}" data-ng-click="deleteEvent(event.id)">{{ 'REMOVE_EVENT' | translate }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

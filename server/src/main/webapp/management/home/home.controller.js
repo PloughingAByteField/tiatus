@@ -1,10 +1,10 @@
 (function() {
     'use strict'; // NOSONAR
 
-    angular.module('HomeController', []).controller('homeController', HomeController);
+    angular.module('HomeController').controller('homeController', HomeController);
 
-    function HomeController($scope) {
-        $scope.$parent.pageTitle = "Home";
+    function HomeController() {
+
     };
 
 })();

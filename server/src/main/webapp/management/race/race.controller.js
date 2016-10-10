@@ -1,15 +1,13 @@
 (function() {
     'use strict'; // NOSONAR
 
-    angular.module('RaceController', ['ngTable', 'ui.bootstrap']).controller('raceController', RaceController);
+    angular.module('RaceController').controller('raceController', RaceController);
 
-    function RaceController($filter, $log, $timeout, Race, $translate, $scope) {
+    function RaceController($filter, $log, $timeout, Race, $translate) {
         var vm = this;
 
         vm.addRaceForm = {};
         vm.race = {};
-
-        $scope.$parent.pageTitle = "Races";
 
         Race.query().$promise.then(function(data) {
             vm.races = data;

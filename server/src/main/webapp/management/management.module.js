@@ -8,6 +8,8 @@
         'ngMessages',
         'ngCookies',
         'RaceService',
+        'EventService',
+        'EventController',
         'RaceController',
         'HomeController'
     ]);

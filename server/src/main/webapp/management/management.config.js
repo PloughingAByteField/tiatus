@@ -39,7 +39,19 @@
                     }
     			})
 
-            .otherwise({redirectTo: '/'});
+    			.when('/event', {
+    				templateUrl : 'event/event.html',
+    				title: 'EVENT_TITLE',
+                    resolve: {
+                        specificTranslations: function($translatePartialLoader, $translate) {
+                            $translatePartialLoader.addPart('common');
+                            $translatePartialLoader.addPart('event');
+                            return $translate.refresh();
+                        }
+                    }
+    			})
+
+                .otherwise({redirectTo: '/'});
     });
 
     angular.module('managementApp').run(['$rootScope', '$route', '$translate', function($rootScope, $route, $translate) {
