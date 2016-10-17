@@ -7,6 +7,7 @@
         'ngSanitize',
         'ngMessages',
         'ngCookies',
+        'dndLists',
         'RaceService',
         'EventService',
         'EventController',

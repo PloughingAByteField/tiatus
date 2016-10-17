@@ -3,34 +3,20 @@
 
     angular.module('EventController').controller('eventController', EventController);
 
-    function EventController($filter, $log, Race, Event, AssignedEvent, $translate) {
+    function EventController($filter, $log, Race, Event, AssignedEvent, $translate, eventAssignedService, eventUnassignedService, raceService) {
         var vm = this;
-        vm.assigned = [];
-        vm.unassigned = [];
 
-        Race.query().$promise.then(function(data) {
-            vm.races = data;
-            if (data.length > 0) {
-                vm.currentRace = vm.races[0].id;
-            }
-        }, function(error) {
-            $log.warn("Failed to get races", error);
-            vm.alert = {
-                type: 'danger',
-                msg: $translate.instant('FAILED_FETCH')
-            };
+        eventAssignedService.getAssigned().then(function(data) {
+            vm.assigned = data;
         });
 
-//        AssignedEvent.query().$promise.then(function (data) {
-//            setAssignedToRace(data);
-//            vm.assigned = data;
-//        }, function(error) {
-//            $log.warn("Failed to get assigned events", error);
-//            vm.alert = {
-//                type: 'danger',
-//                msg: $translate.instant('FAILED_FETCH')
-//            };
-//        });
+        eventUnassignedService.getUnassigned().then(function(data) {
+            vm.unassigned = data;
+        });
+
+        raceService.getRaces().then(function(data) {
+            vm.races = data;
+        });
 
         vm.closeAlert = function() {
             vm.alert = null;

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EventDao;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.RaceEvent;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
@@ -54,5 +55,15 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getEvents() {
         return dao.getEvents();
+    }
+
+    @Override
+    public List<RaceEvent> getAssignedEvents() {
+        return dao.getAssignedEvents();
+    }
+
+    @Override
+    public List<Event> getUnassignedEvents() {
+        return dao.getUnassignedEvents();
     }
 }

@@ -23,18 +23,19 @@
 
     <div class="Spacer"><br /> </div>
 
-    <div ng-show="races.$resolved">
-        <select name="race" ng-model="currentRace" ng-options="race.id as race.name for race in races" ng-change="raceChanged()">
+    <div ng-show="ctrl.races.$resolved">
+        <select name="race" ng-model="currentRace" ng-options="race.id as race.name for race in ctrl.races" ng-change="ctrl.raceChanged()">
         </select>
     </div>
 
     <div class="Spacer"><br /> </div>
 
-    <div ng-controller="eventDropOnAssignedController">
+    <div ng-controller="eventDropOnAssignedController as ctrlAssigned">
         <div>{{ 'ASSIGNED_EVENTS' | translate }}</div>
-        <div ng-show="assigned.$resolved">
-            <div id="assignedEvents" ng-class="{'draw-container': !areAssignedEventsForCurrentRace()}" dnd-list="assignedToRace" dnd-inserter="angular.noop" dnd-drop="dropOnAssigned(event, index, item)">
-                    <div ng-repeat="raceEvent in assignedToRace" id="assignedEvent-{{raceEvent.event.id}}" class="assigned-event"  dnd-draggable="raceEvent" dnd-moved="angular.noop">
+        <!--<div ng-show="ctrl.assigned.$resolved">-->
+        <div >
+            <div id="assignedEvents" ng-class="{'draw-container': !ctrl.areAssignedEventsForCurrentRace()}" dnd-list="assignedToRace" dnd-inserter="angular.noop" dnd-drop="ctrlAssigned.dropOnAssigned(event, index, item)">
+                    <div ng-repeat="raceEvent in assignedToRace" id="assignedEvent-{{raceEvent.event.id}}" class="assigned-event" dnd-draggable="raceEvent" dnd-moved="angular.noop">
                         <div id="{{raceEvent.raceEventOrder}}" class="number" >{{ 'EVENT_RACE_ORDER' | translate }}{{raceEvent.raceEventOrder}}</div>
                         <div id="{{raceEvent.event.id}}" class="event" >{{ 'EVENT_EVENT' | translate }}</span> {{raceEvent.event.name}}</div>
                         <div id="{{raceEvent.event.weighted}}" class="event" >{{ 'EVENT_WEIGHTED' | translate }}</span>{{raceEvent.event.weighted}}</div>
@@ -45,16 +46,19 @@
 
     <div class="Spacer"><br /> </div>
 
-    <div ng-controller="eventDropOnUnassignedController">
+    <div ng-controller="eventDropOnUnassignedController as ctrlUnassigned">
         <div>{{ 'UNASSIGNED_EVENTS' | translate }}</div>
-        <div ng-show="unassigned.$resolved">
+        <div ng-show="ctrl.unassigned.$resolved">
             <div id="unassignedEvents" ng-class="{'draw-container': !unassigned.length}" dnd-list="unassigned" dnd-drop="dropOnUnassigned(event, index, item)" dnd-inserter="angular.noop">
-                    <div ng-repeat="event in unassigned" id="unassignedEvent-{{event.id}}" class="unassigned-event" dnd-draggable="event" dnd-moved="angular.noop">
+                    <div ng-repeat="event in ctrl.unassigned" id="unassignedEvent-{{event.id}}" class="unassigned-event" dnd-draggable="event" dnd-moved="angular.noop">
                         <div class="event" ><span>{{ 'EVENT_EVENT' | translate }}</span>{{event.name}}</div>
                         <div id="{{event.weighted}}" class="event" >{{ 'EVENT_WEIGHTED' | translate }}</span> {{event.weighted}}</div>
-                        <button id="{{event.id}}" data-ng-click="deleteEvent(event.id)">{{ 'REMOVE_EVENT' | translate }}</button>
+                        <button id="{{event.id}}" data-ng-click="ctrl.deleteEvent(event.id)">{{ 'REMOVE_EVENT' | translate }}</button>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <button  data-ng-click="ctrl.testE()">Test</button>
 </div>

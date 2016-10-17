@@ -1,7 +1,18 @@
 (function() {
     'use strict'; // NOSONAR
 
-    angular.module('EventController').controller('eventDropOnAssignedController', ['$scope', '$log', 'AssignedEvent', function($scope, $log, AssignedEvent) {
+    angular.module('EventController').controller('eventDropOnAssignedController', EventAssignedDropController);
+
+    function EventAssignedDropController($scope, $log, AssignedEvent, eventAssignedService, eventUnassignedService) {
+        var vm = this;
+        vm.assigned = eventAssignedService.getAssigned().then(function(data) {
+            vm.assigned = data;
+            console.log(vm.assigned);
+        });
+        eventUnassignedService.getUnassigned().then(function(data) {
+            vm.unassigned = data;
+            console.log(vm.unassigned);
+        });
 
         function addNewRaceEvent(race, raceEventOrder, item, index) {
             var newRaceEvent = {};
@@ -18,10 +29,11 @@
             return newRaceEvent;
         };
 
-        $scope.dropOnAssigned = function(dropEvent, index, item) {
+        vm.dropOnAssigned = function(dropEvent, index, item) {
+            console.log("drop");
             var updates = [];
             var newRaceEvent = {};
-            if (index > $scope.assignedToRace.length) {
+ /*           if (index > vm.assignedToRace.length) {
                 $log.warn("Have index greater than that assigned, bad input");
                 return item;
             }
@@ -85,10 +97,11 @@
 
             $scope.raceChanged();
             $scope.$apply();
-
-            return item;
+*/
+//            return item;
+            return true;
         };
 
-    }]);
+    };
 
 })();

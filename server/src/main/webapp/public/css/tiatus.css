@@ -38,3 +38,114 @@
     padding: 5px;
     list-style: none;
 }
+
+.assigned-event {
+    box-sizing: border-box;
+    padding: 6px 8px 8px 51px;
+    height: 30px;
+    position: relative;
+    border-image: none;
+    line-height: 16px;
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #000000;
+    cursor: move;
+    display: block;
+    font-size: 13px;
+    border-color: #BBBBBB #BBBBBB #BBBBBB;
+    border-width: 1px 1px thin;
+    border-style: solid solid solid;
+    border-spacing: 0;
+    list-style: none outside none;
+}
+
+.unassigned-event {
+    box-sizing: border-box;
+    padding: 6px 8px 8px 51px;
+    height: 40px;
+    position: relative;
+    border-image: none;
+    line-height: 16px;
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #000000;
+    cursor: move;
+    display: block;
+    font-size: 13px;
+    border-color: #BBBBBB #BBBBBB #BBBBBB;
+    border-width: 1px 1px thin;
+    border-style: solid solid solid;
+    border-spacing: 0;
+    list-style: none outside none;
+}
+
+.drag {
+  opacity: .5;
+}
+
+.over {
+  background: red;
+}
+
+form.ng-dirty input.ng-invalid {
+    border: 1px solid #B02B2C;
+}
+
+form.ng-dirty input.ng-valid {
+    border: 1px solid #6BBA70;
+}
+
+.errors {
+  font-size: smaller;
+  color: red;
+}
+
+.ng-table {
+    box-sizing: border-box;
+    width: 80%;
+    border: 1px solid #d4d4d4;
+    font-family: verdana,arial,helvetica,sans-serif;
+    font-size: 14px;
+}
+
+.table-striped > tbody > tr:nth-child(even) > td {
+  background-color: #f3f3f3;
+}
+
+.table-striped > tbody > tr:nth-child(even) > th {
+  background-color: #f3f3f3;
+}
+
+.ng-table th {
+    border-right: 1px solid #d4d4d4;
+    box-sizing: border-box;
+    height: 100%;
+    overflow: hidden;
+    padding: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ng-table tr td {
+    border-right: 1px solid #d4d4d4;
+    box-sizing: border-box;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.draw-container {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-color: #BBBBBB #BBBBBB #BBBBBB;
+    border-image: none;
+    border-style: solid solid solid;
+    border-width: 1px 1px medium;
+    border-radius: 3px;
+    margin: 0;
+    padding: 0;
+    border-spacing: 0;
+    min-height: 130px;
+}
+
+ul[dnd-list], ul[dnd-list] > li {
+    position: relative;
+}

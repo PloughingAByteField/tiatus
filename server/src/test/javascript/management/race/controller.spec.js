@@ -179,7 +179,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
                 expect(ctrl.races.length).toBe(1);
             });
 
-            it('should fail add race', function() {
+            it('should fail to remove race', function() {
                 var race = {};
                 race.id = 1;
 

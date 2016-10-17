@@ -3,22 +3,22 @@
 
     angular.module('RaceController').controller('raceController', RaceController);
 
-    function RaceController($filter, $log, $timeout, Race, $translate) {
+    function RaceController($filter, $log, $timeout, Race, $translate, raceService) {
         var vm = this;
 
         vm.addRaceForm = {};
         vm.race = {};
 
-        Race.query().$promise.then(function(data) {
+        raceService.getRaces().then(function(data) {
             vm.races = data;
 
-        }, function(errResponse) {
-            $log.warn("Failed to get races", errResponse);
+        }, function(error) {
             vm.alert = {
-                type: 'danger',
-                msg: $translate.instant('FAILED_FETCH')
+              type: 'danger',
+              msg: $translate.instant('FAILED_FETCH')
             };
         });
+
 
         vm.closeAlert = function() {
             vm.alert = null;
@@ -28,17 +28,16 @@
             vm.alert = null;
             var race = new Race();
             race.id = entity.id;
-            Race.remove(race).$promise.then(function() {
-                // remove from list
-                vm.races.splice(vm.races.indexOf(entity), 1);
-
-            }, function(errResponse) {
-                $log.warn("Failed to remove race", errResponse);
+            raceService.removeRace(entity).then(function(data) {
+                console.log("ok");
+            }, function(error) {
+            console.log("not ok");
                 vm.alert = {
-                    type: 'danger',
-                    msg: $translate.instant('FAILED_REMOVE')
+                  type: 'danger',
+                  msg: $translate.instant('FAILED_REMOVE')
                 };
             });
+
 
         };
 
@@ -47,21 +46,19 @@
             var newRace = new Race();
             newRace.name = data.name;
             newRace.raceOrder = data.order;
-            Race.save(newRace).$promise.then(function(response) {
-                // add to list
-                vm.races.push(response);
+            raceService.addRace(newRace).then(function(data) {
                 vm.race = {};
                 vm.addRaceForm.$setPristine();
                 vm.addRaceForm.$setUntouched();
 
-            }, function(errResponse) {
-                $log.warn("Failed to add race", errResponse);
+            }, function(error) {
                 vm.addRaceForm.$invalid = true;
                 vm.alert = {
                     type: 'danger',
                     msg: $translate.instant('FAILED_ADD')
                 };
             });
+
         };
     };
 

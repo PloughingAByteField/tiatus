@@ -3,11 +3,13 @@ package org.tiatus.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.RaceEvent;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
 import java.util.List;
@@ -74,6 +76,18 @@ public class EventDaoImpl implements EventDao {
     @Override
     public List<Event> getEvents() {
         TypedQuery<Event> query = em.createQuery("FROM Event order by id", Event.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<RaceEvent> getAssignedEvents() {
+        TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent order by raceEventOrder", RaceEvent.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Event> getUnassignedEvents() {
+        TypedQuery<Event> query = em.createQuery("FROM Event e where e.id not in (select re.event FROM RaceEvent re)", Event.class);
         return query.getResultList();
     }
 }

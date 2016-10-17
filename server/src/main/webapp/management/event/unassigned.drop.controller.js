@@ -2,7 +2,7 @@
     'use strict'; // NOSONAR
 
     angular.module('EventController').controller('eventDropOnUnassignedController', function($scope, $log, AssignedEvent, DeleteAssignedEvent, UnassignedEvent, $translate) {
-
+        var vm = this;
 //            UnassignedEvent.query().$promise.then(function (data) {
 //                $scope.unassigned = data;
 //            }, function(error) {
@@ -13,7 +13,7 @@
 //                };
 //            });
 
-        $scope.dropOnUnassigned = function(dropEvent, index, item) {
+        vm.dropOnUnassigned = function(dropEvent, index, item) {
 
             if (typeof item.raceEventOrder !== 'undefined') {
                 $log.debug('Have unassignment of ' + item.event.name + ' from ' + item.raceEventOrder);

@@ -4,7 +4,7 @@
     angular.module('EventService', ['ngResource'])
     .factory('AssignedEvent', ['$resource',
       function($resource){
-        return $resource('../rest/event/:id', {}, {
+        return $resource('../rest/events/assigned', {}, {
             query: {
                 method: 'GET',
                 isArray: true,
@@ -21,7 +21,7 @@
 
     }]).factory('DeleteAssignedEvent', ['$resource',
       function($resource){
-        return $resource('../rest/raceEvent/delete', {}, {
+        return $resource('../rest/events/delete', {}, {
             remove: {
                 method: 'POST'
             }
@@ -29,7 +29,7 @@
 
     }]).factory('UnassignedEvent', ['$resource',
       function($resource){
-        return $resource('../rest/raceEvent/unassigned', {}, {
+        return $resource('../rest/events/unassigned', {}, {
             query: {
                 method: 'GET',
                  isArray: true,

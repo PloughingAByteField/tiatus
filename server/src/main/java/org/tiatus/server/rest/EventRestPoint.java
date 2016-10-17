@@ -3,8 +3,8 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.RaceEvent;
 import org.tiatus.service.EventService;
-import org.tiatus.service.RaceService;
 import org.tiatus.service.ServiceException;
 
 import javax.inject.Inject;
@@ -21,7 +21,6 @@ import java.util.List;
 @SuppressWarnings("squid:S1166")
 public class EventRestPoint {
 
-    @Inject
     private EventService service;
 
     private static final Logger LOG = LoggerFactory.getLogger(EventRestPoint.class);
@@ -69,6 +68,26 @@ public class EventRestPoint {
     public Response getEvents(@Context HttpServletRequest request) {
         LOG.debug("calling service");
         List<Event> events = service.getEvents();
+        return Response.ok(events).build();
+
+    }
+
+    @GET
+    @Path("assigned")
+    @Produces("application/json")
+    public Response getAssignedEvents(@Context HttpServletRequest request) {
+        LOG.debug("calling service");
+        List<RaceEvent> events = service.getAssignedEvents();
+        return Response.ok(events).build();
+
+    }
+
+    @GET
+    @Path("unassigned")
+    @Produces("application/json")
+    public Response getUnassignedEvents(@Context HttpServletRequest request) {
+        LOG.debug("calling service");
+        List<Event> events = service.getUnassignedEvents();
         return Response.ok(events).build();
 
     }

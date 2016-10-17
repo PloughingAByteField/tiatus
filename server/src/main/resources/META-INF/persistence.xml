@@ -7,6 +7,7 @@
         <jta-data-source>java:/datasources/TiatusDS</jta-data-source>
         <class>org.tiatus.entity.Race</class>
         <class>org.tiatus.entity.Event</class>
+        <class>org.tiatus.entity.RaceEvent</class>
         <class>org.tiatus.entity.User</class>
         <class>org.tiatus.entity.Role</class>
         <class>org.tiatus.entity.UserRole</class>
