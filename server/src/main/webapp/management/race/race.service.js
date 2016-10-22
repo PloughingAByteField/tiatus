@@ -6,11 +6,14 @@
     // this an intermediary caching service shared across the controllers
     function RaceService($log, Race, $q) {
         var races = undefined;
+        var currentRace = {};
 
         var service = {
             getRaces: getRaces,
             addRace: addRace,
-            removeRace: removeRace
+            removeRace: removeRace,
+            getCurrentRace: getCurrentRace,
+            setCurrentRace: setCurrentRace
         };
 
         return service;
@@ -60,6 +63,14 @@
             });
             return $q.when(deferred.promise);
         };
+
+        function getCurrentRace() {
+            return currentRace;
+        }
+
+        function setCurrentRace(race) {
+            currentRace = race;
+        }
     };
 
 })();

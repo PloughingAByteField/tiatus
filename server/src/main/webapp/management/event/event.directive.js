@@ -11,9 +11,12 @@
                     }
 
                     for (var i = 0; i < scope.ctrl.assigned.length; i++) {
-                        var assignedEvent = scope.ctrl.assigned[i].event;
-                        if (assignedEvent.name === viewValue) {
-                            return false;
+                        var eventsForRace = scope.ctrl.assigned[i];
+                        for (var x = 0; x < eventsForRace.events.length; x++) {
+                            var assignedEvent = eventsForRace.events[x].event;
+                            if (assignedEvent.name === viewValue) {
+                                return false;
+                            }
                         }
                     }
 

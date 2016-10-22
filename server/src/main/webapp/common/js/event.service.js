@@ -4,7 +4,7 @@
     angular.module('EventService', ['ngResource'])
     .factory('AssignedEvent', ['$resource',
       function($resource){
-        return $resource('../rest/events/assigned', {}, {
+        return $resource('../rest/events/assigned/:id', {}, {
             query: {
                 method: 'GET',
                 isArray: true,

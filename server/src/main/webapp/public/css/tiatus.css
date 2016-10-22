@@ -16,8 +16,8 @@
 }
 
 .event-logo {
-    top: 10px;
-    text-align: center;
+    top: -10px;
+    text-align: top;
     position: absolute;
     left: 2%;
 }
@@ -75,6 +75,21 @@
     border-style: solid solid solid;
     border-spacing: 0;
     list-style: none outside none;
+}
+
+.event {
+    display: inline;
+    padding: 0 20px 0 0;
+}
+
+.number {
+    display: inline;
+    padding: 0 20px 0 0;
+}
+
+.entry-time-only {
+    padding: 0 20px 0 0;
+    float: right;
 }
 
 .drag {
@@ -148,4 +163,8 @@ form.ng-dirty input.ng-valid {
 
 ul[dnd-list], ul[dnd-list] > li {
     position: relative;
+}
+
+.Spacer {
+    margin-bottom: 20px;
 }

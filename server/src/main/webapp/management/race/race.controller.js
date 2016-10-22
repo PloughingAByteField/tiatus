@@ -3,7 +3,7 @@
 
     angular.module('RaceController').controller('raceController', RaceController);
 
-    function RaceController($filter, $log, $timeout, Race, $translate, raceService) {
+    function RaceController($log, Race, $translate, raceService) {
         var vm = this;
 
         vm.addRaceForm = {};
@@ -29,9 +29,7 @@
             var race = new Race();
             race.id = entity.id;
             raceService.removeRace(entity).then(function(data) {
-                console.log("ok");
             }, function(error) {
-            console.log("not ok");
                 vm.alert = {
                   type: 'danger',
                   msg: $translate.instant('FAILED_REMOVE')

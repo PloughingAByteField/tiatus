@@ -79,7 +79,33 @@ public class EventRestPoint {
         LOG.debug("calling service");
         List<RaceEvent> events = service.getAssignedEvents();
         return Response.ok(events).build();
+    }
 
+    @DELETE
+    @Path("assigned/{id}")
+    @Produces("application/json")
+    public Response removeAssignedEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
+        LOG.debug("calling service");
+//        List<RaceEvent> events = service.getAssignedEvents();
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Path("assigned")
+    @Produces("application/json")
+    public Response updateAssignedEvents(List<RaceEvent> events, @Context HttpServletRequest request) {
+        LOG.debug("calling service");
+//        List<RaceEvent> events = service.getAssignedEvents();
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("assigned")
+    @Produces("application/json")
+    public Response addAssignedEvent(RaceEvent event, @Context HttpServletRequest request) {
+        LOG.debug("calling service");
+//        List<RaceEvent> events = service.getAssignedEvents();
+        return Response.ok().build();
     }
 
     @GET
