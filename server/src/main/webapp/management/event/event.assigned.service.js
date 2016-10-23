@@ -9,7 +9,6 @@
 
         var service = {
             getAssignedEvents: getAssignedEvents,
-            addAssignedEvent: addAssignedEvent,
             unassignEvent: unassignEvent,
             assignEvent: assignEvent,
             reassignEvent: reassignEvent,
@@ -53,10 +52,6 @@
             return $q.when(assignedEvents);
         }
 
-        function addAssignedEvent(event) {
-            assignedEvents.push(event);
-        };
-
         function assignEvent(item, raceId, index) {
             var events = getAssignedEventsForRace(raceId);
             var updatedEvents = [];
@@ -71,18 +66,31 @@
             var race = raceAssigned.race;
             // add event to race_event
             AssignedEvent.save({race: {id: race.id}, event: {id: item.id}, raceEventOrder: orderAtDrop}).$promise.then(function (data) {
+                if (updatedEvents.length > 0) {
+                    // update race_events that have had race_order
+                    AssignedEvent.update(updatedEvents).$promise.then(function (data) {
+                        for (var i = 0; i < updatedEvents.length; i++) {
+                            var updated = updatedEvents[i];
+                            var eventIndex = getEventIndex(events, updated);
+                            if (eventIndex !== -1) {
+                                var event = events[eventIndex];
+                                event.raceEventOrder = updated.raceEventOrder;
+                            }
+                        }
+                        events.splice(index, 0, {event: item, raceEventOrder: orderAtDrop});
+
+                    }, function(error) {
+                        $log.warn("Failed to update events", error);
+                        return false;
+                    });
+                } else {
+                    events.splice(index, 0, {event: item, raceEventOrder: orderAtDrop});
+                }
             }, function(error) {
                 $log.warn("Failed to add event", error);
+                return false;
             });
 
-            if (updatedEvents.length > 0) {
-                // update race_events that have had race_order
-                AssignedEvent.update(updatedEvents).$promise.then(function (data) {
-                }, function(error) {
-                    $log.warn("Failed to update events", error);
-                });
-            }
-            events.splice(index, 0, {event: item, raceEventOrder: orderAtDrop});
         };
 
         function reassignEvent(item, raceId, dropIndex) {
@@ -97,7 +105,6 @@
             orderAtDrop = events[index].raceEventOrder;
             // is drop point ahead or behind the item
             var indexOfItem = getEventIndex(events, item);
-            console.log("indexOfItem " + indexOfItem);
             if (index < indexOfItem) {
                 $log.debug("drop before");
                 updatedEvents = reorderRaceOrder(events, index, indexOfItem, 1);
@@ -108,7 +115,7 @@
             } else if (index > indexOfItem) {
                 $log.debug("drop after ");
                 $log.debug(events[index].event);
-                updatedEvents = reorderRaceOrder(events, indexOfItem, index + 1, -1);
+                updatedEvents = reorderRaceOrder(events, indexOfItem + 1, index + 1, -1);
                 if (dropIndex !== index) {
                     events[indexOfItem].raceEventOrder = orderAtDrop;
                 } else {
@@ -160,6 +167,8 @@
                     return i;
                 }
             }
+
+            return -1;
         };
 
 
@@ -167,8 +176,7 @@
             var updates = [];
             for (var i = start; i < end; i++) {
                 var item = items[i];
-                item.raceEventOrder = item.raceEventOrder + value;
-                updates.push({ event: { id: item.event.id }, raceEventOrder: item.raceEventOrder });
+                updates.push({ event: { id: item.event.id }, raceEventOrder: item.raceEventOrder + value });
             }
             return updates;
         };

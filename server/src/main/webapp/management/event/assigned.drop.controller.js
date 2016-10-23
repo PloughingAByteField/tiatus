@@ -35,16 +35,19 @@
         vm.dropOnAssigned = function(dropEvent, index, item) {
             var updates = [];
             var newRaceEvent = {};
+            var success = true;
 
             // are we a self drop
             if (typeof item.raceEventOrder !== 'undefined') {
                 eventAssignedService.reassignEvent(item, raceService.getCurrentRace(), index);
 
             } else {
-                eventAssignedService.assignEvent(item, raceService.getCurrentRace(), index);
-                eventUnassignedService.assignEvent(item);
+                var success = eventAssignedService.assignEvent(item, raceService.getCurrentRace(), index);
+                if (success) {
+                    success = eventUnassignedService.assignEvent(item);
+                }
             }
-            return true;
+            return success;
         };
 
     };
