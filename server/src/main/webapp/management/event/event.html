@@ -1,7 +1,7 @@
 <div data-ng-controller="eventController as ctrl">
     <h1>{{ 'EVENT' | translate }}</h1>
 
-    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert != null" ng-class="'alert-' + ctrl.alert.type">
+    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert.msg != {}" ng-class="'alert-' + ctrl.alert.type">
         {{ctrl.alert.msg}}
     </div>
 

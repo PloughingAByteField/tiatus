@@ -3,8 +3,9 @@
 
     angular.module('EventController').controller('eventController', EventController);
 
-    function EventController($log, Event, $translate, eventAssignedService, eventUnassignedService, raceService) {
+    function EventController($log, Event, $translate, eventAssignedService, eventUnassignedService, raceService, alertService) {
         var vm = this;
+        vm.alert = alertService.getAlert();
 
         eventAssignedService.getAssignedEvents().then(function(data) {
             vm.assigned = data;
@@ -29,7 +30,7 @@
         };
 
         vm.closeAlert = function() {
-            vm.alert = null;
+            alertService.clearAlert();
         };
 
         vm.raceChanged = function(raceId) {
@@ -38,8 +39,6 @@
         };
 
         vm.createEvent = function(e) {
-            vm.alert = null;
-            $log.debug(e);
             var event = new Event();
             event.name = e.name;
             event.weighted = e.weighted;
@@ -51,21 +50,22 @@
 
             }, function(errResponse) {
                 $log.warn("Failed to create event", errResponse);
-                vm.alert = {
+                alert = {
                     type: 'danger',
                     msg: $translate.instant('FAILED_ADD')
                 };
+                alertService.setAlert(alert);
             });
         };
 
         vm.deleteEvent = function(id) {
-            vm.alert = null;
             eventUnassignedService.removeUnassigned(id).then(function(data) {
             }, function(error) {
-              vm.alert = {
+              alert = {
                 type: 'danger',
                 msg: $translate.instant('FAILED_REMOVE')
               };
+              alertService.setAlert(alert);
             });
         };
     };
