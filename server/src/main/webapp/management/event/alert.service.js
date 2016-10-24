@@ -23,9 +23,9 @@
             return alert;
         };
 
-        function setAlert(newAlert) {
-            alert.msg = newAlert.msg;
-            alert.type = newAlert.type;
+        function setAlert(msg) {
+            alert.msg = msg;
+            alert.type = 'danger';
         };
     };
 })();

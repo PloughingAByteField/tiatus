@@ -35,25 +35,25 @@
         vm.dropOnAssigned = function(dropEvent, index, item) {
             var updates = [];
             var newRaceEvent = {};
-            var success = true;
 
             // are we a self drop
             if (typeof item.raceEventOrder !== 'undefined') {
-                eventAssignedService.reassignEvent(item, raceService.getCurrentRace(), index);
-
+                eventAssignedService.reassignEvent(item, raceService.getCurrentRace(), index).then(function(data) {}, function(error) {
+                   dropFailure();
+                });
             } else {
                 eventAssignedService.assignEvent(item, raceService.getCurrentRace(), index).then(function(data) {
-                    success = eventUnassignedService.assignEvent(item);
+                   eventUnassignedService.assignEvent(item);
                 }, function(error) {
-                    $log.warn("Failed to drop item on assigned");
-                    var alert = {
-                        type: 'danger',
-                        msg: $translate.instant('FAILED_ASSIGN')
-                    };
-                    alertService.setAlert(alert);
+                   dropFailure();
                 });
             }
-            return success;
+            return true;
+        };
+
+        function dropFailure() {
+            $log.warn("Failed to drop item on assigned");
+            alertService.setAlert($translate.instant('FAILED_ASSIGN'));
         };
 
     };

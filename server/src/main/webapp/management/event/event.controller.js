@@ -50,22 +50,13 @@
 
             }, function(errResponse) {
                 $log.warn("Failed to create event", errResponse);
-                alert = {
-                    type: 'danger',
-                    msg: $translate.instant('FAILED_ADD')
-                };
-                alertService.setAlert(alert);
+                alertService.setAlert($translate.instant('FAILED_ADD'));
             });
         };
 
         vm.deleteEvent = function(id) {
-            eventUnassignedService.removeUnassigned(id).then(function(data) {
-            }, function(error) {
-              alert = {
-                type: 'danger',
-                msg: $translate.instant('FAILED_REMOVE')
-              };
-              alertService.setAlert(alert);
+            eventUnassignedService.removeUnassigned(id).then(function(data) {}, function(error) {
+              alertService.setAlert($translate.instant('FAILED_REMOVE'));
             });
         };
     };

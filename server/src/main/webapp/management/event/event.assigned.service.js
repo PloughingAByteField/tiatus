@@ -91,6 +91,7 @@
         };
 
         function reassignEvent(item, raceId, dropIndex) {
+            var deferred = $q.defer();
             var raceAssigned = getRaceAssigned(raceId);
             var events = raceAssigned.events;
             var orderAtDrop = - 1;
@@ -105,20 +106,12 @@
             if (index < indexOfItem) {
                 $log.debug("drop before");
                 updatedEvents = reorderRaceOrder(events, index, indexOfItem, 1);
-                events[indexOfItem].raceEventOrder = orderAtDrop;
                 updatedEvents.push({ event: { id: item.event.id }, raceEventOrder: orderAtDrop });
 
             } else if (index > indexOfItem) {
                 $log.debug("drop after ");
-                $log.debug(events[index].event);
                 updatedEvents = reorderRaceOrder(events, indexOfItem + 1, index + 1, -1);
-                if (dropIndex !== index) {
-                    events[indexOfItem].raceEventOrder = orderAtDrop;
-                } else {
-                    events[indexOfItem].raceEventOrder = orderAtDrop;
-                }
                 updatedEvents.push({ event: { id: item.event.id }, raceEventOrder: orderAtDrop });
-
 
             } else {
                 $log.debug("drop on self");
@@ -128,12 +121,20 @@
                 // update race_events that have had race_order
                 AssignedEvent.update(updatedEvents).$promise.then(function (data) {
                     updateEvents(updatedEvents, events);
+                    events[indexOfItem].raceEventOrder = orderAtDrop;
                     events = $filter('orderBy')(events, "raceEventOrder");
                     raceAssigned.events = events;
+                    deferred.resolve();
+
                 }, function(error) {
                     $log.warn("Failed to update events", error);
+                    deferred.reject(error);
                 });
+            } else {
+                deferred.resolve();
             }
+
+            return $q.when(deferred.promise);
         };
 
         function updateEvents(updatedEvents, events) {
@@ -148,6 +149,7 @@
         };
 
         function unassignEvent(item, raceId) {
+            var deferred = $q.defer();
             var events = getAssignedEventsForRace(raceId);
             var index = getEventIndex(events, item);
 
@@ -155,17 +157,27 @@
 
             // delete event from race_event
             AssignedEvent.remove({ id: events[index].event.id }).$promise.then(function (data) {
-                // update race_events that have had race_order
-                AssignedEvent.update(updatedEvents).$promise.then(function (data) {
-                     updateEvents(updatedEvents, events);
-                     $log.debug("Removing event " + item.event.name);
-                     events.splice(index, 1);
-                }, function(error) {
-                    $log.warn("Failed to update events", error);
-                });
+
+                if (updatedEvents.length > 0) {
+                    // update race_events that have had race_order
+                    AssignedEvent.update(updatedEvents).$promise.then(function (data) {
+                         updateEvents(updatedEvents, events);
+                         $log.debug("Removing event " + item.event.name);
+                         events.splice(index, 1);
+                         deferred.resolve(data);
+                    }, function(error) {
+                        $log.warn("Failed to update events", error);
+                        deferred.reject(error);
+                    });
+                } else {
+                    events.splice(index, 1);
+                    deferred.resolve(data);
+                }
             }, function(error) {
                 $log.warn("Failed to remove event", error);
+                deferred.reject(error);
             });
+            return $q.when(deferred.promise);
         };
 
         function getEventIndex(items, e) {

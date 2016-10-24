@@ -13,7 +13,9 @@
             if (typeof item.raceEventOrder !== 'undefined') {
                 $log.debug('Have unassignment of ' + item.event.name + ' from ' + item.raceEventOrder);
                 eventUnassignedService.unassignEvent(item.event, index);
-                eventAssignedService.unassignEvent(item, raceService.getCurrentRace());
+                eventAssignedService.unassignEvent(item, raceService.getCurrentRace()).then(function(data) {}, function(error) {}, function(error) {
+                    dropFailure();
+                });
 
             } else {
                 return false;
@@ -22,5 +24,9 @@
             return true;
         };
 
+        function dropFailure() {
+            $log.warn("Failed to drop item on unassigned");
+            alertService.setAlert($translate.instant('FAILED_UNASSIGN'));
+        };
     };
 })();
