@@ -33,7 +33,7 @@ public class EventRestPoint {
         try {
             LOG.debug("calling service");
             Event saved = service.addEvent(event);
-            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
+            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());

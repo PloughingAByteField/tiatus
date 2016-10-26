@@ -6,6 +6,7 @@
     function EventController($log, Event, $translate, eventAssignedService, eventUnassignedService, raceService, alertService) {
         var vm = this;
         vm.alert = alertService.getAlert();
+        vm.event = { weighted: false };
 
         eventAssignedService.getAssignedEvents().then(function(data) {
             vm.assigned = data;
@@ -42,9 +43,8 @@
             var event = new Event();
             event.name = e.name;
             event.weighted = e.weighted;
-            $log.debug(event);
             eventUnassignedService.createUnassignedEvent(event).then(function(data) {
-                vm.event = {};
+                vm.event = { weighted: false };
                 vm.addEventForm.$setPristine();
                 vm.addEventForm.$setUntouched();
 
@@ -55,7 +55,7 @@
         };
 
         vm.deleteEvent = function(id) {
-            eventUnassignedService.removeUnassigned(id).then(function(data) {}, function(error) {
+            eventUnassignedService.removeUnassigned({'id': id}).then(function(data) {}, function(error) {
               alertService.setAlert($translate.instant('FAILED_REMOVE'));
             });
         };

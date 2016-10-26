@@ -40,6 +40,18 @@
     }]).factory('Event', ['$resource',
       function($resource){
         return $resource('../rest/events/:id', {}, {
+            save: {
+                method: 'POST',
+                transformResponse: function(data, headers, status) {
+                    if (status == 201) {
+                        var locationParts = headers("Location").split('/');
+                        var id = locationParts[locationParts.length - 1];
+                        return {'id': id};
+                    } else {
+                        return data;
+                    }
+                }
+            }
         });
     }]);
 

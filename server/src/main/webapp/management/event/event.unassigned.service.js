@@ -73,11 +73,11 @@
             return -1;
         };
 
-        function removeUnassigned(eventId) {
+        function removeUnassigned(event) {
             var deferred = $q.defer();
-            Event.remove(eventId).$promise.then(function() {
+            Event.remove(event).$promise.then(function() {
                 // remove from list
-                deleteUnassigned(item);
+                deleteUnassigned(event);
                 deferred.resolve();
             }, function(error) {
                 $log.warn("Failed to remove event", error);

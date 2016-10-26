@@ -53,7 +53,7 @@
                     <div ng-repeat="event in ctrlUnassigned.unassigned" id="unassignedEvent-{{event.id}}" class="unassigned-event" dnd-draggable="event" dnd-moved="angular.noop">
                         <div class="event" ><span>{{ 'EVENT_EVENT' | translate }}</span>{{event.name}}</div>
                         <div id="{{event.weighted}}" class="event" >{{ 'EVENT_WEIGHTED' | translate }}</span> {{event.weighted}}</div>
-                        <button id="{{event.id}}" data-ng-click="ctrl.deleteEvent(event.id)">{{ 'REMOVE_EVENT' | translate }}</button>
+                        <button data-ng-click="ctrl.deleteEvent(event.id)">{{ 'REMOVE_EVENT' | translate }}</button>
                 </div>
             </div>
         </div>
