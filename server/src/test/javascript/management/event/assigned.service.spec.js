@@ -178,6 +178,213 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 expect(assignedEvents[1].race.id).toBe(2);
                 expect(assignedEvents[1].events[0].event.id).toBe(2);
             });
+
+            it('should unassign event', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.unassignEvent({ event: {id: 1}}, 1);
+                expect(AssignedEvent.remove).toHaveBeenCalled();
+                deferredRemove.resolve();
+                scope.$apply();
+                expect(AssignedEvent.update).toHaveBeenCalled();
+                deferredUpdate.resolve();
+                scope.$apply();
+
+                expect(assignedEvents[0].events.length).toBe(1);
+                expect(assignedEvents[0].events[0].event.id).toBe(3);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should unassign event with no updates', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.unassignEvent({ event: {id: 3}}, 1);
+                expect(AssignedEvent.remove).toHaveBeenCalled();
+                deferredRemove.resolve();
+                scope.$apply();
+                expect(AssignedEvent.update).not.toHaveBeenCalled();
+
+                expect(assignedEvents[0].events.length).toBe(1);
+                expect(assignedEvents[0].events[0].event.id).toBe(1);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should fail to unassign event when removing', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.unassignEvent({ event: {id: 1}}, 1);
+                expect(AssignedEvent.remove).toHaveBeenCalled();
+                deferredRemove.reject();
+                scope.$apply();
+
+                expect(AssignedEvent.update).not.toHaveBeenCalled();
+
+                expect(assignedEvents[0].events.length).toBe(2);
+                expect(assignedEvents[0].events[0].event.id).toBe(1);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].events[1].event.id).toBe(3);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should fail to unassign event when updating', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.unassignEvent({ event: {id: 1}}, 1);
+                expect(AssignedEvent.remove).toHaveBeenCalled();
+                deferredRemove.resolve();
+                scope.$apply();
+                deferredUpdate.reject();
+                scope.$apply();
+                expect(AssignedEvent.update).toHaveBeenCalled();
+
+                expect(assignedEvents[0].events.length).toBe(2);
+                expect(assignedEvents[0].events[0].event.id).toBe(1);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].events[1].event.id).toBe(3);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should reassign event before', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.reassignEvent({ event: {id: 3}}, 1, 0);
+                expect(AssignedEvent.save).not.toHaveBeenCalled();
+                expect(AssignedEvent.remove).not.toHaveBeenCalled();
+                expect(AssignedEvent.update).toHaveBeenCalled();
+                deferredUpdate.resolve();
+                scope.$apply();
+
+                expect(assignedEvents[0].events.length).toBe(2);
+                expect(assignedEvents[0].events[0].event.id).toBe(3);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].events[1].event.id).toBe(1);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should reassign event after', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 1);
+                expect(AssignedEvent.save).not.toHaveBeenCalled();
+                expect(AssignedEvent.remove).not.toHaveBeenCalled();
+                expect(AssignedEvent.update).toHaveBeenCalled();
+                deferredUpdate.resolve();
+                scope.$apply();
+
+                expect(assignedEvents[0].events.length).toBe(2);
+                expect(assignedEvents[0].events[0].event.id).toBe(3);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].events[1].event.id).toBe(1);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should reassign event at end', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 2);
+                expect(AssignedEvent.save).not.toHaveBeenCalled();
+                expect(AssignedEvent.remove).not.toHaveBeenCalled();
+                expect(AssignedEvent.update).toHaveBeenCalled();
+                deferredUpdate.resolve();
+                scope.$apply();
+
+                expect(assignedEvents[0].events.length).toBe(2);
+                expect(assignedEvents[0].events[0].event.id).toBe(3);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].events[1].event.id).toBe(1);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should not reassign event if drop on self', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 0);
+                expect(AssignedEvent.save).not.toHaveBeenCalled();
+                expect(AssignedEvent.remove).not.toHaveBeenCalled();
+                expect(AssignedEvent.update).not.toHaveBeenCalled();
+                deferredUpdate.resolve();
+                scope.$apply();
+
+                expect(assignedEvents[0].events.length).toBe(2);
+                expect(assignedEvents[0].events[0].event.id).toBe(1);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].events[1].event.id).toBe(3);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should not reassign event if update fails', function() {
+                var assignedEvents = getAssignedEvents();
+                expect(assignedEvents.length).toBe(2);
+
+                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 1);
+                expect(AssignedEvent.save).not.toHaveBeenCalled();
+                expect(AssignedEvent.remove).not.toHaveBeenCalled();
+                expect(AssignedEvent.update).toHaveBeenCalled();
+                deferredUpdate.reject();
+                scope.$apply();
+
+                expect(assignedEvents[0].events.length).toBe(2);
+                expect(assignedEvents[0].events[0].event.id).toBe(1);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].events[1].event.id).toBe(3);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].race.id).toBe(1);
+                expect(assignedEvents[1].events.length).toBe(1);
+                expect(assignedEvents[1].race.id).toBe(2);
+                expect(assignedEvents[1].events[0].event.id).toBe(2);
+            });
+
+            it('should return race assigned events', function() {
+                var assignedEvents = getAssignedEvents();
+                var data = eventAssignedService.getAssignedEventsForRace(1);
+                expect(data.length).toBe(2);
+            });
+
+            it('should return empty race assigned events', function() {
+                var assignedEvents = getAssignedEvents();
+                var data = eventAssignedService.getAssignedEventsForRace(4);
+                expect(data.length).toBe(0);
+            });
         });
     });
 });

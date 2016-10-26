@@ -141,10 +141,8 @@
             for (var i = 0; i < updatedEvents.length; i++) {
                 var updated = updatedEvents[i];
                 var eventIndex = getEventIndex(events, updated);
-                if (eventIndex !== -1) {
-                    var event = events[eventIndex];
-                    event.raceEventOrder = updated.raceEventOrder;
-                }
+                var event = events[eventIndex];
+                event.raceEventOrder = updated.raceEventOrder;
             }
         };
 
@@ -187,8 +185,6 @@
                     return i;
                 }
             }
-
-            return -1;
         };
 
 
