@@ -18,18 +18,15 @@
         };
 
         vm.dropOnAssigned = function(dropEvent, index, item) {
-            var updates = [];
-            var newRaceEvent = {};
-
             // are we a self drop
             if (typeof item.raceEventOrder !== 'undefined') {
-                eventAssignedService.reassignEvent(item, raceService.getCurrentRace(), index).then(function(data) {}, function(error) {
+                eventAssignedService.reassignEvent(item, raceService.getCurrentRace(), index).then(function() {}, function() {
                    dropFailure();
                 });
             } else {
-                eventAssignedService.assignEvent(item, raceService.getCurrentRace(), index).then(function(data) {
+                eventAssignedService.assignEvent(item, raceService.getCurrentRace(), index).then(function() {
                    eventUnassignedService.assignEvent(item);
-                }, function(error) {
+                }, function() {
                    dropFailure();
                 });
             }

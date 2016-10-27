@@ -20,8 +20,8 @@
                         }
                     }
 
-                    for (var x = 0; x < scope.ctrl.unassigned.length; x++) {
-                        var unassignedEvent = scope.ctrl.unassigned[x];
+                    for (var j = 0; j < scope.ctrl.unassigned.length; j++) {
+                        var unassignedEvent = scope.ctrl.unassigned[j];
                         if (unassignedEvent.name === viewValue) {
                             return false;
                         }

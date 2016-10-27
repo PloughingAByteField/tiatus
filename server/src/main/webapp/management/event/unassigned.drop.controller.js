@@ -13,7 +13,7 @@
             if (typeof item.raceEventOrder !== 'undefined') {
                 $log.debug('Have unassignment of ' + item.event.name + ' from ' + item.raceEventOrder);
                 eventUnassignedService.unassignEvent(item.event, index);
-                eventAssignedService.unassignEvent(item, raceService.getCurrentRace()).then(function(data) {}, function(error) {}, function(error) {
+                eventAssignedService.unassignEvent(item, raceService.getCurrentRace()).then(function() {}, function() {}, function() {
                     dropFailure();
                 });
 
