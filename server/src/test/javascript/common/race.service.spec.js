@@ -7,6 +7,9 @@ describe("src.test.javascript.common.js.race.service.spec.js", function() {
         $httpBackend = $injector.get('$httpBackend');
         mockResource = $injector.get('Race');
         $httpBackend.whenGET('lang/en.json').respond();
+        $httpBackend.whenGET('lang/common/en.json').respond();
+        $httpBackend.whenGET('lang/home/en.json').respond();
+        $httpBackend.whenGET('home/home.html').respond();
     }));
 
     describe('call url', function() {

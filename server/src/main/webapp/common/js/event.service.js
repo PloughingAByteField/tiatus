@@ -19,14 +19,6 @@
             }
         });
 
-    }]).factory('DeleteAssignedEvent', ['$resource',
-      function($resource){
-        return $resource('../rest/events/delete', {}, {
-            remove: {
-                method: 'POST'
-            }
-        });
-
     }]).factory('UnassignedEvent', ['$resource',
       function($resource){
         return $resource('../rest/events/unassigned', {}, {

@@ -3,7 +3,7 @@
 
     angular.module('EventController').controller('eventController', EventController);
 
-    function EventController($log, Event, $translate, eventAssignedService, eventUnassignedService, raceService, alertService) {
+    function EventController($log, $translate, eventAssignedService, eventUnassignedService, raceService, alertService) {
         var vm = this;
         vm.alert = alertService.getAlert();
         vm.event = { weighted: false };
@@ -40,10 +40,7 @@
         };
 
         vm.createEvent = function(e) {
-            var event = new Event();
-            event.name = e.name;
-            event.weighted = e.weighted;
-            eventUnassignedService.createUnassignedEvent(event).then(function(data) {
+            eventUnassignedService.createUnassignedEvent({'name': e.name, 'weighted': e.weighted}).then(function(data) {
                 vm.event = { weighted: false };
                 vm.addEventForm.$setPristine();
                 vm.addEventForm.$setUntouched();
