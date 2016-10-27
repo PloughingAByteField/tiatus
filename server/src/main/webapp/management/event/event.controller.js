@@ -40,7 +40,7 @@
         };
 
         vm.createEvent = function(e) {
-            eventUnassignedService.createUnassignedEvent({'name': e.name, 'weighted': e.weighted}).then(function(data) {
+            eventUnassignedService.createUnassignedEvent({'name': e.name, 'weighted': e.weighted}).then(function() {
                 vm.event = { weighted: false };
                 vm.addEventForm.$setPristine();
                 vm.addEventForm.$setUntouched();
@@ -52,7 +52,7 @@
         };
 
         vm.deleteEvent = function(id) {
-            eventUnassignedService.removeUnassigned({'id': id}).then(function(data) {}, function(error) {
+            eventUnassignedService.removeUnassigned({'id': id}).then(function() {}, function() {
               alertService.setAlert($translate.instant('FAILED_REMOVE'));
             });
         };
