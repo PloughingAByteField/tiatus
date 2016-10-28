@@ -1,7 +1,7 @@
 (function() {
     'use strict'; // NOSONAR
 
-    angular.module('EventController').service('alertService', AlertService);
+    angular.module('AlertService', []).service('alertService', AlertService);
 
     function AlertService() {
         var alert = { msg : null, type: null };

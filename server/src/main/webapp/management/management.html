@@ -25,13 +25,15 @@
     <script src="home/home.module.js"></script>
     <script src="home/home.controller.js"></script>
 
+    <script src="alert.service.js"></script>
+
     <script src="race/race.module.js"></script>
     <script src="race/race.controller.js"></script>
     <script src="race/race.service.js"></script>
 
     <script src="event/event.module.js"></script>
     <script src="event/event.controller.js"></script>
-    <script src="event/alert.service.js"></script>
+
     <script src="event/event.directive.js"></script>
     <script src="event/event.assigned.service.js"></script>
     <script src="event/event.unassigned.service.js"></script>
@@ -54,7 +56,7 @@
 </head>
 <body data-ng-cloak>
     <div class="tiatus-container">
-        <div class="Spacer"> </div>
+        <div class="spacer"> </div>
         <div>
             <div class="event-header">{{ eventTitle }}</div>
 
@@ -65,7 +67,7 @@
 
         <div class="content">
             <div data-ng-view></div>
-            <div class="Spacer"> </div>
+            <div class="spacer"> </div>
         </div>
 
         <!-- make these services -->

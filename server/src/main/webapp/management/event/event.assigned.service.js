@@ -119,7 +119,7 @@
 
             if (updatedEvents.length > 0) {
                 // update race_events that have had race_order
-                AssignedEvent.update(updatedEvents).$promise.then(function (data) {
+                AssignedEvent.update(updatedEvents).$promise.then(function () {
                     updateEvents(updatedEvents, events);
                     events[indexOfItem].raceEventOrder = orderAtDrop;
                     events = $filter('orderBy')(events, "raceEventOrder");
@@ -158,7 +158,7 @@
 
                 if (updatedEvents.length > 0) {
                     // update race_events that have had race_order
-                    AssignedEvent.update(updatedEvents).$promise.then(function (data) {
+                    AssignedEvent.update(updatedEvents).$promise.then(function () {
                          updateEvents(updatedEvents, events);
                          $log.debug("Removing event " + item.event.name);
                          events.splice(index, 1);

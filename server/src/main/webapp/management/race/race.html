@@ -1,7 +1,7 @@
 <div data-ng-controller="raceController as ctrl">
     <h1>{{ 'RACE' | translate }}</h1>
 
-    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert != null" ng-class="'alert-' + ctrl.alert.type">
+    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert.msg != null" ng-class="'alert-' + ctrl.alert.type">
         {{ctrl.alert.msg}}
     </div>
 
@@ -34,8 +34,8 @@
         </form>
     </div>
 
-    <div class="Spacer"> </div>
-    <div class="Spacer"> </div>
+    <div class="spacer"> </div>
+    <div class="spacer"> </div>
 
     <div data-ng-show="ctrl.races.$resolved">
         <table id="races" data-ng-table class="table table-condensed table-bordered table-striped" >

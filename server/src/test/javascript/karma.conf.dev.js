@@ -37,8 +37,7 @@ module.exports = function(config) {
         'src/main/webapp/common/js/**/*.js',
         'src/test/javascript/setup/*.spec.js',
         'src/test/javascript/common/*.js',
-        'src/test/javascript/management/race/*.js',
-        'src/test/javascript/management/event/*.js'
+        'src/test/javascript/management/**/*.js'
     ],
 
 

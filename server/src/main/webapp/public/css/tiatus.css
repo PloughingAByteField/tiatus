@@ -17,7 +17,7 @@
 
 .event-logo {
     top: -10px;
-    text-align: top;
+    text-align: start;
     position: absolute;
     left: 2%;
 }
@@ -100,11 +100,11 @@
   background: red;
 }
 
-form.ng-dirty input.ng-invalid {
+input.ng-dirty.ng-invalid {
     border: 1px solid #B02B2C;
 }
 
-form.ng-dirty input.ng-valid {
+input.ng-dirty.ng-valid {
     border: 1px solid #6BBA70;
 }
 
@@ -121,11 +121,7 @@ form.ng-dirty input.ng-valid {
     font-size: 14px;
 }
 
-.table-striped > tbody > tr:nth-child(even) > td {
-  background-color: #f3f3f3;
-}
-
-.table-striped > tbody > tr:nth-child(even) > th {
+.table-striped > tr:nth-child(even) > td {
   background-color: #f3f3f3;
 }
 
@@ -135,7 +131,6 @@ form.ng-dirty input.ng-valid {
     height: 100%;
     overflow: hidden;
     padding: 5px;
-    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
@@ -144,7 +139,6 @@ form.ng-dirty input.ng-valid {
     box-sizing: border-box;
     height: 100%;
     overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
@@ -165,6 +159,6 @@ ul[dnd-list], ul[dnd-list] > li {
     position: relative;
 }
 
-.Spacer {
+.spacer {
     margin-bottom: 20px;
 }

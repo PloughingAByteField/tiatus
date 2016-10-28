@@ -8,6 +8,7 @@
         'ngMessages',
         'ngCookies',
         'dndLists',
+        'AlertService',
         'RaceService',
         'EventService',
         'EventController',

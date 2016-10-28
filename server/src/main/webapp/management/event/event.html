@@ -1,7 +1,7 @@
 <div data-ng-controller="eventController as ctrl">
     <h1>{{ 'EVENT' | translate }}</h1>
 
-    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert.msg != {}" ng-class="'alert-' + ctrl.alert.type">
+    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert.msg != null" ng-class="'alert-' + ctrl.alert.type">
         {{ctrl.alert.msg}}
     </div>
 
@@ -21,7 +21,7 @@
         <button data-ng-click="ctrl.createEvent(ctrl.event)" ng-disabled="ctrl.addEventForm.$invalid">{{ 'CREATE_EVENT' | translate }}</button>
     </form>
 
-    <div class="Spacer"> </div>
+    <div class="spacer"> </div>
 
     <div ng-show="ctrl.races.$resolved">
         <label>{{ 'CHANGE_RACE' | translate }}</label>
@@ -29,7 +29,7 @@
         </select>
     </div>
 
-    <div class="Spacer"> </div>
+    <div class="spacer"> </div>
 
     <div ng-controller="eventDropOnAssignedController as ctrlAssigned">
         <div>{{ 'ASSIGNED_EVENTS' | translate }}</div>
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <div class="Spacer"> </div>
+    <div class="spacer"> </div>
 
     <div ng-controller="eventDropOnUnassignedController as ctrlUnassigned">
         <div>{{ 'UNASSIGNED_EVENTS' | translate }}</div>

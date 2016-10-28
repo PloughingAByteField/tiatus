@@ -21,18 +21,20 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
     describe('raceController', function(){
 
         describe('getRaces', function(){
-            var scope, deferred, Race;
+            var scope, deferred, Race, alertService;
 
-            beforeEach(inject(function($rootScope, $controller, $q, _Race_, $httpBackend) {
+            beforeEach(inject(function($rootScope, $controller, $q, _Race_, _alertService_, $httpBackend) {
                 Race = _Race_;
+                alertService = _alertService_;
                 deferredSave = $q.defer();
                 deferredQuery = $q.defer();
                 deferredRemove = $q.defer();
                 spyOn(Race, 'query').and.returnValue({$promise: deferredQuery.promise});
                 spyOn(Race, 'save').and.returnValue({ $promise: deferredSave.promise });
                 spyOn(Race, 'remove').and.returnValue({ $promise: deferredRemove.promise });
+                spyOn(alertService, 'clearAlert').and.returnValue();
                 scope = $rootScope.$new();
-                ctrl = $controller('raceController', {$scope: scope, Race: Race});
+                ctrl = $controller('raceController', {$scope: scope, Race: Race, alertService: alertService});
                 ctrl.races = [];
                 $httpBackend.whenGET('home/home.html').respond();
             }));
@@ -53,25 +55,28 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
             });
 
             it('should fail to fetch races from mocked backend', function() {
+                expect(alertService.getAlert().msg).toBe(null);
                 expect(ctrl.races.length).toBe(0);
                 deferredQuery.reject();
                 scope.$apply();
                 expect(ctrl.races.length).toBe(0);
-                expect(ctrl.alert).not.toBeUndefined();
-                // as error message will be localised by angular-translate which has been mocked
-                expect(ctrl.alert.msg).toBe("FAILED_FETCH");
-                expect(ctrl.alert.type).toBe("danger");
-
+                expect(alertService.getAlert().msg).toBe('FAILED_FETCH');
                 expect(Race.save).not.toHaveBeenCalled();
                 expect(Race.remove).not.toHaveBeenCalled();
+            });
+
+            it('should call clearAlert', function() {
+                ctrl.closeAlert();
+                expect(alertService.clearAlert).toHaveBeenCalled();
             });
         });
 
         describe('addRace', function(){
-            var scope, deferred, Race;
+            var scope, deferred, Race, alertService;
 
-            beforeEach(inject(function($rootScope, $controller, $q, _Race_, $httpBackend) {
+            beforeEach(inject(function($rootScope, $controller, $q, _Race_, _alertService_, $httpBackend) {
                     Race = _Race_;
+                    alertService = _alertService_;
                     deferredSave = $q.defer();
                     deferredQuery = $q.defer();
                     deferredRemove = $q.defer();
@@ -79,7 +84,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
                     spyOn(Race, 'save').and.returnValue({ $promise: deferredSave.promise });
                     spyOn(Race, 'remove').and.returnValue({ $promise: deferredRemove.promise });
                     scope = $rootScope.$new();
-                    ctrl = $controller('raceController', {$scope: scope, Race: Race});
+                    ctrl = $controller('raceController', {$scope: scope, Race: Race, alertService: alertService});
                     ctrl.races = [];
                     $httpBackend.whenGET('home/home.html').respond();
             }));
@@ -122,6 +127,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
                     $setUntouched: function() {}
                 }
 
+                expect(alertService.getAlert().msg).toBe(null);
                 expect(ctrl.races.length).toBe(0);
                 deferredQuery.resolve([{id: 1, name: 'Race 1'}, {id: 2, name: 'Race 2'}]);
                 scope.$apply();
@@ -134,20 +140,18 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
                 scope.$apply();
                 expect(ctrl.races.length).toBe(2);
 
-                expect(ctrl.alert).not.toBeUndefined();
-                expect(ctrl.alert.msg).toBe("FAILED_ADD");
-                expect(ctrl.alert.type).toBe("danger");
-
+                expect(alertService.getAlert().msg).toBe('FAILED_ADD');
                 expect(Race.remove).not.toHaveBeenCalled();
             });
         });
 
 
        describe('removeRace', function(){
-            var scope, deferred, Race;
+            var scope, deferred, Race, alertService;
 
-            beforeEach(inject(function($rootScope, $controller, $q, _Race_, $httpBackend) {
+            beforeEach(inject(function($rootScope, $controller, $q, _Race_, _alertService_, $httpBackend) {
                     Race = _Race_;
+                    alertService = _alertService_;
                     deferredSave = $q.defer();
                     deferredQuery = $q.defer();
                     deferredRemove = $q.defer();
@@ -155,7 +159,7 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
                     spyOn(Race, 'save').and.returnValue({ $promise: deferredSave.promise });
                     spyOn(Race, 'remove').and.returnValue({ $promise: deferredRemove.promise });
                     scope = $rootScope.$new();
-                    ctrl = $controller('raceController', {$scope: scope, Race: Race});
+                    ctrl = $controller('raceController', {$scope: scope, Race: Race, alertService: alertService});
                     ctrl.races = [];
                     $httpBackend.whenGET('home/home.html').respond();
             }));
@@ -189,16 +193,14 @@ describe("src.test.javascript.management.race.controller.spec.js", function() {
 
                 expect(ctrl.races.length).toBe(2);
                 expect(ctrl.alert).toBeUndefined();
+                expect(alertService.getAlert().msg).toBe(null);
 
                 ctrl.removeRace(race);
                 deferredRemove.reject();
                 scope.$apply();
                 expect(ctrl.races.length).toBe(2);
 
-                expect(ctrl.alert).not.toBeUndefined();
-                expect(ctrl.alert.msg).toBe("FAILED_REMOVE");
-                expect(ctrl.alert.type).toBe("danger");
-
+                expect(alertService.getAlert().msg).toBe('FAILED_REMOVE');
                 expect(Race.save).not.toHaveBeenCalled();
             });
         });
