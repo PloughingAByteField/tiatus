@@ -10,11 +10,13 @@
 
         eventAssignedService.getAssignedEvents().then(function(data) {
             vm.assigned = data;
+            $log.debug(vm.assigned);
             raceDataChange();
         });
 
         eventUnassignedService.getUnassigned().then(function(data) {
             vm.unassigned = data;
+            $log.debug(vm.unassigned);
         });
 
         raceService.getRaces().then(function(data) {
