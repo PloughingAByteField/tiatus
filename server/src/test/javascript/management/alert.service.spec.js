@@ -1,4 +1,4 @@
-describe("src.test.javascript.management.event.alert.service.spec.js", function() {
+describe("src.test.javascript.management.alert.service.spec.js", function() {
 
     beforeEach(module(function($logProvider) { // test fail other wise
         // We can configure the debugging level (the default is true)
