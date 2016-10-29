@@ -5,17 +5,13 @@
 
     function EventAssignedDropController($log, eventAssignedService, eventUnassignedService, raceService, $translate, alertService) {
         var vm = this;
-        vm.assigned = eventAssignedService.getAssignedEvents().then(function(data) {
+        eventAssignedService.getAssignedEvents().then(function(data) {
             vm.assigned = data;
         });
 
         eventUnassignedService.getUnassigned().then(function(data) {
             vm.unassigned = data;
         });
-
-        vm.assignedToRace = function(raceId) {
-            return eventAssignedService.getAssignedEventsForRace(raceId);
-        };
 
         vm.dropOnAssigned = function(dropEvent, index, item) {
             // are we a self drop
