@@ -54,7 +54,7 @@ public class UserDaoImpl implements UserDao {
             }
 
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist race", e.getMessage());
+            LOG.warn("Failed to persist user", e.getMessage());
             throw new DaoException(e);
         }
     }

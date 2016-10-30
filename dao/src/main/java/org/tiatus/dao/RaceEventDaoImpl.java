@@ -2,7 +2,7 @@ package org.tiatus.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tiatus.entity.Event;
+import org.tiatus.entity.RaceEvent;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
@@ -16,9 +16,9 @@ import java.util.List;
  * Created by johnreynolds on 10/10/2016.
  */
 @Default
-public class EventDaoImpl implements EventDao {
+public class RaceEventDaoImpl implements RaceEventDao {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EventDaoImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RaceEventDaoImpl.class);
 
     @PersistenceContext(unitName = "primary")
     protected EntityManager em;
@@ -27,21 +27,21 @@ public class EventDaoImpl implements EventDao {
     protected UserTransaction tx;
 
     @Override
-    public Event addEvent(Event event) throws DaoException {
-        LOG.debug("Adding event " + event);
+    public RaceEvent addRaceEvent(RaceEvent raceEvent) throws DaoException {
+        LOG.debug("Adding raceEvent " + raceEvent);
         try {
-            Event existing = null;
-            if (event.getId() != null) {
-                existing = em.find(Event.class, event.getId());
+            RaceEvent existing = null;
+            if (raceEvent.getId() != null) {
+                existing = em.find(RaceEvent.class, raceEvent.getId());
             }
             if (existing == null) {
                 tx.begin();
-                Event merged = em.merge(event);
+                RaceEvent merged = em.merge(raceEvent);
                 tx.commit();
 
                 return merged;
             } else {
-                String message = "Failed to add event due to existing event with same id " + event.getId();
+                String message = "Failed to add raceEvent due to existing raceEvent with same id " + raceEvent.getId();
                 LOG.warn(message);
                 throw new DaoException(message);
             }
@@ -52,46 +52,42 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public void deleteEvent(Event event) throws DaoException {
+    public void deleteRaceEvent(RaceEvent raceEvent) throws DaoException {
         try {
-            Event existing = null;
-            if (event.getId() != null) {
-                existing = em.find(Event.class, event.getId());
+            RaceEvent existing = null;
+            if (raceEvent.getId() != null) {
+                existing = em.find(RaceEvent.class, raceEvent.getId());
             }
             if (existing != null) {
                 tx.begin();
-                em.remove(em.contains(event) ? event : em.merge(event));
+                em.remove(em.contains(raceEvent) ? raceEvent : em.merge(raceEvent));
                 tx.commit();
             } else {
-                LOG.warn("No such event of id " + event.getId());
+                LOG.warn("No such event of id " + raceEvent.getId());
             }
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to delete event", e);
+            LOG.warn("Failed to delete raceEvent", e);
             throw new DaoException(e.getMessage());
         }
     }
 
+
     @Override
-    public void updateEvent(Event event) throws DaoException {
+    public void updateRaceEvent(RaceEvent raceEvent) throws DaoException {
         try {
             tx.begin();
-            em.merge(event);
+            em.merge(raceEvent);
             tx.commit();
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to update event", e);
+            LOG.warn("Failed to update raceEvent", e);
             throw new DaoException(e.getMessage());
         }
     }
 
     @Override
-    public List<Event> getEvents() {
-        TypedQuery<Event> query = em.createQuery("FROM Event order by id", Event.class);
+    public List<RaceEvent> getRaceEvents() {
+        TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent order by raceEventOrder", RaceEvent.class);
         return query.getResultList();
     }
 
-    @Override
-    public List<Event> getUnassignedEvents() {
-        TypedQuery<Event> query = em.createQuery("FROM Event e where e.id not in (select re.event FROM RaceEvent re)", Event.class);
-        return query.getResultList();
-    }
 }

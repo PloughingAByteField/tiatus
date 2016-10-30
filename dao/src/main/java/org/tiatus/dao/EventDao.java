@@ -1,7 +1,6 @@
 package org.tiatus.dao;
 
 import org.tiatus.entity.Event;
-import org.tiatus.entity.RaceEvent;
 
 import java.util.List;
 
@@ -25,16 +24,17 @@ public interface EventDao {
     void deleteEvent(Event event) throws DaoException;
 
     /**
+     * Update a Event
+     * @param event Event to update
+     * @throws DaoException on error
+     */
+    void updateEvent(Event event) throws DaoException;
+
+    /**
      * Get events
      * @return list of events
      */
     List<Event> getEvents();
-
-    /**
-     * Get assigned events
-     * @return list of events assigned to a race
-     */
-    List<RaceEvent> getAssignedEvents();
 
     /**
      * Get unassigned events

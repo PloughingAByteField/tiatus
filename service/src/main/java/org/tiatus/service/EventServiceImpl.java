@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EventDao;
+import org.tiatus.dao.RaceEventDao;
 import org.tiatus.entity.Event;
 import org.tiatus.entity.RaceEvent;
 
@@ -19,14 +20,16 @@ public class EventServiceImpl implements EventService {
     private static final Logger LOG = LoggerFactory.getLogger(EventServiceImpl.class);
 
     private final EventDao dao;
+    private final RaceEventDao raceEventDao;
 
     /**
      * Constructor for service
      * @param dao object injected by cdi
      */
     @Inject
-    public EventServiceImpl(EventDao dao) {
+    public EventServiceImpl(EventDao dao, RaceEventDao raceEventDao) {
         this.dao = dao;
+        this.raceEventDao = raceEventDao;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<RaceEvent> getAssignedEvents() {
-        return dao.getAssignedEvents();
+        return raceEventDao.getRaceEvents();
     }
 
     @Override

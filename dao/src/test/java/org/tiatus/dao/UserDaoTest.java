@@ -28,7 +28,7 @@ public class UserDaoTest {
 
             @Mock
             public List<UserRole> getResultList() {
-                List<UserRole> list = new ArrayList<UserRole>();
+                List<UserRole> list = new ArrayList<>();
                 UserRole userRole = new UserRole();
                 list.add(userRole);
                 return list;
@@ -83,7 +83,7 @@ public class UserDaoTest {
 
             @Mock
             public List<Role> getResultList() {
-                List<Role> list = new ArrayList<Role>();
+                List<Role> list = new ArrayList<>();
                 Role role = new Role();
                 role.setRoleName("ADMIN");
                 list.add(role);
@@ -121,7 +121,7 @@ public class UserDaoTest {
 
             @Mock
             public List<User> getResultList() {
-                List<User> list = new ArrayList<User>();
+                List<User> list = new ArrayList<>();
                 User user = new User();
                 user.setUserName("username");
                 list.add(user);
@@ -147,6 +147,34 @@ public class UserDaoTest {
         dao.em = em;
         User user = dao.getUser("username", "password");
         Assert.assertEquals(user.getUserName(), "username");
+    }
+
+    @Test
+    public void testGetUserNoUser() {
+        TypedQuery typedQuery = new MockUp<TypedQuery>() {
+            @Mock
+            public TypedQuery setParameter(String name, Object value) {
+                return this.getMockInstance();
+            }
+
+            @Mock
+            public List<User> getResultList() {
+                return new ArrayList<>();
+            }
+
+        }.getMockInstance();
+
+        EntityManager em = new MockUp<EntityManager>() {
+            @Mock
+            public  TypedQuery createQuery(String qlString, Class resultClass) {
+                return typedQuery;
+            }
+        }.getMockInstance();
+
+        UserDaoImpl dao = new UserDaoImpl();
+        dao.em = em;
+        User user = dao.getUser("username", "password");
+        Assert.assertNull(user);
     }
 
     @Test
@@ -226,9 +254,7 @@ public class UserDaoTest {
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
             public User find(Class entityClass, Object primaryKey) {
-                User user = new User();
-                user.setId(1L);
-                return user;
+                return null;
             }
 
             @Mock

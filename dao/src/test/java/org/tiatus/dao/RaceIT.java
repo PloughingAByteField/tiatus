@@ -8,10 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.entity.Race;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.transaction.NotSupportedException;
+import javax.transaction.*;
 import java.util.List;
 
 /**
@@ -37,16 +38,16 @@ public class RaceIT {
 
     @Test
     public void getRaces() {
-        List<org.tiatus.entity.Race> races = dao.getRaces();
+        List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
 
         // add race
         em.getTransaction().begin();
-        org.tiatus.entity.Race race1 = new org.tiatus.entity.Race();
-        race1.setId(new Long(1));
+        Race race1 = new Race();
+        race1.setId(1L);
         race1.setName("Race 1");
-        org.tiatus.entity.Race race2 = new org.tiatus.entity.Race();
-        race2.setId(new Long(2));
+        Race race2 = new Race();
+        race2.setId(2L);
         race2.setName("Race 2");
         em.merge(race1);
         em.merge(race2);
@@ -59,10 +60,10 @@ public class RaceIT {
 
     @Test
     public void addRace() throws Exception {
-        List<org.tiatus.entity.Race> races = dao.getRaces();
+        List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
-        org.tiatus.entity.Race newRace = new org.tiatus.entity.Race();
-        newRace.setId(new Long(1));
+        Race newRace = new Race();
+        newRace.setId(1L);
         newRace.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(newRace);
@@ -75,10 +76,10 @@ public class RaceIT {
 
     @Test (expected = DaoException.class)
     public void addExistingRace() throws Exception {
-        List<org.tiatus.entity.Race> races = dao.getRaces();
+        List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
-        org.tiatus.entity.Race newRace = new org.tiatus.entity.Race();
-        newRace.setId(new Long(1));
+        Race newRace = new Race();
+        newRace.setId(1L);
         newRace.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(newRace);
@@ -87,10 +88,10 @@ public class RaceIT {
 
     @Test (expected = DaoException.class)
     public void testDaoExceptionWithException() throws Exception {
-        List<org.tiatus.entity.Race> races = dao.getRaces();
+        List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
-        org.tiatus.entity.Race newRace = new org.tiatus.entity.Race();
-        newRace.setId(new Long(1));
+        Race newRace = new Race();
+        newRace.setId(1L);
         newRace.setName("Race 1");
         EntityManager em = new MockUp<EntityManager>(){
             @Mock
@@ -101,5 +102,107 @@ public class RaceIT {
         dao.em = em;
 
         dao.addRace(newRace);
+    }
+
+    @Test
+    public void removeRace() throws Exception {
+        List<Race> races = dao.getRaces();
+        Assert.assertTrue(races.isEmpty());
+        Race race = new Race();
+        race.setId(1L);
+        race.setName("Race 1");
+        dao.tx = new EntityUserTransaction(em);
+        dao.addRace(race);
+
+        races = dao.getRaces();
+        Assert.assertTrue(!races.isEmpty());
+        Assert.assertTrue(races.size() == 1);
+
+        dao.removeRace(race);
+        races = dao.getRaces();
+        Assert.assertTrue(races.isEmpty());
+    }
+
+
+    @Test
+    public void removeRaceNotExisting() throws Exception {
+        List<Race> races = dao.getRaces();
+        Assert.assertTrue(races.isEmpty());
+        Race race = new Race();
+        race.setId(1L);
+        race.setName("Race 1");
+        dao.tx = new EntityUserTransaction(em);
+        dao.addRace(race);
+
+        races = dao.getRaces();
+        Assert.assertTrue(!races.isEmpty());
+        Assert.assertTrue(races.size() == 1);
+
+        Race race2 = new Race();
+        race2.setId(2L);
+        race2.setName("Race 2");
+        dao.removeRace(race2);
+        races = dao.getRaces();
+        Assert.assertTrue(!races.isEmpty());
+        Assert.assertTrue(races.size() == 1);
+        Assert.assertEquals(races.get(0).getName(), "Race 1");
+    }
+
+
+    @Test (expected = DaoException.class)
+    public void removeRaceWithException() throws Exception {
+        Race race = new Race();
+        race.setId(1L);
+        race.setName("Race 1");
+
+        EntityManager em = new MockUp<EntityManager>(){
+            @Mock
+            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
+                throw new NotSupportedException();
+            }
+        }.getMockInstance();
+        dao.em = em;
+
+        dao.removeRace(race);
+    }
+
+    @Test
+    public void updateRace() throws Exception {
+        List<Race> races = dao.getRaces();
+        Assert.assertTrue(races.isEmpty());
+        Race newRace = new Race();
+        newRace.setId(1L);
+        newRace.setName("Race 1");
+        dao.tx = new EntityUserTransaction(em);
+        dao.addRace(newRace);
+
+        races = dao.getRaces();
+        Assert.assertTrue(!races.isEmpty());
+        Assert.assertTrue(races.size() == 1);
+        Assert.assertEquals(races.get(0).getName(), "Race 1");
+        newRace.setName("new name");
+        dao.updateRace(newRace);
+        races = dao.getRaces();
+        Assert.assertTrue(!races.isEmpty());
+        Assert.assertTrue(races.size() == 1);
+        Assert.assertEquals(races.get(0).getId(), Long.valueOf(1L));
+        Assert.assertEquals(races.get(0).getName(), "new name");
+    }
+
+    @Test (expected = DaoException.class)
+    public void updateRaceWithException() throws Exception {
+        Race race = new Race();
+        race.setId(1L);
+        race.setName("Race 1");
+
+        UserTransaction tx = new MockUp<UserTransaction>() {
+            @Mock
+            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
+                throw new HeuristicMixedException();
+            }
+
+        }.getMockInstance();
+        dao.tx = tx;
+        dao.updateRace(race);
     }
 }

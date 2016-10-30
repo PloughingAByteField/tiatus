@@ -4,7 +4,9 @@ import mockit.Mock;
 import mockit.MockUp;
 import org.junit.Assert;
 import org.junit.Test;
+import org.tiatus.entity.Event;
 import org.tiatus.entity.Race;
+import org.tiatus.entity.RaceEvent;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -15,12 +17,12 @@ import java.util.List;
 /**
  * Created by johnreynolds on 14/09/2016.
  */
-public class RaceDaoTest {
+public class RaceEventDaoTest {
     @Test
     public void testAddRace() throws DaoException {
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
-            public Race find(Class entityClass, Object primaryKey) {
+            public RaceEvent find(Class entityClass, Object primaryKey) {
                 return null;
             }
 
@@ -43,22 +45,28 @@ public class RaceDaoTest {
 
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.addRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.addRaceEvent(raceEvent);
     }
 
     @Test (expected = DaoException.class)
-    public void testAddRaceExisting() throws DaoException {
+    public void testAddRaceEventExisting() throws DaoException {
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
-            public Race find(Class entityClass, Object primaryKey) {
-                Race race = new Race();
-                race.setId(1L);
-                return race;
+            public RaceEvent find(Class entityClass, Object primaryKey) {
+                RaceEvent RaceEvent = new RaceEvent();
+                RaceEvent.setId(1L);
+                return RaceEvent;
             }
 
             @Mock
@@ -80,19 +88,25 @@ public class RaceDaoTest {
 
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.addRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.addRaceEvent(raceEvent);
     }
 
     @Test (expected = DaoException.class)
-    public void testAddRaceException() throws DaoException {
+    public void testAddRaceEventException() throws DaoException {
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
-            public Race find(Class entityClass, Object primaryKey) {
+            public RaceEvent find(Class entityClass, Object primaryKey) {
                 return null;
             }
 
@@ -115,22 +129,35 @@ public class RaceDaoTest {
 
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.addRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.addRaceEvent(raceEvent);
     }
 
     @Test
-    public void testGetRaces() {
+    public void testGetRaceEvents() {
         TypedQuery typedQuery = new MockUp<TypedQuery>() {
             @Mock
-            public List<Race> getResultList() {
-                List<Race> list = new ArrayList<>();
+            public List<RaceEvent> getResultList() {
+                List<RaceEvent> list = new ArrayList<>();
+                RaceEvent raceEvent = new RaceEvent();
                 Race race = new Race();
-                list.add(race);
+                race.setId(1L);
+                Event event = new Event();
+                event.setId(1L);
+                raceEvent.setId(1L);
+                raceEvent.setEvent(event);
+                raceEvent.setRace(race);
+                list.add(raceEvent);
                 return list;
             }
         }.getMockInstance();
@@ -142,13 +169,13 @@ public class RaceDaoTest {
             }
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
-        Assert.assertFalse(dao.getRaces().isEmpty());
+        Assert.assertFalse(dao.getRaceEvents().isEmpty());
     }
 
     @Test
-    public void testRemoveRace() throws Exception {
+    public void testRemoveRaceEvent() throws Exception {
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock
             void begin() throws NotSupportedException, SystemException {
@@ -164,10 +191,16 @@ public class RaceDaoTest {
 
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
-            public Race find(Class<Race> entityClass, Object primaryKey) {
+            public RaceEvent find(Class<Race> entityClass, Object primaryKey) {
+                RaceEvent raceEvent = new RaceEvent();
                 Race race = new Race();
                 race.setId(1L);
-                return race;
+                Event event = new Event();
+                event.setId(1L);
+                raceEvent.setId(1L);
+                raceEvent.setEvent(event);
+                raceEvent.setRace(race);
+                return raceEvent;
             }
 
             @Mock
@@ -181,16 +214,22 @@ public class RaceDaoTest {
             }
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.removeRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.deleteRaceEvent(raceEvent);
     }
 
     @Test
-    public void testRemoveRaceNoRace() throws Exception {
+    public void testRemoveRaceEventNoRaceEvent() throws Exception {
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock
             void begin() throws NotSupportedException, SystemException {
@@ -206,7 +245,7 @@ public class RaceDaoTest {
 
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
-            public Race find(Class<Race> entityClass, Object primaryKey) {
+            public RaceEvent find(Class<Race> entityClass, Object primaryKey) {
                 return null;
             }
 
@@ -221,16 +260,22 @@ public class RaceDaoTest {
             }
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.removeRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.deleteRaceEvent(raceEvent);
     }
 
     @Test (expected = DaoException.class)
-    public void testRemoveRaceException() throws Exception {
+    public void testRemoveRaceEventException() throws Exception {
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock
             void begin() throws NotSupportedException, SystemException {
@@ -246,10 +291,16 @@ public class RaceDaoTest {
 
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
-            public Race find(Class<Race> entityClass, Object primaryKey) {
+            public RaceEvent find(Class<Race> entityClass, Object primaryKey) {
+                RaceEvent raceEvent = new RaceEvent();
                 Race race = new Race();
                 race.setId(1L);
-                return race;
+                Event event = new Event();
+                event.setId(1L);
+                raceEvent.setId(1L);
+                raceEvent.setEvent(event);
+                raceEvent.setRace(race);
+                return raceEvent;
             }
 
             @Mock
@@ -263,16 +314,22 @@ public class RaceDaoTest {
             }
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.removeRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.deleteRaceEvent(raceEvent);
     }
 
     @Test
-    public void testUpdateRace() throws Exception {
+    public void testUpdateRaceEvent() throws Exception {
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock
             void begin() throws NotSupportedException, SystemException {
@@ -293,16 +350,22 @@ public class RaceDaoTest {
             }
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.updateRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.updateRaceEvent(raceEvent);
     }
 
     @Test (expected = DaoException.class)
-    public void testUpdateRaceException() throws Exception {
+    public void testUpdateRaceEventException() throws Exception {
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock
             void begin() throws NotSupportedException, SystemException {
@@ -323,11 +386,17 @@ public class RaceDaoTest {
             }
         }.getMockInstance();
 
-        RaceDaoImpl dao = new RaceDaoImpl();
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         dao.tx = tx;
+        RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
-        dao.updateRace(race);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        dao.updateRaceEvent(raceEvent);
     }
 }
