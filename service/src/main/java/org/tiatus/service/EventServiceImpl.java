@@ -24,7 +24,8 @@ public class EventServiceImpl implements EventService {
 
     /**
      * Constructor for service
-     * @param dao object injected by cdi
+     * @param dao Event dao object injected by cdi
+     * @param raceEventDao RaceEvent dao object injected by cdi
      */
     @Inject
     public EventServiceImpl(EventDao dao, RaceEventDao raceEventDao) {
