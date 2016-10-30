@@ -11,9 +11,11 @@ import org.jboss.resteasy.plugins.server.resourcefactory.POJOResourceFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.tiatus.entity.Event;
 import org.tiatus.entity.Race;
+import org.tiatus.entity.RaceEvent;
 import org.tiatus.role.Role;
-import org.tiatus.service.RaceServiceImpl;
+import org.tiatus.service.EventServiceImpl;
 import org.tiatus.service.ServiceException;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,38 +27,37 @@ import java.util.List;
 /**
  * Created by johnreynolds on 09/07/2016.
  */
-public class RaceRestPointTest extends RestTestBase {
+public class EventRestPointTest extends RestTestBase {
 
     @Before
     public void setup() throws Exception {
-        new MockUp<RaceRestPoint>() {
+        new MockUp<EventRestPoint>() {
             @Mock
             void $init(Invocation invocation) { // need to supply the CDI injected object which we are mocking
-                RaceRestPoint restPoint = invocation.getInvokedInstance();
-                RaceServiceImpl service = new RaceServiceImpl(null);
+                EventRestPoint restPoint = invocation.getInvokedInstance();
+                EventServiceImpl service = new EventServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
             }
         };
 
         dispatcher = MockDispatcherFactory.createDispatcher();
-        endPoint = new POJOResourceFactory(RaceRestPoint.class);
+        endPoint = new POJOResourceFactory(EventRestPoint.class);
         dispatcher.getRegistry().addResourceFactory(endPoint);
         endPointDetails = fillEndPointDetails(endPoint);
     }
 
-
     @Test
-    public void addRace() throws Exception {
-        new MockUp<RaceServiceImpl>() {
+    public void addEvent() throws Exception {
+        new MockUp<EventServiceImpl>() {
             @Mock
-            public Race addRace(Race race) throws ServiceException {
-                return race;
+            public Event addEvent(Event event) throws ServiceException {
+                return event;
             }
         };
 
-        String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
+        String payload = "{\"id\":\"1\",\"name\":\"Event 1\"}";
 
-        MockHttpRequest request = MockHttpRequest.post("races");
+        MockHttpRequest request = MockHttpRequest.post("events");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         request.content(payload.getBytes());
@@ -68,17 +69,17 @@ public class RaceRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void addRaceServiceException() throws Exception {
-        new MockUp<RaceServiceImpl>() {
+    public void addEventServiceException() throws Exception {
+        new MockUp<EventServiceImpl>() {
             @Mock
-            public Race addRace(Race race) throws ServiceException {
+            public Event addEvent(Event event) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
 
-        String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
+        String payload = "{\"id\":\"1\",\"name\":\"Event 1\"}";
 
-        MockHttpRequest request = MockHttpRequest.post("races");
+        MockHttpRequest request = MockHttpRequest.post("events");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         request.content(payload.getBytes());
@@ -90,17 +91,17 @@ public class RaceRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void addRaceGeneralException() throws Exception {
-        new MockUp<RaceServiceImpl>() {
+    public void addEventGeneralException() throws Exception {
+        new MockUp<EventServiceImpl>() {
             @Mock
-            public Race addRace(Race race) throws Exception {
+            public Event addEvent(Event event) throws Exception {
                 throw new Exception("exception");
             }
         };
 
-        String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
+        String payload = "{\"id\":\"1\",\"name\":\"Event 1\"}";
 
-        MockHttpRequest request = MockHttpRequest.post("races");
+        MockHttpRequest request = MockHttpRequest.post("events");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         request.content(payload.getBytes());
@@ -112,14 +113,14 @@ public class RaceRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void deleteRace() throws Exception {
-        new MockUp<RaceServiceImpl>() {
+    public void deleteEvent() throws Exception {
+        new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteRace(Race race) throws ServiceException {
+            public void deleteEvent(Event event) throws ServiceException {
             }
         };
 
-        MockHttpRequest request = MockHttpRequest.delete("races/1");
+        MockHttpRequest request = MockHttpRequest.delete("events/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
 
@@ -130,16 +131,16 @@ public class RaceRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void deleteRaceServiceException() throws Exception {
-        new MockUp<RaceServiceImpl>() {
+    public void deleteEventServiceException() throws Exception {
+        new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteRace(Race race) throws ServiceException {
+            public void deleteEvent(Event event) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
 
 
-        MockHttpRequest request = MockHttpRequest.delete("races/1");
+        MockHttpRequest request = MockHttpRequest.delete("events/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
 
@@ -150,15 +151,15 @@ public class RaceRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void deleteRaceGeneralException() throws Exception {
-        new MockUp<RaceServiceImpl>() {
+    public void deleteEventGeneralException() throws Exception {
+        new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteRace(Race race) throws Exception {
+            public void deleteEvent(Event event) throws Exception {
                 throw new Exception("exception");
             }
         };
 
-        MockHttpRequest request = MockHttpRequest.delete("races/1");
+        MockHttpRequest request = MockHttpRequest.delete("events/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
 
@@ -169,26 +170,74 @@ public class RaceRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void getRaces() throws Exception {
-        new MockUp<RaceServiceImpl>() {
+    public void getEvents() throws Exception {
+        new MockUp<EventServiceImpl>() {
             @Mock
-            public List<Race> getRaces() {
-                List<Race> races = new ArrayList<>();
-                Race race = new Race();
-                race.setId(1L);
-                race.setRaceOrder(1);
-                race.setName("Race 1");
-                races.add(race);
-                return races;
+            public List<Event> getEvents() {
+                List<Event> events = new ArrayList<>();
+                Event event = new Event();
+                event.setId(1L);
+                event.setName("name");
+                event.setWeighted(true);
+                events.add(event);
+                return events;
             }
         };
 
-        MockHttpRequest request = MockHttpRequest.get("races");
+        MockHttpRequest request = MockHttpRequest.get("events");
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
         Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
 
+    @Test
+    public void getUnassignedEvents() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public List<Event> getUnassignedEvents() {
+                List<Event> events = new ArrayList<>();
+                Event event = new Event();
+                event.setId(1L);
+                event.setName("name");
+                event.setWeighted(true);
+                events.add(event);
+                return events;
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.get("events/unassigned");
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+        Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    @Test
+    public void getAssignedEvents() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public List<RaceEvent> getAssignedEvents() {
+                List<RaceEvent> raceEvents = new ArrayList<>();
+                Race race1 = new Race();
+                race1.setId(1L);
+                race1.setName("Race 1");
+                Event event1 = new Event();
+                event1.setId(1L);
+                event1.setName("Event 1");
+                RaceEvent raceEvent1 = new RaceEvent();
+                raceEvent1.setId(1L);
+                raceEvent1.setRace(race1);
+                raceEvent1.setEvent(event1);
+                raceEvents.add(raceEvent1);
+                return raceEvents;
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.get("events/assigned");
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+        Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+/*
     @Test
     public void checkGetRaceAnnotations() throws Exception {
         EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races", "GET");
@@ -260,4 +309,5 @@ public class RaceRestPointTest extends RestTestBase {
             throw new Exception();
         }
     }
+    */
 }

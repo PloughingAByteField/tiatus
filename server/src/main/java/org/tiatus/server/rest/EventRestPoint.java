@@ -4,9 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
 import org.tiatus.entity.RaceEvent;
+import org.tiatus.role.Role;
 import org.tiatus.service.EventService;
 import org.tiatus.service.ServiceException;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -26,12 +29,13 @@ public class EventRestPoint {
     private static final Logger LOG = LoggerFactory.getLogger(EventRestPoint.class);
 
     @POST
+    @RolesAllowed({Role.ADMIN})
+    @Consumes("application/json")
     @Produces("application/json")
     public Response createEvent(Event event, @Context UriInfo uriInfo) {
         // call service which will place in db and queue
         LOG.debug("Adding event name " + event.getName());
         try {
-            LOG.debug("calling service");
             Event saved = service.addEvent(event);
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
@@ -46,6 +50,7 @@ public class EventRestPoint {
     }
 
     @DELETE
+    @RolesAllowed({Role.ADMIN})
     @Path("{id}")
     @Produces("application/json")
     public Response removeEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
@@ -55,64 +60,80 @@ public class EventRestPoint {
         event.setId(id);
         try {
             service.deleteEvent(event);
-            return Response.ok().build();
+            return Response.noContent().build();
 
         } catch (ServiceException e) {
             LOG.warn("Failed to delete event: " + event.getName(), e);
-            return Response.status(Status.BAD_REQUEST).build();
+            throw new InternalServerErrorException();
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
         }
     }
 
     @GET
+    @PermitAll
     @Produces("application/json")
     public Response getEvents(@Context HttpServletRequest request) {
-        LOG.debug("calling service");
         List<Event> events = service.getEvents();
         return Response.ok(events).build();
 
     }
 
     @GET
+    @PermitAll
     @Path("assigned")
     @Produces("application/json")
     public Response getAssignedEvents(@Context HttpServletRequest request) {
-        LOG.debug("calling service");
         List<RaceEvent> events = service.getAssignedEvents();
         return Response.ok(events).build();
     }
 
     @DELETE
+    @RolesAllowed({Role.ADMIN})
     @Path("assigned/{id}")
     @Produces("application/json")
     public Response removeAssignedEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
-        LOG.debug("calling service");
-//        List<RaceEvent> events = service.getAssignedEvents();
-        return Response.ok().build();
-    }
+        LOG.debug("Got raceEvent id " + id);
+        RaceEvent raceEvent = new RaceEvent();
+        raceEvent.setId(id);
+        try {
+            service.deleteRaceEvent(raceEvent);
+            return Response.noContent().build();
 
-    @PUT
-    @Path("assigned")
-    @Produces("application/json")
-    public Response updateAssignedEvents(List<RaceEvent> events, @Context HttpServletRequest request) {
-        LOG.debug("calling service");
-//        List<RaceEvent> events = service.getAssignedEvents();
-        return Response.ok().build();
+        } catch (ServiceException e) {
+            LOG.warn("Failed to delete raceEvent: " + raceEvent.getId(), e);
+            throw new InternalServerErrorException();
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
     }
 
     @POST
+    @RolesAllowed({Role.ADMIN})
     @Path("assigned")
+    @Consumes("application/json")
     @Produces("application/json")
-    public Response addAssignedEvent(RaceEvent event, @Context HttpServletRequest request) {
-        LOG.debug("calling service");
-//        List<RaceEvent> events = service.getAssignedEvents();
-        return Response.ok().build();
+    public Response addAssignedEvent(RaceEvent raceEvent, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
+        try {
+            RaceEvent saved = service.addRaceEvent(raceEvent);
+            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception: ", e.getSuppliedException());
+            throw new InternalServerErrorException();
+
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
     }
 
     @GET
+    @PermitAll
     @Path("unassigned")
     @Produces("application/json")
     public Response getUnassignedEvents(@Context HttpServletRequest request) {
-        LOG.debug("calling service");
         List<Event> events = service.getUnassignedEvents();
         return Response.ok(events).build();
 

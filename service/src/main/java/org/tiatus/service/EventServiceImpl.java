@@ -46,10 +46,33 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException {
+        LOG.debug("Adding raceEvent " + raceEvent);
+        try {
+            return raceEventDao.addRaceEvent(raceEvent);
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public void deleteEvent(Event event) throws ServiceException {
         LOG.debug("Delete event " + event.getId());
         try {
             dao.deleteEvent(event);
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void deleteRaceEvent(RaceEvent raceEvent) throws ServiceException {
+        LOG.debug("Delete raceEvent " + raceEvent.getId());
+        try {
+            raceEventDao.deleteRaceEvent(raceEvent);
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);

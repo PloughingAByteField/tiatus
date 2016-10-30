@@ -39,7 +39,7 @@ public class EventServiceImplTest {
     }
 
     @Test (expected = ServiceException.class)
-    public void testAddRaceExcepton() throws Exception {
+    public void testAddRaceException() throws Exception {
         new MockUp<EventDaoImpl>() {
             @Mock
             Event addEvent(Event event) throws DaoException {
@@ -49,6 +49,32 @@ public class EventServiceImplTest {
         EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
         Event event = new Event();
         service.addEvent(event);
+    }
+
+    @Test
+    public void testAddRaceEvent() throws Exception {
+        new MockUp<RaceEventDaoImpl>() {
+            @Mock
+            RaceEvent addRaceEvent(RaceEvent event) throws DaoException {
+                return event;
+            }
+        };
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        RaceEvent event = new RaceEvent();
+        service.addRaceEvent(event);
+    }
+
+    @Test (expected = ServiceException.class)
+    public void testAddRaceEventException() throws Exception {
+        new MockUp<RaceEventDaoImpl>() {
+            @Mock
+            RaceEvent addRaceEvent(RaceEvent event) throws DaoException {
+                throw new DaoException("message");
+            }
+        };
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        RaceEvent event = new RaceEvent();
+        service.addRaceEvent(event);
     }
 
     @Test
@@ -73,6 +99,30 @@ public class EventServiceImplTest {
         EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
         Event event = new Event();
         service.deleteEvent(event);
+    }
+
+    @Test
+    public void testDeleteRaceEvent() throws Exception {
+        new MockUp<RaceEventDaoImpl>() {
+            @Mock
+            public void deleteRaceEvent(RaceEvent event) throws DaoException {}
+        };
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        RaceEvent event = new RaceEvent();
+        service.deleteRaceEvent(event);
+    }
+
+    @Test (expected = ServiceException.class)
+    public void testDeleteRaceEventException() throws Exception {
+        new MockUp<RaceEventDaoImpl>() {
+            @Mock
+            public void deleteRaceEvent(RaceEvent event) throws DaoException {
+                throw new DaoException("message");
+            }
+        };
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        RaceEvent event = new RaceEvent();
+        service.deleteRaceEvent(event);
     }
 
     @Test

@@ -10,19 +10,34 @@ import java.util.List;
  */
 public interface EventService {
     /**
-     * Add event
-     * @param event to create
-     * @return created event
+     * Add Event
+     * @param event Event to create
+     * @return created Event
      * @throws ServiceException on error
      */
     Event addEvent(Event event) throws ServiceException;
 
     /**
-     * Remove a event
-     * @param event to remove
+     * Add RaceEvent
+     * @param raceEvent RaceEvent to create
+     * @return created RaceEvent
+     * @throws ServiceException on error
+     */
+    RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException;
+
+    /**
+     * Remove a Event
+     * @param event Event to remove
      * @throws ServiceException on error
      */
     void deleteEvent(Event event) throws ServiceException;
+
+    /**
+     * Remove a RaceEvent
+     * @param raceEvent RaceEvent to remove
+     * @throws ServiceException on error
+     */
+    void deleteRaceEvent(RaceEvent raceEvent) throws ServiceException;
 
     /**
      * Get events
