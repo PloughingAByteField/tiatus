@@ -7,6 +7,9 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * Created by johnreynolds on 10/10/2016.
+ */
 @Entity
 @Table(name = "event")
 public class Event implements Serializable {
