@@ -5,7 +5,8 @@
 
     // this an intermediary caching service shared across the controllers
     function EventAssignedService($log, AssignedEvent, $q, $filter) {
-        var assignedEvents = undefined;
+        var assignedEvents = [];
+        var assignedEventsPromise = undefined;
 
         var service = {
             getAssignedEvents: getAssignedEvents,
@@ -18,7 +19,7 @@
         return service;
 
         function getAssignedEvents() {
-            if (!assignedEvents) {
+            if (!assignedEventsPromise) {
 
                 var deferred = $q.defer();
                 // get assigned events and split into array of races each with an array of events
@@ -42,23 +43,26 @@
                     deferred.resolve(assignedEvents);
 
                 }, function(error) {
-                    assignedEvents = error;
                     deferred.reject(error);
                     $log.warn("Failed to get assigned events", error);
                 });
-                assignedEvents = deferred.promise;
+                assignedEventsPromise = deferred.promise;
             }
 
-            return $q.when(assignedEvents);
+            return $q.when(assignedEventsPromise);
         }
 
         function assignEvent(item, raceId, index) {
             var deferred = $q.defer();
             var events = getAssignedEventsForRace(raceId);
             var updatedEvents = [];
-            var orderAtDrop = - 1;
+            var orderAtDrop = -1;
             if (index === events.length) {
-                orderAtDrop = events[index - 1].raceEventOrder + 1;
+                if (events.length === 0) {
+                    orderAtDrop = 1;
+                } else {
+                    orderAtDrop = events[index - 1].raceEventOrder + 1;
+                }
             } else {
                 orderAtDrop = events[index].raceEventOrder;
                 updatedEvents = reorderRaceOrder(events, index, events.length, 1);
@@ -236,7 +240,9 @@
                 return raceAssigned.events;
             }
 
-            return [];
+            raceAssigned = {race: {id: raceId}, events: []};
+            assignedEvents.push(raceAssigned);
+            return raceAssigned.events;
         };
 
     };

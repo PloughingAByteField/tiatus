@@ -86,6 +86,31 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 expect(assignedEvents[1].events[0].event.id).toBe(2);
             });
 
+            it('should assign event dropped on empty', function() {
+                var assignedEvents;
+                eventAssignedService.getAssignedEvents().then(function(data) {
+                    assignedEvents = data;
+                });
+                expect(AssignedEvent.query).toHaveBeenCalled();
+                deferredQuery.resolve([]);
+                scope.$apply();
+                expect(assignedEvents.length).toBe(0);
+
+                eventAssignedService.assignEvent({id: 4}, 1, 0);
+                deferredSave.resolve({id: 4});
+                scope.$apply();
+
+                expect(AssignedEvent.update).not.toHaveBeenCalled();
+                expect(AssignedEvent.save).toHaveBeenCalled();
+
+                expect(assignedEvents.length).toBe(1);
+                expect(assignedEvents[0].events.length).toBe(1);
+                expect(assignedEvents[0].events[0].id).toBe(4);
+                expect(assignedEvents[0].events[0].event.id).toBe(4);
+                expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
+                expect(assignedEvents[0].race.id).toBe(1);
+            });
+
             it('should assign event dropped at start', function() {
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
