@@ -44,7 +44,7 @@ public class RaceRestPoint {
      * Add race, restricted to Admin users
      * @param uriInfo location details
      * @param race to add
-     * @return response containg uri of newly created race or an error code
+     * @return 201 response with location containing uri of newly created race or an error code
      */
     @RolesAllowed({Role.ADMIN})
     @POST

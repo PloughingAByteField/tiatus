@@ -2,6 +2,7 @@ package org.tiatus.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.entity.Event;
 import org.tiatus.entity.RaceEvent;
 
 import javax.annotation.Resource;
@@ -88,6 +89,12 @@ public class RaceEventDaoImpl implements RaceEventDao {
     public List<RaceEvent> getRaceEvents() {
         TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent order by raceEventOrder", RaceEvent.class);
         return query.getResultList();
+    }
+
+    @Override
+    public RaceEvent getRaceEventByEvent(Event event) throws DaoException {
+        TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent re where re.event.id = :event_id", RaceEvent.class);
+        return query.setParameter("event_id", event.getId()).getSingleResult();
     }
 
 }

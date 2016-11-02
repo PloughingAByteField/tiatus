@@ -69,7 +69,8 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
 
                 eventAssignedService.assignEvent({id: 4}, 1, 2);
                 expect(AssignedEvent.save).toHaveBeenCalled();
-                deferredSave.resolve();
+                expect(AssignedEvent.update).not.toHaveBeenCalled();
+                deferredSave.resolve({id: 4});
                 scope.$apply();
 
                 expect(assignedEvents[0].events.length).toBe(3);
@@ -78,6 +79,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
                 expect(assignedEvents[0].events[2].event.id).toBe(4);
                 expect(assignedEvents[0].events[2].raceEventOrder).toBe(3);
+                expect(assignedEvents[0].events[2].id).toBe(4);
                 expect(assignedEvents[0].race.id).toBe(1);
                 expect(assignedEvents[1].events.length).toBe(1);
                 expect(assignedEvents[1].race.id).toBe(2);
@@ -89,14 +91,16 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 expect(assignedEvents.length).toBe(2);
 
                 eventAssignedService.assignEvent({id: 4}, 1, 0);
-                expect(AssignedEvent.save).toHaveBeenCalled();
-                deferredSave.resolve();
+                deferredUpdate.resolve();
+                scope.$apply()
+
+                deferredSave.resolve({id: 4});
                 scope.$apply();
                 expect(AssignedEvent.update).toHaveBeenCalled();
-                deferredUpdate.resolve();
-                scope.$apply();
+                expect(AssignedEvent.save).toHaveBeenCalled();
 
                 expect(assignedEvents[0].events.length).toBe(3);
+                expect(assignedEvents[0].events[0].id).toBe(4);
                 expect(assignedEvents[0].events[0].event.id).toBe(4);
                 expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
                 expect(assignedEvents[0].events[1].event.id).toBe(1);
@@ -114,17 +118,20 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 expect(assignedEvents.length).toBe(2);
 
                 eventAssignedService.assignEvent({id: 4}, 1, 1);
-                expect(AssignedEvent.save).toHaveBeenCalled();
-                deferredSave.resolve();
+                deferredUpdate.resolve();
+                scope.$apply()
+
+                deferredSave.resolve({id: 4});
                 scope.$apply();
                 expect(AssignedEvent.update).toHaveBeenCalled();
-                deferredUpdate.resolve();
-                scope.$apply();
+                expect(AssignedEvent.save).toHaveBeenCalled();
+
 
                 expect(assignedEvents[0].events.length).toBe(3);
                 expect(assignedEvents[0].events[0].event.id).toBe(1);
                 expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
                 expect(assignedEvents[0].events[1].event.id).toBe(4);
+                expect(assignedEvents[0].events[1].id).toBe(4);
                 expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
                 expect(assignedEvents[0].events[2].event.id).toBe(3);
                 expect(assignedEvents[0].events[2].raceEventOrder).toBe(3);
@@ -139,17 +146,21 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 expect(assignedEvents.length).toBe(2);
 
                 eventAssignedService.assignEvent({id: 4}, 1, 1);
-                expect(AssignedEvent.save).toHaveBeenCalled();
+                deferredUpdate.resolve();
+                scope.$apply();
+
                 deferredSave.reject();
                 scope.$apply();
 
-                expect(AssignedEvent.update).not.toHaveBeenCalled();
+                expect(AssignedEvent.update).toHaveBeenCalled();
+                expect(AssignedEvent.save).toHaveBeenCalled();
 
+                // if save fails then the data is corrupt but can be fixed thorugh the ui
                 expect(assignedEvents[0].events.length).toBe(2);
                 expect(assignedEvents[0].events[0].event.id).toBe(1);
                 expect(assignedEvents[0].events[0].raceEventOrder).toBe(1);
                 expect(assignedEvents[0].events[1].event.id).toBe(3);
-                expect(assignedEvents[0].events[1].raceEventOrder).toBe(2);
+                expect(assignedEvents[0].events[1].raceEventOrder).toBe(3);
                 expect(assignedEvents[0].race.id).toBe(1);
                 expect(assignedEvents[1].events.length).toBe(1);
                 expect(assignedEvents[1].race.id).toBe(2);
@@ -161,12 +172,10 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 expect(assignedEvents.length).toBe(2);
 
                 eventAssignedService.assignEvent({id: 4}, 1, 1);
-                expect(AssignedEvent.save).toHaveBeenCalled();
-                deferredSave.resolve();
-                scope.$apply();
                 expect(AssignedEvent.update).toHaveBeenCalled();
                 deferredUpdate.reject();
                 scope.$apply();
+                expect(AssignedEvent.save).not.toHaveBeenCalled();
 
                 expect(assignedEvents[0].events.length).toBe(2);
                 expect(assignedEvents[0].events[0].event.id).toBe(1);

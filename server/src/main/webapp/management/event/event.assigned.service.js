@@ -28,11 +28,11 @@
                         var assignedRaceEvent = data[i];
                         var raceElement = getRaceElement(assignedRaceEvent.race.id, raceEvents);
                         if (raceElement) {
-                            raceElement.events.push({ event: assignedRaceEvent.event, raceEventOrder: assignedRaceEvent.raceEventOrder});
+                            raceElement.events.push({id: assignedRaceEvent.id, event: assignedRaceEvent.event, raceEventOrder: assignedRaceEvent.raceEventOrder});
                         } else {
                             var events = [];
-                            events.push({ event: assignedRaceEvent.event, raceEventOrder: assignedRaceEvent.raceEventOrder});
-                            var raceEvent = { race: assignedRaceEvent.race, events: events };
+                            events.push({id: assignedRaceEvent.id, event: assignedRaceEvent.event, raceEventOrder: assignedRaceEvent.raceEventOrder});
+                            var raceEvent = {race: assignedRaceEvent.race, events: events };
                             raceEvents.push(raceEvent);
                         }
                     }
@@ -66,28 +66,34 @@
             var raceAssigned = getRaceAssigned(raceId);
             var race = raceAssigned.race;
             // add event to race_event
-            AssignedEvent.save({race: {id: race.id}, event: {id: item.id}, raceEventOrder: orderAtDrop}).$promise.then(function (data) {
-                if (updatedEvents.length > 0) {
-                    // update race_events that have had race_order
-                    AssignedEvent.update(updatedEvents).$promise.then(function (data) {
-                        updateEvents(updatedEvents, events);
-                        events.splice(index, 0, {event: item, raceEventOrder: orderAtDrop});
-                        deferred.resolve(data);
+            // need to do updates first or get db constraint
+            if (updatedEvents.length > 0) {
+                // update race_events that have had race_order
+                AssignedEvent.update(updatedEvents).$promise.then(function (data) {
+                    updateEvents(updatedEvents, events);
+                    saveAssignedEvent(deferred, events, item, index, orderAtDrop, race);
+                    events = $filter('orderBy')(events, "raceEventOrder");
 
-                    }, function(error) {
-                        deferred.reject(error);
-                        $log.warn("Failed to update events", error);
-                    });
-                } else {
-                    events.splice(index, 0, {event: item, raceEventOrder: orderAtDrop});
-                    deferred.resolve(data);
-                }
+                }, function(error) {
+                    deferred.reject(error);
+                    $log.warn("Failed to update events", error);
+                });
+            } else {
+                saveAssignedEvent(deferred, events, item, index, orderAtDrop, race);
+                events = $filter('orderBy')(events, "raceEventOrder");
+            }
+
+            return $q.when(deferred.promise);
+        };
+
+        function saveAssignedEvent(deferred, events, item, index, orderAtDrop, race) {
+            AssignedEvent.save({race: {id: race.id}, event: {id: item.id}, raceEventOrder: orderAtDrop}).$promise.then(function (data) {
+                events.splice(index, 0, {id: data.id, event: item, raceEventOrder: orderAtDrop});
+                deferred.resolve(data);
             }, function(error) {
                 $log.warn("Failed to add event", error);
                 deferred.reject(error);
             });
-
-            return $q.when(deferred.promise);
         };
 
         function reassignEvent(item, raceId, dropIndex) {
@@ -154,7 +160,7 @@
             var updatedEvents = reorderRaceOrder(events, index + 1, events.length, -1);
 
             // delete event from race_event
-            AssignedEvent.remove({ id: events[index].event.id }).$promise.then(function (data) {
+            AssignedEvent.remove({ id: item.id }).$promise.then(function (data) {
 
                 if (updatedEvents.length > 0) {
                     // update race_events that have had race_order

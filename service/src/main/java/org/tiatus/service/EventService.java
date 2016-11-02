@@ -40,6 +40,13 @@ public interface EventService {
     void deleteRaceEvent(RaceEvent raceEvent) throws ServiceException;
 
     /**
+     * Update a RaceEvents
+     * @param raceEvents List of RaceEvents to update
+     * @throws ServiceException on error
+     */
+    void updateRaceEvents(List<RaceEvent> raceEvents) throws ServiceException;
+
+    /**
      * Get events
      * @return list of events
      */

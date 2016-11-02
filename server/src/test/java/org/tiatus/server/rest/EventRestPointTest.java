@@ -237,6 +237,117 @@ public class EventRestPointTest extends RestTestBase {
         dispatcher.invoke(request, response);
         Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
+
+    @Test
+    public void deleteAssignedEvent() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public void deleteRaceEvent(RaceEvent raceEvent) {
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.delete("events/assigned/1");
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+        Assert.assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    }
+
+    @Test
+    public void deleteAssignedEventGeneralException() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public void deleteRaceEvent(RaceEvent raceEvent) throws Exception {
+                throw new Exception("exception");
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.delete("events/assigned/1");
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void deleteAssignedEventServiceException() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public void deleteRaceEvent(RaceEvent raceEvent) throws ServiceException {
+                throw new ServiceException(new Exception("exception"));
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.delete("events/assigned/1");
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+
+    @Test
+    public void addAssignedEvent() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException {
+                return raceEvent;
+            }
+        };
+
+        String payload = "{\"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}";
+
+        MockHttpRequest request = MockHttpRequest.post("events/assigned");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+    }
+
+    @Test
+    public void addAssignedEventGeneralException() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public RaceEvent addRaceEvent(RaceEvent raceEvent) throws Exception {
+                throw new Exception("exception");
+            }
+        };
+
+        String payload = "{\"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}";
+
+        MockHttpRequest request = MockHttpRequest.post("events/assigned");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void addAssignedEventServiceException() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException {
+                throw new ServiceException(new Exception("exception"));
+            }
+        };
+
+        String payload = "{\"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}";
+
+        MockHttpRequest request = MockHttpRequest.post("events/assigned");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
 /*
     @Test
     public void checkGetRaceAnnotations() throws Exception {

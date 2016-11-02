@@ -19,6 +19,7 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
     private static final Logger LOG = LoggerFactory.getLogger(EventServiceImpl.class);
 
+    private static final String DAO_EXCEPTION = "Got dao exception: ";
     private final EventDao dao;
     private final RaceEventDao raceEventDao;
 
@@ -40,7 +41,7 @@ public class EventServiceImpl implements EventService {
             return dao.addEvent(event);
 
         } catch (DaoException e) {
-            LOG.warn("Got dao exception");
+            LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         }
     }
@@ -52,7 +53,7 @@ public class EventServiceImpl implements EventService {
             return raceEventDao.addRaceEvent(raceEvent);
 
         } catch (DaoException e) {
-            LOG.warn("Got dao exception");
+            LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         }
     }
@@ -63,7 +64,7 @@ public class EventServiceImpl implements EventService {
         try {
             dao.deleteEvent(event);
         } catch (DaoException e) {
-            LOG.warn("Got dao exception");
+            LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         }
     }
@@ -74,7 +75,24 @@ public class EventServiceImpl implements EventService {
         try {
             raceEventDao.deleteRaceEvent(raceEvent);
         } catch (DaoException e) {
-            LOG.warn("Got dao exception");
+            LOG.warn(DAO_EXCEPTION);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void updateRaceEvents(List<RaceEvent> raceEvents) throws ServiceException {
+        // find event by id, get id set race order and update
+        try {
+            for (RaceEvent raceEventToUpdate : raceEvents) {
+                RaceEvent existingRaceEvent = raceEventDao.getRaceEventByEvent(raceEventToUpdate.getEvent());
+                if (existingRaceEvent != null) {
+                    existingRaceEvent.setRaceEventOrder(raceEventToUpdate.getRaceEventOrder());
+                    raceEventDao.updateRaceEvent(existingRaceEvent);
+                }
+            }
+        } catch (DaoException e) {
+            LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         }
     }

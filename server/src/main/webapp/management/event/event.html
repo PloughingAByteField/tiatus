@@ -35,7 +35,7 @@
         <div>{{ 'ASSIGNED_EVENTS' | translate }}</div>
         <div>
             <div id="assignedEvents" ng-class="{'draw-container': ctrlAssigned.assigned}" dnd-list="ctrl.assignedToRace" dnd-inserter="angular.noop" dnd-drop="ctrlAssigned.dropOnAssigned(event, index, item)">
-                <div ng-repeat="raceEvent in ctrl.assignedToRace" id="assignedEvent-{{raceEvent.event.id}}" class="assigned-event" dnd-draggable="raceEvent" dnd-moved="angular.noop">
+                <div ng-repeat="raceEvent in ctrl.assignedToRace | orderBy: 'raceEventOrder'" id="assignedEvent-{{raceEvent.event.id}}" class="assigned-event" dnd-draggable="raceEvent" dnd-moved="angular.noop">
                     <div id="{{raceEvent.raceEventOrder}}" class="number" >{{ 'EVENT_RACE_ORDER' | translate }}{{raceEvent.raceEventOrder}}</div>
                     <div id="{{raceEvent.event.id}}" class="event" >{{ 'EVENT_EVENT' | translate }}</span> {{raceEvent.event.name}}</div>
                     <div id="{{raceEvent.event.weighted}}" class="event" >{{ 'EVENT_WEIGHTED' | translate }}</span>{{raceEvent.event.weighted}}</div>
