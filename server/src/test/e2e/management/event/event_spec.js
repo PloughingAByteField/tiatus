@@ -26,7 +26,7 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
 
     it('should be add event to unassigned', function() {
 
-        var assignedEvents = element(by.css('.draw-container'));
+        var assignedEvents = element(by.id('assignedEvents'));
         var assignedRows = assignedEvents.$$('.assigned-event');
         expect(assignedRows.count()).toBe(0);
         var unassignedEvents = element(by.id('unassignedEvents'));
