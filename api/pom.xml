@@ -6,7 +6,6 @@
         <artifactId>tiatus</artifactId>
         <groupId>org.tiatus</groupId>
         <version>0.0.2-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <name>api</name>
