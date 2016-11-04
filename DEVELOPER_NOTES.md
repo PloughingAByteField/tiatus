@@ -32,3 +32,7 @@ webdriver-manager start
 With the local wildfly instance running on port 8080, run <br />
 grunt protractor --baseUrl=http://127.0.0.1:8080
 
+Maven site is a bit screwed up by maven 3.  To generate javadoc do
+mvn -Ddocker.skip=true -Dflyway.skip=true -Dmaven.test.skip=true install javadoc:aggregate
+The doc will be in target/site/apidocs
+
