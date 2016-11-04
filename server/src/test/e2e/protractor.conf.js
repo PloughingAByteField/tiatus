@@ -5,7 +5,9 @@ exports.config = {
   specs: [
     'setup/*.js',
     'login/*.js',
-    'management/**/*.js'
+    'management/race/race_spec.js',
+    'management/race/create_races_for_events_spec.js',
+    'management/event/event_spec.js'
   ],
 
   capabilities: {
