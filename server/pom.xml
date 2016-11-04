@@ -163,6 +163,7 @@
                         </goals>
 
                         <configuration>
+                            <skip>${docker.skip}</skip>
                             <arguments>--no-color protractor --baseUrl=http://${local.ip}:7080</arguments>
                         </configuration>
                     </execution>
