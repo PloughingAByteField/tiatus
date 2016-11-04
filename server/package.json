@@ -24,7 +24,8 @@
     "karma-coverage": "~1.0.0",
     "karma-junit-reporter": "~1.0.0",
     "jasmine-reporters": "https://github.com/PloughingAByteField/jasmine-reporters/tarball/sonar_generic_reporter",
-    "karma-sonarqube-unit-reporter": "~0.0.7"
+    "karma-sonarqube-unit-reporter": "~0.0.7",
+    "html-dnd": "git://github.com/PloughingAByteField/html-dnd.git"
   },
   "engines": {
     "node": ">=4.4.6"
