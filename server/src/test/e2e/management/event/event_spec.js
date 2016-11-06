@@ -26,7 +26,7 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
         expect(rows.count()).toBe(0);
     });
 
-    it('should be able to add unassiged event and move to assigned', function() {
+    it('should be able to add unassigned event and move to assigned', function() {
 
         var assignedEvents = element(by.id('assignedEvents'));
         var assignedRows = assignedEvents.$$('.assigned-event');
@@ -53,10 +53,14 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
             var draggable = browser.findElement(by.id(id));
             var droppable = browser.findElement(by.id('assignedEvents'));
             browser.driver.executeScript(dragAndDrop, draggable, droppable);
+            assignedRows = assignedEvents.$$('.assigned-event');
+            expect(assignedRows.count()).toBe(1);
+            unassignedRows = unassignedEvents.$$('.unassigned-event');
+            expect(unassignedRows.count()).toBe(0);
         });
     });
 
-    it('should be able to add a second unassiged event and move to assigned', function() {
+    it('should be able to add a second unassigned event and move to assigned', function() {
 
         var assignedEvents = element(by.id('assignedEvents'));
         var assignedRows = assignedEvents.$$('.assigned-event');
@@ -86,8 +90,123 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
                 var draggable = browser.findElement(by.id(id));
                 var droppable = browser.findElement(by.id(assignedId));
                 browser.driver.executeScript(dragAndDrop, draggable, droppable);
+                assignedRows = assignedEvents.$$('.assigned-event');
+                expect(assignedRows.count()).toBe(2);
+                unassignedRows = unassignedEvents.$$('.unassigned-event');
+                expect(unassignedRows.count()).toBe(0);
             });
         });
 
+    });
+
+    it('should be able to add a third unassigned event and move to assigned in the middle', function() {
+
+        var assignedEvents = element(by.id('assignedEvents'));
+        var assignedRows = assignedEvents.$$('.assigned-event');
+        expect(assignedRows.count()).toBe(2);
+        var unassignedEvents = element(by.id('unassignedEvents'));
+        var unassignedRows = unassignedEvents.$$('.unassigned-event');
+
+        expect(unassignedRows.count()).toBe(0);
+        element(by.model('ctrl.event.name')).sendKeys('Event 3');
+        element(by.id('createEvent')).click();
+
+        unassignedRows = unassignedEvents.$$('.unassigned-event');
+        expect(unassignedRows.count()).toBe(1);
+        assignedRows = assignedEvents.$$('.assigned-event');
+        expect(assignedRows.count()).toBe(2);
+
+        var unassigned = element.all(by.repeater('event in ctrlUnassigned.unassigned'));
+        expect(unassigned.count()).toBe(1);
+        var unassignedEvent = element.all(by.repeater('event in ctrlUnassigned.unassigned')).get(0);
+        var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+
+        // all this is done as selenium webdirver does not handle html5 drag and drop
+        unassignedEvent.getAttribute('id').then(function(txt) {
+            var id = txt;
+            assignedEvent.getAttribute('id').then(function(assignedId) {
+                var draggable = browser.findElement(by.id(id));
+                var droppable = browser.findElement(by.id(assignedId));
+                browser.driver.executeScript(dragAndDrop, draggable, droppable);
+                assignedRows = assignedEvents.$$('.assigned-event');
+                expect(assignedRows.count()).toBe(3);
+                unassignedRows = unassignedEvents.$$('.unassigned-event');
+                expect(unassignedRows.count()).toBe(0);
+            });
+        });
+    });
+
+    it('should be able to add a forth unassigned event and move to assigned at the start', function() {
+
+        var assignedEvents = element(by.id('assignedEvents'));
+        var assignedRows = assignedEvents.$$('.assigned-event');
+        expect(assignedRows.count()).toBe(3);
+        var unassignedEvents = element(by.id('unassignedEvents'));
+        var unassignedRows = unassignedEvents.$$('.unassigned-event');
+
+        expect(unassignedRows.count()).toBe(0);
+        element(by.model('ctrl.event.name')).sendKeys('Event 4');
+        element(by.id('createEvent')).click();
+
+        unassignedRows = unassignedEvents.$$('.unassigned-event');
+        expect(unassignedRows.count()).toBe(1);
+        assignedRows = assignedEvents.$$('.assigned-event');
+        expect(assignedRows.count()).toBe(3);
+
+        var unassigned = element.all(by.repeater('event in ctrlUnassigned.unassigned'));
+        expect(unassigned.count()).toBe(1);
+        var unassignedEvent = element.all(by.repeater('event in ctrlUnassigned.unassigned')).get(0);
+        var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+
+        // all this is done as selenium webdirver does not handle html5 drag and drop
+        unassignedEvent.getAttribute('id').then(function(txt) {
+            var id = txt;
+            assignedEvent.getAttribute('id').then(function(assignedId) {
+                var draggable = browser.findElement(by.id(id));
+                var droppable = browser.findElement(by.id(assignedId));
+                browser.driver.executeScript(dragAndDrop, draggable, droppable, 1, 1);
+                assignedRows = assignedEvents.$$('.assigned-event');
+                expect(assignedRows.count()).toBe(4);
+                unassignedRows = unassignedEvents.$$('.unassigned-event');
+                expect(unassignedRows.count()).toBe(0);
+            });
+        });
+    });
+
+    it('should be able to add a fifth unassigned event and move to assigned one after the start', function() {
+
+        var assignedEvents = element(by.id('assignedEvents'));
+        var assignedRows = assignedEvents.$$('.assigned-event');
+        expect(assignedRows.count()).toBe(4);
+        var unassignedEvents = element(by.id('unassignedEvents'));
+        var unassignedRows = unassignedEvents.$$('.unassigned-event');
+
+        expect(unassignedRows.count()).toBe(0);
+        element(by.model('ctrl.event.name')).sendKeys('Event 5');
+        element(by.id('createEvent')).click();
+
+        unassignedRows = unassignedEvents.$$('.unassigned-event');
+        expect(unassignedRows.count()).toBe(1);
+        assignedRows = assignedEvents.$$('.assigned-event');
+        expect(assignedRows.count()).toBe(4);
+
+        var unassigned = element.all(by.repeater('event in ctrlUnassigned.unassigned'));
+        expect(unassigned.count()).toBe(1);
+        var unassignedEvent = element.all(by.repeater('event in ctrlUnassigned.unassigned')).get(0);
+        var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+
+        // all this is done as selenium webdirver does not handle html5 drag and drop
+        unassignedEvent.getAttribute('id').then(function(txt) {
+            var id = txt;
+            assignedEvent.getAttribute('id').then(function(assignedId) {
+                var draggable = browser.findElement(by.id(id));
+                var droppable = browser.findElement(by.id(assignedId));
+                browser.driver.executeScript(dragAndDrop, draggable, droppable, 1000, 1000);
+                assignedRows = assignedEvents.$$('.assigned-event');
+                expect(assignedRows.count()).toBe(5);
+                unassignedRows = unassignedEvents.$$('.unassigned-event');
+                expect(unassignedRows.count()).toBe(0);
+            });
+        });
     });
 });
