@@ -57,25 +57,28 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
             expect(assignedRows.count()).toBe(1);
             unassignedRows = unassignedEvents.$$('.unassigned-event');
             expect(unassignedRows.count()).toBe(0);
+            var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+            expect(assignedEvent.getText()).toContain('Event: Event 1');
+            expect(assignedEvent.getText()).toContain('Race Order: 1');
         });
     });
 
     it('should be able to add a second unassigned event and move to assigned', function() {
-
+        var assignedRowsCount;
         var assignedEvents = element(by.id('assignedEvents'));
         var assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(1);
+        assignedRows.count().then(function(count) {
+            assignedRowsCount = count;
+        });
         var unassignedEvents = element(by.id('unassignedEvents'));
         var unassignedRows = unassignedEvents.$$('.unassigned-event');
 
-        // expect(unassignedRows.count()).toBe(0);
+        expect(unassignedRows.count()).toBe(0);
         element(by.model('ctrl.event.name')).sendKeys('Event 2');
         element(by.id('createEvent')).click();
 
         unassignedRows = unassignedEvents.$$('.unassigned-event');
         expect(unassignedRows.count()).toBe(1);
-        assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(1);
 
         var unassigned = element.all(by.repeater('event in ctrlUnassigned.unassigned'));
         expect(unassigned.count()).toBe(1);
@@ -91,19 +94,29 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
                 var droppable = browser.findElement(by.id(assignedId));
                 browser.driver.executeScript(dragAndDrop, draggable, droppable);
                 assignedRows = assignedEvents.$$('.assigned-event');
-                expect(assignedRows.count()).toBe(2);
+                expect(assignedRows.count()).toBe(assignedRowsCount + 1);
                 unassignedRows = unassignedEvents.$$('.unassigned-event');
                 expect(unassignedRows.count()).toBe(0);
+
+                var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+                expect(assignedEvent.getText()).toContain('Event: Event 1');
+                expect(assignedEvent.getText()).toContain('Race Order: 1');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(1);
+                expect(assignedEvent.getText()).toContain('Event: Event 2');
+                expect(assignedEvent.getText()).toContain('Race Order: 2');
             });
         });
 
     });
 
     it('should be able to add a third unassigned event and move to assigned in the middle', function() {
-
+        var assignedRowsCount;
         var assignedEvents = element(by.id('assignedEvents'));
         var assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(2);
+        assignedRows.count().then(function(count) {
+            assignedRowsCount = count;
+        });
         var unassignedEvents = element(by.id('unassignedEvents'));
         var unassignedRows = unassignedEvents.$$('.unassigned-event');
 
@@ -114,7 +127,6 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
         unassignedRows = unassignedEvents.$$('.unassigned-event');
         expect(unassignedRows.count()).toBe(1);
         assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(2);
 
         var unassigned = element.all(by.repeater('event in ctrlUnassigned.unassigned'));
         expect(unassigned.count()).toBe(1);
@@ -129,18 +141,32 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
                 var droppable = browser.findElement(by.id(assignedId));
                 browser.driver.executeScript(dragAndDrop, draggable, droppable);
                 assignedRows = assignedEvents.$$('.assigned-event');
-                expect(assignedRows.count()).toBe(3);
+                expect(assignedRows.count()).toBe(assignedRowsCount + 1);
                 unassignedRows = unassignedEvents.$$('.unassigned-event');
                 expect(unassignedRows.count()).toBe(0);
+
+                var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+                expect(assignedEvent.getText()).toContain('Event: Event 1');
+                expect(assignedEvent.getText()).toContain('Race Order: 1');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(1);
+                expect(assignedEvent.getText()).toContain('Event: Event 3');
+                expect(assignedEvent.getText()).toContain('Race Order: 2');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(2);
+                expect(assignedEvent.getText()).toContain('Event: Event 2');
+                expect(assignedEvent.getText()).toContain('Race Order: 3');
             });
         });
     });
 
     it('should be able to add a forth unassigned event and move to assigned at the start', function() {
-
+        var assignedRowsCount;
         var assignedEvents = element(by.id('assignedEvents'));
         var assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(3);
+        assignedRows.count().then(function(count) {
+            assignedRowsCount = count;
+        });
         var unassignedEvents = element(by.id('unassignedEvents'));
         var unassignedRows = unassignedEvents.$$('.unassigned-event');
 
@@ -151,7 +177,6 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
         unassignedRows = unassignedEvents.$$('.unassigned-event');
         expect(unassignedRows.count()).toBe(1);
         assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(3);
 
         var unassigned = element.all(by.repeater('event in ctrlUnassigned.unassigned'));
         expect(unassigned.count()).toBe(1);
@@ -166,18 +191,36 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
                 var droppable = browser.findElement(by.id(assignedId));
                 browser.driver.executeScript(dragAndDrop, draggable, droppable, 1, 1);
                 assignedRows = assignedEvents.$$('.assigned-event');
-                expect(assignedRows.count()).toBe(4);
+                expect(assignedRows.count()).toBe(assignedRowsCount + 1);
                 unassignedRows = unassignedEvents.$$('.unassigned-event');
                 expect(unassignedRows.count()).toBe(0);
+
+                var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+                expect(assignedEvent.getText()).toContain('Event: Event 4');
+                expect(assignedEvent.getText()).toContain('Race Order: 1');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(1);
+                expect(assignedEvent.getText()).toContain('Event: Event 1');
+                expect(assignedEvent.getText()).toContain('Race Order: 2');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(2);
+                expect(assignedEvent.getText()).toContain('Event: Event 3');
+                expect(assignedEvent.getText()).toContain('Race Order: 3');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(3);
+                expect(assignedEvent.getText()).toContain('Event: Event 2');
+                expect(assignedEvent.getText()).toContain('Race Order: 4');
             });
         });
     });
 
     it('should be able to add a fifth unassigned event and move to assigned one after the start', function() {
-
+        var assignedRowsCount;
         var assignedEvents = element(by.id('assignedEvents'));
         var assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(4);
+        assignedRows.count().then(function(count) {
+            assignedRowsCount = count;
+        });
         var unassignedEvents = element(by.id('unassignedEvents'));
         var unassignedRows = unassignedEvents.$$('.unassigned-event');
 
@@ -188,7 +231,6 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
         unassignedRows = unassignedEvents.$$('.unassigned-event');
         expect(unassignedRows.count()).toBe(1);
         assignedRows = assignedEvents.$$('.assigned-event');
-        expect(assignedRows.count()).toBe(4);
 
         var unassigned = element.all(by.repeater('event in ctrlUnassigned.unassigned'));
         expect(unassigned.count()).toBe(1);
@@ -203,9 +245,29 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
                 var droppable = browser.findElement(by.id(assignedId));
                 browser.driver.executeScript(dragAndDrop, draggable, droppable, 1000, 1000);
                 assignedRows = assignedEvents.$$('.assigned-event');
-                expect(assignedRows.count()).toBe(5);
+                expect(assignedRows.count()).toBe(assignedRowsCount + 1);
                 unassignedRows = unassignedEvents.$$('.unassigned-event');
                 expect(unassignedRows.count()).toBe(0);
+
+                var assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(0);
+                expect(assignedEvent.getText()).toContain('Event: Event 4');
+                expect(assignedEvent.getText()).toContain('Race Order: 1');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(1);
+                expect(assignedEvent.getText()).toContain('Event: Event 5');
+                expect(assignedEvent.getText()).toContain('Race Order: 2');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(2);
+                expect(assignedEvent.getText()).toContain('Event: Event 1');
+                expect(assignedEvent.getText()).toContain('Race Order: 3');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(3);
+                expect(assignedEvent.getText()).toContain('Event: Event 3');
+                expect(assignedEvent.getText()).toContain('Race Order: 4');
+
+                assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(4);
+                expect(assignedEvent.getText()).toContain('Event: Event 2');
+                expect(assignedEvent.getText()).toContain('Race Order: 5');
             });
         });
     });
