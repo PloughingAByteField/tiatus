@@ -47,11 +47,28 @@ describe("src.test.javascript.common.js.event.service.spec.js", function() {
             $httpBackend.flush();
         });
 
-        it('should call url with save', function() {
+        it('should call Event url with save returning 201', function() {
+            $httpBackend.expectPOST('../rest/events').respond(201, '', {'Location': '../rest/events/2'});
+            var result = mockEvent.save({name: 'Race 1'});
+            $httpBackend.flush();
+        });
+
+        it('should call Event url with save returning 200', function() {
+            $httpBackend.expectPOST('../rest/events').respond({'id': 2});
+            var result = mockEvent.save({name: 'Race 1'});
+            $httpBackend.flush();
+        });
+
+        it('should call AssignedEvent url with save returning 201', function() {
             $httpBackend.expectPOST('../rest/events/assigned').respond(201, '', {'Location': '../rest/events/assigned/2'});
             var result = mockAssignedEvent.save({name: 'Race 1'});
             $httpBackend.flush();
+        });
 
+        it('should call AssignedEvent url with save returning 200', function() {
+            $httpBackend.expectPOST('../rest/events/assigned').respond({'id' : 2});
+            var result = mockAssignedEvent.save({name: 'Race 1'});
+            $httpBackend.flush();
         });
     });
 });
