@@ -11,6 +11,7 @@
         'AlertService',
         'RaceService',
         'EventService',
+        'PositionController',
         'EventController',
         'RaceController',
         'HomeController'

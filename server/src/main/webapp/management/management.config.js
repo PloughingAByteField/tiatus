@@ -39,6 +39,18 @@
                     }
     			})
 
+    			.when('/position', {
+    				templateUrl : 'position/position.html',
+    				title: 'POSITION_TITLE',
+                    resolve: {
+                        specificTranslations: function($translatePartialLoader, $translate) {
+                            $translatePartialLoader.addPart('common');
+                            $translatePartialLoader.addPart('position');
+                            return $translate.refresh();
+                        }
+                    }
+    			})
+
     			.when('/event', {
     				templateUrl : 'event/event.html',
     				title: 'EVENT_TITLE',

@@ -6,6 +6,6 @@
         $scope.titleImage = "/public/images/stopwatch.svg";
         $scope.favIcon = "/public/images/favicon.ico";
         $scope.eventTitle = "Tiatus";
-        $scope.links = [{title: 'home', href: '#/'}, {title: 'race', href: '#/race'}, {title: 'event', href: '#/event'}, {title: 'logout', href: '/rest/logout'}]
+        $scope.links = [{title: 'home', href: '#/'}, {title: 'race', href: '#/race'}, {title: 'position', href: '#/position'}, {title: 'event', href: '#/event'}, {title: 'logout', href: '/rest/logout'}]
     });
 })();
