@@ -3,7 +3,7 @@
 
     angular.module('EventController').controller('eventController', EventController);
 
-    function EventController($log, $translate, eventAssignedService, eventUnassignedService, raceService, alertService) {
+    function EventController($log, $translate, eventAssignedService, eventUnassignedService, raceService, alertService, $scope) {
         var vm = this;
         vm.alert = alertService.getAlert();
         vm.event = { weighted: false };
@@ -37,8 +37,16 @@
         };
 
         vm.raceChanged = function(raceId) {
-            vm.assignedToRace = eventAssignedService.getAssignedEventsForRace(raceId);
             raceService.setCurrentRace(raceId);
+            updateAssignedToRaceEvents(raceId);
+        };
+
+        $scope.$on('eventsChange', function() {
+            updateAssignedToRaceEvents(vm.currentRace);
+        });
+
+        function updateAssignedToRaceEvents(raceId) {
+            vm.assignedToRace = eventAssignedService.getAssignedEventsForRace(raceId);
         };
 
         vm.createEvent = function(e) {

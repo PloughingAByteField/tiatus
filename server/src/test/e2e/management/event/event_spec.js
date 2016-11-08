@@ -379,7 +379,6 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
             var droppable = browser.findElement(by.id('unassignedEvents'));
             browser.driver.executeScript(dragAndDrop, draggable, droppable);
 
-            browser.refresh(); // not ideal sevice data is updated but view digest is not triggering under webdriver
             assignedRows = assignedEvents.$$('.assigned-event');
             expect(assignedRows.count()).toBe(assignedRowsCount - 1);
             unassignedRows = unassignedEvents.$$('.unassigned-event');
@@ -400,7 +399,6 @@ describe('src.test.e2e.management.event.event_spec.js', function() {
             assignedEvent = element.all(by.repeater('raceEvent in ctrl.assignedToRace')).get(3);
             expect(assignedEvent.getText()).toContain('Event: Event 4');
             expect(assignedEvent.getText()).toContain('Race Order: 4');
-
         });
    });
 

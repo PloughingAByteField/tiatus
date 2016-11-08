@@ -4,7 +4,7 @@
     angular.module('EventController').service('eventAssignedService', EventAssignedService);
 
     // this an intermediary caching service shared across the controllers
-    function EventAssignedService($log, AssignedEvent, $q, $filter) {
+    function EventAssignedService($log, AssignedEvent, $q, $filter, $rootScope) {
         var assignedEvents = [];
         var assignedEventsPromise = undefined;
 
@@ -24,22 +24,20 @@
                 var deferred = $q.defer();
                 // get assigned events and split into array of races each with an array of events
                 AssignedEvent.query().$promise.then(function (data) {
-                    var raceEvents = [];
                     for (var i = 0; i < data.length; i++) {
                         var assignedRaceEvent = data[i];
-                        var raceElement = getRaceElement(assignedRaceEvent.race.id, raceEvents);
+                        var raceElement = getRaceElement(assignedRaceEvent.race.id, assignedEvents);
                         if (raceElement) {
                             raceElement.events.push({id: assignedRaceEvent.id, event: assignedRaceEvent.event, raceEventOrder: assignedRaceEvent.raceEventOrder});
                         } else {
                             var events = [];
                             events.push({id: assignedRaceEvent.id, event: assignedRaceEvent.event, raceEventOrder: assignedRaceEvent.raceEventOrder});
                             var raceEvent = {race: assignedRaceEvent.race, events: events };
-                            raceEvents.push(raceEvent);
+                            assignedEvents.push(raceEvent);
                         }
                     }
-                    orderEvents(raceEvents);
+                    orderEvents(assignedEvents);
 
-                    assignedEvents = raceEvents;
                     deferred.resolve(assignedEvents);
 
                 }, function(error) {
@@ -86,6 +84,7 @@
                 saveAssignedEvent(deferred, events, item, index, orderAtDrop, race);
                 events = $filter('orderBy')(events, "raceEventOrder");
             }
+            $rootScope.$broadcast('eventsChange');
 
             return $q.when(deferred.promise);
         };
@@ -173,6 +172,7 @@
                          $log.debug("Removing event " + item.event.name);
                          events.splice(index, 1);
                          deferred.resolve(data);
+
                     }, function(error) {
                         $log.warn("Failed to update events", error);
                         deferred.reject(error);
@@ -181,6 +181,8 @@
                     events.splice(index, 1);
                     deferred.resolve(data);
                 }
+
+                $rootScope.$broadcast('eventsChange');
             }, function(error) {
                 $log.warn("Failed to remove event", error);
                 deferred.reject(error);
