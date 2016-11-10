@@ -4,8 +4,9 @@
     angular.module('EventController').service('eventAssignedService', EventAssignedService);
 
     // this an intermediary caching service shared across the controllers
-    function EventAssignedService($log, AssignedEvent, $q, $filter, $rootScope) {
+    function EventAssignedService($log, AssignedEvent, $q, $filter) {
         var assignedEvents = [];
+        var eventChangeListeners = [];
         var assignedEventsPromise = undefined;
 
         var service = {
@@ -13,7 +14,8 @@
             unassignEvent: unassignEvent,
             assignEvent: assignEvent,
             reassignEvent: reassignEvent,
-            getAssignedEventsForRace: getAssignedEventsForRace
+            getAssignedEventsForRace: getAssignedEventsForRace,
+            addEventChangeListener: addEventChangeListener
         };
 
         return service;
@@ -50,6 +52,16 @@
             return $q.when(assignedEventsPromise);
         }
 
+        function addEventChangeListener(listener) {
+            eventChangeListeners.push(listener);
+        }
+
+        function notifyEventChangeListener() {
+            for (var i = 0; i < eventChangeListeners.length; i++) {
+                eventChangeListeners[i]();
+            }
+        }
+
         function assignEvent(item, raceId, index) {
             var deferred = $q.defer();
             var events = getAssignedEventsForRace(raceId);
@@ -84,7 +96,7 @@
                 saveAssignedEvent(deferred, events, item, index, orderAtDrop, race);
                 events = $filter('orderBy')(events, "raceEventOrder");
             }
-            $rootScope.$broadcast('eventsChange');
+            notifyEventChangeListener();
 
             return $q.when(deferred.promise);
         };
@@ -139,6 +151,8 @@
                     $log.warn("Failed to update events", error);
                     deferred.reject(error);
                 });
+
+                notifyEventChangeListener();
             } else {
                 deferred.resolve();
             }
@@ -182,7 +196,8 @@
                     deferred.resolve(data);
                 }
 
-                $rootScope.$broadcast('eventsChange');
+                notifyEventChangeListener();
+
             }, function(error) {
                 $log.warn("Failed to remove event", error);
                 deferred.reject(error);
