@@ -71,6 +71,30 @@ public class PositionServiceImplTest {
     }
 
     @Test
+    public void testUpdatePosition() throws Exception {
+        new MockUp<PositionDaoImpl>() {
+            @Mock
+            public void updatePosition(Position position) throws DaoException {}
+        };
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        Position position = new Position();
+        service.updatePosition(position);
+    }
+
+    @Test (expected = ServiceException.class)
+    public void testUpdatePositionException() throws Exception {
+        new MockUp<PositionDaoImpl>() {
+            @Mock
+            public void updatePosition(Position position) throws DaoException {
+                throw new DaoException("message");
+            }
+        };
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        Position position = new Position();
+        service.updatePosition(position);
+    }
+
+    @Test
     public void testGetPositions() throws Exception {
         new MockUp<PositionDaoImpl>() {
             @Mock

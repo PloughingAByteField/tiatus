@@ -169,6 +169,69 @@ public class PositionRestPointTest extends RestTestBase {
     }
 
     @Test
+    public void updatePosition() throws Exception {
+        new MockUp<PositionServiceImpl>() {
+            @Mock
+            public void updatePosition(Position position) throws ServiceException {
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.put("positions");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        String payload = "{\"id\":\"1\",\"name\":\"Position 1\"}";
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    }
+
+    @Test
+    public void updatePositionServiceException() throws Exception {
+        new MockUp<PositionServiceImpl>() {
+            @Mock
+            public void updatePosition(Position position) throws ServiceException {
+                throw new ServiceException(new Exception("exception"));
+            }
+        };
+
+
+        MockHttpRequest request = MockHttpRequest.put("positions");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        String payload = "{\"id\":\"1\",\"name\":\"Position 1\"}";
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void updatePositionGeneralException() throws Exception {
+        new MockUp<PositionServiceImpl>() {
+            @Mock
+            public void updatePosition(Position position) throws Exception {
+                throw new Exception("exception");
+            }
+        };
+
+        MockHttpRequest request = MockHttpRequest.put("positions");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        String payload = "{\"id\":\"1\",\"name\":\"Position 1\"}";
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
     public void getPositions() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
@@ -188,6 +251,7 @@ public class PositionRestPointTest extends RestTestBase {
         dispatcher.invoke(request, response);
         Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
     }
+
 
     @Test
     public void getActiveTimingPositions() throws Exception {
@@ -296,6 +360,30 @@ public class PositionRestPointTest extends RestTestBase {
         }
 
         if (!endPointDetail.getMethodName().equals("removePosition")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getRolesAllowed().contains(Role.ADMIN)) {
+            System.out.println("End point does not have expected roles");
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void checkUpdatePositionAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "positions", "PUT");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for PUT:position");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for PUT:position is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("updatePosition")) {
             System.out.println("End point method name has changed");
             throw new Exception();
         }
