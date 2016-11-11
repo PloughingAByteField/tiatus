@@ -112,7 +112,7 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
         it('should call create event', function() {
             ctrl.event = {data: 'data', weighted: true};
             ctrl.createEvent(ctrl.event);
-            ctrl.addEventForm = addPositionForm = {
+            ctrl.addEventForm = {
                 $setPristine: function() {},
                 $setUntouched: function() {}
             };

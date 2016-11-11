@@ -1,4 +1,25 @@
 {
   "POSITION" : "Positions",
-  "POSITION_TITLE" : "Position"
+  "POSITION_TITLE" : "Positions",
+  "POSITION_NAME" : "Name",
+  "POSITION_ORDER" : "Order",
+  "ADD_POSITION" : "Add Position",
+  "CREATE_POSITION" : "Create Position",
+  "DELETE_POSITION" : "Remove Position",
+  "UPDATE_POSITION" : "Update Position",
+  "POSITION_NAME_REQUIRED" : "Position name is required.",
+  "POSITION_NAME_TOO_SHORT" : "Position name is too short.",
+  "POSITION_NAME_TOO_LONG" : "Position name is too long.",
+  "POSITION_NAME_ALREADY_EXISTS" : "Position name already exists.",
+  "POSITION_ORDER_REQUIRED" : "Position order number is required.",
+  "POSITION_ORDER_TOO_SMALL" : "Position order number is too small.",
+  "POSITION_ORDER_TOO_LARGE" : "Position order number is too large.",
+  "POSITION_ORDER_ALREADY_EXISTS" : "Position number already exists.",
+  "POSITION_IS_TIMING" : "Is Timing",
+  "POSITION_IS_SHOW_ALL_ENTRIES" : "Show All Entries",
+  "POSITION_IS_ACTIVE" : "Is Active",
+  "POSITION_CAN_START" : "Can Start",
+  "FAILED_ADD" : "Failed to add position",
+  "FAILED_REMOVE" : "Failed to remove position",
+  "FAILED_UPDATE" : "Failed to update position"
 }
