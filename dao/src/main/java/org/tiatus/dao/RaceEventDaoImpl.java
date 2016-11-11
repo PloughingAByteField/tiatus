@@ -92,7 +92,7 @@ public class RaceEventDaoImpl implements RaceEventDao {
     }
 
     @Override
-    public RaceEvent getRaceEventByEvent(Event event) throws DaoException {
+    public RaceEvent getRaceEventByEvent(Event event) {
         TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent re where re.event.id = :event_id", RaceEvent.class);
         return query.setParameter("event_id", event.getId()).getSingleResult();
     }

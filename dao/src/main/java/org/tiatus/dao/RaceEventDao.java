@@ -45,7 +45,6 @@ public interface RaceEventDao {
      *
      * @param event Event
      * @return RaceEvent containing event or null
-     * @throws DaoException on error
      */
-    RaceEvent getRaceEventByEvent(Event event) throws DaoException;
+    RaceEvent getRaceEventByEvent(Event event);
 }

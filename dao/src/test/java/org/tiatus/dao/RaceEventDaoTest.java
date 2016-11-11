@@ -143,22 +143,26 @@ public class RaceEventDaoTest {
         dao.addRaceEvent(raceEvent);
     }
 
+    private List<RaceEvent> getRaceEvents() {
+        List<RaceEvent> list = new ArrayList<>();
+        RaceEvent raceEvent = new RaceEvent();
+        Race race = new Race();
+        race.setId(1L);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        list.add(raceEvent);
+        return list;
+    }
+
     @Test
     public void testGetRaceEvents() {
         TypedQuery typedQuery = new MockUp<TypedQuery>() {
             @Mock
             public List<RaceEvent> getResultList() {
-                List<RaceEvent> list = new ArrayList<>();
-                RaceEvent raceEvent = new RaceEvent();
-                Race race = new Race();
-                race.setId(1L);
-                Event event = new Event();
-                event.setId(1L);
-                raceEvent.setId(1L);
-                raceEvent.setEvent(event);
-                raceEvent.setRace(race);
-                list.add(raceEvent);
-                return list;
+               return getRaceEvents();
             }
         }.getMockInstance();
 
@@ -172,6 +176,32 @@ public class RaceEventDaoTest {
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
         dao.em = em;
         Assert.assertFalse(dao.getRaceEvents().isEmpty());
+    }
+
+    @Test
+    public void testGetRaceEventByEvent() {
+        TypedQuery typedQuery = new MockUp<TypedQuery>() {
+            @Mock
+            public List<RaceEvent> getResultList() {
+                return getRaceEvents();
+            }
+
+            @Mock
+            public TypedQuery setParameter(String name, Object value) {
+                return this.getMockInstance();
+            }
+        }.getMockInstance();
+
+        EntityManager em = new MockUp<EntityManager>() {
+            @Mock
+            public TypedQuery createQuery(String qlString, Class resultClass) {
+                return typedQuery;
+            }
+        }.getMockInstance();
+
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
+        dao.em = em;
+        dao.getRaceEventByEvent(getRaceEvents().get(0).getEvent());
     }
 
     @Test
