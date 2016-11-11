@@ -187,4 +187,55 @@ public class EventServiceImplTest {
         Assert.assertFalse(events.isEmpty());
         Assert.assertEquals(events.get(0).getEvent().getName(), "Event 1");
     }
+
+    private List<RaceEvent> getRaceEvents() {
+        List<RaceEvent> raceEvents = new ArrayList<>();
+        RaceEvent raceEvent = new RaceEvent();
+        Race race = new Race();
+        race.setId(1L);
+        Event event = new Event();
+        event.setId(1L);
+        event.setName("Event 1");
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+        raceEvents.add(raceEvent);
+        return raceEvents;
+    }
+
+    @Test
+    public void testUpdateRaceEvents() throws Exception {
+        new MockUp<RaceEventDaoImpl>() {
+            @Mock
+            public void updateRaceEvent(RaceEvent raceEvent) throws DaoException {
+
+            }
+
+            @Mock
+            public RaceEvent getRaceEventByEvent(Event event) throws DaoException {
+                return getRaceEvents().get(0);
+            }
+        };
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+
+        service.updateRaceEvents(getRaceEvents());
+    }
+
+    @Test (expected = ServiceException.class)
+    public void testUpdateRaceEventsDaoException() throws Exception {
+        new MockUp<RaceEventDaoImpl>() {
+            @Mock
+            public void updateRaceEvent(RaceEvent raceEvent) throws DaoException {
+                throw new DaoException("error");
+            }
+
+            @Mock
+            public RaceEvent getRaceEventByEvent(Event event) throws DaoException {
+                return getRaceEvents().get(0);
+            }
+        };
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+
+        service.updateRaceEvents(getRaceEvents());
+    }
 }

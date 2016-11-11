@@ -348,21 +348,134 @@ public class EventRestPointTest extends RestTestBase {
 
         Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
     }
-/*
+
     @Test
-    public void checkGetRaceAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races", "GET");
+    public void updateAssignedEvents() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public void updateRaceEvents(List<RaceEvent> raceEvents) throws ServiceException {
+            }
+        };
+
+        String payload = "[{\"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}]";
+
+        MockHttpRequest request = MockHttpRequest.put("events/assigned");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    }
+
+    @Test
+    public void updateAssignedEventsServiceException() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public void updateRaceEvents(List<RaceEvent> raceEvents) throws ServiceException {
+                throw new ServiceException("error");
+            }
+        };
+
+        String payload = "[{\"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}]";
+
+        MockHttpRequest request = MockHttpRequest.put("events/assigned");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void updateAssignedEventsGeneralException() throws Exception {
+        new MockUp<EventServiceImpl>() {
+            @Mock
+            public void updateRaceEvents(List<RaceEvent> raceEvents) throws Exception {
+                throw new Exception();
+            }
+        };
+
+        String payload = "[{\"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}]";
+
+        MockHttpRequest request = MockHttpRequest.put("events/assigned");
+        request.accept(MediaType.APPLICATION_JSON);
+        request.contentType(MediaType.APPLICATION_JSON);
+        request.content(payload.getBytes());
+
+        MockHttpResponse response = new MockHttpResponse();
+        dispatcher.invoke(request, response);
+
+        Assert.assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    }
+
+    @Test
+    public void createEventAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events", "POST");
         if (endPointDetail == null) {
-            System.out.println("Failed to find end point for GET:race");
+            System.out.println("Failed to find end point for POST:events");
             throw new Exception();
         }
 
         if (!EndPointDetail.isValid(endPointDetail)) {
-            System.out.println("End point for GET:race is not valid");
+            System.out.println("End point for POST:events is not valid");
             throw new Exception();
         }
 
-        if (!endPointDetail.getMethodName().equals("getRaces")) {
+        if (!endPointDetail.getMethodName().equals("createEvent")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getRolesAllowed().contains(Role.ADMIN)) {
+            System.out.println("End point does not have expected roles");
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void removeEventAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events/{id}", "DELETE");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for DELETE:events");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for DELETE:events is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("removeEvent")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getRolesAllowed().contains(Role.ADMIN)) {
+            System.out.println("End point does not have expected roles");
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void getEventsAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events/assigned", "GET");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for GET:events/assigned");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for GET:events/assigned is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("getAssignedEvents")) {
             System.out.println("End point method name has changed");
             throw new Exception();
         }
@@ -374,19 +487,43 @@ public class EventRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void checkAddRaceAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races", "POST");
+    public void getAssignedEventsAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events/assigned", "GET");
         if (endPointDetail == null) {
-            System.out.println("Failed to find end point for POST:race");
+            System.out.println("Failed to find end point for GET:events/assigned");
             throw new Exception();
         }
 
         if (!EndPointDetail.isValid(endPointDetail)) {
-            System.out.println("End point for POST:race is not valid");
+            System.out.println("End point for GET:events/assigned is not valid");
             throw new Exception();
         }
 
-        if (!endPointDetail.getMethodName().equals("addRace")) {
+        if (!endPointDetail.getMethodName().equals("getAssignedEvents")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (endPointDetail.isAllowAll() == null || !endPointDetail.isAllowAll()) {
+            System.out.println("End point is not allowed all");
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void removeAssignedEventAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events/assigned/{id}", "DELETE");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for DELETE:events/assigned");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for DELETE:events/assigned is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("removeAssignedEvent")) {
             System.out.println("End point method name has changed");
             throw new Exception();
         }
@@ -398,19 +535,19 @@ public class EventRestPointTest extends RestTestBase {
     }
 
     @Test
-    public void checkDeleteRaceAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "races/{id}", "DELETE");
+    public void addAssignedEventAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events/assigned", "POST");
         if (endPointDetail == null) {
-            System.out.println("Failed to find end point for DELETE:race");
+            System.out.println("Failed to find end point for POST:events/assigned");
             throw new Exception();
         }
 
         if (!EndPointDetail.isValid(endPointDetail)) {
-            System.out.println("End point for DELETE:race is not valid");
+            System.out.println("End point for POST:events/assigned is not valid");
             throw new Exception();
         }
 
-        if (!endPointDetail.getMethodName().equals("removeRace")) {
+        if (!endPointDetail.getMethodName().equals("addAssignedEvent")) {
             System.out.println("End point method name has changed");
             throw new Exception();
         }
@@ -420,5 +557,52 @@ public class EventRestPointTest extends RestTestBase {
             throw new Exception();
         }
     }
-    */
+
+    @Test
+    public void updateAssignedEventsAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events/assigned", "PUT");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for PUT:events/assigned");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for PUT:events/assigned is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("updateAssignedEvents")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getRolesAllowed().contains(Role.ADMIN)) {
+            System.out.println("End point does not have expected roles");
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void getUnassignedEventsAnnotations() throws Exception {
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "events/unassigned", "GET");
+        if (endPointDetail == null) {
+            System.out.println("Failed to find end point for GET:events/unassigned");
+            throw new Exception();
+        }
+
+        if (!EndPointDetail.isValid(endPointDetail)) {
+            System.out.println("End point for GET:events/unassigned is not valid");
+            throw new Exception();
+        }
+
+        if (!endPointDetail.getMethodName().equals("getUnassignedEvents")) {
+            System.out.println("End point method name has changed");
+            throw new Exception();
+        }
+
+        if (endPointDetail.isAllowAll() == null || !endPointDetail.isAllowAll()) {
+            System.out.println("End point is not allowed all");
+            throw new Exception();
+        }
+    }
 }
