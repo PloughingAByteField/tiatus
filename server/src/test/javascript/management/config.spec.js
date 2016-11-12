@@ -24,7 +24,12 @@ describe("src.test.javascript.management.config.spec.js", function() {
             inject(function($route) {
                 expect($route.routes['/'].templateUrl).toEqual('home/home.html');
                 expect($route.routes['/race'].templateUrl).toEqual('race/race.html');
+                expect($route.routes['/position'].templateUrl).toEqual('position/position.html');
+                expect($route.routes['/club'].templateUrl).toEqual('club/club.html');
                 expect($route.routes['/event'].templateUrl).toEqual('event/event.html');
+                expect($route.routes['/entry'].templateUrl).toEqual('entry/entry.html');
+                expect($route.routes['/draw'].templateUrl).toEqual('draw/draw.html');
+                expect($route.routes['/user'].templateUrl).toEqual('user/user.html');
                 expect($route.routes[null].redirectTo).toEqual('/')
             });
         });
@@ -62,6 +67,66 @@ describe("src.test.javascript.management.config.spec.js", function() {
                 expect($route.current.templateUrl).toBe('event/event.html');
                 expect($translatePartialLoader.isPartAvailable('common')).toBe(true);
                 expect($translatePartialLoader.isPartAvailable('event')).toBe(true);
+            });
+        });
+
+        it('should switch to position', function() {
+            inject(function($route, $location, $rootScope, $translatePartialLoader, $httpBackend) {
+                $httpBackend.expectGET('position/position.html').respond();
+                expect($route.current).toBeUndefined();
+                $location.path('/position');
+                $rootScope.$digest();
+                expect($route.current.templateUrl).toBe('position/position.html');
+                expect($translatePartialLoader.isPartAvailable('common')).toBe(true);
+                expect($translatePartialLoader.isPartAvailable('position')).toBe(true);
+            });
+        });
+
+        it('should switch to club', function() {
+            inject(function($route, $location, $rootScope, $translatePartialLoader, $httpBackend) {
+                $httpBackend.expectGET('club/club.html').respond();
+                expect($route.current).toBeUndefined();
+                $location.path('/club');
+                $rootScope.$digest();
+                expect($route.current.templateUrl).toBe('club/club.html');
+                expect($translatePartialLoader.isPartAvailable('common')).toBe(true);
+                expect($translatePartialLoader.isPartAvailable('club')).toBe(true);
+            });
+        });
+
+        it('should switch to entry', function() {
+            inject(function($route, $location, $rootScope, $translatePartialLoader, $httpBackend) {
+                $httpBackend.expectGET('entry/entry.html').respond();
+                expect($route.current).toBeUndefined();
+                $location.path('/entry');
+                $rootScope.$digest();
+                expect($route.current.templateUrl).toBe('entry/entry.html');
+                expect($translatePartialLoader.isPartAvailable('common')).toBe(true);
+                expect($translatePartialLoader.isPartAvailable('entry')).toBe(true);
+            });
+        });
+
+        it('should switch to draw', function() {
+            inject(function($route, $location, $rootScope, $translatePartialLoader, $httpBackend) {
+                $httpBackend.expectGET('draw/draw.html').respond();
+                expect($route.current).toBeUndefined();
+                $location.path('/draw');
+                $rootScope.$digest();
+                expect($route.current.templateUrl).toBe('draw/draw.html');
+                expect($translatePartialLoader.isPartAvailable('common')).toBe(true);
+                expect($translatePartialLoader.isPartAvailable('draw')).toBe(true);
+            });
+        });
+
+        it('should switch to user', function() {
+            inject(function($route, $location, $rootScope, $translatePartialLoader, $httpBackend) {
+                $httpBackend.expectGET('user/user.html').respond();
+                expect($route.current).toBeUndefined();
+                $location.path('/user');
+                $rootScope.$digest();
+                expect($route.current.templateUrl).toBe('user/user.html');
+                expect($translatePartialLoader.isPartAvailable('common')).toBe(true);
+                expect($translatePartialLoader.isPartAvailable('user')).toBe(true);
             });
         });
     });
