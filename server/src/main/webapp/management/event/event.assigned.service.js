@@ -83,7 +83,7 @@
             // need to do updates first or get db constraint
             if (updatedEvents.length > 0) {
                 // update race_events that have had race_order
-                AssignedEvent.update(updatedEvents).$promise.then(function (data) {
+                AssignedEvent.update(updatedEvents).$promise.then(function () {
                     updateEvents(updatedEvents, events);
                     saveAssignedEvent(deferred, events, item, index, orderAtDrop, race);
                     events = $filter('orderBy')(events, "raceEventOrder");
