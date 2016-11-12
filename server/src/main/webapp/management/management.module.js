@@ -15,6 +15,10 @@
         'PositionController',
         'EventController',
         'RaceController',
+        'ClubController',
+        'EntryController',
+        'DrawController',
+        'UserController',
         'HomeController'
     ]);
 })();

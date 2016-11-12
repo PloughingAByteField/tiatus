@@ -1,0 +1,8 @@
+<div data-ng-controller="clubController as ctrl">
+    <h1>{{ 'CLUB' | translate }}</h1>
+
+    <div data-uib-alert type="{{ctrl.alert.type}}" close="ctrl.closeAlert()" ng-show="ctrl.alert.msg != null" ng-class="'alert-' + ctrl.alert.type">
+        {{ctrl.alert.msg}}
+    </div>
+
+</div>
