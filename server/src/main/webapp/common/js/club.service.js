@@ -24,7 +24,7 @@
             update: {
                 method: 'PUT',
                 isArray: true
-            },
+            }
         });
     }]);
 })();

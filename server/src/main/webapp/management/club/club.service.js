@@ -32,7 +32,7 @@
 
             return $q.when(clubs);
         }
-        
+
         function addClub(club) {
             var deferred = $q.defer();
             Club.save(club).$promise.then(function(data) {
@@ -78,6 +78,5 @@
             });
             return $q.when(deferred.promise);
         };
-        
     }
 })();
