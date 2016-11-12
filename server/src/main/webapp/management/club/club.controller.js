@@ -43,6 +43,16 @@
             });
         };
 
+        function isClubNameInUse(club) {
+            for (var i=0; i < vm.clubs.length; i++) {
+                var existing = vm.clubs[i];
+                if (existing.id !== club.id && existing.club === club.club) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         vm.validClubName = function(club) {
             if (typeof club === 'undefined' || typeof club.club === 'undefined') {
                 return false;
@@ -52,13 +62,7 @@
                 return false;
             }
 
-            for (var i=0; i < vm.clubs.length; i++) {
-                var existing = vm.clubs[i];
-                if (existing.id !== club.id && existing.club === club.club) {
-                    return false;
-                }
-            }
-            return true;
+            return !isClubNameInUse(club);
         };
     };
 
