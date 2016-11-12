@@ -11,7 +11,7 @@
         <form name="ctrl.addClubForm" novalidate>
             <div class="form-group">
                 <label>{{ 'CLUB_NAME' | translate }}</label>
-                <input class="ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" type="text" name="name" id="name" ng-model="ctrl.club.club" not-existing-club-name required ng-minlength="3" ng-maxlength="254" size="100"/>
+                <input class="ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" type="text" name="name" id="name" ng-model="ctrl.club.clubName" not-existing-club-name required ng-minlength="3" ng-maxlength="254" size="100"/>
                 <div class="errors" ng-messages="ctrl.addClubForm.name.$error" ng-if="(ctrl.addClubForm.name.$dirty && ctrl.addClubForm.name.$invalid) || (ctrl.addClubForm.order.$dirty)">
                     <p ng-message="minlength">{{ 'CLUB_NAME_TOO_SHORT' | translate }}</p>
                     <p ng-message="maxlength">{{ 'CLUB_NAME_TOO_LONG' | translate }}</p>
@@ -30,7 +30,7 @@
     <div ng-show="ctrl.clubs.$resolved">
         <table id="clubs" ng-table class="table table-condensed table-bordered table-striped" >
             <tr ng-repeat="club in ctrl.clubs">
-                <td data-title="'CLUB_NAME' | translate"><input type="text" name="name" ng-model="club.club" style="width:100%"/></td>
+                <td data-title="'CLUB_NAME' | translate"><input type="text" name="name" ng-model="club.clubName" style="width:100%"/></td>
                 <td><button class="btn primary update-club" ng-click="ctrl.updateClub(club)" ng-disabled="!ctrl.validClubName(club)">{{ 'UPDATE_CLUB' | translate }}</button></td>
                 <td><button class="btn primary delete-club" ng-click="ctrl.removeClub(club)">{{ 'REMOVE_CLUB' | translate }}</button></td>
             </tr>

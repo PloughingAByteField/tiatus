@@ -39,7 +39,7 @@ describe("src.test.javascript.management.club.controller.spec.js", function() {
         }));
 
         function getClubs() {
-            deferredQuery.resolve([{id: 1, club: 'Club 1'}, {id: 2, club: 'Club 2'}]);
+            deferredQuery.resolve([{id: 1, clubName: 'Club 1'}, {id: 2, clubName: 'Club 2'}]);
             scope.$apply();
         };
 
@@ -65,7 +65,7 @@ describe("src.test.javascript.management.club.controller.spec.js", function() {
 
         it('should call create club', function() {
             getClubs();
-            ctrl.club = {club: 'Club 3'};
+            ctrl.club = {clubName: 'Club 3'};
             ctrl.addClubForm = {
                 $setPristine: function() {},
                 $setUntouched: function() {}
@@ -110,7 +110,7 @@ describe("src.test.javascript.management.club.controller.spec.js", function() {
         });
 
         it('should call update club', function() {
-            ctrl.updateClub({id: 1, club: 'Update'});
+            ctrl.updateClub({id: 1, clubName: 'Update'});
             expect(clubService.updateClub).toHaveBeenCalled();
             deferredSave.resolve();
             scope.$apply();
@@ -118,7 +118,7 @@ describe("src.test.javascript.management.club.controller.spec.js", function() {
 
         it('should call update club but throw error', function() {
             expect(alertService.getAlert().msg).toBe(null);
-            ctrl.updateClub({id: 1, club: 'Update'});
+            ctrl.updateClub({id: 1, clubName: 'Update'});
             expect(clubService.updateClub).toHaveBeenCalled();
             deferredSave.reject();
             scope.$apply();
@@ -131,21 +131,21 @@ describe("src.test.javascript.management.club.controller.spec.js", function() {
         });
 
         it('should have validate name call return false for a club name of length less than 3', function() {
-            expect(ctrl.validClubName({id: 1, club: '12'})).toBe(false);
+            expect(ctrl.validClubName({id: 1, clubName: '12'})).toBe(false);
         });
 
         it('should have validate name call return false for a club name of length greater than 254', function() {
-            expect(ctrl.validClubName({id: 1, club: '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'})).toBe(false);
+            expect(ctrl.validClubName({id: 1, clubName: '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789'})).toBe(false);
         });
 
         it('should have validate name call return false for an existing club name', function() {
             getClubs();
-            expect(ctrl.validClubName({id: 2, club: 'Club 1'})).toBe(false);
+            expect(ctrl.validClubName({id: 2, clubName: 'Club 1'})).toBe(false);
         });
 
         it('should have validate name call return true for an non existing club name', function() {
             getClubs();
-            expect(ctrl.validClubName({id: 1, club: 'Club 3'})).toBe(true);
+            expect(ctrl.validClubName({id: 1, clubName: 'Club 3'})).toBe(true);
         });
     });
 });

@@ -102,7 +102,7 @@ public class ClubServiceImplTest {
                 List<Club> clubs = new ArrayList<>();
                 Club club = new Club();
                 club.setId(1L);
-                club.setClub("Club 1");
+                club.setClubName("Club 1");
                 clubs.add(club);
                 return clubs;
             }

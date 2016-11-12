@@ -12,7 +12,7 @@
 
                     for (var i = 0; i < scope.ctrl.clubs.length; i++) {
                         var club = scope.ctrl.clubs[i];
-                        if (club.club === viewValue) {
+                        if (club.clubName === viewValue) {
                             return false;
                         }
                     }

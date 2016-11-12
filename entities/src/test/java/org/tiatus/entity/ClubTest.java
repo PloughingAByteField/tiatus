@@ -17,8 +17,8 @@ public class ClubTest {
     @Test
     public void testClubName() {
         Club club = new Club();
-        club.setClub("name");
-        Assert.assertEquals(club.getClub(), "name");
+        club.setClubName("name");
+        Assert.assertEquals(club.getClubName(), "name");
     }
 
     @Test
@@ -37,10 +37,10 @@ public class ClubTest {
     public void testClubEqualsDifferentInstance() {
         Club club = new Club();
         club.setId(1L);
-        club.setClub("name");
+        club.setClubName("name");
         Club club2 = new Club();
         club2.setId(1L);
-        club2.setClub("name");
+        club2.setClubName("name");
         Assert.assertTrue(club.equals(club2));
     }
 
@@ -48,10 +48,10 @@ public class ClubTest {
     public void testClubHashCode() {
         Club club = new Club();
         club.setId(1L);
-        club.setClub("name");
+        club.setClubName("name");
         Club club2 = new Club();
         club2.setId(1L);
-        club2.setClub("name");
+        club2.setClubName("name");
         Assert.assertEquals(club.hashCode(), club2.hashCode());
     }
 }

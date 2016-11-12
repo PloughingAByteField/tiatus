@@ -54,7 +54,7 @@ public class ClubRestPointTest extends RestTestBase {
             }
         };
 
-        String payload = "{\"id\":\"1\",\"club\":\"Club 1\"}";
+        String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
 
         MockHttpRequest request = MockHttpRequest.post("clubs");
         request.accept(MediaType.APPLICATION_JSON);
@@ -76,7 +76,7 @@ public class ClubRestPointTest extends RestTestBase {
             }
         };
 
-        String payload = "{\"id\":\"1\",\"club\":\"Club 1\"}";
+        String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
 
         MockHttpRequest request = MockHttpRequest.post("clubs");
         request.accept(MediaType.APPLICATION_JSON);
@@ -98,7 +98,7 @@ public class ClubRestPointTest extends RestTestBase {
             }
         };
 
-        String payload = "{\"id\":\"1\",\"club\":\"Club 1\"}";
+        String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
 
         MockHttpRequest request = MockHttpRequest.post("clubs");
         request.accept(MediaType.APPLICATION_JSON);
@@ -179,7 +179,7 @@ public class ClubRestPointTest extends RestTestBase {
         MockHttpRequest request = MockHttpRequest.put("clubs");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
-        String payload = "{\"id\":\"1\",\"club\":\"Club 1\"}";
+        String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
         request.content(payload.getBytes());
 
         MockHttpResponse response = new MockHttpResponse();
@@ -201,7 +201,7 @@ public class ClubRestPointTest extends RestTestBase {
         MockHttpRequest request = MockHttpRequest.put("clubs");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
-        String payload = "{\"id\":\"1\",\"club\":\"Club 1\"}";
+        String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
         request.content(payload.getBytes());
 
         MockHttpResponse response = new MockHttpResponse();
@@ -222,7 +222,7 @@ public class ClubRestPointTest extends RestTestBase {
         MockHttpRequest request = MockHttpRequest.put("clubs");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
-        String payload = "{\"id\":\"1\",\"club\":\"Club 1\"}";
+        String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
         request.content(payload.getBytes());
 
         MockHttpResponse response = new MockHttpResponse();
@@ -239,7 +239,7 @@ public class ClubRestPointTest extends RestTestBase {
                 List<Club> clubs = new ArrayList<>();
                 Club club = new Club();
                 club.setId(1L);
-                club.setClub("Club 1");
+                club.setClubName("Club 1");
                 clubs.add(club);
                 return clubs;
             }

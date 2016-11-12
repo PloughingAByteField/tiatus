@@ -25,13 +25,13 @@ describe('src.test.e2e.management.club.club_spec.js', function() {
         var rows = table.$$('tr');
         expect(rows.count()).toBe(2);
 
-        element(by.model('ctrl.club.club')).sendKeys('Club 1');
+        element(by.model('ctrl.club.clubName')).sendKeys('Club 1');
         element(by.id('createClub')).click();
 
         rows = table.$$('tr');
         expect(rows.count()).toBe(3);
         var club = element(by.repeater('club in ctrl.clubs').row(0));
-        expect(club.element(by.model('club.club')).getAttribute('value')).toEqual('Club 1');
+        expect(club.element(by.model('club.clubName')).getAttribute('value')).toEqual('Club 1');
     });
 
     it('should remove club', function() {
@@ -51,13 +51,13 @@ describe('src.test.e2e.management.club.club_spec.js', function() {
         var rows = table.$$('tr');
         expect(rows.count()).toBe(2);
 
-        element(by.model('ctrl.club.club')).sendKeys('Club 1');
+        element(by.model('ctrl.club.clubName')).sendKeys('Club 1');
         element(by.id('createClub')).click();
 
         rows = table.$$('tr');
         expect(rows.count()).toBe(3);
         var club = element(by.repeater('club in ctrl.clubs').row(0));
-        var clubTxt = club.element(by.model('club.club'));
+        var clubTxt = club.element(by.model('club.clubName'));
         expect(clubTxt.getAttribute('value')).toEqual('Club 1');
         clubTxt.clear();
         clubTxt.sendKeys('Club 2');
@@ -71,7 +71,7 @@ describe('src.test.e2e.management.club.club_spec.js', function() {
         var rows = table.$$('tr');
         expect(rows.count()).toBe(3);
 
-        element(by.model('ctrl.club.club')).sendKeys('Club 2');
+        element(by.model('ctrl.club.clubName')).sendKeys('Club 2');
 
         var errors = $('.errors');
         expect(errors.isPresent()).toBe(true);
@@ -81,7 +81,7 @@ describe('src.test.e2e.management.club.club_spec.js', function() {
         expect(errors.$('[ng-message=minlength]').isPresent()).toBe(false);
         expect(errors.$('[ng-message=maxlength]').isPresent()).toBe(false);
 
-        element(by.model('ctrl.club.club')).clear();
+        element(by.model('ctrl.club.clubName')).clear();
     });
 
 });

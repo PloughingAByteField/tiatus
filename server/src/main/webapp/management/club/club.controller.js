@@ -46,7 +46,7 @@
         function isClubNameInUse(club) {
             for (var i=0; i < vm.clubs.length; i++) {
                 var existing = vm.clubs[i];
-                if (existing.id !== club.id && existing.club === club.club) {
+                if (existing.id !== club.id && existing.clubName === club.clubName) {
                     return true;
                 }
             }
@@ -54,11 +54,11 @@
         }
 
         vm.validClubName = function(club) {
-            if (typeof club === 'undefined' || typeof club.club === 'undefined') {
+            if (typeof club === 'undefined' || typeof club.clubName === 'undefined') {
                 return false;
             }
 
-            if (club.club.length < 3 || club.club.length > 254) {
+            if (club.clubName.length < 3 || club.clubName.length > 254) {
                 return false;
             }
 

@@ -45,10 +45,10 @@ public class ClubIT {
         em.getTransaction().begin();
         Club club1 = new Club();
         club1.setId(1L);
-        club1.setClub("Club 1");
+        club1.setClubName("Club 1");
         Club club2 = new Club();
         club2.setId(2L);
-        club2.setClub("Club 2");
+        club2.setClubName("Club 2");
         em.merge(club1);
         em.merge(club2);
         em.getTransaction().commit();
@@ -64,7 +64,7 @@ public class ClubIT {
         Assert.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setId(1L);
-        newClub.setClub("Club 1");
+        newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
 
@@ -80,7 +80,7 @@ public class ClubIT {
         Assert.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setId(1L);
-        newClub.setClub("Club 1");
+        newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
         dao.addClub(newClub);
@@ -92,7 +92,7 @@ public class ClubIT {
         Assert.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setId(1L);
-        newClub.setClub("Club 1");
+        newClub.setClubName("Club 1");
         EntityManager em = new MockUp<EntityManager>(){
             @Mock
             public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
@@ -110,7 +110,7 @@ public class ClubIT {
         Assert.assertTrue(clubs.isEmpty());
         Club club = new Club();
         club.setId(1L);
-        club.setClub("Club 1");
+        club.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(club);
 
@@ -130,7 +130,7 @@ public class ClubIT {
         Assert.assertTrue(clubs.isEmpty());
         Club club = new Club();
         club.setId(1L);
-        club.setClub("Club 1");
+        club.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(club);
 
@@ -140,12 +140,12 @@ public class ClubIT {
 
         Club club2 = new Club();
         club2.setId(2L);
-        club2.setClub("Club 2");
+        club2.setClubName("Club 2");
         dao.removeClub(club2);
         clubs = dao.getClubs();
         Assert.assertTrue(!clubs.isEmpty());
         Assert.assertTrue(clubs.size() == 1);
-        Assert.assertEquals(clubs.get(0).getClub(), "Club 1");
+        Assert.assertEquals(clubs.get(0).getClubName(), "Club 1");
     }
 
 
@@ -153,7 +153,7 @@ public class ClubIT {
     public void removeClubWithException() throws Exception {
         Club club = new Club();
         club.setId(1L);
-        club.setClub("Club 1");
+        club.setClubName("Club 1");
 
         EntityManager em = new MockUp<EntityManager>(){
             @Mock
@@ -172,28 +172,28 @@ public class ClubIT {
         Assert.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setId(1L);
-        newClub.setClub("Club 1");
+        newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
 
         clubs = dao.getClubs();
         Assert.assertTrue(!clubs.isEmpty());
         Assert.assertTrue(clubs.size() == 1);
-        Assert.assertEquals(clubs.get(0).getClub(), "Club 1");
-        newClub.setClub("new name");
+        Assert.assertEquals(clubs.get(0).getClubName(), "Club 1");
+        newClub.setClubName("new name");
         dao.updateClub(newClub);
         clubs = dao.getClubs();
         Assert.assertTrue(!clubs.isEmpty());
         Assert.assertTrue(clubs.size() == 1);
         Assert.assertEquals(clubs.get(0).getId(), Long.valueOf(1L));
-        Assert.assertEquals(clubs.get(0).getClub(), "new name");
+        Assert.assertEquals(clubs.get(0).getClubName(), "new name");
     }
 
     @Test (expected = DaoException.class)
     public void updateClubWithException() throws Exception {
         Club club = new Club();
         club.setId(1L);
-        club.setClub("Club 1");
+        club.setClubName("Club 1");
 
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock

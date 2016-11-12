@@ -15,8 +15,8 @@ import java.io.Serializable;
 public class Club implements Serializable {
     private static final long serialVersionUID = 8109059549918273345L;
 
-    @Column(name = "club")
-    private String club;
+    @Column(name = "clubName")
+    private String clubName;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
@@ -36,19 +36,19 @@ public class Club implements Serializable {
         this.id = id;
     }
 
-    public String getClub() {
-        return club;
+    public String getClubName() {
+        return clubName;
     }
 
-    public void setClub(String club) {
-        this.club = club;
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
                 .append(this.id)
-                .append(this.club)
+                .append(this.clubName)
                 .toHashCode();
     }
 
@@ -65,7 +65,7 @@ public class Club implements Serializable {
         Club club = (Club) o;
         return new EqualsBuilder()
                 .append(this.id, club.id)
-                .append(this.club, club.club)
+                .append(this.clubName, club.clubName)
                 .isEquals();
     }
 }

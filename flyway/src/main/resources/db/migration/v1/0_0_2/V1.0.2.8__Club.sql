@@ -1,6 +1,6 @@
 CREATE TABLE club (
     id bigint NOT NULL PRIMARY KEY,
-    club character varying(255) UNIQUE
+    clubName character varying(255) UNIQUE
 );
 
 CREATE SEQUENCE club_id_sequence

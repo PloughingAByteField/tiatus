@@ -24,7 +24,7 @@ describe("src.test.javascript.management.club.directive.spec.js", function() {
           // Store references to $rootScope and $compile
           // so they are available to all tests in this describe block
           beforeEach(function() {
-            html ='<form name="form"><input type="text" name="name" id="name" ng-model="ctrl.club.club" not-existing-club-name /></form>';
+            html ='<form name="form"><input type="text" name="name" id="name" ng-model="ctrl.club.clubName" not-existing-club-name /></form>';
 
             inject(function(_$compile_, _$rootScope_){
                 // The injector unwraps the underscores (_) from around the parameter names when matching
@@ -40,11 +40,11 @@ describe("src.test.javascript.management.club.directive.spec.js", function() {
 
           it('to get existing club name error', function() {
             scope.ctrl = {};
-            scope.ctrl.clubs = [{id: 1, club: 'Club 1'}];
+            scope.ctrl.clubs = [{id: 1, clubName: 'Club 1'}];
             elem.triggerHandler('input');
             var form = scope.form;
             scope.ctrl.club = {};
-            scope.ctrl.club.club = scope.ctrl.clubs[0].club;
+            scope.ctrl.club.clubName = scope.ctrl.clubs[0].clubName;
             //need to trigger a digest here for the two-way binding
             scope.$digest();
             elem.triggerHandler('blur');
@@ -56,11 +56,11 @@ describe("src.test.javascript.management.club.directive.spec.js", function() {
 
           it('to not get existing event name error', function() {
             scope.ctrl = {};
-            scope.ctrl.clubs = [{id: 1, club: 'Club 1'}];
+            scope.ctrl.clubs = [{id: 1, clubName: 'Club 1'}];
             elem.triggerHandler('input');
             var form = scope.form;
             scope.ctrl.club = {};
-            scope.ctrl.club.club = 'Club 2';
+            scope.ctrl.club.clubName = 'Club 2';
             //need to trigger a digest here for the two-way binding
             scope.$digest();
             elem.triggerHandler('blur');
