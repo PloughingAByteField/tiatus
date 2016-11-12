@@ -10,6 +10,7 @@
         'dndLists',
         'AlertService',
         'RaceService',
+        'ClubService',
         'PositionService',
         'EventService',
         'PositionController',

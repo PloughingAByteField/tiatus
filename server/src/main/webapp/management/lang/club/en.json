@@ -4,11 +4,13 @@
   "ADD_CLUB" : "Add Club",
   "CREATE_CLUB" : "Create Club",
   "REMOVE_CLUB" : "Remove Club",
+  "UPDATE_CLUB" : "Update Club",
   "CLUB_NAME" : "Club Name: ",
   "CLUB_NAME_REQUIRED" : "Club name is required.",
   "CLUB_NAME_TOO_SHORT" : "Club name is too short.",
   "CLUB_NAME_TOO_LONG" : "Club name is too long.",
   "CLUB_NAME_ALREADY_EXISTS" : "Club name already exists.",
   "FAILED_ADD" : "Failed to add club",
-  "FAILED_REMOVE" : "Failed to remove club"
+  "FAILED_REMOVE" : "Failed to remove club",
+  "FAILED_UPDATE" : "Failed to update club"
 }

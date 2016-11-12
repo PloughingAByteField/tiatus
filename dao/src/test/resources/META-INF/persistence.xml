@@ -12,6 +12,7 @@
         <class>org.tiatus.entity.UserRole</class>
         <class>org.tiatus.entity.Role</class>
         <class>org.tiatus.entity.Position</class>
+        <class>org.tiatus.entity.Club</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:h2:target/st_h2" />

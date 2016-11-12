@@ -12,6 +12,7 @@
         <class>org.tiatus.entity.Role</class>
         <class>org.tiatus.entity.UserRole</class>
         <class>org.tiatus.entity.Position</class>
+        <class>org.tiatus.entity.Club</class>
         <properties>
             <!-- Properties for Hibernate -->
             <property name="hibernate.show_sql" value="true" />
