@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * Created by johnreynolds on 11/11/2016.
+ */
 @Entity
 @Table(name = "position", uniqueConstraints = { @UniqueConstraint(columnNames = { "timing", "positionOrder" }) })
 public class Position implements Serializable {
