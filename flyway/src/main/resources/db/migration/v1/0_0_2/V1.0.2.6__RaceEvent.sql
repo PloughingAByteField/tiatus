@@ -1,7 +1,7 @@
 CREATE TABLE race_event (
     id bigint NOT NULL PRIMARY KEY,
-    race_id bigint NOT NULL,
-    event_id bigint NOT NULL,
+    race_id bigint NOT NULL REFERENCES race (id),
+    event_id bigint NOT NULL REFERENCES event (id),
     race_event_order int NOT NULL
 );
 

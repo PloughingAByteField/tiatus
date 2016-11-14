@@ -1,7 +1,7 @@
 CREATE TABLE user_role (
     id bigint NOT NULL PRIMARY KEY,
-    role_id bigint NOT NULL,
-    user_id bigint NOT NULL
+    role_id bigint NOT NULL REFERENCES role (id),
+    user_id bigint NOT NULL REFERENCES app_user (id)
 );
 
 ALTER TABLE user_role ADD CONSTRAINT role_user_constraint UNIQUE (role_id, user_id);
