@@ -55,7 +55,8 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
             expect(raceService.getRaces).toHaveBeenCalled();
             getRaces();
             expect(ctrl.races.length).toBe(2);
-            expect(ctrl.currentRace).toBe(1);
+            expect(ctrl.currentRace.id).toBe(1);
+            expect(ctrl.currentRace.name).toBe('Race 1');
         });
 
         function getAssignedEvents() {
@@ -101,7 +102,8 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
                 {id: 3, race: {id: 1, name: 'Race 1'}, event: {name: "Event 3", id: 3, weighted: false}, raceEventOrder:2}
             ]);
             scope.$apply();
-            expect(raceService.getCurrentRace()).toBe(1);
+            expect(raceService.getCurrentRace().id).toBe(1);
+            expect(raceService.getCurrentRace().name).toBe('Race 1');
         });
 
         it('should call clearAlert', function() {

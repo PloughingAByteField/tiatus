@@ -23,8 +23,11 @@
 
         raceService.getRaces().then(function(data) {
             vm.races = data;
-            raceService.setCurrentRace(vm.races[0].id);
+            raceService.setCurrentRace(vm.races[0]);
+            console.log('Set race');
+            console.log(data);
             vm.currentRace = raceService.getCurrentRace();
+            console.log(vm.currentRace);
             raceDataChange();
         });
 
@@ -38,13 +41,13 @@
             alertService.clearAlert();
         };
 
-        vm.raceChanged = function(raceId) {
-            raceService.setCurrentRace(raceId);
-            updateAssignedToRaceEvents(raceId);
+        vm.raceChanged = function(race) {
+            raceService.setCurrentRace(race);
+            updateAssignedToRaceEvents(race);
         };
 
-        function updateAssignedToRaceEvents(raceId) {
-            vm.assignedToRace = eventAssignedService.getAssignedEventsForRace(raceId);
+        function updateAssignedToRaceEvents(race) {
+            vm.assignedToRace = eventAssignedService.getAssignedEventsForRace(race);
         };
 
         vm.createEvent = function(e) {

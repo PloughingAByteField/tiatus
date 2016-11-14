@@ -23,9 +23,9 @@
 
     <div class="spacer"> </div>
 
-    <div ng-show="ctrl.races.$resolved">
+    <div ng-show="ctrl.currentRace">
         <label>{{ 'CHANGE_RACE' | translate }}</label>
-        <select name="race" ng-model="ctrl.currentRace" ng-options="race.id as race.name for race in ctrl.races" ng-change="ctrl.raceChanged(ctrl.currentRace)">
+        <select name="race" ng-model="ctrl.currentRace" ng-options="race as race.name for race in ctrl.races" ng-change="ctrl.raceChanged(ctrl.currentRace)">
         </select>
 
         <div class="spacer"> </div>

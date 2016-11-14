@@ -62,9 +62,9 @@
             }
         }
 
-        function assignEvent(item, raceId, index) {
+        function assignEvent(item, race, index) {
             var deferred = $q.defer();
-            var events = getAssignedEventsForRace(raceId);
+            var events = getAssignedEventsForRace(race);
             var updatedEvents = [];
             var orderAtDrop = -1;
             if (index === events.length) {
@@ -75,10 +75,8 @@
                 }
             } else {
                 orderAtDrop = events[index].raceEventOrder;
-                updatedEvents = reorderRaceOrder(events, index, events.length, 1);
+                updatedEvents = reorderRaceOrder(events, index, events.length, 1, race);
             }
-            var raceAssigned = getRaceAssigned(raceId);
-            var race = raceAssigned.race;
             // add event to race_event
             // need to do updates first or get db constraint
             if (updatedEvents.length > 0) {
@@ -105,15 +103,17 @@
             AssignedEvent.save({race: {id: race.id}, event: {id: item.id}, raceEventOrder: orderAtDrop}).$promise.then(function (data) {
                 events.splice(index, 0, {id: data.id, event: item, raceEventOrder: orderAtDrop});
                 deferred.resolve(data);
+                notifyEventChangeListener();
+
             }, function(error) {
                 $log.warn("Failed to add event", error);
                 deferred.reject(error);
             });
         };
 
-        function reassignEvent(item, raceId, dropIndex) {
+        function reassignEvent(item, race, dropIndex) {
             var deferred = $q.defer();
-            var raceAssigned = getRaceAssigned(raceId);
+            var raceAssigned = getRaceAssigned(race.id);
             var events = raceAssigned.events;
             var orderAtDrop = - 1;
             var updatedEvents = [];
@@ -126,12 +126,12 @@
             var indexOfItem = getEventIndex(events, item);
             if (index < indexOfItem) {
                 $log.debug("drop before");
-                updatedEvents = reorderRaceOrder(events, index, indexOfItem, 1);
+                updatedEvents = reorderRaceOrder(events, index, indexOfItem, 1, race);
                 updatedEvents.push({ event: { id: item.event.id }, raceEventOrder: orderAtDrop });
 
             } else if (index > indexOfItem) {
                 $log.debug("drop after ");
-                updatedEvents = reorderRaceOrder(events, indexOfItem + 1, index + 1, -1);
+                updatedEvents = reorderRaceOrder(events, indexOfItem + 1, index + 1, -1, race);
                 updatedEvents.push({ event: { id: item.event.id }, raceEventOrder: orderAtDrop });
 
             } else {
@@ -169,12 +169,12 @@
             }
         };
 
-        function unassignEvent(item, raceId) {
+        function unassignEvent(item, race) {
             var deferred = $q.defer();
-            var events = getAssignedEventsForRace(raceId);
+            var events = getAssignedEventsForRace(race);
             var index = getEventIndex(events, item);
 
-            var updatedEvents = reorderRaceOrder(events, index + 1, events.length, -1);
+            var updatedEvents = reorderRaceOrder(events, index + 1, events.length, -1, race);
 
             // delete event from race_event
             AssignedEvent.remove({ id: item.id }).$promise.then(function (data) {
@@ -215,11 +215,11 @@
         };
 
 
-        function reorderRaceOrder(items, start, end, value) {
+        function reorderRaceOrder(items, start, end, value, race) {
             var updates = [];
             for (var i = start; i < end; i++) {
                 var item = items[i];
-                updates.push({ event: { id: item.event.id }, raceEventOrder: item.raceEventOrder + value });
+                updates.push({ event: {id: item.event.id}, race: {id: race.id}, raceEventOrder: item.raceEventOrder + value });
             }
             return updates;
         };
@@ -251,13 +251,13 @@
             }
         };
 
-        function getAssignedEventsForRace(raceId) {
-            var raceAssigned = getRaceAssigned(raceId);
+        function getAssignedEventsForRace(race) {
+            var raceAssigned = getRaceAssigned(race.id);
             if (raceAssigned) {
                 return raceAssigned.events;
             }
 
-            raceAssigned = {race: {id: raceId}, events: []};
+            raceAssigned = {race: {id: race.id}, events: []};
             assignedEvents.push(raceAssigned);
             return raceAssigned.events;
         };

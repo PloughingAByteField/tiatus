@@ -67,7 +67,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.assignEvent({id: 4}, 1, 2);
+                eventAssignedService.assignEvent({id: 4}, {id: 1}, 2);
                 expect(AssignedEvent.save).toHaveBeenCalled();
                 expect(AssignedEvent.update).not.toHaveBeenCalled();
                 deferredSave.resolve({id: 4});
@@ -96,7 +96,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 scope.$apply();
                 expect(assignedEvents.length).toBe(0);
 
-                eventAssignedService.assignEvent({id: 4}, 1, 0);
+                eventAssignedService.assignEvent({id: 4}, {id: 1}, 0);
                 deferredSave.resolve({id: 4});
                 scope.$apply();
 
@@ -115,7 +115,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.assignEvent({id: 4}, 1, 0);
+                eventAssignedService.assignEvent({id: 4}, {id: 1}, 0);
                 deferredUpdate.resolve();
                 scope.$apply()
 
@@ -142,7 +142,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.assignEvent({id: 4}, 1, 1);
+                eventAssignedService.assignEvent({id: 4}, {id: 1}, 1);
                 deferredUpdate.resolve();
                 scope.$apply()
 
@@ -170,7 +170,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.assignEvent({id: 4}, 1, 1);
+                eventAssignedService.assignEvent({id: 4}, {id: 1}, 1);
                 deferredUpdate.resolve();
                 scope.$apply();
 
@@ -196,7 +196,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.assignEvent({id: 4}, 1, 1);
+                eventAssignedService.assignEvent({id: 4}, {id: 1}, 1);
                 expect(AssignedEvent.update).toHaveBeenCalled();
                 deferredUpdate.reject();
                 scope.$apply();
@@ -217,7 +217,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.unassignEvent({ event: {id: 1}}, 1);
+                eventAssignedService.unassignEvent({event: {id: 1}}, {id: 1});
                 expect(AssignedEvent.remove).toHaveBeenCalled();
                 deferredRemove.resolve();
                 scope.$apply();
@@ -238,7 +238,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.unassignEvent({ event: {id: 3}}, 1);
+                eventAssignedService.unassignEvent({event: {id: 3}}, {id: 1});
                 expect(AssignedEvent.remove).toHaveBeenCalled();
                 deferredRemove.resolve();
                 scope.$apply();
@@ -257,7 +257,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.unassignEvent({ event: {id: 1}}, 1);
+                eventAssignedService.unassignEvent({ event: {id: 1}}, {id: 1});
                 expect(AssignedEvent.remove).toHaveBeenCalled();
                 deferredRemove.reject();
                 scope.$apply();
@@ -279,7 +279,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.unassignEvent({ event: {id: 1}}, 1);
+                eventAssignedService.unassignEvent({ event: {id: 1}}, {id: 1});
                 expect(AssignedEvent.remove).toHaveBeenCalled();
                 deferredRemove.resolve();
                 scope.$apply();
@@ -302,7 +302,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.reassignEvent({ event: {id: 3}}, 1, 0);
+                eventAssignedService.reassignEvent({ event: {id: 3}}, {id: 1}, 0);
                 expect(AssignedEvent.save).not.toHaveBeenCalled();
                 expect(AssignedEvent.remove).not.toHaveBeenCalled();
                 expect(AssignedEvent.update).toHaveBeenCalled();
@@ -324,7 +324,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 1);
+                eventAssignedService.reassignEvent({ event: {id: 1}}, {id: 1}, 1);
                 expect(AssignedEvent.save).not.toHaveBeenCalled();
                 expect(AssignedEvent.remove).not.toHaveBeenCalled();
                 expect(AssignedEvent.update).toHaveBeenCalled();
@@ -346,7 +346,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 2);
+                eventAssignedService.reassignEvent({ event: {id: 1}}, {id: 1}, 2);
                 expect(AssignedEvent.save).not.toHaveBeenCalled();
                 expect(AssignedEvent.remove).not.toHaveBeenCalled();
                 expect(AssignedEvent.update).toHaveBeenCalled();
@@ -368,7 +368,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 0);
+                eventAssignedService.reassignEvent({ event: {id: 1}}, {id: 1}, 0);
                 expect(AssignedEvent.save).not.toHaveBeenCalled();
                 expect(AssignedEvent.remove).not.toHaveBeenCalled();
                 expect(AssignedEvent.update).not.toHaveBeenCalled();
@@ -390,7 +390,7 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
                 var assignedEvents = getAssignedEvents();
                 expect(assignedEvents.length).toBe(2);
 
-                eventAssignedService.reassignEvent({ event: {id: 1}}, 1, 1);
+                eventAssignedService.reassignEvent({ event: {id: 1}}, {id: 1}, 1);
                 expect(AssignedEvent.save).not.toHaveBeenCalled();
                 expect(AssignedEvent.remove).not.toHaveBeenCalled();
                 expect(AssignedEvent.update).toHaveBeenCalled();
@@ -410,13 +410,13 @@ describe("src.test.javascript.management.event.assigned.service.js", function() 
 
             it('should return race assigned events', function() {
                 var assignedEvents = getAssignedEvents();
-                var data = eventAssignedService.getAssignedEventsForRace(1);
+                var data = eventAssignedService.getAssignedEventsForRace({id: 1});
                 expect(data.length).toBe(2);
             });
 
             it('should return empty race assigned events', function() {
                 var assignedEvents = getAssignedEvents();
-                var data = eventAssignedService.getAssignedEventsForRace(4);
+                var data = eventAssignedService.getAssignedEventsForRace({id: 4});
                 expect(data.length).toBe(0);
             });
         });
