@@ -1,7 +1,8 @@
 {
   "ENTRY" : "Entries",
   "ENTRY_TITLE" : "Entries",
-  "SELETED_RACE" : "Selected Race",
+  "UPLOAD_ENTRIES_FILE" : "Upload an entries file, these must conform to the tiatus entry file format",
+  "SELECTED_RACE" : "Selected Race",
   "ADD_ENTRY" : "Add Entry",
   "CREATE_ENTRY" : "Create Entry",
   "ENTRY_NUMBER" : "Number: ",
@@ -10,6 +11,7 @@
   "ENTRY_CLUB" : "Club: ",
   "ENTRY_CREW" : "Crew:",
   "ENTRY_WEIGHTING" : "Weighting: ",
+  "UPDATE_ENTRY" : "Update Entry",
   "REMOVE_ENTRY" : "Remove Entry",
   "UPLOAD_FILE" : "Upload File",
   "UPLOAD_TRACKER_FILE" : "Upload Tracker File",
@@ -24,5 +26,6 @@
   "FILE_INVALID_NON_MASTERS_WEIGHT" : "Have weighting for non masters event",
   "FILE_PROCESSING_ERROR" : "Have issue processing file",
   "FAILED_ADD" : "Failed to add entry",
-  "FAILED_REMOVE" : "Failed to remove entry"
+  "FAILED_REMOVE" : "Failed to remove entry",
+  "FAILED_UPDATE" : "Failed to update entry"
 }

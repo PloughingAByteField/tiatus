@@ -13,6 +13,7 @@
         'ClubService',
         'PositionService',
         'EventService',
+        'EntryService',
         'PositionController',
         'EventController',
         'RaceController',

@@ -24,10 +24,7 @@
         raceService.getRaces().then(function(data) {
             vm.races = data;
             raceService.setCurrentRace(vm.races[0]);
-            console.log('Set race');
-            console.log(data);
             vm.currentRace = raceService.getCurrentRace();
-            console.log(vm.currentRace);
             raceDataChange();
         });
 

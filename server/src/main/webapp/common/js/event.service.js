@@ -41,6 +41,11 @@
     }]).factory('Event', ['$resource',
       function($resource){
         return $resource('../rest/events/:id', {}, {
+            query: {
+                method: 'GET',
+                isArray: true,
+                cache: false
+            },
             save: {
                 method: 'POST',
                 transformResponse: function(data, headers, status) {
