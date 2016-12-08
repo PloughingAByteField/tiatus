@@ -3,10 +3,10 @@
 
     angular.module('EntryController').controller('entryController', EntryController);
 
-    function EntryController($log, raceService, alertService, entryService, eventService, eventAssignedService, clubService, NgTableParams) {
+    function EntryController($log, $location, $filter, raceService, alertService, entryService, eventService, eventAssignedService, clubService, NgTableParams, $translate) {
         var vm = this;
         vm.alert = alertService.getAlert();
-        vm.entry = {fixedNumber: false, timeOnly: false};
+        vm.entry = entryService.getActiveEntry();
 
         vm.closeAlert = function() {
             alertService.clearAlert();
@@ -73,9 +73,17 @@
             vm.entry.event = vm.events[0];
         });
 
+        vm.newEntry = function() {
+            entryService.setActiveEntry({fixedNumber: false, timeOnly: false});
+            $location.path('/entry_details');
+        };
+
         function getAssignedToRaceEntries(race) {
             vm.eventsAssignedToRace = eventAssignedService.getAssignedEventsForRace(race);
-            vm.tableParams = new NgTableParams({count: 10}, {counts: [], dataset: vm.entries});
+            vm.entriesForRace = $filter('filter')(vm.entries, function (entry) {
+                return entry.race.id == race.id;
+            });
+            vm.tableParams = new NgTableParams({count: 10}, {counts: [], dataset: vm.entriesForRace});
         };
 
         function dataReady() {
@@ -84,73 +92,19 @@
             }
         };
 
-        function isTimeOnlyEvent(entry) {
-            // is this a timed only event by not being in eventsAssignedToRace
-            for (var i=0; i < vm.eventsAssignedToRace.length; i++) {
-                var assignedEvent = vm.eventsAssignedToRace[i];
-                if (assignedEvent.event.id === entry.event.id) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        function fillNewEntry(entry) {
-            var timeOnlyEvent = isTimeOnlyEvent(entry);
-            var newEntry = {};
-            if (entry.fixedNumber && typeof entry.number !== 'undefined') {
-                newEntry.number = entry.number;
-                newEntry.fixedNumber = true;
-            }
-
-            if (typeof entry.crew !== 'undefined') {
-                newEntry.crew = entry.crew;
-            }
-
-            if (typeof entry.weighting !== 'undefined') {
-                newEntry.weighting = entry.weighting;
-            }
-
-            newEntry.event = entry.event;
-            newEntry.clubs = [];
-            for (var x=0; x < entry.clubs.length; x++) {
-                newEntry.clubs.push(entry.clubs[x]);
-            }
-            newEntry.race = {id: vm.currentRace.id};
-
-            return newEntry;
-        }
-
-        vm.addEntry = function(entry) {
-            var newEntry = fillNewEntry(entry);
-            console.log(newEntry);
-            entryService.addEntry(newEntry).then(function() {
-                vm.entry = {fixedNumber: false, timeOnly: false};
-                vm.addEntryForm.$setPristine();
-                vm.addEntryForm.$setUntouched();
-            }, function() {
-                $log.warn("Failed to save entry");
-                alertService.setAlert($translate.instant('FAILED_ADD'));
-            });
-        };
-
         vm.removeEntry = function(entry) {
             entryService.removeEntry(entry).then(function() {
 
             }, function() {
-                $log.warn("Failed to save entry");
+                $log.warn("Failed to remove entry");
                 alertService.setAlert($translate.instant('FAILED_REMOVE'));
             });
         };
 
-        vm.updateEntry = function(entry, form) {
-            console.log(form);
-//            entryService.removeEntry(entry).then(function() {
-//
-//            }, function() {
-//                $log.warn("Failed to save entry");
-//                alertService.setAlert($translate.instant('FAILED_REMOVE'));
-//            });
+        vm.updateEntry = function(entry) {
+            console.log(entry);
+            entryService.setActiveEntry(entry);
+            $location.path('/entry_details');
         };
     };
 

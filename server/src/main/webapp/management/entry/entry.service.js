@@ -8,11 +8,15 @@
         var entries = [];
         var entryChangeListeners = [];
         var entriesPromise = undefined;
+        var activeEntry = {fixedNumber: false, timeOnly: false};
 
         var service = {
             getEntries: getEntries,
+            getActiveEntry: getActiveEntry,
+            setActiveEntry: setActiveEntry,
             addEntry: addEntry,
             removeEntry: removeEntry,
+            updateEntry: updateEntry,
             addEntryChangeListener: addEntryChangeListener
         };
 
@@ -20,6 +24,14 @@
 
         function addEntryChangeListener(listener) {
             entryChangeListeners.push(listener);
+        }
+
+        function getActiveEntry() {
+            return activeEntry;
+        }
+
+        function setActiveEntry(entry) {
+            activeEntry = entry;
         }
 
         function notifyEntryChangeListener() {
@@ -75,6 +87,21 @@
             }, function(error) {
                 $log.warn("Failed to remove entry", error);
                 deferred.reject(error);
+            });
+            return $q.when(deferred.promise);
+        }
+
+        function updateEntry(entry) {
+            var deferred = $q.defer();
+            Entry.update(entry).$promise.then(function(data) {
+                deferred.resolve();
+
+                notifyEntryChangeListener();
+
+            }, function(error) {
+                $log.warn("Failed to update entry", error);
+                deferred.reject(error);
+
             });
             return $q.when(deferred.promise);
         }

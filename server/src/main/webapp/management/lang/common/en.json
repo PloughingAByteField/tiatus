@@ -9,5 +9,6 @@
   "USERNAME_IS_REQUIRED" : "User name is required",
   "PASSWORD_TOO_SHORT" : "Password is required to have 8 or more chars",
   "PASSWORD_TOO_LONG" : "Password is required to have less than 20 chars",
-  "PASSWORD_IS_REQUIRED" : "Password is required"
+  "PASSWORD_IS_REQUIRED" : "Password is required",
+  "BACK" : "Go back"
 }

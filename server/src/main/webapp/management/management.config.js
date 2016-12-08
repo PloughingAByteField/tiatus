@@ -87,6 +87,17 @@
                     }
     			})
 
+    			.when('/entry_details', {
+    				templateUrl : 'entry/entry_details.html',
+    				title: 'ENTRY_TITLE',
+                    resolve: {
+                        specificTranslations: function($translatePartialLoader, $translate) {
+                            $translatePartialLoader.addPart('common');
+                            $translatePartialLoader.addPart('entry');
+                            return $translate.refresh();
+                        }
+                    }
+    			})
     			.when('/draw', {
     				templateUrl : 'draw/draw.html',
     				title: 'DRAW_TITLE',
