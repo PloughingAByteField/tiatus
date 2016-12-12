@@ -28,7 +28,7 @@ describe('src.test.e2e.management.club.create_clubs_spec.js', function() {
     expect(club.element(by.model('club.clubName')).getAttribute('value')).toEqual('Club 1');
   });
 
-  it('should create club', function() {
+  it('should create another club', function() {
     var table = element(by.id('clubs'));
     expect(table.isPresent());
     var rows = table.$$('tr');
