@@ -41,7 +41,7 @@
 
                 <div class="form-group" ng-show="ctrl.clubs">
                     <label>{{ 'ENTRY_CLUB' | translate }}</label>
-                    <select multiple name="clubs" ng-model="ctrl.entry.clubs" ng-options="club as club.clubName for club in ctrl.clubs" ng-change="ctrl.clubChanged(entry)" required></select>
+                    <select multiple name="clubs" ng-model="ctrl.entry.clubs" ng-options="club as club.clubName for club in ctrl.clubs track by club.id" ng-change="ctrl.clubChanged(entry)" required></select>
                     {{entry.club}}
                 </div>
 

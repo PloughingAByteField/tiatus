@@ -8,7 +8,9 @@ exports.config = {
     'management/race/race_spec.js',
     'management/race/create_races_for_events_spec.js',
     'management/event/event_spec.js',
-    'management/club/club_spec.js'
+    'management/club/club_spec.js',
+    'management/club/create_clubs_spec.js',
+    'management/entry/entry_spec.js'
   ],
 
   capabilities: {

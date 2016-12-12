@@ -33,7 +33,7 @@
         <div class="spacer"> </div>
 
         <div ng-show="ctrl.tableParams">
-            <table ng-table="ctrl.tableParams" class="table table-condensed table-bordered table-striped" show-filter="true">
+            <table id="entries" ng-table="ctrl.tableParams" class="table table-condensed table-bordered table-striped" show-filter="true">
                 <tr ng-repeat="entry in $data | orderBy:'raceOrder'" id="entry-{{entry.id}}" ng-form name="entryUpdateForm">
                         <td data-title="'ENTRY_NUMBER' | translate">{{entry.number}}</td>
                         <td data-title="'ENTRY_EVENT' | translate" filter="{'event.name': 'text'}" ng-model="event.name">{{entry.event.name}}</td>

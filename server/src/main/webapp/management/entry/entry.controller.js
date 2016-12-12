@@ -21,7 +21,6 @@
         });
 
         vm.raceChanged = function(race) {
-        console.log('race change');
             raceService.setCurrentRace(race);
             getAssignedToRaceEntries(race);
         };
