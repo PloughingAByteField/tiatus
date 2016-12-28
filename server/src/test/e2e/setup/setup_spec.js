@@ -6,8 +6,8 @@ describe('src.test.e2e.setup_spec.js', function() {
             return /setup/.test(url);
         });
     }, 5000);
-
   });
+
   it('should check both inputs are required and button disabled', function() {
     browser.get('setup/setup.html');
     var nameError = element(by.id('nameError'));
@@ -88,10 +88,10 @@ describe('src.test.e2e.setup_spec.js', function() {
     element(by.id('create')).click();
 
 //     wait for redirect to login
-//    return browser.driver.wait(function() {
-//      return browser.driver.getCurrentUrl().then(function(url) {
-//        return /login/.test(url);
-//      });
-//    }, 5000);
+    return browser.driver.wait(function() {
+      return browser.driver.getCurrentUrl().then(function(url) {
+        return /login/.test(url);
+      });
+    }, 5000);
   });
 });
