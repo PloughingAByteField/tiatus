@@ -187,7 +187,7 @@
                 <version>${docker.maven.plugin.fabric8.version}</version>
                 <configuration>
                     <logDate>default</logDate>
-                    <autoPull>true</autoPull>
+                    <autoPull>once</autoPull>
                     <skip>${docker.skip}</skip>
                     <images>
                         <image>
