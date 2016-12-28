@@ -5,7 +5,7 @@ describe('src.test.e2e.login.login_spec.js', function() {
         return browser.driver.getCurrentUrl().then(function(url) {
             return /login/.test(url);
         });
-    }, 5000);
+    }, 10000);
 
   });
 
@@ -22,7 +22,7 @@ describe('src.test.e2e.login.login_spec.js', function() {
         return browser.driver.getCurrentUrl().then(function(url) {
             return /management/.test(url);
         });
-    }, 5000);
+    }, 10000);
 
   });
 

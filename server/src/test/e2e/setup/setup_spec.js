@@ -5,7 +5,7 @@ describe('src.test.e2e.setup_spec.js', function() {
         return browser.driver.getCurrentUrl().then(function(url) {
             return /setup/.test(url);
         });
-    }, 5000);
+    }, 10000);
   });
 
   it('should check both inputs are required and button disabled', function() {
@@ -92,6 +92,6 @@ describe('src.test.e2e.setup_spec.js', function() {
       return browser.driver.getCurrentUrl().then(function(url) {
         return /login/.test(url);
       });
-    }, 5000);
+    }, 10000);
   });
 });
