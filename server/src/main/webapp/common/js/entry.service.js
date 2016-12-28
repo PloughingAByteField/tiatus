@@ -24,6 +24,11 @@
             update: {
                 method: 'PUT',
                 isArray: true
+            },
+            updateEntries: {
+                url: '../rest/entries/updates',
+                method: 'PUT',
+                isArray: true
             }
         });
     }]);

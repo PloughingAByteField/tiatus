@@ -5,4 +5,55 @@
         {{ctrl.alert.msg}}
     </div>
 
+    <div ng-show="ctrl.currentRace">
+        <select name="race" ng-model="ctrl.currentRace" ng-options="race as race.name for race in ctrl.races" ng-change="ctrl.raceChanged(ctrl.currentRace)">
+        </select>
+    </div>
+
+    <div>
+        <div ng-if="!ctrl.currentRace.drawLocked">
+            <div>{{ 'DRAW_FOR_RACE' | translate }}{{ctrl.currentRace.name}}</div>
+        </div>
+        <div ng-if="ctrl.currentRace.drawLocked">
+            <div>
+                <div>{{ 'DRAW_FOR_RACE' | translate }}{{ctrl.currentRace.name}}
+                    <a class="btn" data-ng-click="ctrl.downloadDraw(ctrl.currentRace)" >{{ 'DOWNLOAD_DRAW_FOR_RACE' | translate }}</a></a>
+                    <a class="btn" data-ng-click="ctrl.downloadDrawForClubs(ctrl.currentRace)" >{{ 'DOWNLOAD_CLUBS_DRAW_FOR_RACE' | translate }}</a></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="Spacer"> </div>
+        <div class="Spacer"> </div>
+
+        <div ng-if="!ctrl.currentRace.drawLocked">
+            <div data-ng-click="ctrl.lockDraw(ctrl.currentRace)"><a>{{ 'LOCK_DRAW_FOR_RACE' | translate }}</a></div>
+            <div ng-show="ctrl.entries">
+                <div id="entries"  dnd-list="ctrl.entriesForRace" dnd-inserter="angular.noop" dnd-drop="ctrl.dropEntry(event, index, item)">
+                    <div ng-repeat="entry in ctrl.entriesForRace | orderBy:'raceOrder'" class="assigned-event" dnd-draggable="entry" dnd-moved="angular.noop">
+                        <div class="number" >{{ 'NUMBER' | translate }}{{entry.number}}</div>
+                        <div class="event" >{{ 'EVENT' | translate }}{{entry.event.name}}</div>
+                        <div class="number" >{{ 'CLUB' | translate }}{{entry.club}}</div>
+                        <div ng-if="entry.crew"  class="number" >{{ 'CREW' | translate }}{{entry.crew}}</div>
+                        <div class="entry-time-only" ng-if="entry.timeOnly">{{ 'TIME_ONLY' | translate }}</div>
+                        <div class="fixed-number" ng-if="entry.fixedNumber">{{ 'FIXED_NUMBER' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="ctrl.currentRace.drawLocked">
+            <div ng-show="ctrl.entries">
+                <div id="lockedEntries">
+                    <div ng-repeat="entry in ctrl.entriesForRace | orderBy:'raceOrder'" class="assigned-event">
+                        <div class="number" >{{ 'NUMBER' | translate }}{{entry.number}}</div>
+                        <div class="event" >{{ 'EVENT' | translate }}{{entry.event.name}}</div>
+                        <div class="number" >{{ 'CLUB' | translate }}{{entry.club}}</div>
+                        <div class="number" >{{ 'CREW' | translate }}{{entry.crew}}</div>
+                        <div class="entry-time-only" ng-if="entry.timeOnly">{{ 'TIME_ONLY' | translate }}</div>
+                        <div class="fixedNumber" ng-if="entry.fixedNumber">{{ 'FIXED_NUMBER' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

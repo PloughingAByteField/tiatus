@@ -6,7 +6,6 @@
     // this an intermediary caching service shared across the controllers
     function EventService($log, Event, $q, $filter) {
         var events = undefined;
-        var eventChangeListeners = [];
 
         var service = {
             getEvents: getEvents
@@ -30,16 +29,6 @@
             }
 
             return $q.when(events);
-        }
-
-        function addEventChangeListener(listener) {
-            eventChangeListeners.push(listener);
-        }
-
-        function notifyEventChangeListener() {
-            for (var i = 0; i < eventChangeListeners.length; i++) {
-                eventChangeListeners[i]();
-            }
         }
     };
 

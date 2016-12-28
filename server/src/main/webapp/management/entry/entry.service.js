@@ -4,7 +4,7 @@
     angular.module('EntryController').service('entryService', EntryService);
 
     // this an intermediary caching service shared across the controllers
-    function EntryService($log, Entry, $q, $filter) {
+    function EntryService($log, Entry, $q) {
         var entries = [];
         var entryChangeListeners = [];
         var entriesPromise = undefined;

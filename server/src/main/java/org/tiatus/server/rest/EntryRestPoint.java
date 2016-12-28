@@ -118,6 +118,32 @@ public class EntryRestPoint {
         }
     }
 
+    /**
+     * Update list of entries, restricted to Admin users
+     * @param entries to update
+     * @return 201 response with location containing uri of newly created entry or an error code
+     */
+    @RolesAllowed({Role.ADMIN})
+    @PUT
+    @Path("updates")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response updateEntries(List<Entry> entries) {
+        LOG.debug("Updating " + entries.size() + " entries");
+        try {
+            service.updateEntries(entries);
+            return Response.noContent().build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception: ", e.getSuppliedException());
+            throw new InternalServerErrorException();
+
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
+    }
+
     @Inject
     // sonar want constructor injection which jaxrs does not support
     public void setService(EntryService service) {

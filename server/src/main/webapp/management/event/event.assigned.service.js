@@ -203,7 +203,7 @@
                 deferred.reject(error);
             });
             return $q.when(deferred.promise);
-        };
+        }
 
         function getEventIndex(items, e) {
             for (var i = 0; i < items.length; i++) {
@@ -212,7 +212,7 @@
                     return i;
                 }
             }
-        };
+        }
 
 
         function reorderRaceOrder(items, start, end, value, race) {
@@ -222,14 +222,14 @@
                 updates.push({ event: {id: item.event.id}, race: {id: race.id}, raceEventOrder: item.raceEventOrder + value });
             }
             return updates;
-        };
+        }
 
         function orderEvents(raceEvents) {
             for (var i = 0; i < raceEvents.length; i++) {
                 var raceAssigned = raceEvents[i];
                 raceAssigned.events = $filter('orderBy')(raceAssigned.events, "raceEventOrder");
             }
-        };
+        }
 
         function getRaceElement(raceId, raceEvents) {
             for (var i = 0; i < raceEvents.length; i++) {
@@ -240,7 +240,7 @@
             }
 
             return undefined;
-        };
+        }
 
         function getRaceAssigned(raceId) {
             for (var i = 0; i < assignedEvents.length; i++) {

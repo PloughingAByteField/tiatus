@@ -106,8 +106,10 @@ describe("src.test.javascript.management.entry_details.controller.spec.js", func
 
         it('should get assigned events', function() {
             expect(ctrl.eventsAssignedToRace).toBeUndefined();
+            getEntries();
             ctrl.raceChanged({id: 1, name: 'Race 1'});
             scope.$apply();
+
 
             expect(eventAssignedService.getAssignedEventsForRace).toHaveBeenCalled();
             expect(ctrl.eventsAssignedToRace.length).toBe(2);
@@ -156,7 +158,7 @@ describe("src.test.javascript.management.entry_details.controller.spec.js", func
                 $setPristine: function() {},
                 $setUntouched: function() {}
             };
-
+            getEntries();
             getRaces();
             scope.$apply();
 
@@ -173,6 +175,7 @@ describe("src.test.javascript.management.entry_details.controller.spec.js", func
                 $setUntouched: function() {}
             };
 
+            getEntries();
             getRaces();
             scope.$apply();
             ctrl.addEntry({clubs: [{id: 1, clubName: 'Club 1'}, {id: 2, clubName: 'Club 2'}], event: {name: 'Event 1', id: 1, weighted: false}, race : {id: 1, name : 'Race 1'}});

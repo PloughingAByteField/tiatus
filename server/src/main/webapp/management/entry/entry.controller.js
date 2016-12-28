@@ -83,13 +83,13 @@
                 return entry.race.id == race.id;
             });
             vm.tableParams = new NgTableParams({count: 10}, {counts: [], dataset: vm.entriesForRace});
-        };
+        }
 
         function dataReady() {
             if (typeof vm.entries !== 'undefined' && typeof vm.currentRace !== 'undefined' && typeof vm.assigned !== 'undefined') {
                 vm.raceChanged(vm.currentRace);
             }
-        };
+        }
 
         vm.removeEntry = function(entry) {
             entryService.removeEntry(entry).then(function() {
@@ -101,10 +101,9 @@
         };
 
         vm.updateEntry = function(entry) {
-            console.log(entry);
             entryService.setActiveEntry(entry);
             $location.path('/entry_details');
         };
-    };
+    }
 
 })();

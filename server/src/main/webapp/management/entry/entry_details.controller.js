@@ -3,7 +3,7 @@
 
     angular.module('EntryController').controller('entryDetailsController', EntryDetailsController);
 
-    function EntryDetailsController($log, $location, raceService, alertService, entryService, eventService, eventAssignedService, clubService, $translate) {
+    function EntryDetailsController($log, $location, raceService, alertService, entryService, eventService, eventAssignedService, clubService, $translate, $filter) {
         var vm = this;
         vm.alert = alertService.getAlert();
         vm.entry = entryService.getActiveEntry();
@@ -16,6 +16,7 @@
         function getEntries() {
             entryService.getEntries().then(function(data) {
                 vm.entries = data;
+                dataReady();
             });
         }
         getEntries();
@@ -24,8 +25,20 @@
             getAssignedToRaceEntries(vm.currentRace);
         });
 
+        function dataReady() {
+            if (typeof vm.entries !== 'undefined' && typeof vm.currentRace !== 'undefined') {
+                vm.raceChanged(vm.currentRace);
+            }
+        }
+
         function getAssignedToRaceEntries(race) {
-            vm.eventsAssignedToRace = eventAssignedService.getAssignedEventsForRace(race);
+            if (typeof vm.entries !== 'undefined') {
+                vm.eventsAssignedToRace = eventAssignedService.getAssignedEventsForRace(race);
+                vm.entriesForRace = $filter('filter')(vm.entries, function (entry) {
+                    return entry.race.id == race.id;
+                });
+                console.log(vm.entriesForRace);
+            }
         }
 
         vm.raceChanged = function(race) {
@@ -38,6 +51,7 @@
             raceService.setCurrentRace(vm.races[0]);
             vm.currentRace = raceService.getCurrentRace();
             vm.raceChanged(vm.currentRace);
+            dataReady();
         });
 
         clubService.getClubs().then(function(data) {
@@ -66,6 +80,21 @@
             return true;
         }
 
+        function getLastNumber(entries) {
+            if (entries.length === 0) {
+                return 1;
+            }
+
+            var results = $filter('orderBy')(entries, "number");
+            for (var i = results.length - 1; i > 0; i--) {
+                if ( !results[i].fixedNumber) {
+                    return results[i].number + 1;
+                }
+            }
+
+            return results[results.length - 1].number + 1;
+        };
+
         function fillNewEntry(entry) {
             var newEntry = {};
             var timeOnlyEvent = isTimeOnlyEvent(entry);
@@ -73,7 +102,11 @@
             if (entry.fixedNumber && typeof entry.number !== 'undefined') {
                 newEntry.number = entry.number;
                 newEntry.fixedNumber = true;
+            } else {
+                newEntry.number = getLastNumber(vm.entriesForRace);
             }
+
+            newEntry.raceOrder = vm.entriesForRace.length + 1;
 
             if (typeof entry.crew !== 'undefined') {
                 newEntry.crew = entry.crew;

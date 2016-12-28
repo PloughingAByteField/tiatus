@@ -54,12 +54,25 @@ public class EntryServiceImpl implements EntryService {
 
     @Override
     public void updateEntry(Entry entry) throws ServiceException {
-        LOG.debug("Update club " + entry.getId());
+        LOG.debug("Update entry " + entry.getId());
         try {
             dao.updateEntry(entry);
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void updateEntries(List<Entry> entries) throws ServiceException {
+        for (Entry entry: entries) {
+            LOG.debug("Update entry " + entry.getId());
+            try {
+                dao.updateEntry(entry);
+            } catch (DaoException e) {
+                LOG.warn("Got dao exception");
+                throw new ServiceException(e);
+            }
         }
     }
 

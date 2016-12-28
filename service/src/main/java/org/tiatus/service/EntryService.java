@@ -31,6 +31,13 @@ public interface EntryService {
     void updateEntry(Entry entry) throws ServiceException;
 
     /**
+     * Update list of entries
+     * @param entries to update
+     * @throws ServiceException on error
+     */
+    void updateEntries(List<Entry> entries) throws ServiceException;
+
+    /**
      * Get entries
      * @return list of entries
      */
