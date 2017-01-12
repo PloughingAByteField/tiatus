@@ -15,8 +15,11 @@
     <properties>
         <sonar.javascript.coveragePlugin>lcov</sonar.javascript.coveragePlugin>
         <sonar.javascript.lcov.reportPath>target/coverage/lcov.info</sonar.javascript.lcov.reportPath>
-        <sonar.exclusions>src/main/webapp/public/js/**</sonar.exclusions>
+        <sonar.exclusions>src/main/webapp/public/js/**,src/main/typescript/**/*.spec.ts,,src/main/typescript/**/*.e2e.ts</sonar.exclusions>
+        <sonar.sources>src/main/java,src/main/webapp,src/main/typescript</sonar.sources>
         <sonar.tests>src/test/javascript,src/test/e2e,src/test/java</sonar.tests>
+        <sonar.tests.inclusions>src/main/typescript/**/*.spec.ts</sonar.tests.inclusions>
+        <sonar.ts.tslintconfigpath>tslint.json</sonar.ts.tslintconfigpath>
         <sonar.genericcoverage.unitTestReportPaths>target/js/protractor.xml,target/js/TESTS.xml</sonar.genericcoverage.unitTestReportPaths>
     </properties>
 
@@ -178,6 +181,18 @@
                         </configuration>
                     </execution>
 
+                    <execution>
+                        <id>npm run build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run build</arguments>
+                            <environmentVariables>
+                                <TARGET>${project.build.directory}/${project.build.finalName}</TARGET>
+                            </environmentVariables>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

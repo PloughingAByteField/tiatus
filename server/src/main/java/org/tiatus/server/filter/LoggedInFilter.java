@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
         filterName="LoginServlet",
         urlPatterns={"/*"},
         initParams = {
-            @WebInitParam(name = "pass-through", value = "/rest/login,/public,/results,/favicon.ico")
+            @WebInitParam(name = "pass-through", value = "/rest/login,/public,/results,/favicon.ico,/test,/polyfills,/maps,/vendor,/chunks,/adjudicator")
         }
 )
 public class LoggedInFilter implements Filter {
@@ -60,9 +60,11 @@ public class LoggedInFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         LOG.debug("in doFilter");
+
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String requestedUrl = request.getRequestURI();
+
         if (checkUrl(requestedUrl)){
             LOG.debug("skipping " + requestedUrl);
         } else {
@@ -100,7 +102,7 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean isValidAccess(String root, UserPrincipal p) {
-        if ("rest".equals(root) || "common".equals(root)) {
+        if ("rest".equals(root) || "common".equals(root) || "results".equals(root) || "test".equals(root) || "polyfills".equals(root) || "vendor".equals(root)) {
             return true;
         }
 
