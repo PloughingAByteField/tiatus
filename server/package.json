@@ -1,7 +1,7 @@
 {
-  "name": "frontend-project",
+  "name": "tiatus",
   "version": "0.0.1",
-  "description": "Description for frontend-project",
+  "description": "Tiatus is a unified timing system",
   "private": true,
   "scripts": {
     "build:aot:prod": "npm run clean:dist && npm run clean:aot && npm run ngc -- --webpack webpack/webpack.dev.js && webpack --config webpack/webpack.dev.js  --progress --profile --bail",
