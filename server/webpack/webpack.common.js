@@ -149,6 +149,14 @@ module.exports = function (options) {
           use: 'file-loader'
         },
 
+{
+             test: /\.scss$/,
+             loaders: ['raw-loader', 'sass-loader']
+    },
+    {
+              test: /\.(woff2?|ttf|eot|svg)$/,
+              loader: 'url?limit=10000'
+    },
       ],
 
     },
@@ -222,6 +230,7 @@ module.exports = function (options) {
        * See: https://www.npmjs.com/package/copy-webpack-plugin
        */
       new CopyWebpackPlugin([
+        { from: 'node_modules/bootstrap-sass/assets/fonts', to: 'assets/fonts' },
         { from: 'src/main/typescript/assets', to: 'results/assets' },
         { from: 'src/main/typescript/results/i18n', to: 'results/i18n' },
         { from: 'src/main/typescript/meta', to: 'results'}

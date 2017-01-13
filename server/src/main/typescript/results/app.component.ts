@@ -15,9 +15,10 @@ import { AppState } from './app.service';
   selector: 'app',
   encapsulation: ViewEncapsulation.None,
   styleUrls: [
-    './app.component.css'
+    './app.component.scss'
   ],
   template: `
+  <navbar></navbar>
     <nav>
       <span>
         <a [routerLink]=" ['./'] ">
@@ -56,6 +57,8 @@ import { AppState } from './app.service';
         <a [href]="url">
           <img [src]="angularclassLogo" width="25%">
         </a>
+        <br>
+        <a href="assets/fonts/bootstrap/glyphicons-halflings-regular.woff2"> aaa </a>
       </div>
     </footer>
   `

@@ -1,10 +1,10 @@
 import { NgModule, ApplicationRef } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
-import {TranslateModule} from 'ng2-translate';
+import { TranslateModule } from 'ng2-translate';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -19,6 +19,10 @@ import { HomeComponent } from './home';
 import { AboutComponent } from './about';
 import { NoContentComponent } from './no-content';
 import { XLarge } from './home/x-large';
+
+import { NavbarComponent } from './navbar/navbar';
+
+import { AlertModule, DatepickerModule } from 'ng2-bootstrap';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -42,18 +46,22 @@ type StoreType = {
     AboutComponent,
     HomeComponent,
     NoContentComponent,
-    XLarge
+    XLarge,
+    NavbarComponent
   ],
   imports: [ // import Angular's modules
     BrowserModule,
     FormsModule,
     HttpModule,
+    AlertModule.forRoot(),
+      DatepickerModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
-    APP_PROVIDERS
+    APP_PROVIDERS,
+    Title
   ]
 })
 export class AppModule {
