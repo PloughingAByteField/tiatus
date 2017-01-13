@@ -4,6 +4,7 @@ import { AppState } from '../app.service';
 import { Title } from './title';
 import { XLarge } from './x-large';
 
+import {NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   // The selector is what angular internally uses
@@ -23,6 +24,7 @@ export class HomeComponent {
   // Set our default values
   localState = { value: '' };
   date: Date = new Date();
+    model: NgbDateStruct = {year: this.date.getFullYear(), month: this.date.getMonth() + 1, day: this.date.getDate()};
 
   // TypeScript public modifiers
   constructor(public appState: AppState, public title: Title) {

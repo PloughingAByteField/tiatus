@@ -14,13 +14,17 @@
 
   <hr>
 
+  <ngb-alert type="info">Hello from ng-bootstrap  {{ date.toDateString() }}</ngb-alert>
+  <hr>
+  <div style="display:inline-block; min-height:290px;">
+    <ngb-datepicker [(ngModel)]="model" showWeeks="true"></ngb-datepicker>
+  </div>
+
+  <hr>
+
   <div>
     <h4>Local State</h4>
 
-    <alert type="info">Hello from ng2-bootstrap  {{ date.toDateString() }}</alert>
-    <div style="display:inline-block; min-height:290px;">
-      <datepicker [(ngModel)]="date" showWeeks="true"></datepicker>
-    </div>
 
     <form (ngSubmit)="submitState(localState.value)" autocomplete="off">
 

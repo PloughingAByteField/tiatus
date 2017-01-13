@@ -22,7 +22,7 @@ import { XLarge } from './home/x-large';
 
 import { NavbarComponent } from './navbar/navbar';
 
-import { AlertModule, DatepickerModule } from 'ng2-bootstrap';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -53,8 +53,7 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    AlertModule.forRoot(),
-      DatepickerModule.forRoot(),
+    NgbModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
