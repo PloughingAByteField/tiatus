@@ -149,6 +149,9 @@ module.exports = function (options) {
       watchOptions: {
         aggregateTimeout: 300,
         poll: 1000
+      },
+      proxy: {
+        "/rest": "http://127.0.0.1:8080"
       }
     },
 

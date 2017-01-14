@@ -5,7 +5,8 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Title }     from '@angular/platform-browser';
 import { AppState } from './app.service';
-
+import { Race, RacesService } from './services/races.service';
+import { Observable } from 'rxjs/Observable'
 
 /*
  * App Component
@@ -24,13 +25,17 @@ export class AppComponent {
   url = 'https://twitter.com/AngularClass';
   param = {value: 'world'};
 
+  races: Observable<Race[]>;
+
   constructor(
-    public appState: AppState, private translate: TranslateService, private titleService: Title) {
+    public appState: AppState, private translate: TranslateService, private titleService: Title, private racesService: RacesService) {
 
       translate.setDefaultLang('en');
 
      // the lang to use, if the lang isn't available, it will use the current loader to get them
      translate.use('en');
+
+     this.races = this.racesService.getRaces();
   }
 
   public setTitle( newTitle: string) {

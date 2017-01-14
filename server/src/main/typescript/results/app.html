@@ -26,6 +26,7 @@
 
 <main>
     <router-outlet></router-outlet>
+
 </main>
 
 <pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
@@ -36,5 +37,9 @@
         <a [href]="url">
             <img [src]="angularclassLogo" width="25%">
         </a>
+    </div>
+
+    <div *ngFor="let race of races | async" class="col-sm-4 col-lg-4 col-md-4">
+        <span>name: {{race.name}} id: {{race.id}}</span>
     </div>
 </footer>

@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { TranslateModule } from 'ng2-translate';
+import { RacesService } from './services/races.service';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -27,7 +28,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 // Application wide providers
 const APP_PROVIDERS = [
   ...APP_RESOLVER_PROVIDERS,
-  AppState
+  AppState,
+  RacesService
 ];
 
 type StoreType = {
