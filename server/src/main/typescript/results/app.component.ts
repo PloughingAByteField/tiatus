@@ -25,9 +25,7 @@ export class AppComponent {
 
   races: Observable<Race[]>;
 
-  constructor(
-    private translate: TranslateService, private titleService: Title, private racesService: RacesService) {
-
+  constructor(private translate: TranslateService, private titleService: Title, private racesService: RacesService) {
       translate.setDefaultLang('en');
 
      // the lang to use, if the lang isn't available, it will use the current loader to get them

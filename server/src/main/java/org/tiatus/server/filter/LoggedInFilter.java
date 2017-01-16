@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
         filterName="LoginServlet",
         urlPatterns={"/*"},
         initParams = {
-            @WebInitParam(name = "pass-through", value = "/rest,/public,/results,/favicon.ico,/test,/polyfills,/maps,/vendor,/chunks,/adjudicator")
+            @WebInitParam(name = "pass-through", value = "/rest,/assets,/public,/results,/favicon.ico,/test,/polyfills,/maps,/vendor,/chunks,/adjudicator")
         }
 )
 public class LoggedInFilter implements Filter {

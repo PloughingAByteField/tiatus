@@ -29,7 +29,18 @@
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "target",
+    "bower_components",
+    "src/main/java",
+    "src/test/java",
+    "src/test/javascript",
+    "src/test/e2e",
+    "src/main/webapp",
+    "src/main/docker",
+    "src/main/resources",
+    "src/**/*.spec.ts",
+    "src/**/*.e2e.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
