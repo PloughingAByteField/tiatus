@@ -1,45 +1,17 @@
-<nav>
-      <span>
-        <a [routerLink]=" ['./'] ">
-          ss {{ 'HELLO' | translate:param }}
-        </a>
-      </span>
-    |
-    <span>
-        <a [routerLink]=" ['./home'] ">
-          Home
-        </a>
-      </span>
-    |
-    <span>
-        <a [routerLink]=" ['./detail'] ">
-          Detail
-        </a>
-      </span>
-    |
-    <span>
-        <a [routerLink]=" ['./about'] ">
-          About
-        </a>
-      </span>
-</nav>
+<titlebar></titlebar>
 
-<main>
-    <router-outlet></router-outlet>
+<div class="container-fluid">
+    <div class="row">
+        <sidebar [races]="races"></sidebar>
+        <main>
+            <router-outlet></router-outlet>
 
-</main>
-
-<pre class="app-state">this.appState.state = {{ appState.state | json }}</pre>
-
-<footer>
-    <span>WebPack Angular 2 Starter by <a [href]="url">@AngularClass</a></span>
-    <div>
-        <a [href]="url">
-            <img [src]="angularclassLogo" width="25%">
-        </a>
+                <div *ngFor="let race of races | async" >
+                    <span>name: {{race.name}} id: {{race.id}}</span>
+                </div>
+        </main>
     </div>
 
-    <div *ngFor="let race of races | async" class="col-sm-4 col-lg-4 col-md-4">
-        <span>name: {{race.name}} id: {{race.id}}</span>
-    </div>
-</footer>
+</div>
+
+<footer class="footer"></footer>

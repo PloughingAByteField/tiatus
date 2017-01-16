@@ -1,15 +1,12 @@
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home';
-import { AboutComponent } from './about';
+import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
+import { ResultsComponent } from './race_results';
 
-import { DataResolver } from './app.resolver';
 
 
 export const ROUTES: Routes = [
-  { path: '',      component: HomeComponent },
-  { path: 'home',  component: HomeComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'detail', loadChildren: './+detail/index#DetailModule'},
-  { path: '**',    component: NoContentComponent },
+  { path: '',      component: LandingComponent },
+  { path: 'race/:raceId',  component: ResultsComponent },
+  { path: '**',    component: NoContentComponent }
 ];

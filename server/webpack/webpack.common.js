@@ -228,7 +228,7 @@ module.exports = function (options) {
        */
       new CopyWebpackPlugin([
         { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'assets/css' },
-        { from: 'src/main/typescript/assets', to: 'results/assets' },
+        { from: 'src/main/typescript/assets', to: 'assets' },
         { from: 'src/main/typescript/results/i18n', to: 'results/i18n' },
         { from: 'src/main/typescript/meta', to: 'results'}
       ]),
