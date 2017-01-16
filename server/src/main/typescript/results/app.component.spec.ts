@@ -1,19 +1,10 @@
 import { inject, getTestBed, TestBed } from '@angular/core/testing';
 import { Injector } from "@angular/core";
-import { Component } from '@angular/core';
-import { BaseRequestOptions, ConnectionBackend, Http, XHRBackend, HttpModule } from '@angular/http';
+import { XHRBackend, HttpModule } from '@angular/http';
 import { MockConnection, MockBackend } from '@angular/http/testing';
 import { Title }     from '@angular/platform-browser';
 import { RacesService } from '../services/races.service';
-import {
-    TranslateService,
-    MissingTranslationHandler,
-    MissingTranslationHandlerParams,
-    TranslateLoader,
-    TranslateStaticLoader,
-    LangChangeEvent,
-    TranslationChangeEvent, TranslateModule
-} from 'ng2-translate';
+import { TranslateService, TranslateModule } from 'ng2-translate';
 
 import { AppComponent } from './app.component';
 
