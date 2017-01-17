@@ -61,6 +61,7 @@ module.exports = function (options) {
 
       'polyfills': './src/main/typescript/polyfills.browser.ts',
       'results/results':  './src/main/typescript/results/results.ts',
+      'timing/timing':  './src/main/typescript/timing/timing.ts',
       'adjudicator/adjudicator': './src/main/typescript/adjudicator/adjudicator.ts'
 
     },
@@ -139,7 +140,7 @@ module.exports = function (options) {
         {
           test: /\.html$/,
           use: 'raw-loader',
-          exclude: [helpers.root('src/main/typescript/results/index.html'), helpers.root('src/main/typescript/adjudicator/index.html')]
+          exclude: [helpers.root('src/main/typescript/results/index.html'), helpers.root('src/main/typescript/timing/index.html'), helpers.root('src/main/typescript/adjudicator/index.html')]
         },
 
         /* File loader for supporting images, for example, in CSS files.
@@ -193,7 +194,7 @@ module.exports = function (options) {
       // This enables tree shaking of the vendor modules
       new CommonsChunkPlugin({
         name: 'vendor',
-        chunks: ['results/results', 'adjudicator/adjudicator'],
+        chunks: ['results/results', 'timing/timing', 'adjudicator/adjudicator'],
         filename: 'vendor/vendor.bundle.js',
         minChunks: module => /node_modules\//.test(module.resource)
       }),
@@ -230,7 +231,7 @@ module.exports = function (options) {
         { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'assets/css' },
         { from: 'src/main/typescript/assets', to: 'assets' },
         { from: 'src/main/typescript/results/i18n', to: 'results/i18n' },
-        { from: 'src/main/typescript/meta', to: 'results'}
+        { from: 'src/main/typescript/timing/i18n', to: 'timing/i18n' },
       ]),
 
 
@@ -251,8 +252,19 @@ module.exports = function (options) {
           inject: false,
           chunks: ['results/results'],
         filename: 'results/index.html'
-
       }),
+
+      new HtmlWebpackPlugin({
+        template: 'src/main/typescript/timing/index.html',
+        title: METADATA.title,
+        chunksSortMode: 'dependency',
+        metadata: METADATA,
+//        inject: 'head',
+          inject: false,
+          chunks: ['timing/timing'],
+        filename: 'timing/index.html'
+      }),
+
       new HtmlWebpackPlugin({
           template: 'src/main/typescript/adjudicator/index.html',
           title: METADATA.title,
@@ -262,8 +274,7 @@ module.exports = function (options) {
           inject: false,
           chunks: ['adjudicator/adjudicator'],
           filename: 'adjudicator/index.html'
-        }
-      ),
+      }),
 
       /*
        * Plugin: ScriptExtHtmlWebpackPlugin
