@@ -232,6 +232,7 @@ module.exports = function (options) {
         { from: 'src/main/typescript/assets', to: 'assets' },
         { from: 'src/main/typescript/results/i18n', to: 'results/i18n' },
         { from: 'src/main/typescript/timing/i18n', to: 'timing/i18n' },
+        { from: 'src/main/typescript/adjudicator/i18n', to: 'adjudicator/i18n' },
       ]),
 
 

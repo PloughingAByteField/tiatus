@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'bad-page',
+  selector: 'no-content',
   template: `
     <div>
-      <h1>Opps! Something went wrong</h1>
+      <h1>404: page missing</h1>
     </div>
   `
 })
-export class BadPageComponent {
+export class NoContentComponent {
 
 }
