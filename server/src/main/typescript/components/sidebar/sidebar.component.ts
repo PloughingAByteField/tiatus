@@ -10,6 +10,7 @@ import { Race } from '../../services/races.service';
 })
 export class SidebarComponent {
     private _races: Observable<Race[]>;
+    private _link: string = 'race';
 
     constructor(private translate: TranslateService) {}
 
@@ -22,4 +23,14 @@ export class SidebarComponent {
     get races(): Observable<Race[]> {
         return this._races;
     }
+
+    @Input() set link(link: string) {
+    console.log("link set called " + link);
+        this._link = link;
+    }
+
+    get link(): string {
+        return this._link;
+    }
+
 }

@@ -3,7 +3,7 @@
         <ul class="nav flex-column ">
             <div *ngFor="let race of races | async">
                 <li class="nav-item">
-                    <a class="nav-link" [routerLink]=" ['./race', race.id] ">{{race.name}}</a>
+                    <a class="nav-link" [routerLink]=" [link, race.id] ">{{race.name}}</a>
                 </li>
             </div>
         </ul>
