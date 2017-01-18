@@ -22,7 +22,7 @@ export class AppComponent {
   logo = '/assets/img/stopwatch.svg';
   tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
   param = {value: 'world'};
-
+  link = "race";
   races: Observable<Race[]>;
 
   constructor(private translate: TranslateService, private titleService: Title, private racesService: RacesService) {
