@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
+import { Race, RacesService } from '../../services/races.service';
 
 // Load the implementations that should be tested
 import { LandingComponent } from './landing.component';
@@ -13,6 +14,7 @@ describe('Landing', () => {
     providers: [
       BaseRequestOptions,
       MockBackend,
+      RacesService,
       {
         provide: Http,
         useFactory: function(backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
