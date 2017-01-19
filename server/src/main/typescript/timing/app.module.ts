@@ -6,6 +6,7 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 import { RacesService } from '../services/races.service';
 import { EntriesService } from '../services/entries.service';
+import { ClubsService } from '../services/clubs.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './app.routes';
@@ -19,7 +20,8 @@ import { TitlebarComponent } from '../components/titlebar/titlebar.component';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
+
+import { Ng2PaginationModule } from 'ng2-pagination';
 
 @NgModule({
   bootstrap: [ AppComponent ],
@@ -36,7 +38,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     BrowserModule,
     FormsModule,
     HttpModule,
-    Ng2SmartTableModule,
+    Ng2PaginationModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: false, preloadingStrategy: PreloadAllModules })
@@ -45,6 +47,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
     ENV_PROVIDERS,
     RacesService,
     EntriesService,
+    ClubsService,
     Title
   ]
 })

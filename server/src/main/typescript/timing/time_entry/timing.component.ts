@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { LocalDataSource } from 'ng2-smart-table';
+import { Http } from "@angular/http";
 
 import { Entry, EntriesService } from '../../services/entries.service';
+import { Club, ClubsService } from '../../services/clubs.service';
 
 @Component({
     selector: 'timing',
@@ -12,45 +13,39 @@ import { Entry, EntriesService } from '../../services/entries.service';
     templateUrl: './timing.component.html'
 })
 export class TimingComponent {
-    source: LocalDataSource;
     private _raceId: number = 0;
     private entries: Entry[];
+    private clubs: Club[];
+    public raceEntries: Entry[];
 
-    constructor(private entriesService: EntriesService, private route: ActivatedRoute) {
-        this.source = new LocalDataSource();
+    page: number = 1;
 
+    constructor(private entriesService: EntriesService, private clubsService: ClubsService, private route: ActivatedRoute, private http: Http) {
         this.entriesService.getEntries()
         .subscribe((data: Entry[]) => {
             this.entries = data;
             this.filterRace(this._raceId);
         });
+        this.clubsService.getClubs()
+        .subscribe((data: Club[]) => {
+            this.clubs = data;
+        });
     }
 
     private filterRace(raceId: number) {
         if (this.entries) {
-            this.source.load(this.entries.filter((entry: Entry) => entry.race.id === raceId));
+            this.entries.filter((entry: Entry) => entry.race.id === raceId);
         }
     }
 
-    settings = {
-      columns: {
-        number: {
-          title: 'Number'
-        },
-        crew: {
-          title: 'Crew'
-        },
-        clubs: {
-          title: 'Club',
-          valuePrepareFunction: (value) => {
-            return value.map((club) => club.clubName).join(" / ");
-          }
-        },
-        raceName: {
-          title: 'Race'
-        }
-      }
-    };
+    getClubNames(clubs): string {
+        return clubs.map((club) => club.clubName).join(" / ");
+    }
+
+    onKey(event:any, entry: any) {
+        console.log(event);
+        console.log(entry);
+    }
 
     ngOnInit() {
         console.log('hello from timing');

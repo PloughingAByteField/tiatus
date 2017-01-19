@@ -5,10 +5,6 @@
         <sidebar [races]="races" [link]="link"></sidebar>
         <main>
             <router-outlet></router-outlet>
-
-                <div *ngFor="let race of races | async" >
-                    <span>name: {{race.name}} id: {{race.id}}</span>
-                </div>
         </main>
     </div>
 
