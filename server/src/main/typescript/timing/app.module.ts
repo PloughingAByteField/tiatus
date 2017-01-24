@@ -9,7 +9,7 @@ import { EntriesService } from '../services/entries.service';
 import { ClubsService } from '../services/clubs.service';
 
 import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './app.routes';
+import { appRouting } from './app.routes';
 import { AppComponent } from './app.component';
 import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
@@ -41,7 +41,7 @@ import { Ng2PaginationModule } from 'ng2-pagination';
     Ng2PaginationModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
-    RouterModule.forRoot(ROUTES, { useHash: false, preloadingStrategy: PreloadAllModules })
+    appRouting
   ],
   providers: [
     ENV_PROVIDERS,
