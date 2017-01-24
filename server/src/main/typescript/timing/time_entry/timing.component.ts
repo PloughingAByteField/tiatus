@@ -32,14 +32,8 @@ export class TimingComponent {
         });
     }
 
-    private filterRace(raceId: number) {
-        if (this.entries) {
-            this.entries.filter((entry: Entry) => entry.race.id === raceId);
-        }
-    }
-
     getClubNames(clubs): string {
-        return clubs.map((club) => club.clubName).join(" / ");
+        return clubs.map((club) => club.clubName).join(' / ');
     }
 
     onKey(event:any, entry: any) {
@@ -49,10 +43,16 @@ export class TimingComponent {
 
     ngOnInit() {
         console.log('hello from timing');
-
+        
         this.route.params.subscribe((params: Params) => {
             this._raceId = +params['raceId'];
             this.filterRace(this._raceId);
         });
+    }
+
+    private filterRace(raceId: number) {
+        if (this.entries) {
+            this.entries.filter((entry: Entry) => entry.race.id === raceId);
+        }
     }
 }
