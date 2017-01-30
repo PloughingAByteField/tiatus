@@ -10,7 +10,7 @@ import { ResultsComponent } from './results.component';
 
 import {Observable} from "rxjs/Observable";
 
-describe('App', () => {
+describe('Results', () => {
     let translate: TranslateService;
     let injector: Injector;
     let backend: MockBackend;
