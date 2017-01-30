@@ -4,10 +4,10 @@ import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
 import { TimingEntryComponent } from './time_entry';
 
-const ROUTES: Routes = [
+const timingRoutes: Routes = [
   { path: '',      component: LandingComponent },
   { path: 'race/:raceId',  component: TimingEntryComponent },
   { path: '**',    component: NoContentComponent }
 ];
 
-export const appRouting: ModuleWithProviders = RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules });
+export const timingRouting: ModuleWithProviders = RouterModule.forRoot(timingRoutes, { preloadingStrategy: PreloadAllModules });

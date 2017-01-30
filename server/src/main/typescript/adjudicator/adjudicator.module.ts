@@ -7,7 +7,7 @@ import { TranslateModule } from 'ng2-translate';
 import { RacesService } from '../services/races.service';
 
 import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './adjudicator.routes';
+import { adjudicatorRoutes } from './adjudicator.routes';
 import { AdjudicatorComponent } from './adjudicator.component';
 import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
@@ -36,7 +36,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
-    RouterModule.forRoot(ROUTES, { useHash: false, preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(adjudicatorRoutes, { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
   providers: [
     ENV_PROVIDERS,

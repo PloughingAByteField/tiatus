@@ -3,9 +3,7 @@ import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
 import { ResultsComponent } from './race_results';
 
-
-
-export const ROUTES: Routes = [
+export const adjudicatorRoutes: Routes = [
   { path: '',      component: LandingComponent },
   { path: 'race/:raceId',  component: ResultsComponent },
   { path: '**',    component: NoContentComponent }

@@ -9,7 +9,7 @@ import { EntriesService } from '../services/entries.service';
 import { ClubsService } from '../services/clubs.service';
 
 import { ENV_PROVIDERS } from './environment';
-import { appRouting } from './timing.routes';
+import { timingRouting } from './timing.routes';
 import { TimingComponent } from './timing.component';
 import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
@@ -41,7 +41,7 @@ import { Ng2PaginationModule } from 'ng2-pagination';
     Ng2PaginationModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
-    appRouting
+    timingRouting
   ],
   providers: [
     ENV_PROVIDERS,
