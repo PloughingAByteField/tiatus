@@ -9,28 +9,28 @@ import { Race } from '../../models/race.model';
   templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent {
-    private _races: Observable<Race[]>;
-    private _link: string = 'race';
+    private racesArray: Observable<Race[]>;
+    private raceLink: string = 'race';
 
     constructor(private translate: TranslateService) {}
 
-    @Input() set races(races: Observable<Race[]>) {
+    @Input() set races(newRaces: Observable<Race[]>) {
     console.log("races set called");
-    console.log(races);
-        this._races = races;
+    console.log(newRaces);
+        this.racesArray = newRaces;
     }
 
     get races(): Observable<Race[]> {
-        return this._races;
+        return this.racesArray;
     }
 
-    @Input() set link(link: string) {
-    console.log("link set called " + link);
-        this._link = link;
+    @Input() set link(newLink: string) {
+    console.log("link set called " + newLink);
+        this.raceLink = newLink;
     }
 
     get link(): string {
-        return this._link;
+        return this.raceLink;
     }
 
 }

@@ -13,7 +13,7 @@ import { Entry } from '../../models/entry.model';
     templateUrl: './timing-entry.component.html'
 })
 export class TimingEntryComponent implements OnInit {
-    private _raceId: number = 0;
+    private raceId: number = 0;
     private entries: Entry[];
     private clubs: Club[];
     public raceEntries: Entry[];
@@ -24,7 +24,7 @@ export class TimingEntryComponent implements OnInit {
         this.entriesService.getEntries()
         .subscribe((data: Entry[]) => {
             this.entries = data;
-            this.filterRace(this._raceId);
+            this.filterRace(this.raceId);
         });
         this.clubsService.getClubs()
         .subscribe((data: Club[]) => {
@@ -45,8 +45,8 @@ export class TimingEntryComponent implements OnInit {
         console.log('hello from timing');
         
         this.route.params.subscribe((params: Params) => {
-            this._raceId = +params['raceId'];
-            this.filterRace(this._raceId);
+            this.raceId = +params['raceId'];
+            this.filterRace(this.raceId);
         });
     }
 
