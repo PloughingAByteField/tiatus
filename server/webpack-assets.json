@@ -1,14 +1,17 @@
 {
   "vendor": {
-    "js": "vendor.bundle.js"
+    "js": "vendor/vendor.bundle.js"
   },
-  "test": {
-    "js": "test.bundle.js"
+  "timing/timing": {
+    "js": "./timing/timing.bundle.js"
   },
-  "main": {
-    "js": "main.bundle.js"
+  "results/results": {
+    "js": "./results/results.bundle.js"
+  },
+  "adjudicator/adjudicator": {
+    "js": "./adjudicator/adjudicator.bundle.js"
   },
   "polyfills": {
-    "js": "polyfills.bundle.js"
+    "js": "polyfills/polyfills.bundle.js"
   }
 }

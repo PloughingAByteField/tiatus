@@ -1,4 +1,4 @@
-.tiatus-pagination /deep/ .ng2-pagination  {
+.tiatus-pagination  .ng2-pagination  {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -8,7 +8,7 @@
     border-radius: 0.25rem;
 }
 
-.tiatus-pagination /deep/ .ng2-pagination .current {
+.tiatus-pagination  .ng2-pagination .current {
     background: green;
     position: relative;
     display: block;
@@ -21,7 +21,7 @@
     border-color: #0275d8;
 }
 
-.tiatus-pagination /deep/ .ng2-pagination a {
+.tiatus-pagination  .ng2-pagination a {
     position: relative;
     display: block;
     padding: 0.5rem 0.75rem;
@@ -32,8 +32,8 @@
     border: 1px solid #ddd;
 }
 
-.tiatus-pagination /deep/ .ng2-pagination .pagination-previous,
-.tiatus-pagination /deep/ .ng2-pagination .pagination-previous.disabled
+.tiatus-pagination  .ng2-pagination .pagination-previous,
+.tiatus-pagination  .ng2-pagination .pagination-previous.disabled
 {
     margin-right: 0;
 
@@ -41,15 +41,15 @@
     border-top-left-radius: 0.25rem;
 }
 
-.tiatus-pagination /deep/ .ng2-pagination .pagination-previous a::before,
-.tiatus-pagination /deep/ .ng2-pagination .pagination-previous.disabled a::before
+.tiatus-pagination  .ng2-pagination .pagination-previous a::before,
+.tiatus-pagination  .ng2-pagination .pagination-previous.disabled a::before
 {
     margin-right: 0;
 
 }
 
-.tiatus-pagination /deep/ .ng2-pagination .pagination-next a::after,
-.tiatus-pagination /deep/ .ng2-pagination .pagination-next.disabled a::after
+.tiatus-pagination  .ng2-pagination .pagination-next a::after,
+.tiatus-pagination  .ng2-pagination .pagination-next.disabled a::after
  {
     margin-left: 0;
 }
