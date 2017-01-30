@@ -1,1 +1,1 @@
-export * from './timing.component';
+export * from './timing-entry.component';

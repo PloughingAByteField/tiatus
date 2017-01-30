@@ -6,7 +6,7 @@ import { Title }     from '@angular/platform-browser';
 import { RacesService } from '../services/races.service';
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
-import { AppComponent } from './app.component';
+import { ResultsComponent } from './results.component';
 
 import {Observable} from "rxjs/Observable";
 
@@ -23,7 +23,7 @@ describe('App', () => {
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
                 Title,
-                AppComponent
+                ResultsComponent
             ]
         });
 
@@ -41,7 +41,7 @@ describe('App', () => {
         connection = undefined;
     });
 
-  it('should have a url', inject([ AppComponent ], (app: AppComponent) => {
+  it('should have a url', inject([ ResultsComponent ], (app: ResultsComponent) => {
     expect(app.tiatusUrl).toEqual('https://github.com/PloughingAByteField/tiatus');
   }));
 

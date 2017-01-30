@@ -6,6 +6,7 @@ import { TranslateService } from 'ng2-translate';
 import { Title }     from '@angular/platform-browser';
 import { RacesService } from '../services/races.service';
 import { Observable } from 'rxjs/Observable';
+
 import { Race } from '../models/race.model';
 
 /*
@@ -13,17 +14,17 @@ import { Race } from '../models/race.model';
  * Top Level Component
  */
 @Component({
-  selector: 'app',
+  selector: 'timing',
   styleUrls: [
-    './app.component.css'
+    './timing.component.css'
   ],
-  templateUrl: './app.component.html'
+  templateUrl: './timing.component.html'
 })
-export class AppComponent {
+export class TimingComponent {
   logo = '/assets/img/stopwatch.svg';
   tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
   param = {value: 'world'};
-
+  link = "race";
   races: Observable<Race[]>;
 
   constructor(private translate: TranslateService, private titleService: Title, private racesService: RacesService) {

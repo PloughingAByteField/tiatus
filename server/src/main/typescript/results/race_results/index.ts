@@ -1,1 +1,1 @@
-export * from './results.component';
+export * from './race-results.component';

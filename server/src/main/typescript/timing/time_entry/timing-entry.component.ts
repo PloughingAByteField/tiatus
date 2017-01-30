@@ -8,11 +8,11 @@ import { Club } from '../../models/club.model';
 import { Entry } from '../../models/entry.model';
 
 @Component({
-    selector: 'timing',
-    styleUrls: [ './timing.component.css' ],
-    templateUrl: './timing.component.html'
+    selector: 'timing-entry',
+    styleUrls: [ './timing-entry.component.css' ],
+    templateUrl: './timing-entry.component.html'
 })
-export class TimingComponent implements OnInit {
+export class TimingEntryComponent implements OnInit {
     private _raceId: number = 0;
     private entries: Entry[];
     private clubs: Club[];

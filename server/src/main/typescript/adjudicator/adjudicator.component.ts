@@ -13,13 +13,13 @@ import { Race } from '../models/race.model';
  * Top Level Component
  */
 @Component({
-  selector: 'app',
+  selector: 'adjudicator',
   styleUrls: [
-    './app.component.css'
+    './adjudicator.component.css'
   ],
-  templateUrl: './app.component.html'
+  templateUrl: './adjudicator.component.html'
 })
-export class AppComponent {
+export class AdjudicatorComponent {
   logo = '/assets/img/stopwatch.svg';
   tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
   param = {value: 'world'};

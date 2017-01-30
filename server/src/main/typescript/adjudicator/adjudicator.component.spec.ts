@@ -2,15 +2,15 @@ import { inject, getTestBed, TestBed } from '@angular/core/testing';
 import { Injector } from "@angular/core";
 import { XHRBackend, HttpModule } from '@angular/http';
 import { MockConnection, MockBackend } from '@angular/http/testing';
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { RacesService } from '../services/races.service';
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
-import { AppComponent } from './app.component';
+import { AdjudicatorComponent } from './adjudicator.component';
 
 import {Observable} from "rxjs/Observable";
 
-describe('App', () => {
+describe('Adjudicator', () => {
     let translate: TranslateService;
     let injector: Injector;
     let backend: MockBackend;
@@ -23,7 +23,7 @@ describe('App', () => {
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
                 Title,
-                AppComponent
+                AdjudicatorComponent
             ]
         });
 
@@ -41,7 +41,7 @@ describe('App', () => {
         connection = undefined;
     });
 
-  it('should have a url', inject([ AppComponent ], (app: AppComponent) => {
+  it('should have a url', inject([ AdjudicatorComponent ], (app: AdjudicatorComponent) => {
     expect(app.tiatusUrl).toEqual('https://github.com/PloughingAByteField/tiatus');
   }));
 

@@ -7,11 +7,11 @@ import { TranslateModule } from 'ng2-translate';
 import { RacesService } from '../services/races.service';
 
 import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './app.routes';
-import { AppComponent } from './app.component';
+import { ROUTES } from './results.routes';
+import { ResultsComponent } from './results.component';
 import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
-import { ResultsComponent } from './race_results';
+import { RaceResultsComponent } from './race_results';
 
 import { FooterComponent } from '../components/footer/footer.component';
 import { TitlebarComponent } from '../components/titlebar/titlebar.component';
@@ -20,15 +20,15 @@ import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  bootstrap: [ AppComponent ],
+  bootstrap: [ ResultsComponent ],
   declarations: [
-    AppComponent,
+    ResultsComponent,
     LandingComponent,
     NoContentComponent,
     FooterComponent,
     TitlebarComponent,
     SidebarComponent,
-    ResultsComponent
+    RaceResultsComponent
   ],
   imports: [
     BrowserModule,
@@ -44,6 +44,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     Title
   ]
 })
-export class AppModule {
+export class ResultsModule {
 }
 
