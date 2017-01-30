@@ -14,6 +14,8 @@
     "ngc": "./node_modules/.bin/ngc-w -p tsconfig.webpack.json",
     "rimraf": "rimraf",
     "test": "karma start webpack/karma.conf.js",
+    "lint": "npm run tslint \"src/main/typescript/**/*.ts\"",
+    "tslint": "tslint",
     "start": "webpack-dev-server --config webpack/webpack.dev.js --inline --progress --port 8082"
   },
   "dependencies": {
@@ -71,7 +73,7 @@
     "angular-router-loader": "^0.4.0",
     "angular2-template-loader": "^0.6.0",
     "awesome-typescript-loader": "~3.0.0-beta.17",
-    "codelyzer": "~2.0.0-beta.4",
+    "codelyzer": "^2.0.0-beta.4",
     "copy-webpack-plugin": "^4.0.0",
     "css-loader": "^0.25.0",
     "css-to-string-loader": "^0.1.2",
@@ -112,7 +114,7 @@
     "to-string-loader": "^1.1.4",
     "ts-helpers": "1.1.2",
     "ts-node": "^1.7.0",
-    "tslint": "~4.2.0",
+    "tslint": "^4.2.0",
     "tslint-loader": "^3.2.1",
     "typedoc": "^0.5.0",
     "typescript": "2.1.4",
