@@ -60,9 +60,9 @@ module.exports = function (options) {
     entry: {
 
       'polyfills': './src/main/typescript/polyfills.browser.ts',
-      'results/results':  './src/main/typescript/results/results.ts',
-      'timing/timing':  './src/main/typescript/timing/timing.ts',
-      'adjudicator/adjudicator': './src/main/typescript/adjudicator/adjudicator.ts'
+      'results/results':  './src/main/typescript/results/main.ts',
+      'timing/timing':  './src/main/typescript/timing/main.ts',
+      'adjudicator/adjudicator': './src/main/typescript/adjudicator/main.ts'
 
     },
 
