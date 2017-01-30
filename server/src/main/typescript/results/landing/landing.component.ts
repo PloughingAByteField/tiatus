@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
@@ -7,11 +7,15 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: [ './landing.component.css' ],
   templateUrl: './landing.component.html'
 })
-export class LandingComponent {
-  date: Date = new Date();
-  model: NgbDateStruct = {year: this.date.getFullYear(), month: this.date.getMonth() + 1, day: this.date.getDate()};
+export class LandingComponent implements OnInit {
+  public date: Date = new Date();
+  public model: NgbDateStruct = {
+    year: this.date.getFullYear(),
+    month: this.date.getMonth() + 1,
+    day: this.date.getDate()
+  };
 
-  ngOnInit() {
+  public ngOnInit() {
     console.log('hello from landing');
   }
 

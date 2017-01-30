@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'results',
     styleUrls: [ './results.component.css' ],
     templateUrl: './results.component.html'
 })
-export class ResultsComponent {
+export class ResultsComponent implements OnInit {
 
-    ngOnInit() {
+    public ngOnInit() {
         console.log('hello from results');
     }
 }

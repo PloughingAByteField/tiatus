@@ -36,7 +36,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
-    RouterModule.forRoot(adjudicatorRoutes, { useHash: false, preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(
+      adjudicatorRoutes, { useHash: false, preloadingStrategy: PreloadAllModules}
+    )
   ],
   providers: [
     ENV_PROVIDERS,
@@ -46,4 +48,3 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AdjudicatorModule {
 }
-

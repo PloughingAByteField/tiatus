@@ -1,4 +1,4 @@
-import { ModuleWithProviders } from '@angular/core'
+import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
@@ -10,4 +10,6 @@ const timingRoutes: Routes = [
   { path: '**',    component: NoContentComponent }
 ];
 
-export const timingRouting: ModuleWithProviders = RouterModule.forRoot(timingRoutes, { preloadingStrategy: PreloadAllModules });
+export const timingRouting: ModuleWithProviders = RouterModule.forRoot(
+    timingRoutes, { preloadingStrategy: PreloadAllModules }
+);

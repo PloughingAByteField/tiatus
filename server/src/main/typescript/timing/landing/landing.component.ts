@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
@@ -11,17 +11,21 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: [ './landing.component.css' ],
   templateUrl: './landing.component.html'
 })
-export class LandingComponent {
-    date: Date = new Date();
-    model: NgbDateStruct = {year: this.date.getFullYear(), month: this.date.getMonth() + 1, day: this.date.getDate()};
-    races: Observable<Race[]>;
+export class LandingComponent implements OnInit {
+    public date: Date = new Date();
+    public model: NgbDateStruct = {
+      year: this.date.getFullYear(),
+      month: this.date.getMonth() + 1,
+      day: this.date.getDate()
+    };
+    public races: Observable<Race[]>;
 
     constructor(private racesService: RacesService) {
         this.races = this.racesService.getRaces();
     }
 
-  ngOnInit() {
-    console.log('hello from landing');
-  }
+    public ngOnInit() {
+      console.log('hello from landing');
+    }
 
 }

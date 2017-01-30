@@ -1,9 +1,9 @@
 export class Race {
-    name: string;
-    active: boolean;
-    closed: boolean;
-    drawLocked: boolean;
-    raceOrder: number;
-    startTime: string;
-    id: number;
+    public name: string;
+    public active: boolean;
+    public closed: boolean;
+    public drawLocked: boolean;
+    public raceOrder: number;
+    public startTime: string;
+    public id: number;
 }

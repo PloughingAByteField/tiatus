@@ -1,5 +1,5 @@
 import 'zone.js/dist/zone';
-import "reflect-metadata";
+import 'reflect-metadata';
 
 import '@angular/http';
 import '@angular/router';

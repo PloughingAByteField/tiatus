@@ -13,14 +13,18 @@ import { Entry } from '../../models/entry.model';
     templateUrl: './timing-entry.component.html'
 })
 export class TimingEntryComponent implements OnInit {
+    public raceEntries: Entry[];
+    public page: number = 1;
+
     private raceId: number = 0;
     private entries: Entry[];
     private clubs: Club[];
-    public raceEntries: Entry[];
 
-    page: number = 1;
-
-    constructor(private entriesService: EntriesService, private clubsService: ClubsService, private route: ActivatedRoute) {
+    constructor(
+        private entriesService: EntriesService,
+        private clubsService: ClubsService,
+        private route: ActivatedRoute
+    ) {
         this.entriesService.getEntries()
         .subscribe((data: Entry[]) => {
             this.entries = data;
@@ -32,18 +36,17 @@ export class TimingEntryComponent implements OnInit {
         });
     }
 
-    getClubNames(clubs): string {
+    public getClubNames(clubs): string {
         return clubs.map((club) => club.clubName).join(' / ');
     }
 
-    onKey(event:any, entry: any) {
+    public onKey(event: any, entry: any) {
         console.log(event);
         console.log(entry);
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         console.log('hello from timing');
-        
         this.route.params.subscribe((params: Params) => {
             this.raceId = +params['raceId'];
             this.filterRace(this.raceId);

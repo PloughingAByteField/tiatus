@@ -6,13 +6,13 @@ import { Club } from '../models/club.model';
 
 @Injectable()
 export class ClubsService {
-  searchEvent: EventEmitter<any> = new EventEmitter();
+  public searchEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private http: Http) {}
 
-  getClubs(): Observable<Club[]> {
+  public getClubs(): Observable<Club[]> {
     return this.http.get('/rest/clubs')
-      .map(response => response.json());
+      .map((response) => response.json());
   }
 
 }

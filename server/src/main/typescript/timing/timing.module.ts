@@ -53,4 +53,3 @@ import { Ng2PaginationModule } from 'ng2-pagination';
 })
 export class TimingModule {
 }
-

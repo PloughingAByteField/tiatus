@@ -21,19 +21,23 @@ import { Race } from '../models/race.model';
   templateUrl: './timing.component.html'
 })
 export class TimingComponent {
-  logo = '/assets/img/stopwatch.svg';
-  tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
-  param = {value: 'world'};
-  link = "race";
-  races: Observable<Race[]>;
+  public logo = '/assets/img/stopwatch.svg';
+  public tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
+  public param = { value: 'world' };
+  public link = 'race';
+  public races: Observable<Race[]>;
 
-  constructor(private translate: TranslateService, private titleService: Title, private racesService: RacesService) {
-      translate.setDefaultLang('en');
+  constructor(
+    private translate: TranslateService,
+    private titleService: Title,
+    private racesService: RacesService
+  ) {
+    translate.setDefaultLang('en');
 
-     // the lang to use, if the lang isn't available, it will use the current loader to get them
-     translate.use('en');
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    translate.use('en');
 
-     this.races = this.racesService.getRaces();
+    this.races = this.racesService.getRaces();
   }
 
   public setTitle( newTitle: string) {
@@ -44,4 +48,3 @@ export class TimingComponent {
   }
 
 }
-

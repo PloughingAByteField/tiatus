@@ -6,13 +6,13 @@ import { Entry } from '../models/entry.model';
 
 @Injectable()
 export class EntriesService {
-  searchEvent: EventEmitter<any> = new EventEmitter();
+  public searchEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private http: Http) {}
 
-  getEntries(): Observable<Entry[]> {
+  public getEntries(): Observable<Entry[]> {
     return this.http.get('/rest/entries')
-      .map(response => response.json());
+      .map((response) => response.json());
   }
 
 }

@@ -1,24 +1,23 @@
 import { inject, getTestBed, TestBed } from '@angular/core/testing';
-import { Injector } from "@angular/core";
+import { Injector } from '@angular/core';
 import { XHRBackend, HttpModule } from '@angular/http';
 import { MockConnection, MockBackend } from '@angular/http/testing';
 import { Title }     from '@angular/platform-browser';
-import { RacesService } from '../services/races.service';
+import { Observable } from 'rxjs/Observable';
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
+import { RacesService } from '../services/races.service';
 import { ResultsComponent } from './results.component';
-
-import {Observable} from "rxjs/Observable";
 
 describe('Results', () => {
     let translate: TranslateService;
     let injector: Injector;
     let backend: MockBackend;
-    let connection: MockConnection; // this will be set when a new connection is emitted from the backend.
+    let connection: MockConnection;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, TranslateModule.forRoot()],
+            imports: [ HttpModule, TranslateModule.forRoot() ],
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
@@ -41,8 +40,8 @@ describe('Results', () => {
         connection = undefined;
     });
 
-  it('should have a url', inject([ ResultsComponent ], (app: ResultsComponent) => {
-    expect(app.tiatusUrl).toEqual('https://github.com/PloughingAByteField/tiatus');
-  }));
+    it('should have a url', inject([ ResultsComponent ], (app: ResultsComponent) => {
+        expect(app.tiatusUrl).toEqual('https://github.com/PloughingAByteField/tiatus');
+    }));
 
 });

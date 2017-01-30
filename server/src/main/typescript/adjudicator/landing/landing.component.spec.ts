@@ -3,7 +3,6 @@ import { Component } from '@angular/core';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
-
 // Load the implementations that should be tested
 import { LandingComponent } from './landing.component';
 
@@ -15,7 +14,7 @@ describe('Landing', () => {
       MockBackend,
       {
         provide: Http,
-        useFactory: function(backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
+        useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
           return new Http(backend, defaultOptions);
         },
         deps: [MockBackend, BaseRequestOptions]
@@ -31,6 +30,5 @@ describe('Landing', () => {
   it('should have a title', inject([ LandingComponent ], (landing: LandingComponent) => {
     expect(true).toBe(true);
   }));
-
 
 });
