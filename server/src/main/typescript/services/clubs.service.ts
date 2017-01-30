@@ -1,13 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Http, URLSearchParams, Response } from '@angular/http';
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 
-export class Club {
-  constructor(
-    public name: string,
-    public id: number
-  ){}
-}
+import { Club } from '../models/club.model';
 
 @Injectable()
 export class ClubsService {

@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { Http } from "@angular/http";
-
-import { Entry, EntriesService } from '../../services/entries.service';
-import { Club, ClubsService } from '../../services/clubs.service';
+import { EntriesService } from '../../services/entries.service';
+import { ClubsService } from '../../services/clubs.service';
+import { Club } from '../../models/club.model';
+import { Entry } from '../../models/entry.model';
 
 @Component({
     selector: 'timing',
     styleUrls: [ './timing.component.css' ],
     templateUrl: './timing.component.html'
 })
-export class TimingComponent {
+export class TimingComponent implements OnInit {
     private _raceId: number = 0;
     private entries: Entry[];
     private clubs: Club[];
@@ -20,7 +20,7 @@ export class TimingComponent {
 
     page: number = 1;
 
-    constructor(private entriesService: EntriesService, private clubsService: ClubsService, private route: ActivatedRoute, private http: Http) {
+    constructor(private entriesService: EntriesService, private clubsService: ClubsService, private route: ActivatedRoute) {
         this.entriesService.getEntries()
         .subscribe((data: Entry[]) => {
             this.entries = data;

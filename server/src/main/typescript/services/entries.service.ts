@@ -1,28 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Http, URLSearchParams, Response } from '@angular/http';
-import { Observable } from "rxjs/Observable";
+import { Observable } from 'rxjs/Observable';
 
-import { Club } from './clubs.service';
-import { Race } from './races.service';
-
-export class Entry {
-  constructor(
-    public crew: string,
-    public name: string,
-    public number: number,
-    public raceOrder: number,
-    public timeOnly: boolean,
-    public clubs: Club[],
-    public race: Race,
-    public raceName: string,
-    public id: number
-  ){
-  }
-
-  getClubNames(): string {
-    return "Clubname";
-  }
-}
+import { Entry } from '../models/entry.model';
 
 @Injectable()
 export class EntriesService {

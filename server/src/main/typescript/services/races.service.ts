@@ -1,18 +1,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Http, URLSearchParams} from '@angular/http';
-import {Observable} from "rxjs/Observable";
+import {Observable} from 'rxjs/Observable';
 
-export class Race {
-  constructor(
-    public name: string,
-    public active: boolean,
-    public closed: boolean,
-    public drawLocked: boolean,
-    public raceOrder: number,
-    public startTime: string,
-    public id: number
-  ){}
-}
+import { Race } from '../models/race.model';
 
 @Injectable()
 export class RacesService {

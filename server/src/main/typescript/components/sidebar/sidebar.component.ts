@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Observable } from 'rxjs/Observable';
-import { Race } from '../../services/races.service';
+import { Race } from '../../models/race.model';
 
 @Component({
   selector: 'sidebar',

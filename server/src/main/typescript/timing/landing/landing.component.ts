@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-import { Race, RacesService } from '../../services/races.service';
+import { RacesService } from '../../services/races.service';
+import { Race } from '../../models/race.model';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
