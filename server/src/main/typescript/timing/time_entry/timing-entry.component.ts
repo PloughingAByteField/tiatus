@@ -15,7 +15,8 @@ import { Entry } from '../../models/entry.model';
 export class TimingEntryComponent implements OnInit {
     public raceEntries: Entry[];
     public page: number = 1;
-    public itemsPerPage: number = 1;
+    public itemsPerPage: number = 2;
+    public filteredClubs: Club[];
 
     private raceId: number = 0;
     private entries: Entry[];
@@ -34,6 +35,8 @@ export class TimingEntryComponent implements OnInit {
         this.clubsService.getClubs()
         .subscribe((data: Club[]) => {
             this.clubs = data;
+            this.filteredClubs = this.clubs;
+            // this.filteredClubs = this.filterClubs('2');
         });
     }
 
@@ -52,6 +55,26 @@ export class TimingEntryComponent implements OnInit {
             this.raceId = +params['raceId'];
             this.filterRace(this.raceId);
         });
+    }
+
+    public filterClubs(clubsArr: Club[], clubName: string): Club[] {
+        console.log('clubName ' + clubName);
+        return clubsArr.filter((club: Club) => club.clubName.includes(clubName));
+    }
+
+    public clicked(filter1, filter2) {
+        this.filteredClubs = this.clubs;
+        if (filter1) {
+            console.log('filter1');
+            this.filteredClubs = this.filterClubs(this.filteredClubs, filter1);
+            console.log(this.filteredClubs);
+        }
+        if (filter2) {
+            console.log('filter2');
+            this.filteredClubs = this.filterClubs(this.filteredClubs, filter2);
+            console.log(this.filteredClubs);
+        }
+        
     }
 
     private filterRace(raceId: number) {

@@ -1,4 +1,4 @@
 export class Club {
-    public name: string;
+    public clubName: string;
     public id: number;
 }

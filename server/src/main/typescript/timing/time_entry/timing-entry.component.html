@@ -26,7 +26,9 @@ hello from time entry
 <!--<div class="has-text-centered">-->
     <!--<pagination-controls (pageChange)="page = $event"></pagination-controls>-->
 <!--</div>-->
-
+<input type="text" #filter1>
+<input type="text" #filter2>
+<button (click)="clicked(filter1.value, filter2.value)"></button>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
@@ -35,13 +37,13 @@ hello from time entry
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let club of clubs | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+    <tr *ngFor="let club of filteredClubs | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
         <td>{{club.clubName}}</td>
         <td>{{club.clubName}}</td>
     </tr>
     </tbody>
 </table>
 
-<ngb-pagination [collectionSize]="clubs?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
+<ngb-pagination [collectionSize]="filteredClubs?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
 
 
