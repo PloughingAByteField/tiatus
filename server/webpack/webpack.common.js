@@ -60,9 +60,9 @@ module.exports = function (options) {
     entry: {
 
       'polyfills': './src/main/typescript/polyfills.browser.ts',
-      'results/results':  './src/main/typescript/results/main.ts',
-      'timing/timing':  './src/main/typescript/timing/main.ts',
-      'adjudicator/adjudicator': './src/main/typescript/adjudicator/main.ts'
+      'results':  './src/main/typescript/results/main.ts',
+      'timing':  './src/main/typescript/timing/main.ts',
+      'adjudicator': './src/main/typescript/adjudicator/main.ts'
 
     },
 
@@ -197,13 +197,19 @@ module.exports = function (options) {
       // This enables tree shaking of the vendor modules
       new CommonsChunkPlugin({
         name: 'vendor',
-        chunks: ['results/results', 'timing/timing', 'adjudicator/adjudicator'],
+        chunks: ['results', 'timing', 'adjudicator'],
         filename: 'vendor/vendor.bundle.js',
-        minChunks: module => /node_modules\//.test(module.resource)
+        minChunks: (module) => /node_modules\//.test(module.resource)
+      }),
+      new CommonsChunkPlugin({
+        name: 'common',
+        filename: '[name]/[chunkhash].bundle.js',
+        chunks: ['results', 'timing', 'adjudicator'],
+        minChunks: (module, count) => /src\//.test(module.resource) && count > 1
       }),
       // Specify the correct order the scripts will be injected in
       new CommonsChunkPlugin({
-        name: ['polyfills', 'vendor'].reverse()
+        name: ['polyfills', 'vendor', 'common'].reverse()
       }),
 
       /**
@@ -253,7 +259,7 @@ module.exports = function (options) {
         chunksSortMode: 'dependency',
         metadata: METADATA,
         inject: 'head',
-          chunks: ['results/results'],
+        chunks: ['results', 'polyfills', 'vendor', 'common'],
         filename: 'results/index.html'
       }),
 
@@ -263,7 +269,7 @@ module.exports = function (options) {
         chunksSortMode: 'dependency',
         metadata: METADATA,
         inject: 'head',
-          chunks: ['timing/timing'],
+        chunks: ['timing', 'polyfills', 'vendor', 'common'],
         filename: 'timing/index.html'
       }),
 
@@ -273,7 +279,7 @@ module.exports = function (options) {
           chunksSortMode: 'dependency',
           metadata: METADATA,
           inject: 'head',
-          chunks: ['adjudicator/adjudicator'],
+          chunks: ['adjudicator', 'polyfills', 'vendor', 'common'],
           filename: 'adjudicator/index.html'
       }),
 

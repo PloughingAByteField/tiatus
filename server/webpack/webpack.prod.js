@@ -64,7 +64,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-filename
        */
-      filename: '[name].[chunkhash].bundle.js',
+      filename: '[name]/[chunkhash].bundle.js',
 
       /**
        * The filename of the SourceMaps for the JavaScript files.
@@ -72,7 +72,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
        */
-      sourceMapFilename: '[name].[chunkhash].bundle.map',
+      sourceMapFilename: '[name]/[chunkhash].bundle.map',
 
       /**
        * The filename of non-entry chunks as relative path
@@ -203,6 +203,7 @@ module.exports = function (env) {
           join_vars: true,
           negate_iife: false // we need this for lazy v8
         },
+        sourceMap: true
       }),
 
       /**
