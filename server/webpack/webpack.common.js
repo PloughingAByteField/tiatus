@@ -252,8 +252,7 @@ module.exports = function (options) {
         title: METADATA.title,
         chunksSortMode: 'dependency',
         metadata: METADATA,
-//        inject: 'head',
-          inject: false,
+        inject: 'head',
           chunks: ['results/results'],
         filename: 'results/index.html'
       }),
@@ -263,8 +262,7 @@ module.exports = function (options) {
         title: METADATA.title,
         chunksSortMode: 'dependency',
         metadata: METADATA,
-//        inject: 'head',
-          inject: false,
+        inject: 'head',
           chunks: ['timing/timing'],
         filename: 'timing/index.html'
       }),
@@ -274,8 +272,7 @@ module.exports = function (options) {
           title: METADATA.title,
           chunksSortMode: 'dependency',
           metadata: METADATA,
-//          inject: 'head',
-          inject: false,
+          inject: 'head',
           chunks: ['adjudicator/adjudicator'],
           filename: 'adjudicator/index.html'
       }),
