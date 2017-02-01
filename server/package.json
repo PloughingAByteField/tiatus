@@ -16,7 +16,7 @@
     "test": "karma start webpack/karma.conf.js",
     "lint": "npm run tslint \"src/main/typescript/**/*.ts\"",
     "tslint": "tslint",
-    "start": "webpack-dev-server --config webpack/webpack.dev.js --inline --progress --port 8082"
+    "start": "webpack-dev-server --config webpack/webpack.dev.js --progress --port 8082"
   },
   "dependencies": {
     "@angular/common": "~2.4.5",
