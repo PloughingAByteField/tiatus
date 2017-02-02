@@ -74,7 +74,6 @@ export class TimingEntryComponent implements OnInit {
             this.filteredClubs = this.filterClubs(this.filteredClubs, filter2);
             console.log(this.filteredClubs);
         }
-        
     }
 
     private filterRace(raceId: number) {
