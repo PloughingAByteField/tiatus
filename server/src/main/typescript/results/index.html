@@ -11,10 +11,12 @@
 
   <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
 
-  <!--<% if (webpackConfig.htmlElements.headTags) { %>-->
-  <!--&lt;!&ndash; Configured Head Tags  &ndash;&gt;-->
-  <!--<%= webpackConfig.htmlElements.headTags %>-->
-  <!--<% } %>-->
+  <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
+  
+  <% if (webpackConfig.htmlElements.headTags) { %>
+    <!-- Configured Head Tags  -->
+    <%= webpackConfig.htmlElements.headTags %>
+  <% } %>
 
   <base href="/results/">
 
