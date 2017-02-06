@@ -13,11 +13,11 @@ import { LandingComponent } from './landing';
 import { NoContentComponent } from './no-content';
 import { ResultsComponent } from './race_results';
 
-import { FooterComponent } from '../components/footer/footer.component';
-import { TitlebarComponent } from '../components/titlebar/titlebar.component';
-import { SidebarComponent } from '../components/sidebar/sidebar.component';
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { FooterModule } from '../components/footer/footer.module';
+import { SidebarModule } from '../components/sidebar/sidebar.module';
+import { TitlebarModule } from '../components/titlebar/titlebar.module';
 
 @NgModule({
   bootstrap: [ AdjudicatorComponent ],
@@ -25,15 +25,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AdjudicatorComponent,
     LandingComponent,
     NoContentComponent,
-    FooterComponent,
-    TitlebarComponent,
-    SidebarComponent,
     ResultsComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
+    FooterModule,
+    SidebarModule,
+    TitlebarModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(
