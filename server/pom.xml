@@ -124,7 +124,7 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v6.9.4</nodeVersion>
+                            <nodeVersion>v6.9.5</nodeVersion>
                             <npmVersion>4.1.2</npmVersion>
                         </configuration>
                     </execution>
