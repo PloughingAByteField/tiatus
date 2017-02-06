@@ -20,12 +20,11 @@ export class LandingComponent implements OnInit {
     };
     public races: Observable<Race[]>;
 
-    constructor(private racesService: RacesService) {
-        this.races = this.racesService.getRaces();
-    }
+    constructor(private racesService: RacesService) {}
 
     public ngOnInit() {
       console.log('hello from landing');
+      this.races = this.racesService.getRaces();
     }
 
 }

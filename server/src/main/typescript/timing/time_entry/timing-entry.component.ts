@@ -26,19 +26,7 @@ export class TimingEntryComponent implements OnInit {
         private entriesService: EntriesService,
         private clubsService: ClubsService,
         private route: ActivatedRoute
-    ) {
-        this.entriesService.getEntries()
-        .subscribe((data: Entry[]) => {
-            this.entries = data;
-            this.filterRace(this.raceId);
-        });
-        this.clubsService.getClubs()
-        .subscribe((data: Club[]) => {
-            this.clubs = data;
-            this.filteredClubs = this.clubs;
-            // this.filteredClubs = this.filterClubs('2');
-        });
-    }
+    ) {}
 
     public getClubNames(clubs): string {
         return clubs.map((club) => club.clubName).join(' / ');
@@ -51,6 +39,20 @@ export class TimingEntryComponent implements OnInit {
 
     public ngOnInit() {
         console.log('hello from timing');
+
+        this.entriesService.getEntries()
+        .subscribe((data: Entry[]) => {
+            this.entries = data;
+            this.filterRace(this.raceId);
+        });
+
+        this.clubsService.getClubs()
+        .subscribe((data: Club[]) => {
+            this.clubs = data;
+            this.filteredClubs = this.clubs;
+            // this.filteredClubs = this.filterClubs('2');
+        });
+
         this.route.params.subscribe((params: Params) => {
             this.raceId = +params['raceId'];
             this.filterRace(this.raceId);
