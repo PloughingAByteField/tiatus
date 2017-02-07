@@ -15,7 +15,7 @@ import { Entry } from '../../models/entry.model';
 export class TimingEntryComponent implements OnInit {
     public raceEntries: Entry[];
     public page: number = 1;
-    public itemsPerPage: number = 2;
+    public itemsPerPage: number = 10;
     public filteredEntries: Entry[];
 
     private entries: Entry[];

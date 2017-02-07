@@ -19,7 +19,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let entry of filteredEntries | paginate: { itemsPerPage: 10, currentPage: page }">
+    <tr *ngFor="let entry of filteredEntries | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
         <td>{{entry.number}}</td>
         <td>{{getClubNames(entry.clubs)}}</td>
         <td>{{entry.event.name}}</td>
