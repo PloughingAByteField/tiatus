@@ -1,6 +1,7 @@
 
 import { Club } from './club.model';
 import { Race } from './race.model';
+import { Event } from './event.model';
 
 export class Entry {
     public crew: string;
@@ -11,5 +12,6 @@ export class Entry {
     public clubs: Club[];
     public race: Race;
     public raceName: string;
+    public event: Event;
     public id: number;
 }

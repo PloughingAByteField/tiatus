@@ -1,49 +1,33 @@
-hello from time entry
 
-<!--<table class="table table-bordered table-striped">-->
-    <!--<thead>-->
-    <!--<tr>-->
-        <!--<th>Number</th>-->
-        <!--<th>Club</th>-->
-        <!--<th>Event</th>-->
-        <!--<th>Crew</th>-->
-        <!--<th>Time</th>-->
-        <!--<th>Synced</th>-->
-    <!--</tr>-->
-    <!--</thead>-->
-    <!--<tbody>-->
-    <!--<tr *ngFor="let entry of entries | paginate: { itemsPerPage: 10, currentPage: page }">-->
-        <!--<td>{{entry.number}}</td>-->
-        <!--<td>{{getClubNames(entry.clubs)}}</td>-->
-        <!--<td>{{entry.event.name}}</td>-->
-        <!--<td>{{entry.crew}}</td>-->
-        <!--<td><input #box type="text" (keyup.enter)="onKey(box.value, entry)" (blur)="onKey(box.value, entry)"></td>-->
-
-    <!--</tr>-->
-    <!--</tbody>-->
-<!--</table>-->
-
-<!--<div class="has-text-centered">-->
-    <!--<pagination-controls (pageChange)="page = $event"></pagination-controls>-->
-<!--</div>-->
-<input type="text" #filter1>
-<input type="text" #filter2>
-<button (click)="clicked(filter1.value, filter2.value)"></button>
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
+        <th>Number</th>
         <th>Club</th>
-        <th>HHHHH</th>
+        <th>Event</th>
+        <th>Crew</th>
+        <th>Time</th>
+        <th>Synced</th>
+    </tr>
+    <tr>
+        <th><input type="text" #number (keyup)="onKey(number.value, 'number')"></th>
+        <th><input type="text" #club (keyup)="onKey(club.value, 'club')"></th>
+        <th><input type="text" #event (keyup)="onKey(event.value, 'event')"></th>
+        <th></th>
+        <th></th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let club of filteredClubs | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-        <td>{{club.clubName}}</td>
-        <td>{{club.clubName}}</td>
+    <tr *ngFor="let entry of filteredEntries | paginate: { itemsPerPage: 10, currentPage: page }">
+        <td>{{entry.number}}</td>
+        <td>{{getClubNames(entry.clubs)}}</td>
+        <td>{{entry.event.name}}</td>
+        <td>{{entry.crew}}</td>
+        <td><input #time type="text" (keyup.enter)="onKey(time.value, entry)" (blur)="onKey(time.value, entry)"></td>
+
     </tr>
     </tbody>
 </table>
 
-<ngb-pagination [collectionSize]="filteredClubs?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
-
-
+<ngb-pagination [collectionSize]="filteredEntries?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>

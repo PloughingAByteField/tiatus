@@ -16,11 +16,13 @@ export class TimingEntryComponent implements OnInit {
     public raceEntries: Entry[];
     public page: number = 1;
     public itemsPerPage: number = 2;
-    public filteredClubs: Club[];
+    public filteredEntries: Entry[];
 
-    private raceId: number = 0;
     private entries: Entry[];
-    private clubs: Club[];
+    private raceId: number = 0;
+    private numberFilter: string = '';
+    private clubFilter: string = '';
+    private eventFilter: string = '';
 
     constructor(
         private entriesService: EntriesService,
@@ -28,29 +30,11 @@ export class TimingEntryComponent implements OnInit {
         private route: ActivatedRoute
     ) {}
 
-    public getClubNames(clubs): string {
-        return clubs.map((club) => club.clubName).join(' / ');
-    }
-
-    public onKey(event: any, entry: any) {
-        console.log(event);
-        console.log(entry);
-    }
-
     public ngOnInit() {
-        console.log('hello from timing');
-
         this.entriesService.getEntries()
         .subscribe((data: Entry[]) => {
             this.entries = data;
             this.filterRace(this.raceId);
-        });
-
-        this.clubsService.getClubs()
-        .subscribe((data: Club[]) => {
-            this.clubs = data;
-            this.filteredClubs = this.clubs;
-            // this.filteredClubs = this.filterClubs('2');
         });
 
         this.route.params.subscribe((params: Params) => {
@@ -59,28 +43,57 @@ export class TimingEntryComponent implements OnInit {
         });
     }
 
-    public filterClubs(clubsArr: Club[], clubName: string): Club[] {
-        console.log('clubName ' + clubName);
-        return clubsArr.filter((club: Club) => club.clubName.includes(clubName));
+    public getClubNames(clubs): string {
+        return clubs.map((club) => club.clubName).join(' / ');
     }
 
-    public clicked(filter1, filter2) {
-        this.filteredClubs = this.clubs;
-        if (filter1) {
-            console.log('filter1');
-            this.filteredClubs = this.filterClubs(this.filteredClubs, filter1);
-            console.log(this.filteredClubs);
+    public onKey(value: any, field: string) {
+        if (field === 'number') {
+            this.numberFilter = value;
         }
-        if (filter2) {
-            console.log('filter2');
-            this.filteredClubs = this.filterClubs(this.filteredClubs, filter2);
-            console.log(this.filteredClubs);
+        if (field === 'club') {
+            this.clubFilter = value;
         }
+        if (field === 'event') {
+            this.eventFilter = value;
+        }
+        this.filteredEntries = this.filterEntries();
+    }
+
+    private filterEntries(): Entry[] {
+        let filteredEntries: Entry[] = this.entries;
+        if (this.numberFilter) {
+            filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
+        }
+        if (this.clubFilter) {
+            filteredEntries = this.filterClubs(filteredEntries, this.clubFilter);
+        }
+        if (this.eventFilter) {
+            filteredEntries = this.filterEvents(filteredEntries, this.eventFilter);
+        }
+
+        return filteredEntries;
+    }
+
+    private filterNumbers(entries: Entry[], value: string): Entry[] {
+        return entries.filter((entry: Entry) => entry.number.toString().includes(value));
+    }
+
+    private filterClubs(entries: Entry[], value: string): Entry[] {
+        return entries.filter((entry: Entry)  => {
+             if (entry.clubs.find((club: Club) => club.clubName.includes(value))) {
+                return entry;
+             }
+        });
+    }
+
+    private filterEvents(entries: Entry[], value: string): Entry[] {
+        return entries.filter((entry: Entry)  => entry.event.name.includes(value));
     }
 
     private filterRace(raceId: number) {
         if (this.entries) {
-            this.entries.filter((entry: Entry) => entry.race.id === raceId);
+            this.filteredEntries = this.entries.filter((entry: Entry) => entry.race.id === raceId);
         }
     }
 }
