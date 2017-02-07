@@ -1,4 +1,13 @@
 {
     "RACE": "{{value}}",
-    "TITLE": "This is the title"
+    "TITLE": "This is the title",
+    "NUMBER": "Number",
+    "CLUB": "Club",
+    "EVENT": "Event",
+    "CREW": "Crew",
+    "TIME": "Time",
+    "SYNCED": "Synced",
+    "NUMBER_PLACEHOLDER": "Enter number",
+    "CLUB_PLACEHOLDER": "Enter club",
+    "EVENT_PLACEHOLDER": "Enter event"
 }

@@ -17,12 +17,12 @@ export class TimingEntryComponent implements OnInit {
     public page: number = 1;
     public itemsPerPage: number = 10;
     public filteredEntries: Entry[];
+    public numberFilter: string = '';
+    public clubFilter: string = '';
+    public eventFilter: string = '';
 
     private entries: Entry[];
     private raceId: number = 0;
-    private numberFilter: string = '';
-    private clubFilter: string = '';
-    private eventFilter: string = '';
 
     constructor(
         private entriesService: EntriesService,
@@ -34,12 +34,15 @@ export class TimingEntryComponent implements OnInit {
         this.entriesService.getEntries()
         .subscribe((data: Entry[]) => {
             this.entries = data;
-            this.filterRace(this.raceId);
+            this.filteredEntries = this.filterRace(this.raceId);
         });
 
         this.route.params.subscribe((params: Params) => {
             this.raceId = +params['raceId'];
-            this.filterRace(this.raceId);
+            this.filteredEntries = this.filterRace(this.raceId);
+            this.numberFilter = '';
+            this.clubFilter = '';
+            this.eventFilter = '';
         });
     }
 
@@ -61,7 +64,7 @@ export class TimingEntryComponent implements OnInit {
     }
 
     private filterEntries(): Entry[] {
-        let filteredEntries: Entry[] = this.entries;
+        let filteredEntries: Entry[] = this.filterRace(this.raceId);
         if (this.numberFilter) {
             filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
         }
@@ -91,9 +94,9 @@ export class TimingEntryComponent implements OnInit {
         return entries.filter((entry: Entry)  => entry.event.name.includes(value));
     }
 
-    private filterRace(raceId: number) {
+    private filterRace(raceId: number): Entry[] {
         if (this.entries) {
-            this.filteredEntries = this.entries.filter((entry: Entry) => entry.race.id === raceId);
+            return this.entries.filter((entry: Entry) => entry.race.id === raceId);
         }
     }
 }

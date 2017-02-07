@@ -1,32 +1,31 @@
-
 <table class="table table-bordered table-striped">
     <thead>
-    <tr>
-        <th>Number</th>
-        <th>Club</th>
-        <th>Event</th>
-        <th>Crew</th>
-        <th>Time</th>
-        <th>Synced</th>
-    </tr>
-    <tr>
-        <th><input type="text" #number (keyup)="onKey(number.value, 'number')"></th>
-        <th><input type="text" #club (keyup)="onKey(club.value, 'club')"></th>
-        <th><input type="text" #event (keyup)="onKey(event.value, 'event')"></th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
+        <tr>
+            <th>{{ 'NUMBER' | translate }}</th>
+            <th>{{ 'CLUB' | translate }}</th>
+            <th>{{ 'EVENT' | translate }}</th>
+            <th>{{ 'CREW' | translate }}</th>
+            <th>{{ 'TIME' | translate }}</th>
+            <th>{{ 'SYNCED' | translate }}</th>
+        </tr>
+        <tr>
+            <th><input placeholder="{{ 'NUMBER_PLACEHOLDER' | translate }}" type="text" #number [(ngModel)]="numberFilter" (keyup)="onKey(number.value, 'number')"></th>
+            <th><input placeholder="{{ 'CLUB_PLACEHOLDER' | translate }}" type="text" #club [(ngModel)]="clubFilter" (keyup)="onKey(club.value, 'club')"></th>
+            <th><input placeholder="{{ 'EVENT_PLACEHOLDER' | translate }}" type="text" #event [(ngModel)]="eventFilter" (keyup)="onKey(event.value, 'event')"></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let entry of filteredEntries | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-        <td>{{entry.number}}</td>
-        <td>{{getClubNames(entry.clubs)}}</td>
-        <td>{{entry.event.name}}</td>
-        <td>{{entry.crew}}</td>
-        <td><input #time type="text" (keyup.enter)="onKey(time.value, entry)" (blur)="onKey(time.value, entry)"></td>
+        <tr *ngFor="let entry of filteredEntries | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>{{entry.number}}</td>
+            <td>{{getClubNames(entry.clubs)}}</td>
+            <td>{{entry.event.name}}</td>
+            <td>{{entry.crew}}</td>
+            <td><input #time type="text" (keyup.enter)="onKey(time.value, entry)" (blur)="onKey(time.value, entry)"></td>
 
-    </tr>
+        </tr>
     </tbody>
 </table>
 
