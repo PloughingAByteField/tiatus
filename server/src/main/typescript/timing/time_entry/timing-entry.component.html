@@ -23,7 +23,7 @@
             <td>{{getClubNames(entry.clubs)}}</td>
             <td>{{entry.event.name}}</td>
             <td>{{entry.crew}}</td>
-            <td><input #time type="text" (keyup.enter)="onKey(time.value, entry)" (blur)="onKey(time.value, entry)"></td>
+            <td><input #time type="text" value="entry.time" (keyup.enter)="enterTime(time.value, entry)" (blur)="enterTime(time.value, entry)"></td>
 
         </tr>
     </tbody>

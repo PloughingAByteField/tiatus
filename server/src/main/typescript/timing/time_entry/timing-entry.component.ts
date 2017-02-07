@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
@@ -6,6 +6,9 @@ import { EntriesService } from '../../services/entries.service';
 import { ClubsService } from '../../services/clubs.service';
 import { Club } from '../../models/club.model';
 import { Entry } from '../../models/entry.model';
+import { Position } from '../../models/position.model';
+
+import { TimingPositionService } from '../timing-position.service';
 
 @Component({
     selector: 'timing-entry',
@@ -21,13 +24,16 @@ export class TimingEntryComponent implements OnInit {
     public clubFilter: string = '';
     public eventFilter: string = '';
 
+    private position: Position;
+
     private entries: Entry[];
     private raceId: number = 0;
 
     constructor(
         private entriesService: EntriesService,
         private clubsService: ClubsService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private timingPositionService: TimingPositionService
     ) {}
 
     public ngOnInit() {
@@ -44,13 +50,19 @@ export class TimingEntryComponent implements OnInit {
             this.clubFilter = '';
             this.eventFilter = '';
         });
+        this.position = this.timingPositionService.position;
+        console.log(this.position);
     }
 
     public getClubNames(clubs): string {
         return clubs.map((club) => club.clubName).join(' / ');
     }
 
-    public onKey(value: any, field: string) {
+    public enterTime(value: string) {
+        console.log(value);
+    }
+
+    public onKey(value: string, field: string) {
         if (field === 'number') {
             this.numberFilter = value;
         }

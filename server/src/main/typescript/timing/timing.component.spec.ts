@@ -7,6 +7,8 @@ import { Title }     from '@angular/platform-browser';
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
 import { RacesService } from '../services/races.service';
+import { PositionsService } from '../services/positions.service';
+import { TimingPositionService } from './timing-position.service';
 import { TimingComponent } from './timing.component';
 
 describe('Timing', () => {
@@ -21,6 +23,8 @@ describe('Timing', () => {
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
+                PositionsService,
+                TimingPositionService,
                 Title,
                 TimingComponent
             ]

@@ -7,6 +7,7 @@ import { TranslateModule } from 'ng2-translate';
 import { RacesService } from '../services/races.service';
 import { EntriesService } from '../services/entries.service';
 import { ClubsService } from '../services/clubs.service';
+import { PositionsService } from '../services/positions.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { timingRouting } from './timing.routes';
@@ -48,6 +49,7 @@ import { TitlebarModule } from '../components/titlebar/titlebar.module';
     RacesService,
     EntriesService,
     ClubsService,
+    PositionsService,
     Title
   ]
 })
