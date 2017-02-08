@@ -5,8 +5,10 @@
             <th>{{ 'CLUB' | translate }}</th>
             <th>{{ 'EVENT' | translate }}</th>
             <th>{{ 'CREW' | translate }}</th>
-            <th>{{ 'TIME' | translate }}</th>
-            <th>{{ 'SYNCED' | translate }}</th>
+            <th *ngIf="reverseTimeSort">{{ 'TIME' | translate }} <span (click)="sortTime('up')" class="fa fa-caret-up"></span></th>
+            <th *ngIf="!reverseTimeSort">{{ 'TIME' | translate }} <span (click)="sortTime('down')" class="fa fa-caret-down"></span></th>
+            <th *ngIf="reverseSyncedSort">{{ 'SYNCED' | translate }} <span (click)="sortSynced('up')" class="fa fa-caret-up"></span></th>
+            <th *ngIf="!reverseSyncedSort">{{ 'SYNCED' | translate }} <span (click)="sortSynced('down')" class="fa fa-caret-down"></span></th>
         </tr>
         <tr>
             <th><input placeholder="{{ 'NUMBER_PLACEHOLDER' | translate }}" type="text" #number [(ngModel)]="numberFilter" (keyup)="onKey(number.value, 'number')"></th>

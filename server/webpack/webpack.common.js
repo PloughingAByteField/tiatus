@@ -238,6 +238,8 @@ module.exports = function (options) {
        */
       new CopyWebpackPlugin([
         { from: 'node_modules/bootstrap/dist/css/bootstrap.min.css', to: 'assets/css' },
+        { from: 'node_modules/font-awesome/css/font-awesome.min.css', to: 'assets/css' },
+        { from: 'node_modules/font-awesome/fonts', to: 'assets/fonts' },
         { from: 'src/main/typescript/assets', to: 'assets' },
         { from: 'src/main/typescript/results/i18n', to: 'results/i18n' },
         { from: 'src/main/typescript/timing/i18n', to: 'timing/i18n' },

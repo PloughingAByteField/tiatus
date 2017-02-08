@@ -23,6 +23,8 @@ export class TimingEntryComponent implements OnInit {
     public numberFilter: string = '';
     public clubFilter: string = '';
     public eventFilter: string = '';
+    public reverseTimeSort = false;
+    public reverseSyncedSort = false;
 
     private position: Position;
 
@@ -73,6 +75,16 @@ export class TimingEntryComponent implements OnInit {
             this.eventFilter = value;
         }
         this.filteredEntries = this.filterEntries();
+    }
+
+    public sortTime(direction: string): void {
+        console.log('Got direction ' + direction);
+        this.reverseTimeSort = !this.reverseTimeSort;
+    }
+
+    public sortSynced(direction: string): void {
+        console.log('Got direction ' + direction);
+        this.reverseSyncedSort = !this.reverseSyncedSort;
     }
 
     private filterEntries(): Entry[] {
