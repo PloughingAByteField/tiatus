@@ -99,7 +99,7 @@ public class EntryPositionTime implements Serializable {
 			return true;
 		}
 
-		if (!(o instanceof Club)) {
+		if (!(o instanceof EntryPositionTime)) {
 			return false;
 		}
 
