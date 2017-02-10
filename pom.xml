@@ -27,6 +27,8 @@
 		<surefireArgLine />
 		<docker.skip>false</docker.skip>
 		<flyway.skip>false</flyway.skip>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<dependencyManagement>
@@ -221,6 +223,7 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${surefire.version}</version>
 				<configuration>
@@ -230,7 +233,7 @@
 							<value>org.sonar.java.jacoco.JUnitListener</value>
 						</property>
 					</properties>
-					<!--  place in surefire-reports dir so it can be picked up the sonar SurefireSensor which is used by the JacocoItSensor for analysis --> 
+					<!--place in surefire-reports dir so it can be picked up the sonar SurefireSensor which is used by the JacocoItSensor for analysis-->
 					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
 
 					<!--<groups>org.tiatus.api.test.annotation.IntegrationTest</groups>-->

@@ -9,6 +9,12 @@ import java.util.List;
  */
 public interface EntryDao {
     /**
+     * Get Entry for a given id
+     * @return Entry or null
+     */
+    Entry getEntryForId(Long id);
+
+    /**
      * Get Entries
      * @return a list of Entries
      */

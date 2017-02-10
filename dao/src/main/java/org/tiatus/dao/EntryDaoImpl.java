@@ -28,6 +28,11 @@ public class EntryDaoImpl implements EntryDao {
     protected UserTransaction tx;
 
     @Override
+    public Entry getEntryForId(Long id) {
+        return em.find(Entry.class, id);
+    }
+
+    @Override
     public List<Entry> getEntries() {
         TypedQuery<Entry> query = em.createQuery("FROM Entry order by race, raceOrder", Entry.class);
         return query.getResultList();

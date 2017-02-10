@@ -30,6 +30,11 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
+    public Entry getEntryForId(Long id) {
+        return dao.getEntryForId(id);
+    }
+
+    @Override
     public Entry addEntry(Entry entry) throws ServiceException {
         LOG.debug("Adding entry " + entry);
         try {

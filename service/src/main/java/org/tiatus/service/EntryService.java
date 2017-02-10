@@ -9,6 +9,12 @@ import java.util.List;
  */
 public interface EntryService {
     /**
+     * Get Entry for a given id
+     * @return Entry or null
+     */
+    Entry getEntryForId(Long id);
+
+    /**
      * Add entry
      * @param entry to create
      * @return created entry

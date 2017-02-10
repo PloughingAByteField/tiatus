@@ -4,6 +4,7 @@ import org.tiatus.entity.EntryPositionTime;
 import org.tiatus.entity.Position;
 import org.tiatus.entity.Race;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -21,9 +22,11 @@ public interface EntryPositionTimeDao {
 
     /**
      * Record a time for entry at position in a race
-     * @return EntryPositionTime Added entry position time
      * @throws DaoException on error
      */
-    EntryPositionTime createTimeForEntry(EntryPositionTime time) throws DaoException;
+    void createTime(EntryPositionTime entryPositionTime) throws DaoException;
+
+    void updateTime(EntryPositionTime entryPositionTime) throws DaoException;
+
 
 }

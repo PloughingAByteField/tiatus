@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Default
@@ -23,8 +24,8 @@ public class TimesServiceImpl implements TimesService {
         this.dao = dao;
     }
 
-    @Override
-    public void createTime(EntryPositionTime pt) throws ServiceException {
+//    @Override
+//    public void createTime(EntryPositionTime pt) throws ServiceException {
 //        ie.galwayheadoftheriver.splittiming.dao.PositionTime positionTime = new ie.galwayheadoftheriver.splittiming.dao.PositionTime();
 //        try {
 //            Position position = positionsDao.getPositionForId(pt.getPositionId().toString());
@@ -55,7 +56,27 @@ public class TimesServiceImpl implements TimesService {
 //            logger.warn("Got jms exception", e);
 //            throw new ServiceException();
 //        }
-        LOG.debug("after dao");
+//        LOG.debug("after dao");
+//    }
+
+    @Override
+    public void createTime(EntryPositionTime entryPositionTime) throws ServiceException {
+        try {
+            dao.createTime(entryPositionTime);
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void updateTime(EntryPositionTime entryPositionTime) throws ServiceException {
+        try {
+            dao.updateTime(entryPositionTime);
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
     }
 
     @Override

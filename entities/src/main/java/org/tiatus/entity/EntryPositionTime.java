@@ -1,5 +1,6 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -32,6 +33,16 @@ public class EntryPositionTime implements Serializable {
 
     @Column(name = "start_point")
     private Boolean startPoint;
+
+	@JsonGetter("entry")
+	public Long getEntryId() {
+		return entry.getId();
+	}
+
+	@JsonGetter("position")
+	public Long getPositonId() {
+		return position.getId();
+	}
 
     public Boolean isStartPoint() {
         return startPoint;
