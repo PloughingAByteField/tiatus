@@ -30,6 +30,11 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
+    public Race getRaceForId(Long id) {
+        return dao.getRaceForId(id);
+    }
+
+    @Override
     public Race addRace(Race race) throws ServiceException {
         LOG.debug("Adding race " + race);
         try {

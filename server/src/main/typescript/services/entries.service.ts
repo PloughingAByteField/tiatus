@@ -12,7 +12,7 @@ export class EntriesService {
 
   public getEntries(): Observable<Entry[]> {
     return this.http.get('/rest/entries')
-      .map((response) => response.json());
+      .map((response) => response.json()).share();
   }
 
 }

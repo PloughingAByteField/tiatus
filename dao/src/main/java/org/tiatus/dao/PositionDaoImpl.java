@@ -25,6 +25,11 @@ public class PositionDaoImpl implements PositionDao {
     protected UserTransaction tx;
 
     @Override
+    public Position getPositionForId(Long id) {
+        return em.find(Position.class, id);
+    }
+
+    @Override
     public List<Position> getPositions() {
         TypedQuery<Position> query = em.createQuery("FROM Position order by order", Position.class);
         return query.getResultList();

@@ -9,6 +9,12 @@ import java.util.List;
  */
 public interface PositionDao {
     /**
+     * Get Position for a given id
+     * @return Position or null
+     */
+    Position getPositionForId(Long id);
+
+    /**
      * Get Positions
      * @return a list of Positions
      */

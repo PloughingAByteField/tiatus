@@ -9,6 +9,12 @@ import java.util.List;
  */
 public interface RaceDao {
     /**
+     * Get Race for a given id
+     * @return Race or null
+     */
+    Race getRaceForId(Long id);
+
+    /**
      * Get Races
      * @return a list of Races
      */

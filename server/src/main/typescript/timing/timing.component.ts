@@ -50,14 +50,7 @@ export class TimingComponent implements OnInit {
     this.races = this.racesService.getRaces();
     this.positionsService.getPositions().subscribe((data: Position[]) => {
         this.positions = data;
-        this.timingPositionService.position = this.positions[0];
-    });
-  }
-
-  public setTitle( newTitle: string) {
-    this.translate.get(newTitle).subscribe((res: string) => {
-      console.log('res is ', res);
-      this.titleService.setTitle( res );
+        this.timingPositionService.setPosition = this.positions[0];
     });
   }
 

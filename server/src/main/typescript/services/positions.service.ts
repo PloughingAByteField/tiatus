@@ -12,7 +12,7 @@ export class PositionsService {
 
   public getPositions(): Observable<Position[]> {
     return this.http.get('/rest/positions')
-      .map((response) => response.json());
+      .map((response) => response.json()).share();
   }
 
 }

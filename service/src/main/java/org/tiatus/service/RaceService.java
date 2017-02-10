@@ -9,6 +9,12 @@ import java.util.List;
  */
 public interface RaceService {
     /**
+     * Get Race for a given id
+     * @return Race or null
+     */
+    Race getRaceForId(Long id);
+
+    /**
      * Add race
      * @param race to create
      * @return created race

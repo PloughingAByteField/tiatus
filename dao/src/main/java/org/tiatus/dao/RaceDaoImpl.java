@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -32,6 +33,11 @@ public class RaceDaoImpl implements RaceDao {
     public List<Race> getRaces() {
         TypedQuery<Race> query = em.createQuery("FROM Race order by raceOrder", Race.class);
         return query.getResultList();
+    }
+
+    @Override
+    public Race getRaceForId(Long id) {
+        return em.find(Race.class, id);
     }
 
     @Override

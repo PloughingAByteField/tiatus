@@ -29,6 +29,7 @@ public class PositionServiceImpl implements PositionService {
        this.dao = dao;
     }
 
+
     @Override
     public Position addPosition(Position position) throws ServiceException {
         LOG.debug("Adding position " + position);
@@ -50,6 +51,11 @@ public class PositionServiceImpl implements PositionService {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
         }
+    }
+
+    @Override
+    public Position getPositionForId(Long id) {
+        return dao.getPositionForId(id);
     }
 
     @Override

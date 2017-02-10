@@ -12,7 +12,7 @@ export class ClubsService {
 
   public getClubs(): Observable<Club[]> {
     return this.http.get('/rest/clubs')
-      .map((response) => response.json());
+      .map((response) => response.json()).share();
   }
 
 }

@@ -14,6 +14,7 @@
         <class>org.tiatus.entity.Position</class>
         <class>org.tiatus.entity.Club</class>
         <class>org.tiatus.entity.Entry</class>
+        <class>org.tiatus.entity.EntryPositionTime</class>
         <properties>
             <!-- Properties for Hibernate -->
             <property name="hibernate.show_sql" value="true" />
