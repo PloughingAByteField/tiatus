@@ -82,6 +82,10 @@ export class TimingEntryComponent implements OnInit {
 
     public enterTime(value: string) {
         console.log(value);
+        if (value) {
+            let timeStamp: number = this.convertToTimeStamp(value);
+            console.log(timeStamp);
+        }
     }
 
     public onKey(value: string, field: string) {
@@ -107,12 +111,12 @@ export class TimingEntryComponent implements OnInit {
         this.reverseSyncedSort = !this.reverseSyncedSort;
     }
 
-    public convertFromTimeStamp(timeValue: string): string {
-        if ( !timeValue) {
+    public convertFromTimeStamp(timeStamp: string): string {
+        if ( !timeStamp) {
             return null;
         }
 
-        let date = new Date(timeValue);
+        let date = new Date(timeStamp);
         let hours = date.getUTCHours();
         // Minutes part from the timestamp
         let minutes = '0' + date.getUTCMinutes();
@@ -122,6 +126,24 @@ export class TimingEntryComponent implements OnInit {
         let time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
         time = time + '.' + milliSeconds.substr(-3);
         return time;
+    };
+
+    public convertToTimeStamp(timeString: string): number {
+        if ( !timeString) {
+            return null;
+        }
+
+        let date = new Date(0);
+        date.setUTCMilliseconds(0);
+        let millisecondFields = timeString.split('.');
+        if (millisecondFields.length === 2) {
+            date.setUTCMilliseconds(+millisecondFields[1]);
+        }
+        let timeFields = timeString.split(':');
+        date.setUTCHours(+timeFields[0]);
+        date.setUTCMinutes(+timeFields[1]);
+        date.setUTCSeconds(+timeFields[2]);
+        return date.getTime();
     };
 
     private getTimesForRace(raceId): void {
