@@ -107,6 +107,23 @@ export class TimingEntryComponent implements OnInit {
         this.reverseSyncedSort = !this.reverseSyncedSort;
     }
 
+    public convertFromTimeStamp(timeValue: string): string {
+        if ( !timeValue) {
+            return null;
+        }
+
+        let date = new Date(timeValue);
+        let hours = date.getUTCHours();
+        // Minutes part from the timestamp
+        let minutes = '0' + date.getUTCMinutes();
+        // Seconds part from the timestamp
+        let seconds = '0' + date.getUTCSeconds();
+        let milliSeconds = '000' + date.getUTCMilliseconds();
+        let time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+        time = time + '.' + milliSeconds.substr(-3);
+        return time;
+    };
+
     private getTimesForRace(raceId): void {
         if (this.position && this.race) {
             this.timesService.getTimesForPositionInRace(this.position, this.race)
