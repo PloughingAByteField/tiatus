@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EntryDao;
 import org.tiatus.entity.Entry;
+import org.tiatus.entity.Race;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
@@ -84,5 +85,10 @@ public class EntryServiceImpl implements EntryService {
     @Override
     public List<Entry> getEntries() {
         return dao.getEntries();
+    }
+
+    @Override
+    public List<Entry> getEntriesForRace(Race race) {
+        return dao.getEntriesForRace(race);
     }
 }

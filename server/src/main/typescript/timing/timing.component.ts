@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Race } from '../models/race.model';
 import { Position } from '../models/position.model';
 
-import { TimingPositionService } from './timing-position.service';
+import { TimingPositionService } from './services/timing-position.service';
 /*
  * App Component
  * Top Level Component

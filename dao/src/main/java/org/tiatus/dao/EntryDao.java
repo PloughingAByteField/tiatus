@@ -1,6 +1,7 @@
 package org.tiatus.dao;
 
 import org.tiatus.entity.Entry;
+import org.tiatus.entity.Race;
 
 import java.util.List;
 
@@ -19,6 +20,13 @@ public interface EntryDao {
      * @return a list of Entries
      */
     List<Entry> getEntries();
+
+    /**
+     * Get Entries for race
+     * @return a list of Entries
+     */
+    List<Entry> getEntriesForRace(Race race);
+
 
     /**
      * Add a new Entry

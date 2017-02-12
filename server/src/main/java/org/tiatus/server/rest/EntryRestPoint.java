@@ -3,8 +3,10 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Entry;
+import org.tiatus.entity.Race;
 import org.tiatus.role.Role;
 import org.tiatus.service.EntryService;
+import org.tiatus.service.RaceService;
 import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
@@ -27,6 +29,7 @@ public class EntryRestPoint {
     private static final Logger LOG = LoggerFactory.getLogger(EntryRestPoint.class);
 
     private EntryService service;
+    private RaceService raceService;
 
     /**
      * Get entries
@@ -37,6 +40,16 @@ public class EntryRestPoint {
     @Produces("application/json")
     public Response getEntries() {
         List<Entry> entries = service.getEntries();
+        return Response.ok(entries).build();
+    }
+
+    @PermitAll
+    @GET
+    @Path("race/{raceId}")
+    @Produces("application/json")
+    public Response getEntriesForRace(@PathParam("raceId") String raceId) {
+        Race race = raceService.getRaceForId(Long.parseLong(raceId));
+        List<Entry> entries = service.getEntriesForRace(race);
         return Response.ok(entries).build();
     }
 
@@ -148,5 +161,10 @@ public class EntryRestPoint {
     // sonar want constructor injection which jaxrs does not support
     public void setService(EntryService service) {
         this.service = service;
+    }
+
+    @Inject
+    public void setRaceService(RaceService service) {
+        this.raceService = service;
     }
 }

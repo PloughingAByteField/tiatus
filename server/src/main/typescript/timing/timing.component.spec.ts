@@ -8,7 +8,7 @@ import { TranslateService, TranslateModule } from 'ng2-translate';
 
 import { RacesService } from '../services/races.service';
 import { PositionsService } from '../services/positions.service';
-import { TimingPositionService } from './timing-position.service';
+import { TimingPositionService } from './services/timing-position.service';
 import { TimingComponent } from './timing.component';
 
 describe('Timing', () => {

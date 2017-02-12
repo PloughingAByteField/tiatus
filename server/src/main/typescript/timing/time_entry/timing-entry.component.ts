@@ -2,8 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { EntriesService } from '../../services/entries.service';
-import { ClubsService } from '../../services/clubs.service';
 import { TimesService } from '../../services/times.service';
 import { RacesService } from '../../services/races.service';
 
@@ -12,20 +10,22 @@ import { Entry } from '../../models/entry.model';
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
 import { PositionTime } from '../../models/postion-time.model';
+import { EntryTime } from '../model/entry-time.model';
 
-import { TimingPositionService } from '../timing-position.service';
+import { TimingPositionService } from '../services/timing-position.service';
+import { EntryTimesService } from '../services/entry-times.service';
 
 @Component({
     selector: 'timing-entry',
     styleUrls: [ './timing-entry.component.css' ],
     templateUrl: './timing-entry.component.html',
-    providers: [ TimesService ]
+    providers: [ TimesService, EntryTimesService ]
 })
 export class TimingEntryComponent implements OnInit {
     public raceEntries: Entry[];
     public page: number = 1;
     public itemsPerPage: number = 10;
-    public filteredEntries: Entry[];
+    public filteredEntryTimes: EntryTime[];
     public numberFilter: string = '';
     public clubFilter: string = '';
     public eventFilter: string = '';
@@ -33,19 +33,18 @@ export class TimingEntryComponent implements OnInit {
     public reverseSyncedSort = false;
 
     private position: Position;
-    private entries: Entry[];
+    private entryTimes: EntryTime[];
     private times: PositionTime[];
     private raceId: number = 0;
     private races: Race[];
     private race: Race;
 
     constructor(
-        private entriesService: EntriesService,
-        private clubsService: ClubsService,
         private route: ActivatedRoute,
         private timingPositionService: TimingPositionService,
         private timesService: TimesService,
-        private racesService: RacesService
+        private racesService: RacesService,
+        private entryTimesService: EntryTimesService
     ) {}
 
     public ngOnInit() {
@@ -64,18 +63,12 @@ export class TimingEntryComponent implements OnInit {
             }
         });
 
-        this.entriesService.getEntries().subscribe((data: Entry[]) => {
-            this.entries = data;
-            this.filteredEntries = this.filterRace(this.raceId);
-        });
-
         this.route.params.subscribe((params: Params) => {
             this.raceId = +params['raceId'];
             if (this.races) {
                 this.race = this.racesService.getRaceForId(this.raceId);
             }
             this.getTimesForRace(this.raceId);
-            this.filteredEntries = this.filterRace(this.raceId);
             this.numberFilter = '';
             this.clubFilter = '';
             this.eventFilter = '';
@@ -101,7 +94,7 @@ export class TimingEntryComponent implements OnInit {
         if (field === 'event') {
             this.eventFilter = value;
         }
-        this.filteredEntries = this.filterEntries();
+        this.filteredEntryTimes = this.filterEntries();
     }
 
     public sortTime(direction: string): void {
@@ -117,15 +110,20 @@ export class TimingEntryComponent implements OnInit {
     private getTimesForRace(raceId): void {
         if (this.position && this.race) {
             this.timesService.getTimesForPositionInRace(this.position, this.race)
-            .subscribe((data: PositionTime[]) => {
+                .subscribe((data: PositionTime[]) => {
                 this.times = data;
-                console.log(this.times);
+            });
+
+            this.entryTimesService.getEntriesForRace(this.race, this.position)
+                .subscribe((data: EntryTime[]) => {
+                this.entryTimes = data;
+                this.filteredEntryTimes = this.entryTimes;
             });
         }
     }
 
-    private filterEntries(): Entry[] {
-        let filteredEntries: Entry[] = this.filterRace(this.raceId);
+    private filterEntries(): EntryTime[] {
+        let filteredEntries: EntryTime[] = this.entryTimes;
         if (this.numberFilter) {
             filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
         }
@@ -139,25 +137,22 @@ export class TimingEntryComponent implements OnInit {
         return filteredEntries;
     }
 
-    private filterNumbers(entries: Entry[], value: string): Entry[] {
-        return entries.filter((entry: Entry) => entry.number.toString().includes(value));
+    private filterNumbers(entryTimes: EntryTime[], value: string): EntryTime[] {
+        return entryTimes.filter((entryTime: EntryTime) =>
+            entryTime.entry.number.toString().includes(value));
     }
 
-    private filterClubs(entries: Entry[], value: string): Entry[] {
-        return entries.filter((entry: Entry)  => {
-             if (entry.clubs.find((club: Club) => club.clubName.includes(value))) {
-                return entry;
+    private filterClubs(entryTimes: EntryTime[], value: string): EntryTime[] {
+        return entryTimes.filter((entryTime: EntryTime)  => {
+             if (entryTime.entry.clubs.find((club: Club) => club.clubName.includes(value))) {
+                return entryTime;
              }
         });
     }
 
-    private filterEvents(entries: Entry[], value: string): Entry[] {
-        return entries.filter((entry: Entry)  => entry.event.name.includes(value));
+    private filterEvents(entryTimes: EntryTime[], value: string): EntryTime[] {
+        return entryTimes.filter((entryTime: EntryTime)  =>
+            entryTime.entry.event.name.includes(value));
     }
 
-    private filterRace(raceId: number): Entry[] {
-        if (this.entries) {
-            return this.entries.filter((entry: Entry) => entry.race.id === raceId);
-        }
-    }
 }

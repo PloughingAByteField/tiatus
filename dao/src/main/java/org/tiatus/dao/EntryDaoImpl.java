@@ -3,6 +3,7 @@ package org.tiatus.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Entry;
+import org.tiatus.entity.Race;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
@@ -36,6 +37,12 @@ public class EntryDaoImpl implements EntryDao {
     public List<Entry> getEntries() {
         TypedQuery<Entry> query = em.createQuery("FROM Entry order by race, raceOrder", Entry.class);
         return query.getResultList();
+    }
+
+    @Override
+    public List<Entry> getEntriesForRace(Race race) {
+        TypedQuery<Entry> query = em.createQuery("FROM Entry where race_id = :race_id order by raceOrder", Entry.class);
+        return query.setParameter("race_id", race.getId()).getResultList();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.tiatus.service;
 
 import org.tiatus.entity.Entry;
+import org.tiatus.entity.Race;
 
 import java.util.List;
 
@@ -48,4 +49,10 @@ public interface EntryService {
      * @return list of entries
      */
     List<Entry> getEntries();
+
+    /**
+     * Get entries for race
+     * @return list of entries
+     */
+    List<Entry> getEntriesForRace(Race race);
 }

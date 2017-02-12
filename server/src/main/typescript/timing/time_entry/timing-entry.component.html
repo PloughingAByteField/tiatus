@@ -20,15 +20,15 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let entry of filteredEntries | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>{{entry.number}}</td>
-            <td>{{getClubNames(entry.clubs)}}</td>
-            <td>{{entry.event.name}}</td>
-            <td>{{entry.crew}}</td>
-            <td><input #time type="text" value="entry.time" (keyup.enter)="enterTime(time.value, entry)" (blur)="enterTime(time.value, entry)"></td>
-
+        <tr *ngFor="let e of filteredEntryTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>{{e.entry.number}}</td>
+            <td>{{getClubNames(e.entry.clubs)}}</td>
+            <td>{{e.entry.event.name}}</td>
+            <td>{{e.entry.crew}}</td>
+            <td><input #time type="text" value="{{e.time.time}}" (keyup.enter)="enterTime(time.value, entry)" (blur)="enterTime(time.value, entry)"></td>
+            <td>{{e.time.synced}}</td>
         </tr>
     </tbody>
 </table>
 
-<ngb-pagination [collectionSize]="filteredEntries?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
+<ngb-pagination [collectionSize]="filteredEntryTimes?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
