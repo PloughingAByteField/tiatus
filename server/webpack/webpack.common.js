@@ -60,9 +60,9 @@ module.exports = function (options) {
     entry: {
 
       'polyfills': './src/main/typescript/polyfills.browser.ts',
-      'results':  './src/main/typescript/results/main.ts',
-      'timing':  './src/main/typescript/timing/main.ts',
-      'adjudicator': './src/main/typescript/adjudicator/main.ts'
+      'results':  isProd ? './src/main/typescript/results/main.aot.ts' : './src/main/typescript/results/main.ts',
+      'timing':  isProd ? './src/main/typescript/timing/main.aot.ts' : './src/main/typescript/timing/main.ts',
+      'adjudicator': isProd ? './src/main/typescript/adjudicator/main.aot.ts' : './src/main/typescript/adjudicator/main.ts'
 
     },
 
@@ -81,7 +81,7 @@ module.exports = function (options) {
       extensions: ['.ts', '.js', '.json'],
 
       // An array of directory names to be resolved to the current directory
-      modules: [helpers.root('src'), helpers.root('node_modules')],
+      modules: isProd ? [ helpers.root('./compiled/src'), helpers.root('./compiled/node_modules'), helpers.root('node_modules')] : [helpers.root('src'), helpers.root('node_modules')],
 
     },
 
@@ -107,7 +107,7 @@ module.exports = function (options) {
             '@angularclass/hmr-loader?pretty=' + !isProd + '&prod=' + isProd,
             'awesome-typescript-loader?{configFileName: "tsconfig.webpack.json"}',
             'angular2-template-loader',
-            'angular-router-loader?loader=system&genDir=compiled/src/app&aot=' + AOT
+            'angular-router-loader?loader=system&genDir=compiled&aot=' + AOT
           ],
           exclude: [/\.(spec|e2e)\.ts$/]
         },
