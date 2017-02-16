@@ -16,7 +16,6 @@ import { TimingPositionService } from '../services/timing-position.service';
 import { EntryTimesService } from '../services/entry-times.service';
 
 @Component({
-    selector: 'timing-entry',
     styleUrls: [ './timing-entry.component.css' ],
     templateUrl: './timing-entry.component.html',
     providers: [ TimesService, EntryTimesService ]

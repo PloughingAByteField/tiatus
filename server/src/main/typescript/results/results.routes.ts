@@ -1,6 +1,6 @@
 import { Routes, RouterModule } from '@angular/router';
 import { LandingComponent } from './landing';
-import { NoContentComponent } from './no-content';
+import { NoContentComponent } from '../components/no-content/no-content.component';
 import { RaceResultsComponent } from './race_results';
 
 export const resultsRoutes: Routes = [

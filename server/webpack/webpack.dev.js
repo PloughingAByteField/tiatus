@@ -191,7 +191,7 @@ module: {
         rewrites: [
           { from: /^\/results/, to: '/results/index.html' },
           { from: /^\/timing/, to: '/timing/index.html' },
-          { from: /^\/adjuicator/, to: '/adjuicator/index.html' }
+          { from: /^\/adjudicator/, to: '/adjudicator/index.html' }
         ]
       },
       watchOptions: {

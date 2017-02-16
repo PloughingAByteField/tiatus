@@ -13,7 +13,7 @@ import { ENV_PROVIDERS } from './environment';
 import { timingRouting } from './timing.routes';
 import { TimingComponent } from './timing.component';
 import { LandingComponent } from './landing';
-import { NoContentComponent } from './no-content';
+
 import { TimingEntryComponent } from './time_entry';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -23,13 +23,13 @@ import { Ng2PaginationModule } from 'ng2-pagination';
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
+import { NoContentModule } from '../components/no-content/no-content.module';
 
 @NgModule({
   bootstrap: [ TimingComponent ],
   declarations: [
     TimingComponent,
     LandingComponent,
-    NoContentComponent,
     TimingEntryComponent
   ],
   imports: [
@@ -40,6 +40,7 @@ import { TitlebarModule } from '../components/titlebar/titlebar.module';
     FooterModule,
     SidebarModule,
     TitlebarModule,
+    NoContentModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
     timingRouting

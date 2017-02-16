@@ -10,7 +10,6 @@ import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';
 import { AdjudicatorComponent } from './adjudicator.component';
 import { LandingComponent } from './landing';
-import { NoContentComponent } from './no-content';
 import { ResultsComponent } from './race_results';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -18,13 +17,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
+import { NoContentModule } from '../components/no-content/no-content.module';
 
 @NgModule({
   bootstrap: [ AdjudicatorComponent ],
   declarations: [
     AdjudicatorComponent,
     LandingComponent,
-    NoContentComponent,
     ResultsComponent
   ],
   imports: [
@@ -34,6 +33,7 @@ import { TitlebarModule } from '../components/titlebar/titlebar.module';
     FooterModule,
     SidebarModule,
     TitlebarModule,
+    NoContentModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(
