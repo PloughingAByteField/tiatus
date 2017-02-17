@@ -29,6 +29,7 @@ export class TimingEntryComponent implements OnInit {
     public clubFilter: string = '';
     public eventFilter: string = '';
     public reverseTimeSort = false;
+    public reverseNumberSort = false;
     public reverseSyncedSort = false;
 
     private position: Position;
@@ -100,14 +101,84 @@ export class TimingEntryComponent implements OnInit {
         this.filteredEntryTimes = this.filterEntries();
     }
 
-    public sortTime(direction: string): void {
-        console.log('Got direction ' + direction);
-        this.reverseTimeSort = !this.reverseTimeSort;
+    public sortByNumber(direction: string): void {
+        this.reverseNumberSort = !this.reverseNumberSort;
+        this.filterEntries().sort((e1, e2) => {
+            let order: number;
+            if (e1.entry.number < e2.entry.number) {
+                order = -1;
+
+            } else if (e1.entry.number === e2.entry.number) {
+                order = 0;
+
+            } else if (e1.entry.number > e2.entry.number) {
+                order = 1;
+            }
+
+            if (direction === 'up') {
+                order = order * -1;
+            }
+
+            return order;
+            });
     }
 
-    public sortSynced(direction: string): void {
-        console.log('Got direction ' + direction);
+    public sortByTime(direction: string): void {
+        this.reverseTimeSort = !this.reverseTimeSort;
+        this.filterEntries().sort((e1, e2) => {
+            let order: number;
+            if (e2.time.time === undefined && e1.time.time === undefined) {
+                order = 0;
+            } else if (e2.time.time && e1.time.time === undefined) {
+                order = -1;
+
+            } else if (e1.time.time && e2.time.time === undefined) {
+                order = 1;
+
+            } else if (e1.time.time < e2.time.time) {
+                order = -1;
+
+            } else if (e1.time.time === e2.time.time) {
+                order = 0;
+
+            } else if (e1.time.time > e2.time.time) {
+                order = 1;
+            }
+
+            if (direction === 'up') {
+                order = order * -1;
+            }
+
+            return order;
+            });
+    }
+
+    public sortBySynced(direction: string): void {
         this.reverseSyncedSort = !this.reverseSyncedSort;
+        this.filterEntries().sort((e1, e2) => {
+            let order: number;
+            if (e1.time.synced === undefined && e2.time.synced === undefined) {
+                order = 0;
+
+            } else if (e1.time.synced && e2.time.synced === undefined) {
+                order = 1;
+
+            } else if (e2.time.synced && e1.time.synced === undefined) {
+                order = -1;
+
+            } else if (e1.time.synced === e2.time.synced) {
+                order = 0;
+
+            } else if (e1.time.synced !== e2.time.synced) {
+                order = -1;
+            }
+
+            if (direction === 'up') {
+                order = order * -1;
+            }
+
+            return order;
+        });
     }
 
     public convertFromTimeStamp(timeStamp: string): string {
