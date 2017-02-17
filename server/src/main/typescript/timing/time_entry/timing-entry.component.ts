@@ -103,7 +103,7 @@ export class TimingEntryComponent implements OnInit {
 
     public sortByNumber(direction: string): void {
         this.reverseNumberSort = !this.reverseNumberSort;
-        this.filterEntries().sort((e1, e2) => {
+        this.filteredEntryTimes.sort((e1, e2) => {
             let order: number;
             if (e1.entry.number < e2.entry.number) {
                 order = -1;
@@ -120,12 +120,12 @@ export class TimingEntryComponent implements OnInit {
             }
 
             return order;
-            });
+        });
     }
 
     public sortByTime(direction: string): void {
         this.reverseTimeSort = !this.reverseTimeSort;
-        this.filterEntries().sort((e1, e2) => {
+        this.filteredEntryTimes.sort((e1, e2) => {
             let order: number;
             if (e2.time.time === undefined && e1.time.time === undefined) {
                 order = 0;
@@ -150,12 +150,12 @@ export class TimingEntryComponent implements OnInit {
             }
 
             return order;
-            });
+         });
     }
 
     public sortBySynced(direction: string): void {
         this.reverseSyncedSort = !this.reverseSyncedSort;
-        this.filterEntries().sort((e1, e2) => {
+        this.filteredEntryTimes.sort((e1, e2) => {
             let order: number;
             if (e1.time.synced === undefined && e2.time.synced === undefined) {
                 order = 0;
