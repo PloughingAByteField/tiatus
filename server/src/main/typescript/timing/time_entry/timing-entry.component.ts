@@ -81,11 +81,8 @@ export class TimingEntryComponent implements OnInit {
     }
 
     public enterTime(value: string, entryTime: EntryTime) {
-        console.log(value);
-        console.log(entryTime);
         if (value) {
             let timeStamp: number = this.convertToTimeStamp(value);
-            console.log(timeStamp);
             entryTime.time.synced = false;
 
             // has value changed
