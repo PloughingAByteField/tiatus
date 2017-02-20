@@ -10,11 +10,11 @@ import { Position } from '../../models/position.model';
 import { TimingPositionService } from '../services/timing-position.service';
 
 @Component({
-  selector: 'landing',
-  styleUrls: [ './landing.component.css' ],
-  templateUrl: './landing.component.html'
+  selector: 'position',
+  styleUrls: [ './position.component.css' ],
+  templateUrl: './position.component.html'
 })
-export class LandingComponent implements OnInit {
+export class PositionComponent implements OnInit {
     public date: Date = new Date();
     public model: NgbDateStruct = {
       year: this.date.getFullYear(),
@@ -31,7 +31,7 @@ export class LandingComponent implements OnInit {
       private timingPositionService: TimingPositionService) {}
 
     public ngOnInit() {
-      console.log('hello from landing');
+      console.log('hello from position selection');
 
       this.timingPositionService.getPosition.subscribe((position: Position) => {
         if (position) {

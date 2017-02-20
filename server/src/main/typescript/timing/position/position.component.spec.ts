@@ -7,7 +7,7 @@ import { RacesService } from '../../services/races.service';
 import { Race } from '../../models/race.model';
 
 // Load the implementations that should be tested
-import { LandingComponent } from './landing.component';
+import { PositionComponent } from './position.component';
 
 describe('Landing', () => {
   // provide our implementations or mocks to the dependency injector
@@ -23,15 +23,15 @@ describe('Landing', () => {
         },
         deps: [MockBackend, BaseRequestOptions]
       },
-      LandingComponent
+      PositionComponent
     ]
   }));
 
-  it('should have default data', inject([ LandingComponent ], (landing: LandingComponent) => {
+  it('should have default data', inject([ PositionComponent ], (position: PositionComponent) => {
     expect(true).toBe(true);
   }));
 
-  it('should have a title', inject([ LandingComponent ], (landing: LandingComponent) => {
+  it('should have a title', inject([ PositionComponent ], (position: PositionComponent) => {
     expect(true).toBe(true);
   }));
 

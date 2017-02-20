@@ -12,7 +12,7 @@ import { PositionsService } from '../services/positions.service';
 import { ENV_PROVIDERS } from './environment';
 import { timingRouting } from './timing.routes';
 import { TimingComponent } from './timing.component';
-import { LandingComponent } from './landing';
+import { PositionComponent } from './position';
 
 import { TimingEntryComponent } from './time_entry';
 
@@ -29,7 +29,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   bootstrap: [ TimingComponent ],
   declarations: [
     TimingComponent,
-    LandingComponent,
+    PositionComponent,
     TimingEntryComponent
   ],
   imports: [
