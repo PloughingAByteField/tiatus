@@ -80,11 +80,25 @@ export class TimingEntryComponent implements OnInit {
         return clubs.map((club) => club.clubName).join(' / ');
     }
 
-    public enterTime(value: string) {
+    public enterTime(value: string, entryTime: EntryTime) {
         console.log(value);
+        console.log(entryTime);
         if (value) {
             let timeStamp: number = this.convertToTimeStamp(value);
             console.log(timeStamp);
+            entryTime.time.synced = false;
+
+            // has value changed
+            if (entryTime.time.time === undefined) {
+                entryTime.time.time = timeStamp;
+                this.timesService.setTimeForEntryAtPosition(
+                    entryTime.entry, this.position, entryTime.time);
+
+            } else if (entryTime.time.time !== timeStamp) {
+                entryTime.time.time = timeStamp;
+                this.timesService.updateTimeForEntryAtPosition(
+                    entryTime.entry, this.position, entryTime.time);
+            }
         }
     }
 
@@ -218,11 +232,6 @@ export class TimingEntryComponent implements OnInit {
 
     private getTimesForRace(raceId): void {
         if (this.position && this.race) {
-            this.timesService.getTimesForPositionInRace(this.position, this.race)
-                .subscribe((data: PositionTime[]) => {
-                this.times = data;
-            });
-
             this.entryTimesService.getEntriesForRace(this.race, this.position)
                 .subscribe((data: EntryTime[]) => {
                 this.entryTimes = data;

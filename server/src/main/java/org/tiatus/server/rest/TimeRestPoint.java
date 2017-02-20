@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import java.sql.Timestamp;
+import javax.ws.rs.core.UriInfo;
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public class TimeRestPoint {
     @POST
     @Path("position/{positionId}/entry/{entryId}")
     @Produces("application/json")
-    public Response saveTime(@PathParam("positionId") String positionId, @PathParam("entryId") String entryId, EntryPositionTime entryPositionTime, @Context HttpServletRequest request) {
+    public Response saveTime(@PathParam("positionId") String positionId, @PathParam("entryId") String entryId, EntryPositionTime entryPositionTime, @Context UriInfo uriInfo) {
         try {
             Position position = positionService.getPositionForId(Long.parseLong(positionId));
             entryPositionTime.setPosition(position);
@@ -62,7 +63,7 @@ public class TimeRestPoint {
             LOG.debug("have entry " + entryPositionTime.getEntry().getId());
             LOG.debug("Have time " + entryPositionTime.getTime());
             service.createTime(entryPositionTime);
-            return Response.ok().build();
+            return Response.created(URI.create(uriInfo.getPath())).build();
 
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());

@@ -1,9 +1,11 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Http, URLSearchParams, Response } from '@angular/http';
+import { Headers, Http, URLSearchParams, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/toPromise';
 
 import { PositionTime } from '../models/postion-time.model';
 import { Race } from '../models/race.model';
+import { Entry } from '../models/entry.model';
 import { Position } from '../models/position.model';
 
 import { RacesPositionTimes } from './race-position-times';
@@ -13,8 +15,38 @@ export class TimesService {
 
   private racePositionTimes: RacesPositionTimes[] = new Array<RacesPositionTimes>();
   private observable: Observable<PositionTime[]>;
+  private headers = new Headers({'Content-Type': 'application/json'});
+  private timePositionEndPoint: string = '/rest/time/position/';
+  private entryEndPoint: string = '/entry/';
+  private raceEndPoint: string = '/race/';
 
   constructor(private http: Http) {}
+
+  public setTimeForEntryAtPosition(
+      entry: Entry, position: Position, positionTime: PositionTime): Promise<PositionTime> {
+    return this.http
+      .post(this.timePositionEndPoint + position.id + this.entryEndPoint + entry.id,
+        JSON.stringify({time: positionTime.time}), {headers: this.headers})
+      .toPromise()
+      .then(() => {
+        positionTime.synced = true;
+        return positionTime;
+      })
+      .catch((err) => Promise.reject(err));
+  }
+
+  public updateTimeForEntryAtPosition(
+      entry: Entry, position: Position, positionTime: PositionTime): Promise<PositionTime> {
+    return this.http
+      .put(this.timePositionEndPoint + position.id + this.entryEndPoint + entry.id,
+        JSON.stringify({time: positionTime.time}), {headers: this.headers})
+      .toPromise()
+      .then(() => {
+        positionTime.synced = true;
+        return positionTime;
+      })
+      .catch((err) => Promise.reject(err));
+  }
 
   public getTimesForPositionInRace(position: Position, race: Race): Observable<PositionTime[]> {
     if (position && race) {
@@ -32,7 +64,7 @@ export class TimesService {
 
     } else {
       if (position && race) {
-        return this.http.get('/rest/time/position/' + position.id + '/race/' + race.id)
+        return this.http.get(this.timePositionEndPoint + position.id + this.raceEndPoint + race.id)
           .map((response) => {
             let data = response.json();
             this.observable = null;
