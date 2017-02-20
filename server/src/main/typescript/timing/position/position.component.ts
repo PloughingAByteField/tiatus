@@ -29,15 +29,9 @@ export class PositionComponent implements OnInit {
       private timingPositionService: TimingPositionService) {}
 
     public ngOnInit() {
-      console.log('hello from position selection');
-
       this.timingPositionService.getPosition.subscribe((position: Position) => {
         if (position) {
-          console.log('have stored position');
           this.selectedPosition = position;
-          console.log(this.selectedPosition);
-        } else {
-          console.log('do not have stored position');
         }
       });
 

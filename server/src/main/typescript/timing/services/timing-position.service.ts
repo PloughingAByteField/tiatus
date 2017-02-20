@@ -12,14 +12,10 @@ export class TimingPositionService {
     }
 
     private init() {
-        console.log('getting position from stroage');
-        console.log(localStorage.getItem('position'));
         this.position = new BehaviorSubject<Position>(JSON.parse(localStorage.getItem('position')));
     }
 
     public get getPosition(): Subject<Position> {
-        console.log('getting position from service');
-        console.log(this.position);
         return this.position;
     }
 

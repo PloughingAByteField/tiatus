@@ -15,8 +15,6 @@ export class SidebarComponent {
     constructor(private translate: TranslateService) {}
 
     @Input() set races(newRaces: Observable<Race[]>) {
-        console.log('races set called');
-        console.log(newRaces);
         this.racesArray = newRaces;
     }
 
@@ -25,7 +23,6 @@ export class SidebarComponent {
     }
 
     @Input() set link(newLink: string) {
-        console.log('link set called ' + newLink);
         this.raceLink = newLink;
     }
 

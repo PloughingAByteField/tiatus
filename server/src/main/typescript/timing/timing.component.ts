@@ -44,7 +44,6 @@ export class TimingComponent implements OnInit {
   }
 
   public ngOnInit() {
-    console.log('on init');
     this.timingPositionService.getPosition.subscribe((position: Position) => {
         if (position) {
           this.selectedPosition = position;
