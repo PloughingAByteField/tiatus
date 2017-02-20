@@ -1,13 +1,22 @@
-Hello from position selection
+{{ 'POSITION_TEXT' | translate }}
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Position</th>
+            <th>{{ 'POSITION' | translate }}</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let position of positions | async" >{{position.name}}</tr>
+        <tr *ngFor="let position of positions | async" >
+            <td>{{position.name}}</td>
+            <div *ngIf="selectedPosition">
+                <td *ngIf="selectedPosition.id === position.id">{{ 'POSITION_ACTIVE' | translate }}</td>
+                <td *ngIf="selectedPosition.id !== position.id"><input class="btn btn-primary" type="button" value="{{ 'POSTION_SET_ACTIVE' | translate }}" (click)="setSelectedPosition(position)"></td>
+            </div>
+            <div *ngIf="!selectedPosition">
+                <td><input class="btn btn-primary" type="button" value="{{ 'POSTION_SET_ACTIVE' | translate }}" (click)="setSelectedPosition(position)"></td>
+            </div>
+        </tr>
     </tbody>
 </table>
 

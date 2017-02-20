@@ -3,19 +3,22 @@ import { Component } from '@angular/core';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
-import { RacesService } from '../../services/races.service';
+import { PositionsService } from '../../services/positions.service';
+import { TimingPositionService } from '../services/timing-position.service';
+
 import { Race } from '../../models/race.model';
 
 // Load the implementations that should be tested
 import { PositionComponent } from './position.component';
 
-describe('Landing', () => {
+describe('Position', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
     providers: [
       BaseRequestOptions,
       MockBackend,
-      RacesService,
+      PositionsService,
+      TimingPositionService,
       {
         provide: Http,
         useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {

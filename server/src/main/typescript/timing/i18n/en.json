@@ -9,5 +9,9 @@
     "SYNCED": "Synced",
     "NUMBER_PLACEHOLDER": "Enter number",
     "CLUB_PLACEHOLDER": "Enter club",
-    "EVENT_PLACEHOLDER": "Enter event"
+    "EVENT_PLACEHOLDER": "Enter event",
+    "POSITION": "Position",
+    "POSITION_TEXT": "Please select a position and then a race",
+    "POSITION_ACTIVE": "Selected position as active",
+    "POSTION_SET_ACTIVE": "Set as the active position"
 }
