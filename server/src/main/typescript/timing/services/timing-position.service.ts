@@ -7,11 +7,24 @@ import { Position } from '../../models/position.model';
 export class TimingPositionService {
     private position: Subject<Position> = new BehaviorSubject<Position>(null);
 
+    constructor() {
+        this.init();
+    }
+
+    private init() {
+        console.log('getting position from stroage');
+        console.log(localStorage.getItem('position'));
+        this.position = new BehaviorSubject<Position>(JSON.parse(localStorage.getItem('position')));
+    }
+
     public get getPosition(): Subject<Position> {
+        console.log('getting position from service');
+        console.log(this.position);
         return this.position;
     }
 
     public set setPosition(p: Position) {
+        localStorage.setItem('position', JSON.stringify(p));
         this.position.next(p);
     }
 }

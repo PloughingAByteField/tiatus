@@ -1,3 +1,13 @@
 Hello from landing - timing
 
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Position</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let position of positions | async" >{{position.name}}</tr>
+    </tbody>
+</table>
 

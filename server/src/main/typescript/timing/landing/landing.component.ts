@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Observable } from 'rxjs/Observable';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
+import { PositionsService } from '../../services/positions.service';
 import { RacesService } from '../../services/races.service';
 import { Race } from '../../models/race.model';
-import { Observable } from 'rxjs/Observable';
+import { Position } from '../../models/position.model';
+
+import { TimingPositionService } from '../services/timing-position.service';
 
 @Component({
   selector: 'landing',
@@ -18,13 +21,29 @@ export class LandingComponent implements OnInit {
       month: this.date.getMonth() + 1,
       day: this.date.getDate()
     };
-    public races: Observable<Race[]>;
+    public positions: Observable<Position[]>;
 
-    constructor(private racesService: RacesService) {}
+    private selectedPosition: Position;
+
+    constructor(
+      private racesService: RacesService,
+      private positionsService: PositionsService,
+      private timingPositionService: TimingPositionService) {}
 
     public ngOnInit() {
       console.log('hello from landing');
-      this.races = this.racesService.getRaces();
+
+      this.timingPositionService.getPosition.subscribe((position: Position) => {
+        if (position) {
+          console.log('have stored position');
+          console.log(position);
+          this.selectedPosition = position;
+        } else {
+          console.log('do not have stored position');
+        }
+      });
+
+      this.positions =  this.positionsService.getPositions();
     }
 
 }

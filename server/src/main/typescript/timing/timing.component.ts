@@ -5,7 +5,6 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Title }     from '@angular/platform-browser';
 import { RacesService } from '../services/races.service';
-import { PositionsService } from '../services/positions.service';
 import { Observable } from 'rxjs/Observable';
 
 import { Race } from '../models/race.model';
@@ -30,13 +29,12 @@ export class TimingComponent implements OnInit {
   public param = { value: 'world' };
   public link = 'race';
   public races: Observable<Race[]>;
-  public positions: Position[];
+  public selectedPosition: Position;
 
   constructor(
     private translate: TranslateService,
     private titleService: Title,
     private racesService: RacesService,
-    private positionsService: PositionsService,
     private timingPositionService: TimingPositionService
   ) {
     translate.setDefaultLang('en');
@@ -47,10 +45,11 @@ export class TimingComponent implements OnInit {
 
   public ngOnInit() {
     console.log('on init');
-    this.races = this.racesService.getRaces();
-    this.positionsService.getPositions().subscribe((data: Position[]) => {
-        this.positions = data;
-        this.timingPositionService.setPosition = this.positions[0];
+    this.timingPositionService.getPosition.subscribe((position: Position) => {
+        if (position) {
+          this.selectedPosition = position;
+          this.races = this.racesService.getRaces();
+        }
     });
   }
 
