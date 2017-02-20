@@ -1,11 +1,13 @@
 
-    <nav class="sidebar" role="navigation">
-        <ul class="nav nav-pills flex-column ">
-            <div *ngFor="let race of races | async">
-                <li class="nav-item">
-                    <a class="nav-link" [routerLink]="[link, race.id]" routerLinkActive="active">{{race.name}}</a>
-                </li>
-            </div>
-        </ul>
+<nav class="sidebar" role="navigation">
+    <ul class="nav nav-pills flex-column ">
+        <div *ngFor="let race of races | async">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="[link, race.id]" routerLinkActive="active">{{race.name}}</a>
+            </li>
+        </div>
 
-    </nav>
+        <li><a class="nav-link" routerLink="/">{{ 'POSITION' | translate }}</a></li>
+    </ul>
+
+</nav>
