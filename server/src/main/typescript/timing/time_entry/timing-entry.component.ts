@@ -136,60 +136,36 @@ export class TimingEntryComponent implements OnInit {
 
     public sortByTime(direction: string): void {
         this.reverseTimeSort = !this.reverseTimeSort;
-        this.filteredEntryTimes.sort((e1, e2) => {
-            let order: number;
-            if (e2.time.time === undefined && e1.time.time === undefined) {
-                order = 0;
-            } else if (e2.time.time && e1.time.time === undefined) {
-                order = -1;
-
-            } else if (e1.time.time && e2.time.time === undefined) {
-                order = 1;
-
-            } else if (e1.time.time < e2.time.time) {
-                order = -1;
-
-            } else if (e1.time.time === e2.time.time) {
-                order = 0;
-
-            } else if (e1.time.time > e2.time.time) {
-                order = 1;
+        this.filteredEntryTimes.sort((a, b) => {
+            if (a.time.time === undefined) {
+                return 1;
+            } else if (b.time.time === undefined) {
+                return -1;
+            } else if (a.time.time === b.time.time) {
+                return 0;
+            } else if (direction === 'up') {
+                return a.time.time < b.time.time ? -1 : 1;
+            } else if (direction !== 'up') {
+                return a.time.time < b.time.time ? 1 : -1;
             }
-
-            if (direction === 'up') {
-                order = order * -1;
-            }
-
-            return order;
          });
     }
 
     public sortBySynced(direction: string): void {
         this.reverseSyncedSort = !this.reverseSyncedSort;
-        this.filteredEntryTimes.sort((e1, e2) => {
-            let order: number;
-            if (e1.time.synced === undefined && e2.time.synced === undefined) {
-                order = 0;
-
-            } else if (e1.time.synced && e2.time.synced === undefined) {
-                order = 1;
-
-            } else if (e2.time.synced && e1.time.synced === undefined) {
-                order = -1;
-
-            } else if (e1.time.synced === e2.time.synced) {
-                order = 0;
-
-            } else if (e1.time.synced !== e2.time.synced) {
-                order = -1;
+        this.filteredEntryTimes.sort((a, b) => {
+            if (a.time.synced === undefined) {
+                return 1;
+            } else if (b.time.synced === undefined) {
+                return -1;
+            } else if (a.time.synced === b.time.synced) {
+                return 0;
+            } else if (direction === 'up') {
+                return a.time.synced < b.time.synced ? -1 : 1;
+            } else if (direction !== 'up') {
+                return a.time.synced < b.time.synced ? 1 : -1;
             }
-
-            if (direction === 'up') {
-                order = order * -1;
-            }
-
-            return order;
-        });
+         });
     }
 
     public convertFromTimeStamp(timeStamp: string): string {
