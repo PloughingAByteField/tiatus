@@ -7,7 +7,9 @@
             </li>
         </div>
 
-        <li><a class="nav-link" routerLink="/">{{ 'POSITION' | translate }}</a></li>
+        <div *ngIf="showBack">
+            <li><a class="nav-link" routerLink="/">{{ 'POSITION' | translate }}</a></li>
+        </div>
     </ul>
 
 </nav>

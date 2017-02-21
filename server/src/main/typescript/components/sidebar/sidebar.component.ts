@@ -11,6 +11,7 @@ import { Race } from '../../models/race.model';
 export class SidebarComponent {
     private racesArray: Observable<Race[]>;
     private raceLink: string = 'race';
+    private shouldShowBack: boolean = false;
 
     constructor(private translate: TranslateService) {}
 
@@ -28,6 +29,14 @@ export class SidebarComponent {
 
     get link(): string {
         return this.raceLink;
+    }
+
+    @Input() set showBack(show: boolean) {
+        this.shouldShowBack = show;
+    }
+
+    get showBack(): boolean {
+        return this.shouldShowBack;
     }
 
 }
