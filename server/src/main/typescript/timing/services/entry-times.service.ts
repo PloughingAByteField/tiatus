@@ -23,6 +23,27 @@ export class EntryTimesService {
 
     constructor(private entriesService: EntriesService, private timesService: TimesService) {}
 
+    public addTimeForPosition(position: Position, timeStamp: number, entryTime: EntryTime) {
+        if (entryTime.time.time === undefined || entryTime.time.time !== timeStamp) {
+            entryTime.time.synced = false;
+            if (entryTime.time.time === undefined) {
+                entryTime.time.time = timeStamp;
+                this.timesService.setTimeForEntryAtPosition(
+                    entryTime.entry, position, entryTime.time)
+                    .then()
+                    .catch((err) => console.log(err));
+
+            } else if (entryTime.time.time !== timeStamp) {
+                entryTime.time.time = timeStamp;
+                this.timesService.updateTimeForEntryAtPosition(
+                    entryTime.entry, position, entryTime.time)
+                    .then()
+                    .catch((err) => console.log(err));
+            }
+            // update local storage
+        }
+    }
+
     public getEntriesForRace(race: Race, position: Position): Subject<EntryTime[]> {
         if (race && position) {
             for (let entry of this.raceEntries) {
@@ -65,6 +86,7 @@ export class EntryTimesService {
                     this.entryTimesSubject.next(raceEntryTimes.entries);
             });
             this.raceEntries.push(raceEntryTimes);
+            // put in local storage
         }
 
         return this.entryTimesSubject;

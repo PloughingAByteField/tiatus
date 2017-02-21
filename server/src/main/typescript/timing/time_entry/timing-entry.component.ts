@@ -83,19 +83,7 @@ export class TimingEntryComponent implements OnInit {
     public enterTime(value: string, entryTime: EntryTime) {
         if (value) {
             let timeStamp: number = this.convertToTimeStamp(value);
-            entryTime.time.synced = false;
-
-            // has value changed
-            if (entryTime.time.time === undefined) {
-                entryTime.time.time = timeStamp;
-                this.timesService.setTimeForEntryAtPosition(
-                    entryTime.entry, this.position, entryTime.time);
-
-            } else if (entryTime.time.time !== timeStamp) {
-                entryTime.time.time = timeStamp;
-                this.timesService.updateTimeForEntryAtPosition(
-                    entryTime.entry, this.position, entryTime.time);
-            }
+            this.entryTimesService.addTimeForPosition(this.position, timeStamp, entryTime);
         }
     }
 
