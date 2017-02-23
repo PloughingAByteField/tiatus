@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { TimesService } from '../../services/times.service';
+import { TimesService } from '../services/times.service';
 import { RacesService } from '../../services/races.service';
 
 import { Club } from '../../models/club.model';
@@ -10,7 +10,7 @@ import { Entry } from '../../models/entry.model';
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
 import { PositionTime } from '../../models/postion-time.model';
-import { EntryTime } from '../model/entry-time.model';
+import { EntryTime } from '../models/entry-time.model';
 
 import { TimingPositionService } from '../services/timing-position.service';
 import { EntryTimesService } from '../services/entry-times.service';

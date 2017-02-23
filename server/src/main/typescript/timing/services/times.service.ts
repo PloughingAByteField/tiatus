@@ -3,17 +3,17 @@ import { Headers, Http, URLSearchParams, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
-import { PositionTime } from '../models/postion-time.model';
-import { Race } from '../models/race.model';
-import { Entry } from '../models/entry.model';
-import { Position } from '../models/position.model';
+import { PositionTime } from '../../models/postion-time.model';
+import { Race } from '../../models/race.model';
+import { Entry } from '../../models/entry.model';
+import { Position } from '../../models/position.model';
 
-import { RacesPositionTimes } from './race-position-times';
+import { RacePositionTimes } from '../models/race-position-times';
 
 @Injectable()
 export class TimesService {
 
-  private racePositionTimes: RacesPositionTimes[] = new Array<RacesPositionTimes>();
+  private racePositionTimes: RacePositionTimes[] = new Array<RacePositionTimes>();
   private observable: Observable<PositionTime[]>;
   private headers = new Headers({'Content-Type': 'application/json'});
   private timePositionEndPoint: string = '/rest/time/position/';
@@ -68,7 +68,7 @@ export class TimesService {
           .map((response) => {
             let data = response.json();
             this.observable = null;
-            let rpt: RacesPositionTimes = new RacesPositionTimes();
+            let rpt: RacePositionTimes = new RacePositionTimes();
             rpt.position = position;
             rpt.race = race;
             rpt.times = data;
