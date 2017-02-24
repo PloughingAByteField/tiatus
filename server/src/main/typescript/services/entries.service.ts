@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Http, URLSearchParams, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Entry } from '../models/entry.model';
+import { Entry, convertJsonToEntry } from '../models/entry.model';
 import { Race } from '../models/race.model';
 
 @Injectable()
@@ -13,12 +13,21 @@ export class EntriesService {
 
   public getEntries(): Observable<Entry[]> {
     return this.http.get('/rest/entries')
-      .map((response) => response.json()).share();
+      .map(convertJsonToEntries).share();
   }
 
   public getEntriesForRace(race: Race): Observable<Entry[]> {
   return this.http.get('/rest/entries/race/' + race.id)
-    .map((response) => response.json()).share();
+    .map(convertJsonToEntries).share();
   }
+ }
 
+function convertJsonToEntries(response: Response): Entry[] {
+    let jsonEntries: Entry[] = response.json();
+    let entries: Entry[] = new Array<Entry>();
+    jsonEntries.map((json: Entry) => {
+      entries.push(convertJsonToEntry(json));
+    });
+    console.log(entries);
+    return entries;
 }

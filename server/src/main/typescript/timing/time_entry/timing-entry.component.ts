@@ -76,10 +76,6 @@ export class TimingEntryComponent implements OnInit {
 
     }
 
-    public getClubNames(clubs): string {
-        return clubs.map((club) => club.clubName).join(' / ');
-    }
-
     public enterTime(value: string, entryTime: EntryTime) {
         if (value) {
             let timeStamp: number = this.convertToTimeStamp(value);
@@ -197,6 +193,7 @@ export class TimingEntryComponent implements OnInit {
                 .subscribe((data: EntryTime[]) => {
                 this.entryTimes = data;
                 this.filteredEntryTimes = this.entryTimes;
+                console.log(data);
             });
         }
     }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
 import { EntryTime } from '../models/entry-time.model';
-import { PositionTime } from '../../models/postion-time.model';
+import { PositionTime, convertJsonToPositionTime } from '../../models/postion-time.model';
 import { RaceEntryTimes } from '../models/race-entry-times.model';
 import { Race } from '../../models/race.model';
 import { Entry } from '../../models/entry.model';
@@ -54,7 +54,7 @@ export class TimesService {
               } else {
                 entryTimeForEntry = entryTimesForEntry[0];
               }
-              entryTimeForEntry.times.push(positionTime);
+              entryTimeForEntry.times.push(convertJsonToPositionTime(positionTime));
             });
             this.raceEntryTimes.push(rpt);
             return rpt.entries;

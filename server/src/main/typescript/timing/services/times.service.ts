@@ -3,7 +3,7 @@ import { Headers, Http, URLSearchParams, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
-import { PositionTime } from '../../models/postion-time.model';
+import { PositionTime, convertJsonToPositionTime } from '../../models/postion-time.model';
 import { Race } from '../../models/race.model';
 import { Entry } from '../../models/entry.model';
 import { Position } from '../../models/position.model';
@@ -66,14 +66,18 @@ export class TimesService {
       if (position && race) {
         return this.http.get(this.timePositionEndPoint + position.id + this.raceEndPoint + race.id)
           .map((response) => {
-            let data = response.json();
+            let data: PositionTime[] = response.json();
+            let positionTimes: PositionTime[] = new Array<PositionTime>();
+            data.forEach((positionTimeJson: PositionTime) => {
+              positionTimes.push(convertJsonToPositionTime(positionTimeJson));
+            });
             this.observable = null;
             let rpt: RacePositionTimes = new RacePositionTimes();
             rpt.position = position;
             rpt.race = race;
-            rpt.times = data;
+            rpt.times = positionTimes;
             this.racePositionTimes.push(rpt);
-            return data;
+            return rpt.times;
 
           }).share();
       }

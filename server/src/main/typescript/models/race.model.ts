@@ -7,3 +7,15 @@ export class Race {
     public startTime: string;
     public id: number;
 }
+
+export function convertJsonToRace(json: Race): Race {
+    let race: Race = new Race();
+    race.name = json.name;
+    race.active = json.active;
+    race.closed = json.closed;
+    race.drawLocked = json.drawLocked;
+    race.raceOrder = json.raceOrder;
+    race.startTime = json.startTime;
+    race.id = json.id;
+    return race;
+}
