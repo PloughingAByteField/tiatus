@@ -9,5 +9,7 @@
     "NUMBER_PLACEHOLDER": "Enter number",
     "CLUB_PLACEHOLDER": "Enter club",
     "EVENT_PLACEHOLDER": "Enter event",
+    "DISQUALIFIED": "Disqualifed",
+    "PENALTY": "Penalty",
     "TITLE": "This is the title"
 }

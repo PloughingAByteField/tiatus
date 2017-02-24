@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
+import { TranslateService } from 'ng2-translate';
+
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
 import { Club } from '../../models/club.model';
@@ -34,9 +36,12 @@ export class RaceResultsComponent implements OnInit {
     private races: Race[];
     private race: Race;
     private entryTimes: EntryTime[];
+    private disqualifiedText: string;
+    private penaltyText: string;
 
     constructor(
         private route: ActivatedRoute,
+        private translate: TranslateService,
         private racesService: RacesService,
         private positionsService: PositionsService,
         private entryTimesService: EntryTimesService
@@ -64,6 +69,12 @@ export class RaceResultsComponent implements OnInit {
             this.clubFilter = '';
             this.eventFilter = '';
         });
+        this.translate.get('DISQUALIFIED').subscribe((res: string) => {
+            this.disqualifiedText = res;
+        });
+        this.translate.get('PENALTY').subscribe((res: string) => {
+            this.penaltyText = res;
+        });
     }
 
     public onKey(value: string, field: string) {
@@ -88,28 +99,75 @@ export class RaceResultsComponent implements OnInit {
     }
 
     public getTimeForEntry(entryTime: EntryTime, position: Position): string {
+        if (this.checkIfDisqualified(entryTime)) {
+            return null;
+        }
         if (entryTime.times.length > 0) {
-            // get start point
-            let startPoint: PositionTime = entryTime.times
+            let actualStartPoint: PositionTime = entryTime.times
                 .filter((positionTime: PositionTime) => positionTime.startPoint === true)
                 .shift();
-
+            let eventStartPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.position
+                    === entryTime.entry.event.startingPosition)
+                .shift();
             let time: PositionTime = entryTime.times
                 .filter((positionTime: PositionTime) => positionTime.position === position.id)
                 .shift();
-            if (time && startPoint) {
-                return convertFromTimeStamp(time.time - startPoint.time);
+            if (time && actualStartPoint) {
+                return convertFromTimeStamp(time.time - actualStartPoint.time);
             }
         }
         return null;
     }
 
     public getAdjustedTimeForEntry(entryTime: EntryTime): string {
+        if (this.checkIfDisqualified(entryTime)) {
+            return null;
+        }
+        if (entryTime.times.length > 0) {
+            let actualStartPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.startPoint === true)
+                .shift();
+            let eventStartPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.position
+                    === entryTime.entry.event.startingPosition)
+                .shift();
+            let eventFinishPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.position
+                     === entryTime.entry.event.finishingPosition)
+                .shift();
+            if (eventFinishPoint && actualStartPoint) {
+                // apply penalties
+                let penalties: number = this.getPenaltiesForEntry(entryTime);
+                return convertFromTimeStamp(
+                    eventFinishPoint.time - actualStartPoint.time + penalties);
+            }
+        }
         return null;
     }
 
     public getCommentsForEntry(entryTime: EntryTime): string {
+        if (this.checkIfDisqualified(entryTime)) {
+           return this.disqualifiedText;
+        }
+        if (this.getPenaltiesForEntry(entryTime) > 0) {
+           return this.penaltyText;
+        }
         return null;
+    }
+
+    private getPenaltiesForEntry(entryTime: EntryTime): number {
+        if (entryTime.entry.number === 2) {
+            return 20000;
+        }
+        return 0;
+    }
+
+    private checkIfDisqualified(entryTime: EntryTime): boolean {
+        if (entryTime.entry.number === 3) {
+            return true;
+        }
+        return false;
     }
 
     private getTimesForRace(race: Race): void {
