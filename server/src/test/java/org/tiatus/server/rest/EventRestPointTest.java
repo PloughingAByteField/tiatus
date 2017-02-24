@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.Position;
 import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 import org.tiatus.role.Role;
@@ -179,6 +180,12 @@ public class EventRestPointTest extends RestTestBase {
                 event.setId(1L);
                 event.setName("name");
                 event.setWeighted(true);
+                Position start = new Position();
+                start.setId(new Long(1));
+                event.setStartingPosition(start);
+                Position finish = new Position();
+                finish.setId(new Long(3));
+                event.setFinishingPosition(finish);
                 events.add(event);
                 return events;
             }
@@ -200,6 +207,12 @@ public class EventRestPointTest extends RestTestBase {
                 event.setId(1L);
                 event.setName("name");
                 event.setWeighted(true);
+                Position start = new Position();
+                start.setId(new Long(1));
+                event.setStartingPosition(start);
+                Position finish = new Position();
+                finish.setId(new Long(3));
+                event.setFinishingPosition(finish);
                 events.add(event);
                 return events;
             }
@@ -223,6 +236,12 @@ public class EventRestPointTest extends RestTestBase {
                 Event event1 = new Event();
                 event1.setId(1L);
                 event1.setName("Event 1");
+                Position start = new Position();
+                start.setId(new Long(1));
+                event1.setStartingPosition(start);
+                Position finish = new Position();
+                finish.setId(new Long(3));
+                event1.setFinishingPosition(finish);
                 RaceEvent raceEvent1 = new RaceEvent();
                 raceEvent1.setId(1L);
                 raceEvent1.setRace(race1);

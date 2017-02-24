@@ -28,6 +28,5 @@ function convertJsonToEntries(response: Response): Entry[] {
     jsonEntries.map((json: Entry) => {
       entries.push(convertJsonToEntry(json));
     });
-    console.log(entries);
     return entries;
 }

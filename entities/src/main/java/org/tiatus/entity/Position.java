@@ -43,6 +43,12 @@ public class Position implements Serializable {
     @Column(name = "id")
 	private Long id;
 
+	public Position() {}
+
+	public Position(Long id) {
+		this.id = id;
+	}
+
 	public Integer getOrder() {
 		return order;
 	}
@@ -103,7 +109,7 @@ public class Position implements Serializable {
 	public int hashCode() {
 		return new HashCodeBuilder()
 				.append(this.id)
-				.append(this.name)
+//				.append(this.name)
 				.toHashCode();
 	}
 
@@ -120,7 +126,7 @@ public class Position implements Serializable {
 		Position position = (Position) o;
 		return new EqualsBuilder()
 				.append(this.id, position.id)
-				.append(this.name, position.name)
+//				.append(this.name, position.name)
 				.isEquals();
 	}
 }

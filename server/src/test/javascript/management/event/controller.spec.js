@@ -20,20 +20,23 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
 
     describe('eventController', function(){
 
-        var scope, deferred, raceService, eventAssignedService, eventUnassignedService, alertService;
+        var scope, deferred, raceService, positionService, eventAssignedService, eventUnassignedService, alertService;
 
-        beforeEach(inject(function($rootScope, $controller, $q, _raceService_, _eventAssignedService_, _eventUnassignedService_, _alertService_, $httpBackend) {
+        beforeEach(inject(function($rootScope, $controller, $q, _raceService_, _eventAssignedService_, _eventUnassignedService_, _positionService_, _alertService_, $httpBackend) {
             raceService = _raceService_;
             alertService = _alertService_;
+            positionService = _positionService_;
             eventAssignedService = _eventAssignedService_;
             eventUnassignedService = _eventUnassignedService_;
             deferredSave = $q.defer();
             raceServiceQuery = $q.defer();
+            positionServiceQuery = $q.defer();
             eventAssignedServiceQuery = $q.defer();
             eventUnassignedServiceQuery = $q.defer();
             eventUnassignedServiceCreate = $q.defer();
             deferredRemove = $q.defer();
             spyOn(raceService, 'getRaces').and.returnValue(raceServiceQuery.promise);
+            spyOn(positionService, 'getPositions').and.returnValue(positionServiceQuery.promise);
             spyOn(eventAssignedService, 'getAssignedEvents').and.returnValue(eventAssignedServiceQuery.promise);
             spyOn(eventAssignedService, 'getAssignedEventsForRace').and.returnValue(eventAssignedServiceQuery.promise);
             spyOn(eventUnassignedService, 'getUnassigned').and.returnValue(eventUnassignedServiceQuery.promise);
@@ -41,7 +44,7 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
             spyOn(eventUnassignedService, 'removeUnassigned').and.returnValue(eventUnassignedServiceCreate.promise);
             spyOn(alertService, 'clearAlert').and.returnValue();
             scope = $rootScope.$new();
-            ctrl = $controller('eventController', {$scope: scope, raceService: raceService, eventUnassignedService: eventUnassignedService, eventAssignedService : eventAssignedService});
+            ctrl = $controller('eventController', {$scope: scope, raceService: raceService, positionService: positionService, eventUnassignedService: eventUnassignedService, eventAssignedService : eventAssignedService});
             $httpBackend.whenGET('home/home.html').respond();
         }));
 
@@ -57,6 +60,22 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
             expect(ctrl.races.length).toBe(2);
             expect(ctrl.currentRace.id).toBe(1);
             expect(ctrl.currentRace.name).toBe('Race 1');
+        });
+
+        function getPositions() {
+           positionServiceQuery.resolve([{"name":"Start","active":true,"showAllEntries":true,"order":1,"timing":true,"canStart":true,"id":1},{"name":"Dangan","active":true,"showAllEntries":true,"order":2,"timing":true,"canStart":true,"id":2},{"name":"Finish","active":true,"showAllEntries":true,"order":3,"timing":true,"canStart":false,"id":3}]);
+           scope.$apply();
+        };
+
+        it('should get positions', function() {
+            expect(ctrl.positions).toBeUndefined();
+            expect(positionService.getPositions).toHaveBeenCalled();
+            getPositions();
+            expect(ctrl.positions.length).toBe(3);
+            expect(ctrl.startingPosition.id).toBe(1);
+            expect(ctrl.startingPosition.name).toBe('Start');
+            expect(ctrl.finishingPosition.id).toBe(3);
+            expect(ctrl.finishingPosition.name).toBe('Finish');
         });
 
         function getAssignedEvents() {

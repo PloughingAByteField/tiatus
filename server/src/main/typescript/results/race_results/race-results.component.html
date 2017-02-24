@@ -1,6 +1,3 @@
-hello from results
-<!--<router-outlet></router-outlet>-->
-
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -27,15 +24,16 @@ hello from results
         </tr>
     </thead>
     <tbody>
-        <!--<tr *ngFor="let e of filteredEntryTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+        <tr *ngFor="let e of filteredEntryTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
             <td>{{e.entry.number}}</td>
-            <td>{{getClubNames(e.entry.clubs)}}</td>
+            <td>{{e.entry.getClubNames()}}</td>
             <td>{{e.entry.event.name}}</td>
             <td>{{e.entry.crew}}</td>
-            <td><input #time type="text" [value]="convertFromTimeStamp(e.time.time)" (blur)="enterTime(time.value, e)"></td>
-            <td>{{e.time.synced}}</td>
-        </tr>-->
+            <td *ngFor="let position of displayablePositions">{{ getTimeForEntry(e, position) }}</td>
+            <td>{{ getAdjustedTimeForEntry(e) }}</td>
+            <td>{{ getCommentsForEntry(e) }}</td>
+        </tr>
     </tbody>
 </table>
 
-<!--<ngb-pagination [collectionSize]="filteredEntryTimes?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>-->
+<ngb-pagination [collectionSize]="filteredEntryTimes?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>

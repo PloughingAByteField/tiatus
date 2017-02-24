@@ -6,5 +6,8 @@
     "CREW": "Crew",
     "ADJUSTED_TIME": "Adjusted Time",
     "COMMENTS": "Comments",
+    "NUMBER_PLACEHOLDER": "Enter number",
+    "CLUB_PLACEHOLDER": "Enter club",
+    "EVENT_PLACEHOLDER": "Enter event",
     "TITLE": "This is the title"
 }

@@ -42,14 +42,22 @@ export class EntryTimesService {
             Observable.forkJoin(entriesObs, entryTimesObs).subscribe((data) => {
                     let entries: Entry[] = data[0];
                     let entryTimes: EntryTime[] = data[1];
-                    entryTimes.forEach((entryTime: EntryTime) => {
-                        for (let entry of entries) {
+                    entries.forEach((entry: Entry) => {
+                        let found: boolean = false;
+                        entryTimes.forEach((entryTime: EntryTime) => {
                             if (entryTime.entry.id === entry.id
                                 && entryTime.entry.event === undefined) {
                                 entryTime.entry = entry;
                                 raceEntryTimes.entries.push(entryTime);
-                                break;
+                                found = true;
+                                return;
                             }
+                        });
+                        if (!found) {
+                            let entryTime: EntryTime = new EntryTime();
+                            entryTime.entry = entry;
+                            entryTime.times = new Array<PositionTime>();
+                            raceEntryTimes.entries.push(entryTime);
                         }
                     });
                     this.entryTimesSubject.next(raceEntryTimes.entries);

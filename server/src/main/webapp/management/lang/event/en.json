@@ -13,6 +13,8 @@
   "ASSIGNED_EVENTS" : "Assigned Events",
   "UNASSIGNED_EVENTS" : "Unassigned Events",
   "EVENT_NAME" : "Event Name:",
+  "STARTING_POSITION" : "Starting Position:",
+  "FINISHING_POSITION" : "Finishing Position:",
   "CHANGE_RACE" : "Change race:",
   "EVENT_RACE_ORDER" : "Race Order: ",
   "EVENT_WEIGHTED" : "Weighted Event:",

@@ -40,7 +40,7 @@ public class EntryPositionTime implements Serializable {
 	}
 
 	@JsonGetter("position")
-	public Long getPositonId() {
+	public Long getPositionId() {
 		return position.getId();
 	}
 

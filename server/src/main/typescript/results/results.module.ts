@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
+
+import { Ng2PaginationModule } from 'ng2-pagination';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { RacesService } from '../services/races.service';
 import { EntriesService } from '../services/entries.service';
 import { TimesService } from './services/times.service';
@@ -14,8 +18,6 @@ import { ResultsComponent } from './results.component';
 import { LandingComponent } from './landing';
 
 import { RaceResultsComponent } from './race_results';
-
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -37,6 +39,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     SidebarModule,
     TitlebarModule,
     NoContentModule,
+    Ng2PaginationModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(resultsRoutes, { useHash: false, preloadingStrategy: PreloadAllModules })

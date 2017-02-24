@@ -9,7 +9,8 @@ import { Club } from '../../models/club.model';
 import { Entry } from '../../models/entry.model';
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
-import { PositionTime } from '../../models/postion-time.model';
+import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
+    from '../../models/postion-time.model';
 import { EntryTime } from '../models/entry-time.model';
 
 import { TimingPositionService } from '../services/timing-position.service';
@@ -78,7 +79,7 @@ export class TimingEntryComponent implements OnInit {
 
     public enterTime(value: string, entryTime: EntryTime) {
         if (value) {
-            let timeStamp: number = this.convertToTimeStamp(value);
+            let timeStamp: number = convertToTimeStamp(value);
             this.entryTimesService.addTimeForPosition(this.position, timeStamp, entryTime);
         }
     }
@@ -153,38 +154,7 @@ export class TimingEntryComponent implements OnInit {
     }
 
     public convertFromTimeStamp(timeStamp: string): string {
-        if ( !timeStamp) {
-            return null;
-        }
-
-        let date = new Date(timeStamp);
-        let hours = date.getUTCHours();
-        // Minutes part from the timestamp
-        let minutes = '0' + date.getUTCMinutes();
-        // Seconds part from the timestamp
-        let seconds = '0' + date.getUTCSeconds();
-        let milliSeconds = '000' + date.getUTCMilliseconds();
-        let time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-        time = time + '.' + milliSeconds.substr(-3);
-        return time;
-    };
-
-    public convertToTimeStamp(timeString: string): number {
-        if ( !timeString) {
-            return null;
-        }
-
-        let date = new Date(0);
-        date.setUTCMilliseconds(0);
-        let millisecondFields = timeString.split('.');
-        if (millisecondFields.length === 2) {
-            date.setUTCMilliseconds(+millisecondFields[1]);
-        }
-        let timeFields = timeString.split(':');
-        date.setUTCHours(+timeFields[0]);
-        date.setUTCMinutes(+timeFields[1]);
-        date.setUTCSeconds(+timeFields[2]);
-        return date.getTime();
+        return convertFromTimeStamp(+timeStamp);
     };
 
     private getTimesForRace(raceId): void {

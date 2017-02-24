@@ -3,10 +3,18 @@
 
     angular.module('EventController').controller('eventController', EventController);
 
-    function EventController($log, $translate, eventAssignedService, eventUnassignedService, raceService, alertService) {
+    function EventController($log, $translate, eventAssignedService, eventUnassignedService, raceService, positionService, alertService) {
         var vm = this;
         vm.alert = alertService.getAlert();
         vm.event = { weighted: false };
+
+        positionService.getPositions().then(function(data) {
+            vm.positions = data;
+            vm.startingPosition = vm.positions[0];
+            vm.finishingPosition = vm.positions[vm.positions.length - 1];
+            vm.event.startingPosition = vm.startingPosition;
+            vm.event.finishingPosition = vm.finishingPosition;
+        });
 
         eventAssignedService.addEventChangeListener(function() {
             updateAssignedToRaceEvents(vm.currentRace);
@@ -48,8 +56,8 @@
         };
 
         vm.createEvent = function(e) {
-            eventUnassignedService.createUnassignedEvent({'name': e.name, 'weighted': e.weighted}).then(function() {
-                vm.event = { weighted: false };
+            eventUnassignedService.createUnassignedEvent({'name': e.name, 'weighted': e.weighted, 'startingPosition': e.startingPosition, 'finishingPosition': e.finishingPosition}).then(function() {
+                vm.event = { weighted: false, startingPosition: vm.startingPosition, finishingPosition: vm.finishingPosition };
                 vm.addEventForm.$setPristine();
                 vm.addEventForm.$setUntouched();
 
