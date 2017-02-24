@@ -4,21 +4,24 @@ import { Observable } from 'rxjs/Observable';
 
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
+import { EntryTime } from '../models/entry-time.model';
 
 import { PositionsService } from '../../services/positions.service';
 import { RacesService } from '../../services/races.service';
+import { EntryTimesService } from '../services/entry-times.service';
 
 @Component({
     selector: 'race-results',
     styleUrls: [ './race-results.component.css' ],
     templateUrl: './race-results.component.html',
-    providers: [ PositionsService ]
+    providers: [ PositionsService, EntryTimesService ]
 })
 export class RaceResultsComponent implements OnInit {
 
     public positions: Position[];
     public displayablePositions: Position[];
     public reverseNumberSort = false;
+    public reverseAdjustedTimeSort = false;
     public numberFilter: string = '';
     public clubFilter: string = '';
     public eventFilter: string = '';
@@ -26,11 +29,14 @@ export class RaceResultsComponent implements OnInit {
     private raceId: number = 0;
     private races: Race[];
     private race: Race;
+    private entryTimes: EntryTime[];
+    private filteredEntryTimes: EntryTime[];
 
     constructor(
         private route: ActivatedRoute,
         private racesService: RacesService,
-        private positionsService: PositionsService
+        private positionsService: PositionsService,
+        private entryTimesService: EntryTimesService
     ) {}
 
     public ngOnInit() {
@@ -73,6 +79,12 @@ export class RaceResultsComponent implements OnInit {
     private getTimesForRace(race: Race): void {
         if (race) {
             console.log('Get times for race ' + race.id);
+            this.entryTimesService.getEntriesForRace(this.race)
+                .subscribe((data: EntryTime[]) => {
+                    this.entryTimes = data;
+                    this.filteredEntryTimes = this.entryTimes;
+                    console.log(this.entryTimes);
+            });
         }
     }
 

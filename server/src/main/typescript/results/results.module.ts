@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 import { RacesService } from '../services/races.service';
+import { EntriesService } from '../services/entries.service';
+import { TimesService } from './services/times.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { resultsRoutes } from './results.routes';
@@ -42,6 +44,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   providers: [
     ENV_PROVIDERS,
     RacesService,
+    EntriesService,
+    TimesService,
     Title
   ]
 })

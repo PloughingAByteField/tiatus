@@ -98,6 +98,26 @@ public class TimeRestPoint {
         }
     }
 
+    @GET
+    @Path("race/{raceId}")
+    @Produces("application/json")
+    public Response getListOfTimesForRace(@PathParam("raceId") String raceId, @Context HttpServletRequest request) {
+        try {
+            Race race = raceService.getRaceForId(Long.parseLong(raceId));
+            List<EntryPositionTime> times = service.getTimesForRace(race);
+
+            return Response.ok(times).build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception: ", e.getSuppliedException());
+            throw new InternalServerErrorException();
+
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
+    }
+
     @Inject
     public void setService(TimesService service) {
         this.service = service;

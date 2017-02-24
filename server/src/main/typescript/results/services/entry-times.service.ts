@@ -5,70 +5,58 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
 import { EntriesService } from '../../services/entries.service';
-import { TimesService } from '../../services/times.service';
+import { TimesService } from './times.service';
 
-import { EntryTime } from '../model/entry-time.model';
+import { EntryTime } from '../models/entry-time.model';
 import { Position } from '../../models/position.model';
 import { Entry } from '../../models/entry.model';
 import { Race } from '../../models/race.model';
 import { PositionTime } from '../../models/postion-time.model';
 
-import { RaceEntryTimes } from '../model/race-entry-times.model';
+import { RaceEntryTimes } from '../models/race-entry-times.model';
 
 @Injectable()
 export class EntryTimesService {
-    // public  entryTimesSubject: Subject<EntryTime[]> =
-    //     new BehaviorSubject<EntryTime[]>(new Array<EntryTime>());
-    // private raceEntries: RaceEntryTimes[] = new Array<RaceEntryTimes>();
+    public  entryTimesSubject: Subject<EntryTime[]> =
+        new BehaviorSubject<EntryTime[]>(new Array<EntryTime>());
+    private raceEntries: RaceEntryTimes[] = new Array<RaceEntryTimes>();
 
-    // constructor(private entriesService: EntriesService, private timesService: TimesService) {}
-    constructor(private entriesService: EntriesService) {}
+    constructor(private entriesService: EntriesService, private timesService: TimesService) {}
 
-    // public getEntriesForRace(race: Race): Subject<EntryTime[]> {
-    //     if (race) {
-    //         for (let entry of this.raceEntries) {
-    //             if (entry.race.id === race.id) {
-    //                 this.entryTimesSubject.next(entry.entries);
-    //                 return this.entryTimesSubject;
-    //             }
-    //         }
-    //     }
+    public getEntriesForRace(race: Race): Subject<EntryTime[]> {
+        if (race) {
+            for (let entry of this.raceEntries) {
+                if (entry.race.id === race.id) {
+                    this.entryTimesSubject.next(entry.entries);
+                    return this.entryTimesSubject;
+                }
+            }
+        }
 
-    //     if (race) {
-    //         let raceEntryTimes: RaceEntryTimes = new RaceEntryTimes();
-    //         raceEntryTimes.race = race;
-    //         raceEntryTimes.entries = new Array<EntryTime>();
-    //         let entriesObs = this.entriesService.getEntriesForRace(race);
-    //         let positionTimesObs = this.timesService.getTimesForRace(race);
-    //         Observable.forkJoin(entriesObs, positionTimesObs).subscribe((data) => {
-    //                 let entries: Entry[] = data[0];
-    //                 let positionTimes: PositionTime[] = data[1];
-    //                 entries.forEach((entry: Entry) => {
-    //                     let haveTime: boolean = false;
-    //                     for (let positionTime of positionTimes) {
-    //                         if (positionTime.position === position.id
-    //                             && positionTime.entry === entry.id) {
-    //                             let entryTime: EntryTime = new EntryTime();
-    //                             entryTime.entry = entry;
-    //                             entryTime.time = positionTime;
-    //                             raceEntryTimes.entries.push(entryTime);
-    //                             haveTime = true;
-    //                             break;
-    //                         }
-    //                     }
-    //                     if ( !haveTime) {
-    //                         let entryTime: EntryTime = new EntryTime();
-    //                         entryTime.entry = entry;
-    //                         entryTime.time = new PositionTime();
-    //                         raceEntryTimes.entries.push(entryTime);
-    //                     }
-    //                 });
-    //                 this.entryTimesSubject.next(raceEntryTimes.entries);
-    //         });
-    //         this.raceEntries.push(raceEntryTimes);
-    //         // put in local storage
-    //     }
+        if (race) {
+            let raceEntryTimes: RaceEntryTimes = new RaceEntryTimes();
+            raceEntryTimes.race = race;
+            raceEntryTimes.entries = new Array<EntryTime>();
+            let entriesObs = this.entriesService.getEntriesForRace(race);
+            let entryTimesObs = this.timesService.getTimesForRace(race);
+            Observable.forkJoin(entriesObs, entryTimesObs).subscribe((data) => {
+                    let entries: Entry[] = data[0];
+                    let entryTimes: EntryTime[] = data[1];
+                    entryTimes.forEach((entryTime: EntryTime) => {
+                        for (let entry of entries) {
+                            if (entryTime.entry.id === entry.id
+                                && entryTime.entry.event === undefined) {
+                                entryTime.entry = entry;
+                                raceEntryTimes.entries.push(entryTime);
+                                break;
+                            }
+                        }
+                    });
+                    this.entryTimesSubject.next(raceEntryTimes.entries);
+            });
+            this.raceEntries.push(raceEntryTimes);
+        }
 
-    //     return this.entryTimesSubject;
-    // }
+        return this.entryTimesSubject;
+    }
 }

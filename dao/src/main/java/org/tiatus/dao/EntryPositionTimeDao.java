@@ -13,12 +13,18 @@ import java.util.List;
 public interface EntryPositionTimeDao {
     /**
      * Get times for entries at position for race
-     * @param race Race to add
-     * @param position Position to add
+     * @param race Race
+     * @param position Position
      * @return a list of Races
      */
     List<EntryPositionTime> getPositionTimesForPositionInRace(Race race, Position position) throws DaoException;
 
+    /**
+     * Get times for entries for race
+     * @param race Race
+     * @return a list of Races
+     */
+    List<EntryPositionTime> getTimesForRace(Race race) throws DaoException;
 
     /**
      * Record a time for entry at position in a race
