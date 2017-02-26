@@ -384,7 +384,7 @@
             </servlet-container>
             <handlers>
                 <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
-                <file name="TiatusDirHandler" follow-symlink="true" directory-listing="true" cache-buffers="1024" cache-buffer-size="1024" path="/opt/www/tiatus"/>
+                <file name="TiatusDirHandler" follow-symlink="true" directory-listing="true" cache-buffers="1024" cache-buffer-size="1024" path="${jboss.home.dir}/tiatus"/>
             </handlers>
             <filters>
                 <response-header name="server-header" header-name="Server" header-value="WildFly/10"/>

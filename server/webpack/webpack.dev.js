@@ -199,7 +199,8 @@ module: {
         poll: 1000
       },
       proxy: {
-        "/rest": "http://127.0.0.1:8080"
+        "/rest": "http://127.0.0.1:8080",
+        "/tiatus": "http://127.0.0.1:8080"
       },
       compress: true,
       https: true
