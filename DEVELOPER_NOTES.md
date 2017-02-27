@@ -1,6 +1,8 @@
 # Developer Notes
 
-This is a java maven project with an angular 1.x frontend using docker for end to end testing.
+This is a java maven project with an angular frontend using docker for end to end testing.
+
+A very high level diagram of the system is ![overview](../docs/tiatus_network_arch.png)  
 
 Java 8 and maven 3.3.x is required to build and run unit tests. 
 
@@ -18,18 +20,18 @@ A selemium server image containing some browsers used by the protractor e2e test
 
 There is a maven dev profile. Select it in your IDE or include it when running maven on the command line.
 
-Flyway is used to create the database contents as part of the dev profile. Its configuration options are in flyway/flyway.properties.<br />
-To skip it running against the database use mvn -Dflyway.skip=true package <br />
-To clean the database mvn -Pdev flyway:clean <br />
+Flyway is used to create the database contents as part of the dev profile. Its configuration options are in flyway/flyway.properties.  
+To skip it running against the database use mvn -Dflyway.skip=true package   
+To clean the database mvn -Pdev flyway:clean   
 
 
 To run the e2e tests locally via protactor a local install of selenium in the server directory
-./node_modules/grunt-protractor-runner/scripts/webdriver-manager-update <br />
-and to start it <br />
+./node_modules/grunt-protractor-runner/scripts/webdriver-manager-update   
+and to start it   
 webdriver-manager start
 
 
-With the local wildfly instance running on port 8080, run <br />
+With the local wildfly instance running on port 8080, run   
 grunt protractor --baseUrl=http://127.0.0.1:8080
 
 Maven site is a bit screwed up by maven 3.  To generate javadoc do
