@@ -83,6 +83,7 @@ describe('src.test.e2e.setup_spec.js', function() {
     expect(element(by.id('create')).isEnabled()).toBe(false);
     element(by.model('ctrl.user.userName')).sendKeys('admin');
     element(by.model('ctrl.user.password')).sendKeys('12345678');
+    element(by.model('ctrl.event.title')).sendKeys('Event Title');
 
     expect(element(by.id('create')).isEnabled()).toBe(true);
     element(by.id('create')).click();

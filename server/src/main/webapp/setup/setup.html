@@ -14,7 +14,8 @@
     <script src="/public/js/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
     <script src="setup.module.js"></script>
     <script src="setup.controller.js"></script>
-    <script src="services/user.service.js"></script>
+    <script src="directives/file-model.directive.js"></script>
+    <script src="services/setup.service.js"></script>
     <script src="services/redirect.service.js"></script>
     <style type="text/css" media="all">@import "setup.css";</style>
     <title>Setup</title>
@@ -42,7 +43,20 @@
                 <p data-ng-message="required">{{ 'PASSWORD_IS_REQUIRED' | translate }}</p>
             </div>
         </div>
-        <button id="create" data-ng-click="ctrl.addUser(ctrl.user)" data-ng-disabled="ctrl.addUserForm.$invalid">{{ 'CREATE_USER' | translate }}</button>
+
+        <div class="form-group">
+            <label>{{ 'EVENT_TITLE' | translate }}:</label>
+            <input type="text" placeholder="{{'ENTER_EVENT_TITLE' | translate}}" name="title" id="title" data-ng-model="ctrl.event.title" required data-ng-minlength="3" data-ng-maxlength="120">
+        </div>
+
+        <br />
+        <div class="form-group">
+            <label>{{ 'EVENT_LOGO' | translate }}:</label>
+            <input type="file" file-model="ctrl.event.logo" name="logo" id="logo"/>
+        </div>
+
+        <br />
+        <button id="create" data-ng-click="ctrl.setupApp(ctrl.user, ctrl.event)" data-ng-disabled="ctrl.addUserForm.$invalid">{{ 'CREATE_USER' | translate }}</button>
     </form>
     <br>
 </div>

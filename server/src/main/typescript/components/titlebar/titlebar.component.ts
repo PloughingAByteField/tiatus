@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { ConfigService } from '../../services/config.service';
 
@@ -7,25 +7,30 @@ import { ConfigService } from '../../services/config.service';
   styleUrls: [ './titlebar.component.css' ],
   templateUrl: './titlebar.component.html',
 })
-export class TitlebarComponent {
+export class TitlebarComponent implements OnInit {
   private logo: string;
   private eventTitle: string;
 
   constructor(private configService: ConfigService) {}
 
-  public getLogo(): string {
+  public ngOnInit() {
     if ( !this.logo) {
-      this.logo = this.configService.getLogo();
+      this.configService.getLogo().subscribe((data: string) => {
+        this.logo = data;
+      });
     }
+    if ( !this.eventTitle) {
+      this.configService.getEventTitle().subscribe((data: string) => {
+        this.eventTitle = data;
+      });
+    }
+  }
 
+  public getLogo(): string {
     return this.logo;
   }
 
   public getEventTitle(): string {
-    if ( !this.eventTitle) {
-      this.eventTitle = this.configService.getEventTitle();
-    }
-
     return this.eventTitle;
   }
 }

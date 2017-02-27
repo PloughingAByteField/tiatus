@@ -59,6 +59,8 @@ public class UserServiceImpl implements UserService {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
         }
+
+        LOG.debug("Setting up default config");
     }
 
     @Override

@@ -1,18 +1,34 @@
 (function() {
     angular.module('setupApp').controller('userController', UserController);
 
-    function UserController($scope, $log, User, Redirect) {
-        $log.debug("userController");
-
+    function UserController($scope, $log, Setup, UploadLogo, Redirect) {
         var vm = this;
 
         vm.addUserForm = {};
         vm.user = {};
+        vm.event = {};
 
-        vm.addUser = function(user) {
-            $log.debug("got user " + user.user_name + " password " + user.password);
+        vm.setupApp = function(user, event) {
+            $log.debug("got user " + user.userName + " password " + user.password);
+            $log.debug(event);
+            $log.debug(event.logo);
 
-            User.save(user).$promise.then(function() {
+            Setup.event(event.title).$promise.then(function() {
+                vm.event = {};
+
+                if (typeof event.logo !== 'undefined') {
+                    UploadLogo.save(event.logo).then(function(data) {
+                        $log.debug('uploaded');
+
+                    }, function(errResponse) {
+                        $log.debug('failed to upload');
+                    });
+                }
+            }, function(errResponse) {
+                $log.warn("Failed to set event title", errResponse);
+            });
+
+            Setup.save(user).$promise.then(function() {
                 vm.user = {};
                 vm.addUserForm.$setPristine();
                 vm.addUserForm.$setUntouched();

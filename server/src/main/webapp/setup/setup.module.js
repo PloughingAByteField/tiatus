@@ -6,7 +6,7 @@
         'ngSanitize',
         'ngMessages',
         'ngCookies',
-        'UserService',
+        'SetupService',
         'RedirectService'
     ]);
 
