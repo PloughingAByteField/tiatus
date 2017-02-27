@@ -2,7 +2,7 @@
 
 This is a java maven project with an angular frontend using docker for end to end testing.
 
-A very high level diagram of the system is ![overview](../docs/tiatus_network_arch.png)  
+A very high level diagram of the system is ![overview](docs/tiatus_network_arch.png)  
 
 Java 8 and maven 3.3.x is required to build and run unit tests. 
 
