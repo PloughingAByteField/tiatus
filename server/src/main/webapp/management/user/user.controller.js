@@ -30,8 +30,8 @@
 
         vm.addUser = function(data) {
             console.log(data);
-            userService.addUser({'userName': data.name, 'password': data.password, 'roles': [{'role': {'id': 2, 'roleName': 'TIMING'}}]}).then(function(response) {
-                vm.users.push(response);
+            var user = {'userName': data.name, 'password': data.password, 'roles': [{'role': data.type}]};
+            userService.addUser(user).then(function(response) {
                 vm.user = {};
                 vm.user.type = vm.timingRole;
                 vm.addUserForm.$setPristine();
