@@ -52,6 +52,7 @@ public class SetupRestPoint {
     @Consumes("application/json")
     @Produces("application/json")
     public Response addUser(@Context UriInfo uriInfo, User user) {
+        checkIfSetupHasAlreadyRun();
         LOG.debug("Adding admin user " + user);
         try {
             service.addAdminUser(user);
@@ -72,6 +73,7 @@ public class SetupRestPoint {
     @Consumes("multipart/form-data")
     @Produces("application/json")
     public Response uploadEventDetails(MultipartFormDataInput input, @Context HttpServletRequest request) {
+        checkIfSetupHasAlreadyRun();
         try {
             Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
             List<InputPart> inputParts = uploadForm.get("file");
@@ -113,6 +115,7 @@ public class SetupRestPoint {
     @Consumes("application/json")
     @Produces("application/json")
     public Response uploadEventTitle(String title) {
+        checkIfSetupHasAlreadyRun();
         try {
             LOG.debug("Have title " + title);
             updateConfig("title", title);
@@ -129,6 +132,13 @@ public class SetupRestPoint {
     // sonar want constructor injection which jaxrs does not support
     public void setService(UserService service) {
         this.service = service;
+    }
+
+    private void checkIfSetupHasAlreadyRun() {
+        if (service.hasAdminUser()) {
+            LOG.warn("Already have run setup");
+            throw new InternalServerErrorException();
+        }
     }
 
     private String getFileName(MultivaluedMap<String, String> header) {

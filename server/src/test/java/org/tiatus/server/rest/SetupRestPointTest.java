@@ -54,6 +54,9 @@ public class SetupRestPointTest {
                 user.setId(1L);
                 return user;
             }
+
+            @Mock
+            public boolean hasAdminUser() { return false; }
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
@@ -73,6 +76,9 @@ public class SetupRestPointTest {
             public User addAdminUser(User user) throws ServiceException {
                 throw new ServiceException("e");
             }
+
+            @Mock
+            public boolean hasAdminUser() { return false; }
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
@@ -95,6 +101,9 @@ public class SetupRestPointTest {
                 user.setId(1L);
                 return user;
             }
+
+            @Mock
+            public boolean hasAdminUser() { return false; }
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 

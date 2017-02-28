@@ -21,9 +21,11 @@ describe("src.test.javascript.setup.controller.spec.js", function() {
                 UploadLogo = _UploadLogo_;
                 Redirect = _Redirect_;
                 deferredSave = $q.defer();
+                deferredEvent = $q.defer();
+                deferredUploadLogo = $q.defer();
                 spyOn(Setup, 'save').and.returnValue({ $promise: deferredSave.promise });
-                spyOn(Setup, 'event').and.returnValue({ $promise: deferredSave.promise });
-                spyOn(UploadLogo, 'save').and.returnValue({ $promise: deferredSave.promise });
+                spyOn(Setup, 'event').and.returnValue({ $promise: deferredEvent.promise });
+                spyOn(UploadLogo, 'save').and.returnValue({ $promise: deferredUploadLogo.promise });
                 spyOn(Redirect, 'redirect').and.returnValue({});
                 scope = $rootScope.$new();
                 ctrl = $controller('userController', {$scope: scope, Setup: Setup, Redirect: Redirect});
@@ -41,6 +43,8 @@ describe("src.test.javascript.setup.controller.spec.js", function() {
                }
 
                ctrl.setupApp(user, event);
+               deferredEvent.resolve();
+               deferredUploadLogo.resolve();
                deferredSave.resolve({id: 1, user_name: 'username', password: 'password'});
                scope.$apply();
                expect(Setup.save.calls.mostRecent().args.length).toBe(1);
@@ -62,6 +66,8 @@ describe("src.test.javascript.setup.controller.spec.js", function() {
                }
 
                ctrl.setupApp(user, event);
+                deferredEvent.resolve();
+                deferredUploadLogo.resolve();
                deferredSave.reject();
                scope.$apply();
                expect(Setup.save.calls.mostRecent().args.length).toBe(1);

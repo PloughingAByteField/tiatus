@@ -24,20 +24,21 @@
                         $log.debug('failed to upload');
                     });
                 }
+
+                Setup.save(user).$promise.then(function() {
+                    vm.user = {};
+                    vm.addUserForm.$setPristine();
+                    vm.addUserForm.$setUntouched();
+
+                    Redirect.redirect("/");
+
+                }, function(errResponse) {
+                    $log.warn("Failed to add user", errResponse);
+                    vm.addUserForm.$invalid = true;
+                });
+
             }, function(errResponse) {
                 $log.warn("Failed to set event title", errResponse);
-            });
-
-            Setup.save(user).$promise.then(function() {
-                vm.user = {};
-                vm.addUserForm.$setPristine();
-                vm.addUserForm.$setUntouched();
-
-                Redirect.redirect("/");
-
-            }, function(errResponse) {
-                $log.warn("Failed to add user", errResponse);
-                vm.addUserForm.$invalid = true;
             });
         };
     };
