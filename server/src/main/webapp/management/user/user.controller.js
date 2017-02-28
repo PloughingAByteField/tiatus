@@ -8,7 +8,6 @@
         vm.user = {};
         vm.userRoles = [];
 
-
         userService.getUsers().then(function(data) {
             vm.users = data;
             $log.debug(vm.users);
@@ -20,7 +19,7 @@
         userService.getUserRoles().then(function(data) {
             vm.userRoles = data;
             $log.debug(vm.userRoles);
-            vm.timingRole = vm.userRoles.filter((role) => role.roleName === 'TIMING').shift();
+            vm.timingRole = vm.userRoles.filter(function(role){ return role.roleName === 'TIMING'}).shift();
             console.log(vm.timingRole);
             vm.user.type = vm.timingRole;
 
@@ -47,7 +46,8 @@
             if (vm.getRole(user) === 'MANAGEMENT') {
                 console.log('admin user');
                 // are we the sole admin user -- return
-                var adminUsers = vm.users.filter((u) => vm.getRole(u) === 'MANAGEMENT');
+                var adminUsers = vm.users.filter(function(u){ return vm.getRole(u) === 'MANAGEMENT'});
+                console.log(adminUsers);
                 if (adminUsers.length === 1) {
                     $log.warn('Only have one admin user, will not delete');
                     return;
