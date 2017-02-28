@@ -1,7 +1,9 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -35,6 +37,7 @@ public class User implements Serializable {
 
     @Column(name = "last_name")
     private String lastName;
+
 
     @Column(name = "password")
     private String password;
@@ -75,10 +78,12 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }

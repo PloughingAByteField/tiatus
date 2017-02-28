@@ -6,7 +6,7 @@
   "USER_TYPE": "User type",
   "USER_ACTIVE": "Is Active",
   "REMOVE_USER": "Delete user",
-  "UPDATE_USER": "Update user",
+  "UPDATE_USER": "Update user password",
   "USER_PASSWORD": "User password",
   "USER_NAME_REQUIRED" : "User name is required.",
   "USER_NAME_TOO_SHORT" : "User name is too short.",

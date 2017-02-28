@@ -48,7 +48,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testAddUser() throws Exception {
+    public void testAddAdminUser() throws Exception {
         new MockUp<UserDaoImpl>() {
             @Mock
             public boolean hasAdminUser() {
@@ -56,7 +56,8 @@ public class UserServiceImplTest {
             }
 
             @Mock
-            public void addUser(User user) throws DaoException {
+            public User addUser(User user) throws DaoException {
+                return user;
             }
 
             @Mock
@@ -65,7 +66,7 @@ public class UserServiceImplTest {
             }
         };
         UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
-        service.addUser(new User());
+        service.addAdminUser(new User());
     }
 
     @Test (expected = ServiceException.class)
@@ -77,7 +78,7 @@ public class UserServiceImplTest {
             }
 
             @Mock
-            public void addUser(User user) throws DaoException {
+            public User addUser(User user) throws DaoException {
                 throw new DaoException("message");
             }
 
@@ -87,7 +88,7 @@ public class UserServiceImplTest {
             }
         };
         UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
-        service.addUser(new User());
+        service.addAdminUser(new User());
     }
 
     @Test (expected = ServiceException.class)
@@ -99,7 +100,8 @@ public class UserServiceImplTest {
             }
 
             @Mock (invocations = 0)
-            public void addUser(User user) throws DaoException {
+            public User addUser(User user) throws DaoException {
+                return user;
             }
 
             @Mock (invocations = 0)
@@ -108,6 +110,6 @@ public class UserServiceImplTest {
             }
         };
         UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
-        service.addUser(new User());
+        service.addAdminUser(new User());
     }
 }

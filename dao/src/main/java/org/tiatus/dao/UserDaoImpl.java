@@ -7,6 +7,7 @@ import org.tiatus.entity.User;
 import org.tiatus.entity.UserRole;
 
 import javax.annotation.Resource;
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -35,7 +36,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addUser(User user) throws DaoException {
+    public User addUser(User user) throws DaoException {
         LOG.debug("Adding user " + user);
         try {
             User existing = null;
@@ -47,6 +48,8 @@ public class UserDaoImpl implements UserDao {
                 em.persist(user);
                 tx.commit();
 
+                return user;
+
             } else {
                 String message = "Failed to add user due to existing user with same id " + user.getId();
                 LOG.warn(message);
@@ -56,6 +59,39 @@ public class UserDaoImpl implements UserDao {
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to persist user", e.getMessage());
             throw new DaoException(e);
+        }
+    }
+
+    @Override
+    public void deleteUser(User user) throws DaoException {
+        try {
+            User existing = null;
+            if (user.getId() != null) {
+                existing = em.find(User.class, user.getId());
+            }
+            if (existing != null) {
+                tx.begin();
+                em.remove(em.contains(user) ? user : em.merge(user));
+                tx.commit();
+            } else {
+                LOG.warn("No such user of id " + user.getId());
+            }
+        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+            LOG.warn("Failed to delete user", e);
+            throw new DaoException(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void updateUser(User user) throws DaoException {
+        try {
+            tx.begin();
+            em.merge(user);
+            tx.commit();
+        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+            LOG.warn("Failed to update race", e);
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -78,5 +114,17 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
         return query.getSingleResult();
+    }
+
+    @Override
+    public List<User> getUsers() throws DaoException {
+        TypedQuery<User> query = em.createQuery("FROM User", User.class);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Role> getUserRoles() throws DaoException {
+        TypedQuery<Role> query = em.createQuery("FROM Role", Role.class);
+        return query.getResultList();
     }
 }

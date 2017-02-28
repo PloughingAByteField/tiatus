@@ -50,8 +50,9 @@ public class SetupRestPointTest {
 
         new MockUp<UserServiceImpl>() {
             @Mock
-            public void addUser(User user) throws ServiceException {
+            public User addAdminUser(User user) throws ServiceException {
                 user.setId(1L);
+                return user;
             }
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
@@ -69,7 +70,7 @@ public class SetupRestPointTest {
 
         new MockUp<UserServiceImpl>() {
             @Mock
-            public void addUser(User user) throws ServiceException {
+            public User addAdminUser(User user) throws ServiceException {
                 throw new ServiceException("e");
             }
         };
@@ -90,8 +91,9 @@ public class SetupRestPointTest {
 
         new MockUp<UserServiceImpl>() {
             @Mock
-            public void addUser(User user) throws ServiceException {
+            public User addAdminUser(User user) throws ServiceException {
                 user.setId(1L);
+                return user;
             }
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();

@@ -2,6 +2,9 @@ package org.tiatus.dao;
 
 import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
+import org.tiatus.entity.UserRole;
+
+import java.util.List;
 
 /**
  * Created by johnreynolds on 02/09/2016.
@@ -19,8 +22,21 @@ public interface UserDao {
      * @param user to add
      * @throws DaoException on error
      */
-    void addUser(User user) throws DaoException;
+    User addUser(User user) throws DaoException;
 
+    /**
+     * Remove a user
+     * @param user to remove
+     * @throws DaoException on error
+     */
+    void deleteUser(User user) throws DaoException;
+
+    /**
+     * Update a user
+     * @param user to update
+     * @throws DaoException on error
+     */
+    void updateUser(User user) throws DaoException;
 
     /**
      * Get the role for string identifier of the role.
@@ -36,4 +52,16 @@ public interface UserDao {
      * @return User or null
      */
     User getUser(String userName, String password);
+
+    /**
+     * Get users
+     * @return list of users
+     */
+    List<User> getUsers() throws DaoException;
+
+    /**
+     * Get user roles
+     * @return list of user roles
+     */
+    List<Role> getUserRoles() throws DaoException;
 }

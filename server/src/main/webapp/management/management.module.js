@@ -11,6 +11,7 @@
         'AlertService',
         'RaceService',
         'ClubService',
+        'UserService',
         'PositionService',
         'EventService',
         'EntryService',

@@ -1,6 +1,9 @@
 package org.tiatus.service;
 
+import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
+
+import java.util.List;
 
 /**
  * Created by johnreynolds on 02/09/2016.
@@ -13,11 +16,32 @@ public interface UserService {
     boolean hasAdminUser();
 
     /**
+     * Add an admin user to the system
+     * @param user to add
+     * @throws ServiceException on error
+     */
+    User addAdminUser(User user) throws ServiceException;
+
+    /**
      * Add a user to the system
      * @param user to add
      * @throws ServiceException on error
      */
-    void addUser(User user) throws ServiceException;
+    User addUser(User user) throws ServiceException;
+
+    /**
+     * Remove a user
+     * @param user to remove
+     * @throws ServiceException on error
+     */
+    void deleteUser(User user) throws ServiceException;
+
+    /**
+     * update user
+     * @param user to update
+     * @throws ServiceException on error
+     */
+    void updateUser(User user) throws ServiceException;
 
     /**
      * Get user for supplied username and password
@@ -26,4 +50,18 @@ public interface UserService {
      * @return User or null
      */
     User getUser(String userName, String password);
+
+    /**
+     * Get users
+     * @return list of users
+     */
+    List<User> getUsers() throws ServiceException;
+
+    /**
+     * Get user roles
+     * @return list of user roles
+     */
+    List<Role> getUserRoles() throws ServiceException;
+
+
 }

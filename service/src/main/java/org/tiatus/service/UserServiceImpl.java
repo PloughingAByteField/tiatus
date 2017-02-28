@@ -10,6 +10,7 @@ import org.tiatus.entity.UserRole;
 
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(User user) throws ServiceException {
+    public User addAdminUser(User user) throws ServiceException {
         // do we have an existing user
         if (hasAdminUser()) {
             LOG.warn("Already have an admin user ");
@@ -53,19 +54,73 @@ public class UserServiceImpl implements UserService {
             Set<UserRole> userRoleList = new HashSet<>();
             userRoleList.add(userRole);
             user.setRoles(userRoleList);
-            dao.addUser(user);
+            return dao.addUser(user);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
         }
+    }
 
-        LOG.debug("Setting up default config");
+    @Override
+    public User addUser(User user) throws ServiceException {
+        LOG.debug("Adding user " + user.getUserName());
+        try {
+            return dao.addUser(user);
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void deleteUser(User user) throws ServiceException {
+        try {
+            dao.deleteUser(user);
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void updateUser(User user) throws ServiceException {
+        try {
+            dao.updateUser(user);
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
     }
 
     @Override
     public User getUser(String userName, String password) {
         return dao.getUser(userName, password);
+    }
+
+    @Override
+    public List<User> getUsers() throws ServiceException {
+        try {
+            return dao.getUsers();
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<Role> getUserRoles() throws ServiceException {
+        try {
+            return dao.getUserRoles();
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
     }
 
 
