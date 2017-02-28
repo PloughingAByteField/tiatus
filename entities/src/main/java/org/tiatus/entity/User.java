@@ -42,7 +42,7 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user")
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="user", orphanRemoval = true)
     @JsonManagedReference(value="user-role")
     private Set<UserRole> roles = new HashSet<>();
 
