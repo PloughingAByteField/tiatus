@@ -12,8 +12,9 @@ import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';
 import { AdjudicatorComponent } from './adjudicator.component';
 import { LandingComponent } from './landing';
-import { ResultsComponent } from './race_results';
+import { EntriesComponent } from './entries';
 
+import { Ng2PaginationModule } from 'ng2-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { FooterModule } from '../components/footer/footer.module';
@@ -26,7 +27,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   declarations: [
     AdjudicatorComponent,
     LandingComponent,
-    ResultsComponent
+    EntriesComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +37,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     SidebarModule,
     TitlebarModule,
     NoContentModule,
+    Ng2PaginationModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(

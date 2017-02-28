@@ -20,9 +20,6 @@ import { Race } from '../models/race.model';
   templateUrl: './adjudicator.component.html'
 })
 export class AdjudicatorComponent {
-  public logo = '/assets/img/stopwatch.svg';
-  public tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
-  public param = {value: 'world'};
   public races: Observable<Race[]>;
 
   constructor(

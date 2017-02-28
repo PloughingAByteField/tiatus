@@ -4,14 +4,14 @@ import 'rxjs/add/observable/forkJoin';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
-import { EntriesService } from '../../services/entries.service';
+import { EntriesService } from './entries.service';
 import { TimesService } from './times.service';
 
 import { EntryTime } from '../models/entry-time.model';
-import { Position } from '../../models/position.model';
-import { Entry } from '../../models/entry.model';
-import { Race } from '../../models/race.model';
-import { PositionTime } from '../../models/postion-time.model';
+import { Position } from '../models/position.model';
+import { Entry } from '../models/entry.model';
+import { Race } from '../models/race.model';
+import { PositionTime } from '../models/postion-time.model';
 
 import { RaceEntryTimes } from '../models/race-entry-times.model';
 

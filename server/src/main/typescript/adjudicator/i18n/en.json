@@ -1,4 +1,15 @@
 {
     "RACE": "{{value}}",
-    "TITLE": "This is the title"
+    "NUMBER": "Number",
+    "CLUB": "Club",
+    "EVENT": "Event",
+    "CREW": "Crew",
+    "ADJUSTED_TIME": "Adjusted Time",
+    "RECORDED_TIME": "Recorded Time",
+    "NUMBER_PLACEHOLDER": "Enter number",
+    "CLUB_PLACEHOLDER": "Enter club",
+    "EVENT_PLACEHOLDER": "Enter event",
+    "SYNCED": "Synced",
+    "DISQUALIFIED": "Disqualifed",
+    "TOTAL_PENALTY": "Total Penalties"
 }

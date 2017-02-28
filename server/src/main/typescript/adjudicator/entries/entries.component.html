@@ -1,0 +1,47 @@
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th *ngIf="reverseNumberSort">{{ 'NUMBER' | translate }} <span (click)="sortByNumber('up')" class="fa fa-caret-up"></span></th>
+            <th *ngIf="!reverseNumberSort">{{ 'NUMBER' | translate }} <span (click)="sortByNumber('down')" class="fa fa-caret-down"></span></th>
+            <th>{{ 'EVENT' | translate }}</th>
+            <th>{{ 'CLUB' | translate }}</th>
+            <th>{{ 'CREW' | translate }}</th>
+            <th>{{ 'RECORDED_TIME' | translate }}</th>
+            <th>{{ 'TOTAL_PENALTY' | translate }}</th>
+            <th *ngIf="reverseAdjustedTimeSort">{{ 'ADJUSTED_TIME' | translate }} <span (click)="sortByAdjustedTime('up')" class="fa fa-caret-up"></span></th>
+            <th *ngIf="!reverseAdjustedTimeSort">{{ 'ADJUSTED_TIME' | translate }} <span (click)="sortByAdjustedTime('down')" class="fa fa-caret-down"></span></th>
+            <th></th>
+            <th></th>
+            <th>{{ 'SYNCED' | translate }}</th>
+        </tr>
+        <tr>
+            <th><input placeholder="{{ 'NUMBER_PLACEHOLDER' | translate }}" type="text" #number [(ngModel)]="numberFilter" (keyup)="onKey(number.value, 'number')"></th>
+            <th><input placeholder="{{ 'EVENT_PLACEHOLDER' | translate }}" type="text" #event [(ngModel)]="eventFilter" (keyup)="onKey(event.value, 'event')"></th>
+            <th><input placeholder="{{ 'CLUB_PLACEHOLDER' | translate }}" type="text" #club [(ngModel)]="clubFilter" (keyup)="onKey(club.value, 'club')"></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let e of filteredEntryTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>{{e.entry.number}}</td>
+            <td>{{e.entry.event.name}}</td>
+            <td>{{e.entry.getClubNames()}}</td>
+            <td>{{e.entry.crew}}</td>
+            <td></td>
+            <td></td>
+            <td>{{ getAdjustedTimeForEntry(e) }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<ngb-pagination [collectionSize]="filteredEntryTimes?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>

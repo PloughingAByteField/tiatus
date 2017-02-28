@@ -10,7 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { RacesService } from '../services/races.service';
 import { EntriesService } from '../services/entries.service';
-import { TimesService } from './services/times.service';
+import { TimesService } from '../services/times.service';
 import { ConfigService } from '../services/config.service';
 
 import { ENV_PROVIDERS } from './environment';

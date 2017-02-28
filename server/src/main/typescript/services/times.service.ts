@@ -4,11 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
 import { EntryTime } from '../models/entry-time.model';
-import { PositionTime, convertJsonToPositionTime } from '../../models/postion-time.model';
+import { PositionTime, convertJsonToPositionTime } from '../models/postion-time.model';
 import { RaceEntryTimes } from '../models/race-entry-times.model';
-import { Race } from '../../models/race.model';
-import { Entry } from '../../models/entry.model';
-import { Position } from '../../models/position.model';
+import { Race } from '../models/race.model';
+import { Entry } from '../models/entry.model';
+import { Position } from '../models/position.model';
 
 @Injectable()
 export class TimesService {
