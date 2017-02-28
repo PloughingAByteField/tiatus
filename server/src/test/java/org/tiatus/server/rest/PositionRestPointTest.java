@@ -292,8 +292,8 @@ public class PositionRestPointTest extends RestTestBase {
             throw new Exception();
         }
 
-        if (!endPointDetail.getRolesAllowed().contains(Role.ADMIN)) {
-            System.out.println("End point does not have expected roles");
+        if (endPointDetail.isAllowAll() == null || !endPointDetail.isAllowAll()) {
+            System.out.println("End point is not allowed all");
             throw new Exception();
         }
     }

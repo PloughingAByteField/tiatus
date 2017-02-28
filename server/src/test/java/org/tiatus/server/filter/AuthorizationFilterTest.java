@@ -161,6 +161,25 @@ public class AuthorizationFilterTest {
 
     @Test
     public void testNullUserPrincipal() throws Exception {
+        ResourceInfo resourceInfo = new MockUp<ResourceInfo>() {
+            @Mock
+            public Method getResourceMethod() {
+                return new MockUp<Method>(){
+                    @Mock
+                    public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+                        if (DenyAll.class.equals(annotationClass)) {
+                            return false;
+                        }
+
+                        if (RolesAllowed.class.equals(annotationClass)) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }.getMockInstance();
+            }
+        }.getMockInstance();
+        Deencapsulation.setField(filter, "resourceInfo", resourceInfo);
 
         ContainerRequestContext requestContext = new MockContainerRequestContext(){
             @Override
@@ -170,7 +189,13 @@ public class AuthorizationFilterTest {
             }
         }.getMockInstance();
 
-        filter.filter(requestContext);
+        try {
+            filter.filter(requestContext);
+        } catch (WebApplicationException e) {
+            if (! (e.getResponse().getStatus() == Response.Status.FORBIDDEN.getStatusCode())) {
+                fail("Got unexpected code " + e.getResponse().getStatus());
+            }
+        }
     }
 
     class MockContainerRequestContext extends MockUp<ContainerRequestContext> {

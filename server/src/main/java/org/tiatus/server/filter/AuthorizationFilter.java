@@ -36,9 +36,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         LOG.debug("In AuthorizationFilter");
         SecurityContext sc = requestContext.getSecurityContext();
-        if (sc.getUserPrincipal() == null) {
-            return;
-        }
+
         Method method = resourceInfo.getResourceMethod();
 
         if (method.isAnnotationPresent(DenyAll.class)) {
@@ -46,6 +44,11 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         }
 
         if (method.isAnnotationPresent(RolesAllowed.class)) {
+            if (sc.getUserPrincipal() == null) {
+                LOG.debug("not logged in when accessing restricted role");
+                throw new WebApplicationException(Response.Status.FORBIDDEN);
+            }
+
             RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
             Set<String> rolesAllowed = new HashSet<>(Arrays.asList(rolesAnnotation.value()));
             for (String role : rolesAllowed) {

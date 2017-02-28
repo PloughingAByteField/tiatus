@@ -32,7 +32,7 @@ public class PositionRestPoint {
      * Get positions
      * @return response containing list of positions
      */
-    @RolesAllowed({Role.ADMIN})
+    @PermitAll
     @GET
     @Produces("application/json")
     public Response getPositions() {

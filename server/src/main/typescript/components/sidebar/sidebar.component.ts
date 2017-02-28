@@ -12,6 +12,7 @@ export class SidebarComponent {
     private racesArray: Observable<Race[]>;
     private raceLink: string = 'race';
     private shouldShowBack: boolean = false;
+    private shouldShowLogout: boolean = false;
 
     constructor(private translate: TranslateService) {}
 
@@ -39,4 +40,11 @@ export class SidebarComponent {
         return this.shouldShowBack;
     }
 
+    @Input() set showLogout(show: boolean) {
+        this.shouldShowLogout = show;
+    }
+
+    get showLogout(): boolean {
+        return this.shouldShowLogout;
+    }
 }

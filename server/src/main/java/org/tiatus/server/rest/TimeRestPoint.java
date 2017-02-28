@@ -6,8 +6,10 @@ import org.tiatus.entity.Entry;
 import org.tiatus.entity.EntryPositionTime;
 import org.tiatus.entity.Position;
 import org.tiatus.entity.Race;
+import org.tiatus.role.Role;
 import org.tiatus.service.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -51,6 +53,7 @@ public class TimeRestPoint {
         }
     }
 
+    @RolesAllowed({Role.TIMING})
     @POST
     @Path("position/{positionId}/entry/{entryId}")
     @Produces("application/json")
@@ -75,6 +78,7 @@ public class TimeRestPoint {
         }
     }
 
+    @RolesAllowed({Role.TIMING})
     @PUT
     @Path("position/{positionId}/entry/{entryId}")
     @Produces("application/json")
