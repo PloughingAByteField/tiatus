@@ -13,7 +13,6 @@ export class AdjudicatorPenaltiesService extends PenaltiesService {
     }
 
     public createPenalty(penalty: Penalty): void {
-        console.log(this.penalties);
         this.service.createPenalty(penalty).then(() => {
             this.penalties.push(penalty);
             this.penaltiesSubject.next(this.penalties);
