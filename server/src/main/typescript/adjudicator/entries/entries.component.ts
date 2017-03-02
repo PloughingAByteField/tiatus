@@ -12,7 +12,7 @@ import { EntryTime } from '../../models/entry-time.model';
 
 import { PositionsService } from '../../http-services/positions.service';
 import { RacesService } from '../../http-services/races.service';
-import { EntryTimesService } from '../../http-services/entry-times.service';
+import { EntryTimesService } from '../../services/entry-times.service';
 
 @Component({
     selector: 'entries',

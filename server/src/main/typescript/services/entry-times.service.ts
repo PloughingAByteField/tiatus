@@ -4,8 +4,8 @@ import 'rxjs/add/observable/forkJoin';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
-import { EntriesService } from './entries.service';
-import { TimesService } from './times.service';
+import { EntriesService } from '../http-services/entries.service';
+import { TimesService } from '../http-services/times.service';
 
 import { EntryTime } from '../models/entry-time.model';
 import { Position } from '../models/position.model';
