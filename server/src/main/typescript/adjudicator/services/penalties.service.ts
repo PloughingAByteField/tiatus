@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { Penalty } from '../../models/penalty.model';
 
-import { PenaltiesService } from '../../services/penalties.service';
+import { PenaltiesService } from '../../http-services/penalties.service';
 
 @Injectable()
 export class AdjudicatorPenaltiesService extends PenaltiesService {

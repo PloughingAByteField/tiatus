@@ -5,11 +5,11 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 
-import { RacesService } from '../services/races.service';
-import { EntriesService } from '../services/entries.service';
-import { ClubsService } from '../services/clubs.service';
-import { PositionsService } from '../services/positions.service';
-import { ConfigService } from '../services/config.service';
+import { RacesService } from '../http-services/races.service';
+import { EntriesService } from '../http-services/entries.service';
+import { ClubsService } from '../http-services/clubs.service';
+import { PositionsService } from '../http-services/positions.service';
+import { ConfigService } from '../http-services/config.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { timingRouting } from './timing.routes';

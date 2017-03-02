@@ -7,7 +7,7 @@ import { Penalty } from '../../models/penalty.model';
 import { Entry } from '../../models/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
-import { EntriesService } from '../../services/entries.service';
+import { EntriesService } from '../../http-services/entries.service';
 import { AdjudicatorPenaltiesService } from '../services/penalties.service';
 
 @Component({

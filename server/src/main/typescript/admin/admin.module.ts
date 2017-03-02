@@ -7,8 +7,8 @@ import { TranslateModule } from 'ng2-translate';
 
 import { ENV_PROVIDERS } from './environment';
 
-import { RacesService } from '../services/races.service';
-import { ConfigService } from '../services/config.service';
+import { RacesService } from '../http-services/races.service';
+import { ConfigService } from '../http-services/config.service';
 
 import { adminRoutes } from './admin.routes';
 import { AdminComponent } from './admin.component';

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { ConfigService } from '../../services/config.service';
+import { ConfigService } from '../../http-services/config.service';
 
 import { TitlebarComponent } from './titlebar.component';
 
