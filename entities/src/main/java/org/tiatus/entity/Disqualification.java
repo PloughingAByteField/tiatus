@@ -1,5 +1,6 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -42,6 +43,11 @@ public class Disqualification implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @JsonGetter("entry")
+    public Long getEntryId() {
+        return entry.getId();
     }
 
     public Entry getEntry() {

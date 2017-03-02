@@ -54,8 +54,10 @@ public class Entry implements Serializable {
     @Column(name = "isFixedNumber")
     private boolean isFixedNumber = false;
 
-	public Entry() {
+	public Entry() {}
 
+	public Entry(Long id) {
+		this.setId(id);
 	}
 
 	public Entry(Entry entry) {

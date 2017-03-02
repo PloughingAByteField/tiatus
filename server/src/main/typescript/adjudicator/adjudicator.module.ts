@@ -6,6 +6,8 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 
 import { RacesService } from '../services/races.service';
+import { EntriesService } from '../services/entries.service';
+import { TimesService } from '../services/times.service';
 import { ConfigService } from '../services/config.service';
 
 import { ENV_PROVIDERS } from './environment';
@@ -13,6 +15,7 @@ import { adjudicatorRoutes } from './adjudicator.routes';
 import { AdjudicatorComponent } from './adjudicator.component';
 import { LandingComponent } from './landing';
 import { EntriesComponent } from './entries';
+import { PenaltiesComponent } from './penalties';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -27,6 +30,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   declarations: [
     AdjudicatorComponent,
     LandingComponent,
+    PenaltiesComponent,
     EntriesComponent
   ],
   imports: [
@@ -47,6 +51,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   providers: [
     ENV_PROVIDERS,
     RacesService,
+    EntriesService,
+    TimesService,
     ConfigService,
     Title
   ]

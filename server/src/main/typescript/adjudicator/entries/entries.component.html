@@ -1,4 +1,4 @@
-
+<h2 *ngIf="getRace()">Entries and times for {{getRace().name}}</h2>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -37,7 +37,8 @@
             <td></td>
             <td></td>
             <td>{{ getAdjustedTimeForEntry(e) }}</td>
-            <td></td>
+            <td><button class="btn primary" [routerLink]="['/penalty', e.entry.id]">{{ 'PENALTIES' | translate }}</button></td>
+            <td><button class="btn primary" [routerLink]="['/penalty', e.entry.id]">{{ 'DISQUALIFY_ENTRY' | translate }}</button></td>
             <td></td>
             <td></td>
         </tr>
@@ -45,3 +46,4 @@
 </table>
 
 <ngb-pagination [collectionSize]="filteredEntryTimes?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
+

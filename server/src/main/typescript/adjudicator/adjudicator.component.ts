@@ -1,7 +1,7 @@
 /*
  * Angular 2 decorators and services
  */
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Title }     from '@angular/platform-browser';
 import { RacesService } from '../services/races.service';
@@ -19,27 +19,20 @@ import { Race } from '../models/race.model';
   ],
   templateUrl: './adjudicator.component.html'
 })
-export class AdjudicatorComponent {
+export class AdjudicatorComponent implements OnInit {
   public races: Observable<Race[]>;
 
   constructor(
     private translate: TranslateService,
     private titleService: Title,
     private racesService: RacesService
-  ) {
-    translate.setDefaultLang('en');
+  ) {}
 
-    // the lang to use, if the lang isn't available, it will use the current loader to get them
-    translate.use('en');
+  public ngOnInit() {
+      console.log('hello from penalties');
+      // the lang to use, if the lang isn't available, it will use the current loader to get them
+      this.translate.use('en');
 
-    this.races = this.racesService.getRaces();
+      this.races = this.racesService.getRaces();
   }
-
-  public setTitle( newTitle: string) {
-    this.translate.get(newTitle).subscribe((res: string) => {
-      console.log('res is ', res);
-      this.titleService.setTitle( res );
-    });
-  }
-
 }

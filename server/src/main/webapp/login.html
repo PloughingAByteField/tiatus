@@ -36,7 +36,7 @@
                 <form action="/rest/login" method="POST" name="ctrl.loginForm" data-ng-submit="ctrl.loginForm.$valid" novalidate>
                     <div class="form-group">
                         <label>{{ 'USER_NAME' | translate }}:</label>
-                        <input type="text" placeholder="{{'ENTER_USERNAME' | translate}}" name="user" id="username" data-ng-model="ctrl.user.userName" required data-ng-minlength="5" data-ng-maxlength="256">
+                        <input type="text" placeholder="{{'ENTER_USERNAME' | translate}}" name="user" id="username" data-ng-model="ctrl.user.userName" required data-ng-minlength="3" data-ng-maxlength="256">
                         <div class="errors" id="nameError" data-ng-messages="ctrl.loginForm.name.$error">
                             <p data-ng-message="minlength">{{ 'USERNAME_TOO_SHORT' | translate }}</p>
                             <p data-ng-message="maxlength">{{ 'USERNAME_TOO_LONG' | translate }}</p>

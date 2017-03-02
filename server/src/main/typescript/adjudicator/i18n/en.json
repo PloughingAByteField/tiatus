@@ -10,6 +10,19 @@
     "CLUB_PLACEHOLDER": "Enter club",
     "EVENT_PLACEHOLDER": "Enter event",
     "SYNCED": "Synced",
+    "SELECT_RACE": "Please select a race",
     "DISQUALIFIED": "Disqualifed",
-    "TOTAL_PENALTY": "Total Penalties"
+    "DISQUALIFY_ENTRY" : "Disqualify",
+    "REQUALIFY_ENTRY" : "Requalify",
+    "PENALTIES" : "Penalties",
+    "TOTAL_PENALTY": "Total Penalties",
+    "COMMENT": "Comment",
+    "NOTE": "Note",
+    "PENALTY_TIME": "Penalty Time",
+    "UPDATE_PENALTY": "Update Penalty",
+    "REMOVE_PENALTY": "Remove Penalty",
+    "PENALTY_COMMENT_DESCRIPTION": "The optional 'Comment' field is added to the results page. Please keep it very short, suggested values are 'Unsporting conduct', 'Dangerous conduct'",
+    "PENALTY_NOTE_DESCRIPTION": "The optional 'Note' field is for internal usage and is not display on the results page. Add all the available information that caused a crew to get a penalty",
+    "ENTER_TIME": "Enter time",
+    "ADD_PENALTY_ENTRY": "Add Penalty"
 }
