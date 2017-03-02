@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
-import { PositionsService } from '../../services/positions.service';
+import { PositionsService } from '../../http-services/positions.service';
 import { TimingPositionService } from '../services/timing-position.service';
 
 import { Race } from '../../models/race.model';

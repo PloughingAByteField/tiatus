@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
-import { RacesService } from '../services/races.service';
+import { RacesService } from '../http-services/races.service';
 import { AdminComponent } from './admin.component';
 
 describe('Admin', () => {
