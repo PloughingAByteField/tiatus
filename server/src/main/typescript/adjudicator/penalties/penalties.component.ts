@@ -8,14 +8,14 @@ import { Entry } from '../../models/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
 import { EntriesService } from '../../http-services/entries.service';
-import { AdjudicatorPenaltiesService } from '../services/penalties.service';
+import { AdjudicatorHttpPenaltiesService } from '../http-services/penalties.service';
 import { PenaltiesService } from '../../services/penalties.service';
 
 @Component({
     selector: 'penalties',
     styleUrls: [ './penalties.component.css' ],
     templateUrl: './penalties.component.html',
-    providers: [ AdjudicatorPenaltiesService ]
+    providers: [ AdjudicatorHttpPenaltiesService ]
 })
 export class PenaltiesComponent implements OnInit {
     public penaltiesForEntry: Penalty[];
@@ -33,7 +33,7 @@ export class PenaltiesComponent implements OnInit {
         private route: ActivatedRoute,
         private translate: TranslateService,
         private entriesService: EntriesService,
-        private penaltiesService: AdjudicatorPenaltiesService,
+        private penaltiesService: AdjudicatorHttpPenaltiesService,
         private pService: PenaltiesService
 
     ) {}

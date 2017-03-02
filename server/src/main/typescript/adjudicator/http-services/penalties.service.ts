@@ -7,7 +7,7 @@ import { Penalty } from '../../models/penalty.model';
 import { PenaltiesHttpService } from '../../http-services/penalties.service';
 
 @Injectable()
-export class AdjudicatorPenaltiesService extends PenaltiesHttpService {
+export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
     private headers = new Headers({'Content-Type': 'application/json'});
 
     constructor(protected http: Http) {
