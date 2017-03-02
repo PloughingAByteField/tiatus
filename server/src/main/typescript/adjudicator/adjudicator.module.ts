@@ -6,17 +6,26 @@ import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 
 import { PenaltiesService } from '../services/penalties.service';
+import { DisqualificationService } from '../services/disqualification.service';
 
 import { RacesService } from '../http-services/races.service';
 import { EntriesService } from '../http-services/entries.service';
 import { TimesService } from '../http-services/times.service';
 import { ConfigService } from '../http-services/config.service';
 import { PenaltiesHttpService } from '../http-services/penalties.service';
+import { DisqualificationHttpService } from '../http-services/disqualification.service';
+
+import { AdjudicatorHttpDisqualificationsService }
+    from './http-services/disqualifications.service';
+import { AdjudicatorDisqualificationService } from './services/disqualification.service';
+import { AdjudicatorHttpPenaltiesService } from './http-services/penalties.service';
+import { AdjudicatorPenaltiesService } from './services/penalties.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';
 import { AdjudicatorComponent } from './adjudicator.component';
 import { LandingComponent } from './landing';
+import { DisqualificationComponent } from './disqaulification';
 import { EntriesComponent } from './entries';
 import { PenaltiesComponent } from './penalties';
 
@@ -34,7 +43,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     AdjudicatorComponent,
     LandingComponent,
     PenaltiesComponent,
-    EntriesComponent
+    EntriesComponent,
+    DisqualificationComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +69,12 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     ConfigService,
     PenaltiesHttpService,
     PenaltiesService,
+    DisqualificationHttpService,
+    DisqualificationService,
+    AdjudicatorHttpDisqualificationsService,
+    AdjudicatorDisqualificationService,
+    AdjudicatorHttpPenaltiesService,
+    AdjudicatorPenaltiesService,
     Title
   ]
 })

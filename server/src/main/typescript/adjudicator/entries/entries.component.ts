@@ -7,18 +7,29 @@ import { TranslateService } from 'ng2-translate';
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
 import { Club } from '../../models/club.model';
-import { PositionTime, convertFromTimeStamp } from '../../models/postion-time.model';
+import { Penalty } from '../../models/penalty.model';
+import { Disqualification } from '../../models/disqualification.model';
+import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
+    from '../../models/postion-time.model';
 import { EntryTime } from '../../models/entry-time.model';
 
 import { PositionsService } from '../../http-services/positions.service';
 import { RacesService } from '../../http-services/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 
+import { AdjudicatorDisqualificationService } from '../services/disqualification.service';
+import { AdjudicatorPenaltiesService } from '../services/penalties.service';
+
 @Component({
     selector: 'entries',
     styleUrls: [ './entries.component.css' ],
     templateUrl: './entries.component.html',
-    providers: [ PositionsService, EntryTimesService ]
+    providers: [
+        PositionsService,
+        EntryTimesService,
+        AdjudicatorDisqualificationService,
+        AdjudicatorPenaltiesService
+    ]
 })
 export class EntriesComponent implements OnInit {
 
@@ -32,6 +43,8 @@ export class EntriesComponent implements OnInit {
 
     public filteredEntryTimes: EntryTime[];
 
+    private penalties: Penalty[];
+    private disqualifications: Disqualification[];
     private raceId: number = 0;
     private races: Race[];
     private race: Race;
@@ -42,8 +55,9 @@ export class EntriesComponent implements OnInit {
         private translate: TranslateService,
         private racesService: RacesService,
         private positionsService: PositionsService,
-
-        private entryTimesService: EntryTimesService
+        private entryTimesService: EntryTimesService,
+        private disqualificationService: AdjudicatorDisqualificationService,
+        private penaltiesService: AdjudicatorPenaltiesService
     ) {}
 
     public ngOnInit() {
@@ -61,6 +75,17 @@ export class EntriesComponent implements OnInit {
             this.numberFilter = '';
             this.clubFilter = '';
             this.eventFilter = '';
+        });
+
+        this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
+            this.penalties = penalties;
+            console.log(this.penalties);
+        });
+
+        this.disqualificationService.getDisqualifications()
+            .subscribe((disqualifications: Disqualification[]) => {
+                this.disqualifications = disqualifications;
+                console.log(this.disqualifications);
         });
     }
 
@@ -90,12 +115,83 @@ export class EntriesComponent implements OnInit {
     }
 
     public getAdjustedTimeForEntry(entryTime: EntryTime): string {
-            // if (this.checkIfDisqualified(entryTime)) {
-            //     return null;
-            // }
+        if (this.isDisqualified(entryTime)) {
             return null;
+        }
+        let time: number = this.getTime(entryTime);
+        if (time !== 0) {
+            let penalites: number = this.getTimeForPenaltes(entryTime);
+            return convertFromTimeStamp(time + penalites);
+        }
+        return null;
     }
 
+    public getRecordedTimeForEntry(entryTime: EntryTime): string {
+        if (this.isDisqualified(entryTime)) {
+            return null;
+        }
+        let time: number = this.getTime(entryTime);
+        if (time !== 0) {
+            return convertFromTimeStamp(time);
+        }
+        return null;
+    }
+
+    public getTotalPenaltyTimesForEntry(entryTime: EntryTime): string {
+        if (this.isDisqualified(entryTime)) {
+            return null;
+        }
+
+        let penalites: number = this.getTimeForPenaltes(entryTime);
+        if (penalites !== 0) {
+            return convertFromTimeStamp(penalites);
+        }
+
+        return null;
+    }
+
+    public isDisqualified(entry: EntryTime): boolean {
+        if (this.disqualifications) {
+            let disqualifed: Disqualification = this.disqualifications
+                .filter((disqualification: Disqualification) =>
+                    disqualification.entry === entry.entry.id).shift();
+            if (disqualifed) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private getTimeForPenaltes(entryTime: EntryTime): number {
+        let penalites: Penalty[] = this.penaltiesService.getPenaltiesForEntry(entryTime.entry);
+        if (penalites.length > 0) {
+            let total: number = 0;
+            penalites.map((penalty: Penalty) => total += penalty.time);
+            return total;
+        }
+        return 0;
+    }
+
+    private getTime(entryTime: EntryTime): number {
+        if (entryTime.times.length > 0) {
+            let actualStartPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.startPoint === true)
+                .shift();
+            let eventStartPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.position
+                    === entryTime.entry.event.startingPosition)
+                .shift();
+            let eventFinishPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.position
+                        === entryTime.entry.event.finishingPosition)
+                .shift();
+            if (eventFinishPoint && actualStartPoint) {
+                return eventFinishPoint.time - actualStartPoint.time;
+            }
+        }
+
+        return 0;
+    }
     private setRaceForRaceId(raceId: number): void {
         if (this.races) {
             this.race = this.racesService.getRaceForId(this.raceId);

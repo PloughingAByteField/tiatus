@@ -34,11 +34,14 @@
             <td>{{e.entry.event.name}}</td>
             <td>{{e.entry.getClubNames()}}</td>
             <td>{{e.entry.crew}}</td>
-            <td></td>
-            <td></td>
+            <td>{{ getRecordedTimeForEntry(e) }}</td>
+            <td>{{ getTotalPenaltyTimesForEntry(e) }}</td>
             <td>{{ getAdjustedTimeForEntry(e) }}</td>
             <td><button class="btn primary" [routerLink]="['/penalty', e.entry.id]">{{ 'PENALTIES' | translate }}</button></td>
-            <td><button class="btn primary" [routerLink]="['/penalty', e.entry.id]">{{ 'DISQUALIFY_ENTRY' | translate }}</button></td>
+            <td>
+                <button *ngIf="!isDisqualified(e)" class="btn primary" [routerLink]="['/disqualify', e.entry.id]">{{ 'DISQUALIFY_ENTRY' | translate }}</button>
+                <button *ngIf="isDisqualified(e)" class="btn primary" [routerLink]="['/disqualify', e.entry.id]">{{ 'REQUALIFY_ENTRY' | translate }}</button>
+            </td>
             <td></td>
             <td></td>
         </tr>

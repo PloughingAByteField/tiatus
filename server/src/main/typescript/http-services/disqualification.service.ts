@@ -1,47 +1,28 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Http, URLSearchParams } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Disqualification } from '../models/disqualification.model';
+import { Disqualification, convertJsonToDisqualification } from '../models/disqualification.model';
 
 @Injectable()
-export class PenaltiesService {
-  private cachedData: Disqualification[];
+export class DisqualificationHttpService {
+  protected endpoint: string = '/rest/disqualifications';
 
-  private observable: Observable<Disqualification[]>;
-
-  constructor(private http: Http) {}
-
-  public getDisqualificationForEntry(id: number): Disqualification {
-    if (this.cachedData) {
-      return this.cachedData
-        .filter((disqualification: Disqualification) => disqualification.entry === id).shift();
-    }
-
-    return null;
-  }
+  constructor(protected http: Http) {}
 
   public getDisqualifications(): Observable<Disqualification[]> {
-    if (this.cachedData) {
-      // serve the cached data
-      return Observable.of(this.cachedData);
-
-   } else if (this.observable) {
-     // request in progress
-     return this.observable;
-
-   } else {
-    // fetch data -- share allows multiple subscribers
-    this.observable = this.http.get('/rest/disqualifications')
+    return this.http.get(this.endpoint)
       .map((response) => {
-        // have data do not need observable
-        this.cachedData = response.json();
-        this.observable = null;
-        return this.cachedData;
-
+        return convertJsonToDisqualifications(response);
       }).share();
-
-    return this.observable;
    }
-  }
+}
+
+function convertJsonToDisqualifications(response: Response): Disqualification[] {
+    let jsonDisqualifications: Disqualification[] = response.json();
+    let disqualifications: Disqualification[] = new Array<Disqualification>();
+    jsonDisqualifications.map((json: Disqualification) => {
+      disqualifications.push(convertJsonToDisqualification(json));
+    });
+    return disqualifications;
 }

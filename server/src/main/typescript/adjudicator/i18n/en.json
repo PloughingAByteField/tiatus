@@ -13,7 +13,9 @@
     "SELECT_RACE": "Please select a race",
     "DISQUALIFIED": "Disqualifed",
     "DISQUALIFY_ENTRY" : "Disqualify",
-    "REQUALIFY_ENTRY" : "Requalify",
+    "REQUALIFY_ENTRY" : "Change disqualification",
+    "UPDATE_ENTRY" : "Update disqualification",
+    "REMOVE_ENTRY" : "Remove disqualification",
     "PENALTIES" : "Penalties",
     "TOTAL_PENALTY": "Total Penalties",
     "COMMENT": "Comment",
@@ -27,5 +29,6 @@
     "ADD_PENALTY_ENTRY": "Add Penalty",
     "BACK_TO_ENTRIES": "Back to entries in",
     "FOR_PENALTIES_IN": "Penalties in",
+    "FOR_DISQUALIFICATION_IN": "Disqualification in",
     "FOR_ENTRY": "for entry"
 }

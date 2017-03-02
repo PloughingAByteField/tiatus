@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Penalty } from '../../models/penalty.model';
+import { Entry } from '../../models/entry.model';
 
 import { PenaltiesService } from '../../services/penalties.service';
 import { AdjudicatorHttpPenaltiesService } from '../http-services/penalties.service';
@@ -29,5 +30,14 @@ export class AdjudicatorPenaltiesService extends PenaltiesService {
 
     public updatePenalty(penalty: Penalty): void {
         this.service.updatePenalty(penalty).then();
+    }
+
+    public getPenaltiesForEntry(entry: Entry): Penalty[] {
+        let penalties: Penalty[];
+        if (this.penalties) {
+            penalties = this.penalties.filter((penalty: Penalty) => penalty.entry === entry.id);
+        }
+
+        return penalties;
     }
 }

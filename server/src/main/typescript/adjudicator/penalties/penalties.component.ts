@@ -16,8 +16,7 @@ import { AdjudicatorPenaltiesService } from '../services/penalties.service';
 @Component({
     selector: 'penalties',
     styleUrls: [ './penalties.component.css' ],
-    templateUrl: './penalties.component.html',
-    providers: [ AdjudicatorHttpPenaltiesService, AdjudicatorPenaltiesService ]
+    templateUrl: './penalties.component.html'
 })
 export class PenaltiesComponent implements OnInit {
     public penaltiesForEntry: Penalty[];
@@ -102,11 +101,6 @@ export class PenaltiesComponent implements OnInit {
     }
 
     private getPenaltiesForEntry(entry: Entry): Penalty[] {
-        let penalties: Penalty[];
-        if (this.penalties) {
-            penalties = this.penalties.filter((penalty: Penalty) => penalty.entry === entry.id);
-        }
-
-        return penalties;
+        return this.penaltiesService.getPenaltiesForEntry(entry);
     }
 }
