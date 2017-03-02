@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Location }                 from '@angular/common';
+
 import { Observable } from 'rxjs/Observable';
 
 import { TranslateService } from 'ng2-translate';
@@ -22,18 +24,18 @@ export class PenaltiesComponent implements OnInit {
 
     @Input()
     public model: Penalty = new Penalty();
+    public entry: Entry;
 
     private penalties: Penalty[];
     private entries: Entry[];
-
     private entryId: number;
-    private entry: Entry;
 
     constructor(
         private route: ActivatedRoute,
         private translate: TranslateService,
         private entriesService: EntriesService,
-        private penaltiesService: AdjudicatorPenaltiesService
+        private penaltiesService: AdjudicatorPenaltiesService,
+        private location: Location
 
     ) {}
 
@@ -85,6 +87,10 @@ export class PenaltiesComponent implements OnInit {
             let timeStamp: number = convertToTimeStamp(value);
             penalty.time = timeStamp;
         }
+    }
+
+    public goBack(): void {
+        this.location.back();
     }
 
     private getEntryForEntryId(entryId: number): Entry {

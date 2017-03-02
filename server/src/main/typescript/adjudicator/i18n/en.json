@@ -24,5 +24,8 @@
     "PENALTY_COMMENT_DESCRIPTION": "The optional 'Comment' field is added to the results page. Please keep it very short, suggested values are 'Unsporting conduct', 'Dangerous conduct'",
     "PENALTY_NOTE_DESCRIPTION": "The optional 'Note' field is for internal usage and is not display on the results page. Add all the available information that caused a crew to get a penalty",
     "ENTER_TIME": "Enter time",
-    "ADD_PENALTY_ENTRY": "Add Penalty"
+    "ADD_PENALTY_ENTRY": "Add Penalty",
+    "BACK_TO_ENTRIES": "Back to entries in",
+    "FOR_PENALTIES_IN": "Penalties in",
+    "FOR_ENTRY": "for entry"
 }

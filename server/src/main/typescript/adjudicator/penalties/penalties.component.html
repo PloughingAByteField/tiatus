@@ -1,47 +1,56 @@
-hello penalty
-<!--<p>Penalties for number: {{entry.number}} club: {{entry.club}} event: {{entry.event}}</p>-->
+<div *ngIf="entry">
+    <p>{{ 'FOR_PENALTIES_IN' | translate }} {{entry.race.name}} {{ 'FOR_ENTRY' | translate }} </p>
+    <ul >
+        <li>{{ 'NUMBER' | translate }}: {{entry.number}}</li>
+        <li>{{ 'CLUB' | translate }}: {{entry.getClubNames()}}</li> 
+        <li>{{ 'EVENT' | translate }}: {{entry.event.name}}</li>
+    </ul>
+</div>
 
- <!--<p>Add penalty number: {{entry.number}} club: {{entry.club}} event: {{entry.event.name}}</p>-->
-    <p>The optional 'Comment' field is added to the results page. Please keep it very short, suggested values are 'Unsporting conduct', 'Dangerous conduct'</p>
-    <p>The optional 'Note' field is for internal usage and is not display on the results page. Add all the available information that caused a crew to get a penalty</p>
 
-    <div>
-        <form class="form-group" novalidate>
-            <div class="form-group">
-                <label>{{ 'COMMENT' | translate }}:</label>
-                <input type="text" name="comment" id="comment" [(ngModel)]="model.comment"/>
-            </div>
-            <div class="form-group">
-                <label>{{ 'NOTE' | translate }}:</label>
-                <input type="text" name="note" id="note" [(ngModel)]="model.note"/>
-            </div>  
-            <div class="form-group">
-                <label>{{ 'ENTER_TIME' | translate }}:</label>
-                <input type="text" name="time" id="time" [(ngModel)]="model.time" required/>
-            </div>
-            <div class="form-group">
-                <button (click)="addPenaltyForEntry()">{{ 'ADD_PENALTY_ENTRY' | translate }}</button>
-            </div>
-        </form>
-    </div>
+<p>{{ 'PENALTY_COMMENT_DESCRIPTION' | translate }}</p>
+<p>{{ 'PENALTY_NOTE_DESCRIPTION' | translate }}</p>
 
-    <table ng-table class="table table-condensed table-bordered table-striped" >
-        <thead>
-            <tr>
-                <th>{{'COMMENT' | translate}}</th>
-                <th>{{'NOTE' | translate}}</th>
-                <th>{{'PENALTY_TIME' | translate}}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let penalty of penaltiesForEntry">
-                <td><input #comment type="text" [value]="penalty.comment"></td>
-                <td><input #note type="text" [value]="penalty.note"></td>
-                <td><input #time type="text" [value]="getPenaltyTime(penalty)" (blur)="enterTime(time.value, penalty)"></td>
-                <td><button class="btn primary" (click)="updatePenalty(penalty)">{{ 'UPDATE_PENALTY' | translate }}</button></td>
-                <td><button class="btn primary" (click)="removePenalty(penalty)">{{ 'REMOVE_PENALTY' | translate }}</button></td>
-            </tr>
-        </tbody>
-    </table>
-    <a href="#/">Entries</a>
+<div>
+    <form class="form-group" novalidate>
+        <div class="form-group">
+            <label>{{ 'COMMENT' | translate }}:</label>
+            <input type="text" name="comment" id="comment" [(ngModel)]="model.comment"/>
+        </div>
+        <div class="form-group">
+            <label>{{ 'NOTE' | translate }}:</label>
+            <input type="text" name="note" id="note" [(ngModel)]="model.note"/>
+        </div>  
+        <div class="form-group">
+            <label>{{ 'ENTER_TIME' | translate }}:</label>
+            <input type="text" name="time" id="time" [(ngModel)]="model.time" required/>
+        </div>
+        <div class="form-group">
+            <button (click)="addPenaltyForEntry()">{{ 'ADD_PENALTY_ENTRY' | translate }}</button>
+        </div>
+    </form>
+</div>
+
+<table ng-table class="table table-condensed table-bordered table-striped" >
+    <thead>
+        <tr>
+            <th>{{'COMMENT' | translate}}</th>
+            <th>{{'NOTE' | translate}}</th>
+            <th>{{'PENALTY_TIME' | translate}}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let penalty of penaltiesForEntry">
+            <td><input #comment type="text" [value]="penalty.comment"></td>
+            <td><input #note type="text" [value]="penalty.note"></td>
+            <td><input #time type="text" [value]="getPenaltyTime(penalty)" (blur)="enterTime(time.value, penalty)"></td>
+            <td><button class="btn primary" (click)="updatePenalty(penalty)">{{ 'UPDATE_PENALTY' | translate }}</button></td>
+            <td><button class="btn primary" (click)="removePenalty(penalty)">{{ 'REMOVE_PENALTY' | translate }}</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<div *ngIf="entry">
+    <button class="btn primary" (click)="goBack()">{{ 'BACK_TO_ENTRIES' | translate }} {{entry.race.name}}</button>
+</div>
