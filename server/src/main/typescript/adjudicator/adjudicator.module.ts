@@ -5,10 +5,13 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 
+import { PenaltiesService } from '../services/penalties.service';
+
 import { RacesService } from '../http-services/races.service';
 import { EntriesService } from '../http-services/entries.service';
 import { TimesService } from '../http-services/times.service';
 import { ConfigService } from '../http-services/config.service';
+import { PenaltiesHttpService } from '../http-services/penalties.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';
@@ -54,6 +57,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     EntriesService,
     TimesService,
     ConfigService,
+    PenaltiesHttpService,
+    PenaltiesService,
     Title
   ]
 })

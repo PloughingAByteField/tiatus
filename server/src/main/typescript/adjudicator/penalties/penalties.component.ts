@@ -9,12 +9,13 @@ import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-t
 
 import { EntriesService } from '../../http-services/entries.service';
 import { AdjudicatorPenaltiesService } from '../services/penalties.service';
+import { PenaltiesService } from '../../services/penalties.service';
 
 @Component({
     selector: 'penalties',
     styleUrls: [ './penalties.component.css' ],
     templateUrl: './penalties.component.html',
-    providers: [ AdjudicatorPenaltiesService, EntriesService ]
+    providers: [ AdjudicatorPenaltiesService ]
 })
 export class PenaltiesComponent implements OnInit {
     public penaltiesForEntry: Penalty[];
@@ -32,7 +33,8 @@ export class PenaltiesComponent implements OnInit {
         private route: ActivatedRoute,
         private translate: TranslateService,
         private entriesService: EntriesService,
-        private penaltiesService: AdjudicatorPenaltiesService
+        private penaltiesService: AdjudicatorPenaltiesService,
+        private pService: PenaltiesService
 
     ) {}
 
@@ -47,7 +49,7 @@ export class PenaltiesComponent implements OnInit {
             }
         });
 
-        this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
+        this.pService.getPenalties().subscribe((penalties: Penalty[]) => {
             this.penalties = penalties;
             if (this.entry) {
                 this.penaltiesForEntry = this.getPenaltiesForEntry(this.entry);

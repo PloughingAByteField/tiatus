@@ -4,10 +4,10 @@ import { Observable } from 'rxjs/Observable';
 
 import { Penalty } from '../../models/penalty.model';
 
-import { PenaltiesService } from '../../http-services/penalties.service';
+import { PenaltiesHttpService } from '../../http-services/penalties.service';
 
 @Injectable()
-export class AdjudicatorPenaltiesService extends PenaltiesService {
+export class AdjudicatorPenaltiesService extends PenaltiesHttpService {
     private headers = new Headers({'Content-Type': 'application/json'});
 
     constructor(protected http: Http) {
