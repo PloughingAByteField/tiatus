@@ -4,6 +4,11 @@ export class Penalty {
     public time: number;
     public entry: number;
     public id: number;
+
+    constructor() {
+        this.comment = '';
+        this.note = '';
+    }
 }
 
 export function convertJsonToPenalty(json: Penalty): Penalty {

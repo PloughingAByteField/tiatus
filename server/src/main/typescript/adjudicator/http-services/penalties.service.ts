@@ -8,13 +8,13 @@ import { PenaltiesHttpService } from '../../http-services/penalties.service';
 
 @Injectable()
 export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
-    private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new Headers({'Content-Type': 'application/json'});
 
-    constructor(protected http: Http) {
-        super(http);
-    }
+  constructor(protected http: Http) {
+    super(http);
+  }
 
-public createPenalty(penalty: Penalty): Promise<Penalty> {
+  public createPenalty(penalty: Penalty): Promise<Penalty> {
     return this.http
       .post(this.endpoint,
         JSON.stringify(penalty), {headers: this.headers})

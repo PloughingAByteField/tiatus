@@ -9,13 +9,13 @@ import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-t
 
 import { EntriesService } from '../../http-services/entries.service';
 import { AdjudicatorHttpPenaltiesService } from '../http-services/penalties.service';
-import { PenaltiesService } from '../../services/penalties.service';
+import { AdjudicatorPenaltiesService } from '../services/penalties.service';
 
 @Component({
     selector: 'penalties',
     styleUrls: [ './penalties.component.css' ],
     templateUrl: './penalties.component.html',
-    providers: [ AdjudicatorHttpPenaltiesService ]
+    providers: [ AdjudicatorHttpPenaltiesService, AdjudicatorPenaltiesService ]
 })
 export class PenaltiesComponent implements OnInit {
     public penaltiesForEntry: Penalty[];
@@ -33,14 +33,11 @@ export class PenaltiesComponent implements OnInit {
         private route: ActivatedRoute,
         private translate: TranslateService,
         private entriesService: EntriesService,
-        private penaltiesService: AdjudicatorHttpPenaltiesService,
-        private pService: PenaltiesService
+        private penaltiesService: AdjudicatorPenaltiesService
 
     ) {}
 
     public ngOnInit() {
-        console.log('hello from penalties');
-
         this.entriesService.getEntries().subscribe((entries: Entry[]) => {
             this.entries = entries;
             if (this.entryId) {
@@ -49,7 +46,7 @@ export class PenaltiesComponent implements OnInit {
             }
         });
 
-        this.pService.getPenalties().subscribe((penalties: Penalty[]) => {
+        this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
             this.penalties = penalties;
             if (this.entry) {
                 this.penaltiesForEntry = this.getPenaltiesForEntry(this.entry);
@@ -66,21 +63,16 @@ export class PenaltiesComponent implements OnInit {
     }
 
     public addPenaltyForEntry() {
-        console.log(this.model);
         this.model.entry = this.entry.id;
         this.penaltiesService.createPenalty(this.model);
         this.model = new Penalty();
     }
 
     public removePenalty(penalty: Penalty): void {
-        console.log('Remove ');
-        console.log(penalty);
         this.penaltiesService.removePenalty(penalty);
     }
 
     public updatePenalty(penalty: Penalty): void {
-        console.log('update ');
-        console.log(penalty);
         this.penaltiesService.updatePenalty(penalty);
     }
 
@@ -105,11 +97,8 @@ export class PenaltiesComponent implements OnInit {
 
     private getPenaltiesForEntry(entry: Entry): Penalty[] {
         let penalties: Penalty[];
-        console.log(entry);
         if (this.penalties) {
             penalties = this.penalties.filter((penalty: Penalty) => penalty.entry === entry.id);
-            console.log(this.penalties);
-            console.log(penalties);
         }
 
         return penalties;

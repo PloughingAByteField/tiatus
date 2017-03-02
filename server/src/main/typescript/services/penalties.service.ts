@@ -9,17 +9,19 @@ import { PenaltiesHttpService } from '../http-services/penalties.service';
 
 @Injectable()
 export class PenaltiesService {
-    private penalties: BehaviorSubject<Penalty[]>;
+    protected penalties: Penalty[] = new Array<Penalty>();
+    protected penaltiesSubject: BehaviorSubject<Penalty[]>
+        = new BehaviorSubject<Penalty[]>(this.penalties);
 
-    constructor(private service: PenaltiesHttpService) {
-        this.penalties = new BehaviorSubject<Penalty[]>(new Array<Penalty>());
+    constructor(protected service: PenaltiesHttpService) {
         this.service.getPenalties().subscribe((penalties: Penalty[]) => {
-            console.log(penalties);
-            this.penalties.next(penalties);
+            this.penalties = penalties;
+            this.penaltiesSubject.next(this.penalties);
         });
     }
 
     public getPenalties(): BehaviorSubject<Penalty[]> {
-        return this.penalties;
+        return this.penaltiesSubject;
     }
+
 }
