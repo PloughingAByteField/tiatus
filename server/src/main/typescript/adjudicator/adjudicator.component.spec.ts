@@ -7,7 +7,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
-import { RacesService } from '../http-services/races.service';
+import { RacesService } from '../services/races.service';
+import { RacesHttpService } from '../http-services/races.service';
 import { AdjudicatorComponent } from './adjudicator.component';
 
 describe('Adjudicator', () => {
@@ -22,6 +23,7 @@ describe('Adjudicator', () => {
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
+                RacesHttpService,
                 Title,
                 AdjudicatorComponent
             ]

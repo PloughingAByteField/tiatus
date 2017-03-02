@@ -1,3 +1,6 @@
+<button *ngIf="raceIsOpen()" class="btn primary" (click)="closeRace()">{{ 'CLOSE_RACE' | translate }}</button>
+<button *ngIf="!raceIsOpen()" class="btn primary" (click)="reopenRace()">{{ 'REOPEN_RACE' | translate }}</button>
+
 <h2 *ngIf="getRace()">Entries and times for {{getRace().name}}</h2>
 <table class="table table-bordered table-striped">
     <thead>

@@ -4,7 +4,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Title }     from '@angular/platform-browser';
-import { RacesService } from '../http-services/races.service';
+import { RacesService } from '../services/races.service';
 import { Observable } from 'rxjs/Observable';
 
 import { Race } from '../models/race.model';

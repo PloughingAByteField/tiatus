@@ -6,7 +6,8 @@ import { Title }     from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
-import { RacesService } from '../http-services/races.service';
+import { RacesService } from '../services/races.service';
+import { RacesHttpService } from '../http-services/races.service';
 import { ResultsComponent } from './results.component';
 
 describe('Results', () => {
@@ -21,6 +22,7 @@ describe('Results', () => {
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
+                RacesHttpService,
                 Title,
                 ResultsComponent
             ]

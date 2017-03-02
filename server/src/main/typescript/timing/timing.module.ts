@@ -5,7 +5,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 
-import { RacesService } from '../http-services/races.service';
+import { RacesService } from '../services/races.service';
+import { RacesHttpService } from '../http-services/races.service';
 import { EntriesService } from '../http-services/entries.service';
 import { ClubsService } from '../http-services/clubs.service';
 import { PositionsService } from '../http-services/positions.service';
@@ -50,6 +51,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   providers: [
     ENV_PROVIDERS,
     RacesService,
+    RacesHttpService,
     EntriesService,
     ClubsService,
     PositionsService,

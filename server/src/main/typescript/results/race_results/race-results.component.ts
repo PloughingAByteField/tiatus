@@ -11,7 +11,7 @@ import { PositionTime, convertFromTimeStamp } from '../../models/postion-time.mo
 import { EntryTime } from '../../models/entry-time.model';
 
 import { PositionsService } from '../../http-services/positions.service';
-import { RacesService } from '../../http-services/races.service';
+import { RacesService } from '../../services/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 
 @Component({

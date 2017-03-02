@@ -1,50 +1,28 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Http, URLSearchParams } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Race } from '../models/race.model';
+import { Race, convertJsonToRace } from '../models/race.model';
 
 @Injectable()
-export class RacesService {
-  public searchEvent: EventEmitter<any> = new EventEmitter();
+export class RacesHttpService {
+   protected endpoint: string = '/rest/races';
 
-  private cachedData: Race[];
-  private observable: Observable<Race[]>;
-
-  constructor(private http: Http) {}
-
-  public getRaceForId(id: number): Race {
-    if (this.cachedData) {
-      let races: Race[] = this.cachedData.filter((race: Race) => race.id === id);
-      if (races) {
-        return races[0];
-      }
-    }
-
-    return null;
-  }
+  constructor(protected http: Http) {}
 
   public getRaces(): Observable<Race[]> {
-    if (this.cachedData) {
-      // serve the cached data
-      return Observable.of(this.cachedData);
-
-   } else if (this.observable) {
-     // request in progress
-     return this.observable;
-
-   } else {
-    // fetch data -- share allows multiple subscribers
-    this.observable = this.http.get('/rest/races')
+    return this.http.get(this.endpoint)
       .map((response) => {
-        // have data do not need observable
-        this.cachedData = response.json();
-        this.observable = null;
-        return this.cachedData;
-
+        return convertJsonToRaces(response);
       }).share();
-
-    return this.observable;
    }
-  }
+}
+
+function convertJsonToRaces(response: Response): Race[] {
+    let jsonRaces: Race[] = response.json();
+    let races: Race[] = new Array<Race>();
+    jsonRaces.map((json: Race) => {
+      races.push(convertJsonToRace(json));
+    });
+    return races;
 }

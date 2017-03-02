@@ -7,7 +7,8 @@ import { TranslateModule } from 'ng2-translate';
 
 import { ENV_PROVIDERS } from './environment';
 
-import { RacesService } from '../http-services/races.service';
+import { RacesService } from '../services/races.service';
+import { RacesHttpService } from '../http-services/races.service';
 import { ConfigService } from '../http-services/config.service';
 
 import { adminRoutes } from './admin.routes';
@@ -44,6 +45,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   providers: [
     ENV_PROVIDERS,
     RacesService,
+    RacesHttpService,
     ConfigService,
     Title
   ]

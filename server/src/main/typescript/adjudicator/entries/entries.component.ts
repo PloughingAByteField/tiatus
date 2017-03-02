@@ -14,7 +14,7 @@ import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
 import { EntryTime } from '../../models/entry-time.model';
 
 import { PositionsService } from '../../http-services/positions.service';
-import { RacesService } from '../../http-services/races.service';
+import { RacesService } from '../../services/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 
 import { AdjudicatorDisqualificationService } from '../services/disqualification.service';
@@ -160,6 +160,26 @@ export class EntriesComponent implements OnInit {
             }
         }
         return false;
+    }
+
+    public raceIsOpen(): boolean {
+        if (this.race) {
+            return this.race.closed;
+        }
+        return true;
+    }
+
+    public closeRace(): void {
+        if (this.race) {
+            this.race.closed = true;
+            // this.racesService.
+        }
+    }
+
+    public reopenRace(): void {
+        if (this.race) {
+            this.race.closed = false;
+        }
     }
 
     private getTimeForPenaltes(entryTime: EntryTime): number {

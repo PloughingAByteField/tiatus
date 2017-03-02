@@ -3,7 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { TimesService } from '../services/times.service';
-import { RacesService } from '../../http-services/races.service';
+import { RacesService } from '../../services/races.service';
 
 import { Club } from '../../models/club.model';
 import { Entry } from '../../models/entry.model';
