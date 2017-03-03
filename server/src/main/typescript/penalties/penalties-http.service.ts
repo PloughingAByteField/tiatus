@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Penalty, convertJsonToPenalty } from '../models/penalty.model';
+import { Penalty, convertJsonToPenalty } from './penalty.model';
 
 @Injectable()
 export class PenaltiesHttpService {

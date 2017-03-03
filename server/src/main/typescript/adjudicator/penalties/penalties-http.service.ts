@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Penalty } from '../../models/penalty.model';
+import { Penalty } from '../../penalties/penalty.model';
 
-import { PenaltiesHttpService } from '../../http-services/penalties.service';
+import { PenaltiesHttpService } from '../../penalties/penalties-http.service';
 
 @Injectable()
 export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {

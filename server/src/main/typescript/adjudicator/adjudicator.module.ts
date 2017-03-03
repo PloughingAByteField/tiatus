@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 
-import { PenaltiesService } from '../services/penalties.service';
+import { PenaltiesService } from '../penalties/penalties.service';
 import { DisqualificationService } from '../disqualification/disqualification.service';
 
 import { RacesService } from '../races/races.service';
@@ -17,7 +17,7 @@ import { EntriesHttpService } from '../entries/entries-http.service';
 import { TimesService } from '../times/times.service';
 import { TimesHttpService } from '../times/times-http.service';
 import { ConfigService } from '../http-services/config.service';
-import { PenaltiesHttpService } from '../http-services/penalties.service';
+import { PenaltiesHttpService } from '../penalties/penalties-http.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
 
 import { AdjudicatorHttpDisqualificationsService }

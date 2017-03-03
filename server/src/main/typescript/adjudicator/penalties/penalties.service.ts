@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { Penalty } from '../../models/penalty.model';
+import { Penalty } from '../../penalties/penalty.model';
 import { Entry } from '../../entries/entry.model';
 
-import { PenaltiesService } from '../../services/penalties.service';
+import { PenaltiesService } from '../../penalties/penalties.service';
 import { AdjudicatorHttpPenaltiesService } from './penalties-http.service';
 
 @Injectable()
