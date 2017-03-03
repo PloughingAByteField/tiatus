@@ -1,34 +1,24 @@
-swap entries
-<div *ngIf="entry">
-    <p>{{ 'FOR_PENALTIES_IN' | translate }} {{entry.race.name}} {{ 'FOR_ENTRY' | translate }} </p>
-    <ul >
-        <li>{{ 'NUMBER' | translate }}: {{entry.number}}</li>
-        <li>{{ 'CLUB' | translate }}: {{entry.getClubNames()}}</li> 
-        <li>{{ 'EVENT' | translate }}: {{entry.event.name}}</li>
-    </ul>
+<div *ngIf="race">
+    <p>{{ 'SWAP_ENTRIES' | translate }} {{ 'IN_RACE' | translate }} {{ race.name }}</p>
 </div>
-
-
-<p>{{ 'PENALTY_COMMENT_DESCRIPTION' | translate }}</p>
-<p>{{ 'PENALTY_NOTE_DESCRIPTION' | translate }}</p>
 
 <div>
     <form class="form-group" novalidate>
         <div class="form-group">
-            <label>{{ 'COMMENT' | translate }}:</label>
+            <label>{{ 'SWAP_FROM' | translate }}:</label>
             <select [(ngModel)]="from" name="from">
                 <option *ngFor="let entry of getEntriesForRace()" [ngValue]="entry">{{entry.number}}</option>
             </select>
         </div>
         <div class="form-group">
-            <label>{{ 'NOTE' | translate }}:</label>
+            <label>{{ 'SWAP_TO' | translate }}:</label>
             <select [(ngModel)]="to" name="to">
                  <option *ngFor="let entry of getEntriesForRace()" [ngValue]="entry">{{entry.number}}</option>
             </select>
         </div>  
        
         <div class="form-group">
-            <button (click)="swapEntries()" [disabled]="!isSwapEnabled()">{{ 'ADD_PENALTY_ENTRY' | translate }}</button>
+            <button (click)="swapEntries()" [disabled]="!isSwapEnabled()">{{ 'SWAP_ENTRIES' | translate }}</button>
         </div>
     </form>
 </div>
