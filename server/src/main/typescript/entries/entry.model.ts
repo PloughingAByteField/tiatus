@@ -1,7 +1,7 @@
 
 import { Club, convertJsonToClub } from '../clubs/club.model';
 import { Race, convertJsonToRace } from '../races/race.model';
-import { Event, convertJsonToEvent } from '../models/event.model';
+import { Event, convertJsonToEvent } from '../events/event.model';
 
 export class Entry {
     public crew: string;
