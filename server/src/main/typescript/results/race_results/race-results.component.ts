@@ -6,7 +6,7 @@ import { TranslateService } from 'ng2-translate';
 
 import { Position } from '../../models/position.model';
 import { Race } from '../../races/race.model';
-import { Club } from '../../models/club.model';
+import { Club } from '../../clubs/club.model';
 import { PositionTime, convertFromTimeStamp } from '../../models/postion-time.model';
 import { EntryTime } from '../../models/entry-time.model';
 

@@ -1,5 +1,5 @@
 
-import { Club, convertJsonToClub } from '../models/club.model';
+import { Club, convertJsonToClub } from '../clubs/club.model';
 import { Race, convertJsonToRace } from '../races/race.model';
 import { Event, convertJsonToEvent } from '../models/event.model';
 

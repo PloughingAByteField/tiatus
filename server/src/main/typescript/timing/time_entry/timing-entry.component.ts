@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { TimesService } from '../services/times.service';
 import { RacesService } from '../../races/races.service';
 
-import { Club } from '../../models/club.model';
+import { Club } from '../../clubs/club.model';
 import { Entry } from '../../entries/entry.model';
 import { Position } from '../../models/position.model';
 import { Race } from '../../races/race.model';

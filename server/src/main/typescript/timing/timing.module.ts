@@ -9,7 +9,8 @@ import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
-import { ClubsService } from '../http-services/clubs.service';
+import { ClubsService } from '../clubs/clubs.service';
+import { ClubsHttpService } from '../clubs/clubs-http.service';
 import { PositionsService } from '../http-services/positions.service';
 import { ConfigService } from '../http-services/config.service';
 
@@ -56,6 +57,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     EntriesService,
     EntriesHttpService,
     ClubsService,
+    ClubsHttpService,
     PositionsService,
     ConfigService,
     Title
