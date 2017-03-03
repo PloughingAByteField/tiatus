@@ -7,7 +7,7 @@ import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
 import { Position } from '../../positions/position.model';
 
-import { RacePositionTimes } from '../models/race-position-times';
+import { RacePositionTimes } from './race-position-times';
 
 @Injectable()
 export class TimesService {

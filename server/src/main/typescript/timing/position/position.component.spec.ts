@@ -5,7 +5,7 @@ import { MockBackend } from '@angular/http/testing';
 
 import { PositionsService } from '../../positions/positions.service';
 import { PositionsHttpService } from '../../positions/positions-http.service';
-import { TimingPositionService } from '../services/timing-position.service';
+import { TimingPositionService } from '../times/timing-position.service';
 
 import { Race } from '../../races/race.model';
 

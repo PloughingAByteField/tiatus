@@ -5,15 +5,15 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
 import { EntriesService } from '../../entries/entries.service';
-import { TimesService } from '../services/times.service';
+import { TimesService } from './times.service';
 
-import { EntryTime } from '../models/entry-time.model';
+import { EntryTime } from './entry-time.model';
 import { Position } from '../../positions/position.model';
 import { Entry } from '../../entries/entry.model';
 import { Race } from '../../races/race.model';
 import { PositionTime } from '../../times/postion-time.model';
 
-import { RaceEntryTimes } from '../models/race-entry-times.model';
+import { RaceEntryTimes } from './race-entry-times.model';
 
 @Injectable()
 export class EntryTimesService {

@@ -6,7 +6,7 @@ import { PositionsService } from '../../positions/positions.service';
 import { RacesService } from '../../races/races.service';
 import { Position } from '../../positions/position.model';
 
-import { TimingPositionService } from '../services/timing-position.service';
+import { TimingPositionService } from '../times/timing-position.service';
 
 @Component({
   selector: 'position',
