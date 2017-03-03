@@ -11,7 +11,9 @@ import { DisqualificationService } from '../services/disqualification.service';
 import { RacesService } from '../services/races.service';
 import { RacesHttpService } from '../http-services/races.service';
 import { EntriesService } from '../entries/entries.service';
-import { TimesService } from '../http-services/times.service';
+import { EntriesHttpService } from '../entries/entries-http.service';
+import { TimesService } from '../times/times.service';
+import { TimesHttpService } from '../times/times-http.service';
 import { ConfigService } from '../http-services/config.service';
 import { PenaltiesHttpService } from '../http-services/penalties.service';
 import { DisqualificationHttpService } from '../http-services/disqualification.service';
@@ -69,7 +71,9 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacesService,
     RacesHttpService,
     EntriesService,
+    EntriesHttpService,
     TimesService,
+    TimesHttpService,
     ConfigService,
     PenaltiesHttpService,
     PenaltiesService,

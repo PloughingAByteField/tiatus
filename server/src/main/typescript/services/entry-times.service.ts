@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
 import { EntriesService } from '../entries/entries.service';
-import { TimesService } from '../http-services/times.service';
+import { TimesService } from '../times/times.service';
 
 import { EntryTime } from '../models/entry-time.model';
 import { Position } from '../models/position.model';
@@ -38,8 +38,15 @@ export class EntryTimesService {
             raceEntryTimes.race = race;
             raceEntryTimes.entries = new Array<EntryTime>();
             let entriesObs = this.entriesService.getEntriesForRace(race);
+            // let entriesObs = this.entriesService.getEntries();
+            console.log('entriesObs');
+            console.log(entriesObs);
             let entryTimesObs = this.timesService.getTimesForRace(race);
+            console.log('entryTimesObs');
+            console.log(entryTimesObs);
             Observable.forkJoin(entriesObs, entryTimesObs).subscribe((data) => {
+                    console.log('fired');
+                    console.log(entriesObs);
                     let entries: Entry[] = data[0];
                     let entryTimes: EntryTime[] = data[1];
                     entries.forEach((entry: Entry) => {

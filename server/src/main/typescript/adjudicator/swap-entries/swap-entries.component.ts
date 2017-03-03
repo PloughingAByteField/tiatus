@@ -15,6 +15,7 @@ import { RacesService } from '../../services/races.service';
 import { EntriesService } from '../../entries/entries.service';
 import { PenaltiesService } from '../../services/penalties.service';
 import { DisqualificationService } from '../../services/disqualification.service';
+import { TimesService } from '../../times/times.service';
 
 @Component({
     selector: 'swap-entries',
@@ -41,6 +42,7 @@ export class SwapEntriesComponent implements OnInit {
         private swapService: SwapEntriesService,
         private penaltiesService: PenaltiesService,
         private disqualificationService: DisqualificationService,
+        private timesService: TimesService,
         private location: Location
 
     ) {}
@@ -75,6 +77,8 @@ export class SwapEntriesComponent implements OnInit {
         // force refresh as server has done lots of work behind the sences
         this.penaltiesService.refresh();
         this.disqualificationService.refresh();
+        this.entriesService.refreshForRace(this.from.race);
+        this.timesService.refreshForRace(this.from.race);
     }
 
     public isSwapEnabled(): boolean {

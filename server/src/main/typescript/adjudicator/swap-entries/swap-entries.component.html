@@ -33,6 +33,6 @@ swap entries
     </form>
 </div>
 
-<div *ngIf="entry">
-    <button class="btn primary" (click)="goBack()">{{ 'BACK_TO_ENTRIES' | translate }} {{entry.race.name}}</button>
+<div *ngIf="race">
+    <button class="btn primary" (click)="goBack()">{{ 'BACK_TO_ENTRIES' | translate }} {{race.name}}</button>
 </div>

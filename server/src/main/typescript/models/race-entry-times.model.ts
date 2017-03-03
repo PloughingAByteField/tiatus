@@ -1,4 +1,4 @@
-   import { EntryTime } from './entry-time.model';
+import { EntryTime } from './entry-time.model';
 import { Race } from './race.model';
 
 export class RaceEntryTimes {

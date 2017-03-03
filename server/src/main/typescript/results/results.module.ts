@@ -11,6 +11,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RacesService } from '../services/races.service';
 import { RacesHttpService } from '../http-services/races.service';
 import { EntriesService } from '../entries/entries.service';
+import { EntriesHttpService } from '../entries/entries-http.service';
 import { TimesService } from '../http-services/times.service';
 import { ConfigService } from '../http-services/config.service';
 
@@ -51,6 +52,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacesService,
     RacesHttpService,
     EntriesService,
+    EntriesHttpService,
     TimesService,
     ConfigService,
     Title
