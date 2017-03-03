@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
-import { Position } from '../../models/position.model';
+import { Position } from '../../positions/position.model';
 
 @Injectable()
 export class TimingPositionService {

@@ -8,7 +8,7 @@ import { RacesService } from '../races/races.service';
 import { Observable } from 'rxjs/Observable';
 
 import { Race } from '../races/race.model';
-import { Position } from '../models/position.model';
+import { Position } from '../positions/position.model';
 
 import { TimingPositionService } from './services/timing-position.service';
 /*

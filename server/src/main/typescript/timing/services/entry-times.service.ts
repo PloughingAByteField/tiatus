@@ -8,7 +8,7 @@ import { EntriesService } from '../../entries/entries.service';
 import { TimesService } from '../services/times.service';
 
 import { EntryTime } from '../models/entry-time.model';
-import { Position } from '../../models/position.model';
+import { Position } from '../../positions/position.model';
 import { Entry } from '../../entries/entry.model';
 import { Race } from '../../races/race.model';
 import { PositionTime } from '../../models/postion-time.model';

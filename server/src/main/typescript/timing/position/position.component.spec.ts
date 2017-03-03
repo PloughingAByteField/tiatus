@@ -3,10 +3,11 @@ import { Component } from '@angular/core';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
-import { PositionsService } from '../../http-services/positions.service';
+import { PositionsService } from '../../positions/positions.service';
+import { PositionsHttpService } from '../../positions/positions-http.service';
 import { TimingPositionService } from '../services/timing-position.service';
 
-import { Race } from '../../models/race.model';
+import { Race } from '../../races/race.model';
 
 // Load the implementations that should be tested
 import { PositionComponent } from './position.component';
@@ -18,6 +19,7 @@ describe('Position', () => {
       BaseRequestOptions,
       MockBackend,
       PositionsService,
+      PositionsHttpService,
       TimingPositionService,
       {
         provide: Http,

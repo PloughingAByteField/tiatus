@@ -4,13 +4,13 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService } from 'ng2-translate';
 
-import { Position } from '../../models/position.model';
+import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
 import { PositionTime, convertFromTimeStamp } from '../../models/postion-time.model';
 import { EntryTime } from '../../models/entry-time.model';
 
-import { PositionsService } from '../../http-services/positions.service';
+import { PositionsService } from '../../positions/positions.service';
 import { RacesService } from '../../races/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 
@@ -18,7 +18,7 @@ import { EntryTimesService } from '../../services/entry-times.service';
     selector: 'race-results',
     styleUrls: [ './race-results.component.css' ],
     templateUrl: './race-results.component.html',
-    providers: [ PositionsService, EntryTimesService ]
+    providers: [ EntryTimesService ]
 })
 export class RaceResultsComponent implements OnInit {
     public page: number = 1;

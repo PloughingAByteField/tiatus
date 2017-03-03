@@ -7,7 +7,7 @@ import { RacesService } from '../../races/races.service';
 
 import { Club } from '../../clubs/club.model';
 import { Entry } from '../../entries/entry.model';
-import { Position } from '../../models/position.model';
+import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
     from '../../models/postion-time.model';

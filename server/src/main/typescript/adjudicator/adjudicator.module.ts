@@ -19,6 +19,8 @@ import { TimesHttpService } from '../times/times-http.service';
 import { ConfigService } from '../http-services/config.service';
 import { PenaltiesHttpService } from '../penalties/penalties-http.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
+import { PositionsService } from '../positions/positions.service';
+import { PositionsHttpService } from '../positions/positions-http.service';
 
 import { AdjudicatorHttpDisqualificationsService }
     from './disqualification/disqualification-http.service';
@@ -81,6 +83,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     ConfigService,
     PenaltiesHttpService,
     PenaltiesService,
+    PositionsService,
+    PositionsHttpService,
     DisqualificationHttpService,
     DisqualificationService,
     AdjudicatorHttpDisqualificationsService,

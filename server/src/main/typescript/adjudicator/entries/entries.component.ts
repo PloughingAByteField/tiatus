@@ -13,7 +13,7 @@ import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
     from '../../models/postion-time.model';
 import { EntryTime } from '../../models/entry-time.model';
 
-import { PositionsService } from '../../http-services/positions.service';
+import { PositionsService } from '../../positions/positions.service';
 import { AdjudicatorRacesService } from '../races/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 

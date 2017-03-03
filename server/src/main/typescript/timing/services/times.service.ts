@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import { PositionTime, convertJsonToPositionTime } from '../../models/postion-time.model';
 import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
-import { Position } from '../../models/position.model';
+import { Position } from '../../positions/position.model';
 
 import { RacePositionTimes } from '../models/race-position-times';
 

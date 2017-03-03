@@ -11,7 +11,8 @@ import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 import { ClubsService } from '../clubs/clubs.service';
 import { ClubsHttpService } from '../clubs/clubs-http.service';
-import { PositionsService } from '../http-services/positions.service';
+import { PositionsService } from '../positions/positions.service';
+import { PositionsHttpService } from '../positions/positions-http.service';
 import { ConfigService } from '../http-services/config.service';
 
 import { ENV_PROVIDERS } from './environment';
@@ -59,6 +60,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     ClubsService,
     ClubsHttpService,
     PositionsService,
+    PositionsHttpService,
     ConfigService,
     Title
   ]

@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-import { PositionsService } from '../../http-services/positions.service';
+import { PositionsService } from '../../positions/positions.service';
 import { RacesService } from '../../races/races.service';
-import { Position } from '../../models/position.model';
+import { Position } from '../../positions/position.model';
 
 import { TimingPositionService } from '../services/timing-position.service';
 

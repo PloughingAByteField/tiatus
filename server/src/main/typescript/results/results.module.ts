@@ -12,8 +12,11 @@ import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
-import { TimesService } from '../http-services/times.service';
+import { TimesService } from '../times/times.service';
+import { TimesHttpService } from '../times/times-http.service';
 import { ConfigService } from '../http-services/config.service';
+import { PositionsService } from '../positions/positions.service';
+import { PositionsHttpService } from '../positions/positions-http.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { resultsRoutes } from './results.routes';
@@ -53,7 +56,10 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacesHttpService,
     EntriesService,
     EntriesHttpService,
+    PositionsService,
+    PositionsHttpService,
     TimesService,
+    TimesHttpService,
     ConfigService,
     Title
   ]
