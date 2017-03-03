@@ -7,7 +7,7 @@ import { EntryTime } from '../models/entry-time.model';
 import { PositionTime, convertJsonToPositionTime } from '../models/postion-time.model';
 import { RaceEntryTimes } from '../models/race-entry-times.model';
 import { Race } from '../models/race.model';
-import { Entry } from '../models/entry.model';
+import { Entry } from '../entries/entry.model';
 import { Position } from '../models/position.model';
 
 @Injectable()

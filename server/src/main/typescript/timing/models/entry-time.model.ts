@@ -1,4 +1,4 @@
-import { Entry } from '../../models/entry.model';
+import { Entry } from '../../entries/entry.model';
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
 import { PositionTime } from '../../models/postion-time.model';

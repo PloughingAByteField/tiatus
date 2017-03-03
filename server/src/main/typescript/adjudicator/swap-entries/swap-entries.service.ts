@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Entry } from '../../models/entry.model';
+import { Entry } from '../../entries/entry.model';
 
 import { SwapEntriesHttpService } from './swap-entries-http.service';
 

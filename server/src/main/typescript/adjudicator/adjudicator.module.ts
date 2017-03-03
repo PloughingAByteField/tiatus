@@ -10,7 +10,7 @@ import { DisqualificationService } from '../services/disqualification.service';
 
 import { RacesService } from '../services/races.service';
 import { RacesHttpService } from '../http-services/races.service';
-import { EntriesService } from '../http-services/entries.service';
+import { EntriesService } from '../entries/entries.service';
 import { TimesService } from '../http-services/times.service';
 import { ConfigService } from '../http-services/config.service';
 import { PenaltiesHttpService } from '../http-services/penalties.service';

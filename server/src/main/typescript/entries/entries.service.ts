@@ -1,14 +1,12 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Http, URLSearchParams, Response } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Entry, convertJsonToEntry } from '../models/entry.model';
+import { Entry, convertJsonToEntry } from './entry.model';
 import { Race } from '../models/race.model';
 
 @Injectable()
 export class EntriesService {
-  public searchEvent: EventEmitter<any> = new EventEmitter();
-
   constructor(private http: Http) {}
 
   public getEntries(): Observable<Entry[]> {

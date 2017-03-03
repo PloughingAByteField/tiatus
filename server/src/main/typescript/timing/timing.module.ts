@@ -7,7 +7,7 @@ import { TranslateModule } from 'ng2-translate';
 
 import { RacesService } from '../services/races.service';
 import { RacesHttpService } from '../http-services/races.service';
-import { EntriesService } from '../http-services/entries.service';
+import { EntriesService } from '../entries/entries.service';
 import { ClubsService } from '../http-services/clubs.service';
 import { PositionsService } from '../http-services/positions.service';
 import { ConfigService } from '../http-services/config.service';

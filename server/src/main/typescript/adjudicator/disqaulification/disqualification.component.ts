@@ -6,10 +6,10 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService } from 'ng2-translate';
 import { Disqualification } from '../../models/disqualification.model';
-import { Entry } from '../../models/entry.model';
+import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
-import { EntriesService } from '../../http-services/entries.service';
+import { EntriesService } from '../../entries/entries.service';
 import { AdjudicatorHttpDisqualificationsService }
     from '../http-services/disqualifications.service';
 import { AdjudicatorDisqualificationService } from '../services/disqualification.service';

@@ -3,7 +3,7 @@ import { Http, Headers, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 
-import { Entry } from '../../models/entry.model';
+import { Entry } from '../../entries/entry.model';
 
 @Injectable()
 export class SwapEntriesHttpService {

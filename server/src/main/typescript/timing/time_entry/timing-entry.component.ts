@@ -6,7 +6,7 @@ import { TimesService } from '../services/times.service';
 import { RacesService } from '../../services/races.service';
 
 import { Club } from '../../models/club.model';
-import { Entry } from '../../models/entry.model';
+import { Entry } from '../../entries/entry.model';
 import { Position } from '../../models/position.model';
 import { Race } from '../../models/race.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
