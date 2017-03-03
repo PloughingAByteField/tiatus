@@ -186,6 +186,7 @@ export class EntriesComponent implements OnInit {
             penalites.map((penalty: Penalty) => total += penalty.time);
             return total;
         }
+
         return 0;
     }
 
@@ -209,6 +210,7 @@ export class EntriesComponent implements OnInit {
 
         return 0;
     }
+
     private setRaceForRaceId(raceId: number): void {
         if (this.races) {
             this.race = this.racesService.getRaceForId(this.raceId);

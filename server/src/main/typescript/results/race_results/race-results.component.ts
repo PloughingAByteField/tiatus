@@ -7,12 +7,16 @@ import { TranslateService } from 'ng2-translate';
 import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
+import { Penalty } from '../../penalties/penalty.model';
+import { Disqualification } from '../../disqualification/disqualification.model';
 import { PositionTime, convertFromTimeStamp } from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
 
 import { PositionsService } from '../../positions/positions.service';
 import { RacesService } from '../../races/races.service';
 import { EntryTimesService } from '../../times/entry-times.service';
+import { PenaltiesService } from '../../penalties/penalties.service';
+import { DisqualificationService } from '../../disqualification/disqualification.service';
 
 @Component({
     selector: 'race-results',
@@ -38,13 +42,17 @@ export class RaceResultsComponent implements OnInit {
     private entryTimes: EntryTime[];
     private disqualifiedText: string;
     private penaltyText: string;
+    private penalties: Penalty[];
+    private disqualifications: Disqualification[];
 
     constructor(
         private route: ActivatedRoute,
         private translate: TranslateService,
         private racesService: RacesService,
         private positionsService: PositionsService,
-        private entryTimesService: EntryTimesService
+        private entryTimesService: EntryTimesService,
+        private penaltiesService: PenaltiesService,
+        private disqualificationService: DisqualificationService
     ) {}
 
     public ngOnInit() {
@@ -61,6 +69,15 @@ export class RaceResultsComponent implements OnInit {
                 this.setRaceForRaceId(this.raceId);
             }
         });
+
+        this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
+            this.penalties = penalties;
+        });
+
+        this.disqualificationService.getDisqualifications()
+            .subscribe((disqualifications: Disqualification[]) => {
+                this.disqualifications = disqualifications;
+            });
 
         this.route.params.subscribe((params: Params) => {
             this.raceId = +params['raceId'];
@@ -99,7 +116,7 @@ export class RaceResultsComponent implements OnInit {
     }
 
     public getTimeForEntry(entryTime: EntryTime, position: Position): string {
-        if (this.checkIfDisqualified(entryTime)) {
+        if (this.isDisqualified(entryTime)) {
             return null;
         }
         if (entryTime.times.length > 0) {
@@ -121,7 +138,7 @@ export class RaceResultsComponent implements OnInit {
     }
 
     public getAdjustedTimeForEntry(entryTime: EntryTime): string {
-        if (this.checkIfDisqualified(entryTime)) {
+        if (this.isDisqualified(entryTime)) {
             return null;
         }
         if (entryTime.times.length > 0) {
@@ -147,7 +164,7 @@ export class RaceResultsComponent implements OnInit {
     }
 
     public getCommentsForEntry(entryTime: EntryTime): string {
-        if (this.checkIfDisqualified(entryTime)) {
+        if (this.isDisqualified(entryTime)) {
            return this.disqualifiedText;
         }
         if (this.getPenaltiesForEntry(entryTime) > 0) {
@@ -156,20 +173,61 @@ export class RaceResultsComponent implements OnInit {
         return null;
     }
 
-    private getPenaltiesForEntry(entryTime: EntryTime): number {
-        if (entryTime.entry.number === 2) {
-            return 20000;
-        }
-        return 0;
-    }
-
-    private checkIfDisqualified(entryTime: EntryTime): boolean {
-        if (entryTime.entry.number === 3) {
-            return true;
+    private isDisqualified(entry: EntryTime): boolean {
+        if (this.disqualifications) {
+            let disqualifed: Disqualification = this.disqualifications
+                .filter((disqualification: Disqualification) =>
+                    disqualification.entry === entry.entry.id).shift();
+            if (disqualifed) {
+                return true;
+            }
         }
         return false;
     }
 
+    private getPenaltiesForEntry(entryTime: EntryTime): number {
+        if (this.isDisqualified(entryTime)) {
+            return 0;
+        }
+
+        return this.getTimeForPenaltes(entryTime);
+    }
+
+    private getTimeForPenaltes(entryTime: EntryTime): number {
+        let penalties: Penalty[];
+        if (this.penalties) {
+            penalties = this.penalties.filter((penalty: Penalty) =>
+                penalty.entry === entryTime.entry.id);
+        }
+
+        if (penalties) {
+            let total: number = 0;
+            penalties.map((penalty: Penalty) => total += penalty.time);
+            return total;
+        }
+        return 0;
+    }
+
+    private getTime(entryTime: EntryTime): number {
+        if (entryTime.times.length > 0) {
+            let actualStartPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.startPoint === true)
+                .shift();
+            let eventStartPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.position
+                    === entryTime.entry.event.startingPosition)
+                .shift();
+            let eventFinishPoint: PositionTime = entryTime.times
+                .filter((positionTime: PositionTime) => positionTime.position
+                        === entryTime.entry.event.finishingPosition)
+                .shift();
+            if (eventFinishPoint && actualStartPoint) {
+                return eventFinishPoint.time - actualStartPoint.time;
+            }
+        }
+
+        return 0;
+    }
     private getTimesForRace(race: Race): void {
         if (race) {
             console.log('Get times for race ' + race.id);
