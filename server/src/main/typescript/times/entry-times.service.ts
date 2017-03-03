@@ -20,7 +20,7 @@ export class EntryTimesService {
         new BehaviorSubject<EntryTime[]>(new Array<EntryTime>());
     private raceEntries: RaceEntryTimes[] = new Array<RaceEntryTimes>();
 
-    constructor(private entriesService: EntriesService, private timesService: TimesService) {}
+    constructor(protected entriesService: EntriesService, protected timesService: TimesService) {}
 
     public getEntriesForRace(race: Race): Subject<EntryTime[]> {
         if (race) {

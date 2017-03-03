@@ -14,7 +14,7 @@ import { EntryTime } from '../../times/entry-time.model';
 
 import { PositionsService } from '../../positions/positions.service';
 import { AdjudicatorRacesService } from '../races/races.service';
-import { EntryTimesService } from '../../times/entry-times.service';
+import { EntryTimesFullService } from '../times/entry-times.service';
 
 import { AdjudicatorDisqualificationService } from '../disqualification/disqualification.service';
 import { AdjudicatorPenaltiesService } from '../penalties/penalties.service';
@@ -25,7 +25,7 @@ import { AdjudicatorPenaltiesService } from '../penalties/penalties.service';
     templateUrl: './entries.component.html',
     providers: [
         PositionsService,
-        EntryTimesService,
+        EntryTimesFullService,
         AdjudicatorDisqualificationService,
         AdjudicatorPenaltiesService
     ]
@@ -54,7 +54,7 @@ export class EntriesComponent implements OnInit {
         private translate: TranslateService,
         private racesService: AdjudicatorRacesService,
         private positionsService: PositionsService,
-        private entryTimesService: EntryTimesService,
+        private entryTimesService: EntryTimesFullService,
         private disqualificationService: AdjudicatorDisqualificationService,
         private penaltiesService: AdjudicatorPenaltiesService
     ) {}

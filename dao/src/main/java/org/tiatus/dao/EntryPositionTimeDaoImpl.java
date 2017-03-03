@@ -39,9 +39,21 @@ public class EntryPositionTimeDaoImpl implements EntryPositionTimeDao {
         }
     }
 
-    public List<EntryPositionTime> getTimesForRace(Race race) throws DaoException {
+    public List<EntryPositionTime> getAllTimesForRace(Race race) throws DaoException {
         if (race != null) {
             TypedQuery<EntryPositionTime> query = em.createQuery("FROM EntryPositionTime ept where ept.entry in (select id from Entry where race.id = :race_id) order by ept.position.id", EntryPositionTime.class);
+            query.setParameter("race_id", race.getId());
+            return query.getResultList();
+        } else {
+            LOG.warn("Got null for race");
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<EntryPositionTime> getTimesForRace(Race race) throws DaoException {
+        if (race != null) {
+            TypedQuery<EntryPositionTime> query = em.createQuery("FROM EntryPositionTime ept where ept.entry in (select e.id from Entry e, Disqualification d where e.race.id = :race_id and e.id != d.entry.id) order by ept.position.id", EntryPositionTime.class);
             query.setParameter("race_id", race.getId());
             return query.getResultList();
         } else {

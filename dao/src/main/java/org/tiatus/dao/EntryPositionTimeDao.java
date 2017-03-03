@@ -26,6 +26,8 @@ public interface EntryPositionTimeDao {
      */
     List<EntryPositionTime> getTimesForRace(Race race) throws DaoException;
 
+    List<EntryPositionTime> getAllTimesForRace(Race race) throws DaoException;
+
     /**
      * Record a time for entry at position in a race
      * @throws DaoException on error

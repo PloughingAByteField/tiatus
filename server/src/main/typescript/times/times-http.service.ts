@@ -12,14 +12,18 @@ import { Entry } from '../entries/entry.model';
 @Injectable()
 export class TimesHttpService {
 
-  private timeEndPoint: string = '/rest/time/race/';
-  private raceEndPoint: string = 'race/';
+  protected timeEndPoint: string = '/rest/time/race/';
 
-  constructor(private http: Http) {}
+  constructor(protected http: Http) {}
 
   public getTimesForRace(race: Race): Observable<EntryTime[]> {
+    let url: string = this.timeEndPoint + race.id;
+    return this.getTimesForRaceWithUrl(race, url);
+  }
+
+  protected getTimesForRaceWithUrl(race: Race, url: string): Observable<EntryTime[]> {
       if (race) {
-        return this.http.get(this.timeEndPoint + race.id)
+        return this.http.get(url)
           .map((response) => {
             let data = response.json();
             let rpt: RaceEntryTimes = new RaceEntryTimes();

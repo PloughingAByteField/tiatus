@@ -57,8 +57,20 @@ public class TimesServiceImpl implements TimesService {
     }
 
     @Override
-    public List<EntryPositionTime> getTimesForRace(Race race) throws ServiceException {
+    public List<EntryPositionTime> getAllTimesForRace(Race race) throws ServiceException {
         LOG.debug("Get list of times for race " + race.getName());
+        try {
+            return dao.getAllTimesForRace(race);
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public List<EntryPositionTime> getTimesForRace(Race race) throws ServiceException {
+        LOG.debug("Get full list of times for race " + race.getName());
         try {
             return dao.getTimesForRace(race);
 
@@ -67,6 +79,4 @@ public class TimesServiceImpl implements TimesService {
             throw new ServiceException(e);
         }
     }
-
-
 }

@@ -14,8 +14,11 @@ import { AdjudicatorRacesService } from './races/races.service';
 import { AdjudicatorRacesHttpService } from './races/races-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
+import { TimesFullService } from './times/times.service';
+import { EntryTimesFullService } from './times/entry-times.service';
 import { TimesService } from '../times/times.service';
 import { TimesHttpService } from '../times/times-http.service';
+import { TimesFullHttpService } from './times/times-full-http.service';
 import { ConfigService } from '../config/config.service';
 import { ConfigHttpService } from '../config/config-http.service';
 import { PenaltiesHttpService } from '../penalties/penalties-http.service';
@@ -79,8 +82,11 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     AdjudicatorRacesHttpService,
     EntriesService,
     EntriesHttpService,
+    EntryTimesFullService,
     TimesService,
+    TimesFullService,
     TimesHttpService,
+    TimesFullHttpService,
     ConfigService,
     ConfigHttpService,
     PenaltiesHttpService,

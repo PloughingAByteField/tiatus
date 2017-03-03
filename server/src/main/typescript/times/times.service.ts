@@ -13,7 +13,7 @@ export class TimesService {
     protected raceEntries: RaceTimesSubject[]
         = new Array<RaceTimesSubject>();
 
-    constructor(private service: TimesHttpService) {}
+    constructor(protected service: TimesHttpService) {}
 
     public getTimesForRace(race: Race): BehaviorSubject<EntryTime[]> {
         let subject: RaceTimesSubject
