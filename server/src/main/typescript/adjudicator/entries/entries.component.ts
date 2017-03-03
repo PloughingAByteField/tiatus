@@ -4,18 +4,17 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService } from 'ng2-translate';
 
-import { Position } from '../../models/position.model';
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
 import { Penalty } from '../../penalties/penalty.model';
 import { Disqualification } from '../../disqualification/disqualification.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
-    from '../../models/postion-time.model';
-import { EntryTime } from '../../models/entry-time.model';
+    from '../../times/postion-time.model';
+import { EntryTime } from '../../times/entry-time.model';
 
 import { PositionsService } from '../../positions/positions.service';
 import { AdjudicatorRacesService } from '../races/races.service';
-import { EntryTimesService } from '../../services/entry-times.service';
+import { EntryTimesService } from '../../times/entry-times.service';
 
 import { AdjudicatorDisqualificationService } from '../disqualification/disqualification.service';
 import { AdjudicatorPenaltiesService } from '../penalties/penalties.service';

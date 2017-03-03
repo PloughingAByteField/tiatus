@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from 'ng2-translate';
 import { Penalty } from '../../penalties/penalty.model';
 import { Entry } from '../../entries/entry.model';
-import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
+import { convertToTimeStamp, convertFromTimeStamp } from '../../times/postion-time.model';
 
 import { EntriesService } from '../../entries/entries.service';
 import { AdjudicatorHttpPenaltiesService } from './penalties-http.service';

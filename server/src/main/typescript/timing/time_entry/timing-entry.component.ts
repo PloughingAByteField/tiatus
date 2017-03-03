@@ -10,7 +10,7 @@ import { Entry } from '../../entries/entry.model';
 import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
-    from '../../models/postion-time.model';
+    from '../../times/postion-time.model';
 import { EntryTime } from '../models/entry-time.model';
 
 import { TimingPositionService } from '../services/timing-position.service';

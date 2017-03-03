@@ -3,12 +3,11 @@ import { Headers, Http, URLSearchParams, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
-import { EntryTime } from '../models/entry-time.model';
-import { PositionTime, convertJsonToPositionTime } from '../models/postion-time.model';
-import { RaceEntryTimes } from '../models/race-entry-times.model';
+import { EntryTime } from './entry-time.model';
+import { PositionTime, convertJsonToPositionTime } from './postion-time.model';
+import { RaceEntryTimes } from './race-entry-times.model';
 import { Race } from '../races/race.model';
 import { Entry } from '../entries/entry.model';
-import { Position } from '../models/position.model';
 
 @Injectable()
 export class TimesHttpService {

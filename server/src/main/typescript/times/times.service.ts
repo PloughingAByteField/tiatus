@@ -2,7 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { EntryTime } from '../models/entry-time.model';
+import { EntryTime } from './entry-time.model';
 import { Race } from '../races/race.model';
 
 import { TimesHttpService } from './times-http.service';

@@ -11,7 +11,7 @@ import { EntryTime } from '../models/entry-time.model';
 import { Position } from '../../positions/position.model';
 import { Entry } from '../../entries/entry.model';
 import { Race } from '../../races/race.model';
-import { PositionTime } from '../../models/postion-time.model';
+import { PositionTime } from '../../times/postion-time.model';
 
 import { RaceEntryTimes } from '../models/race-entry-times.model';
 

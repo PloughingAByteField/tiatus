@@ -7,12 +7,12 @@ import { TranslateService } from 'ng2-translate';
 import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
-import { PositionTime, convertFromTimeStamp } from '../../models/postion-time.model';
-import { EntryTime } from '../../models/entry-time.model';
+import { PositionTime, convertFromTimeStamp } from '../../times/postion-time.model';
+import { EntryTime } from '../../times/entry-time.model';
 
 import { PositionsService } from '../../positions/positions.service';
 import { RacesService } from '../../races/races.service';
-import { EntryTimesService } from '../../services/entry-times.service';
+import { EntryTimesService } from '../../times/entry-times.service';
 
 @Component({
     selector: 'race-results',

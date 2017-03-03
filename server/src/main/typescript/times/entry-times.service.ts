@@ -7,13 +7,12 @@ import { Subject } from 'rxjs/Subject';
 import { EntriesService } from '../entries/entries.service';
 import { TimesService } from '../times/times.service';
 
-import { EntryTime } from '../models/entry-time.model';
-import { Position } from '../models/position.model';
+import { EntryTime } from './entry-time.model';
 import { Entry } from '../entries/entry.model';
 import { Race } from '../races/race.model';
-import { PositionTime } from '../models/postion-time.model';
+import { PositionTime } from './postion-time.model';
 
-import { RaceEntryTimes } from '../models/race-entry-times.model';
+import { RaceEntryTimes } from './race-entry-times.model';
 
 @Injectable()
 export class EntryTimesService {
