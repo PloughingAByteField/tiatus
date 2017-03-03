@@ -10,9 +10,8 @@ import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
 import { EntriesService } from '../../entries/entries.service';
-import { AdjudicatorHttpDisqualificationsService }
-    from '../http-services/disqualifications.service';
-import { AdjudicatorDisqualificationService } from '../services/disqualification.service';
+import { AdjudicatorHttpDisqualificationsService } from './disqualifications.service';
+import { AdjudicatorDisqualificationService } from './disqualification.service';
 
 @Component({
     selector: 'disqualification',

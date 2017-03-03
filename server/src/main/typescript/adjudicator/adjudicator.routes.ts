@@ -1,7 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { LandingComponent } from './landing';
 import { NoContentComponent } from '../components/no-content/no-content.component';
-import { DisqualificationComponent } from './disqaulification';
+import { DisqualificationComponent } from './disqualification';
 import { EntriesComponent } from './entries';
 import { PenaltiesComponent } from './penalties';
 import { SwapEntriesComponent } from './swap-entries';

@@ -4,8 +4,7 @@ import { Disqualification } from '../../models/disqualification.model';
 
 import { DisqualificationService } from '../../services/disqualification.service';
 
-import { AdjudicatorHttpDisqualificationsService }
-    from '../http-services/disqualifications.service';
+import { AdjudicatorHttpDisqualificationsService } from './disqualification-http.service';
 
 @Injectable()
 export class AdjudicatorDisqualificationService extends DisqualificationService {

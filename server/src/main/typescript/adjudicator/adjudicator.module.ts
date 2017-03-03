@@ -19,8 +19,8 @@ import { PenaltiesHttpService } from '../http-services/penalties.service';
 import { DisqualificationHttpService } from '../http-services/disqualification.service';
 
 import { AdjudicatorHttpDisqualificationsService }
-    from './http-services/disqualifications.service';
-import { AdjudicatorDisqualificationService } from './services/disqualification.service';
+    from './disqualification/disqualification-http.service';
+import { AdjudicatorDisqualificationService } from './disqualification/disqualification.service';
 import { AdjudicatorHttpPenaltiesService } from './http-services/penalties.service';
 import { AdjudicatorPenaltiesService } from './services/penalties.service';
 
@@ -28,7 +28,7 @@ import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';
 import { AdjudicatorComponent } from './adjudicator.component';
 import { LandingComponent } from './landing';
-import { DisqualificationComponent } from './disqaulification';
+import { DisqualificationComponent } from './disqualification';
 import { EntriesComponent } from './entries';
 import { PenaltiesComponent } from './penalties';
 import { SwapEntriesComponent } from './swap-entries';
