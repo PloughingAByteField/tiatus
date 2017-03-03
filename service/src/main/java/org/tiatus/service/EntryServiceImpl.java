@@ -91,4 +91,28 @@ public class EntryServiceImpl implements EntryService {
     public List<Entry> getEntriesForRace(Race race) {
         return dao.getEntriesForRace(race);
     }
+
+    @Override
+    public void swapEntryNumbers(Entry from, Entry to) throws ServiceException {
+        if (from.getRace().getId() != to.getRace().getId()) {
+            String warning = "Entries are not in the same race";
+            LOG.warn(warning);
+            throw new ServiceException(warning);
+        }
+
+        if (to.getId() == from.getId()) {
+            String warning = "Entries are the same";
+            LOG.warn(warning);
+            throw new ServiceException(warning);
+        }
+
+        // do swap in single transaction updating any position times in the process
+        try {
+            dao.swapEntryNumbers(from, to);
+
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
 }

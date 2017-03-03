@@ -55,4 +55,12 @@ public interface EntryService {
      * @return list of entries
      */
     List<Entry> getEntriesForRace(Race race);
+
+    /**
+     * Swap the numbers of two entries
+     * @param from entry to switch number from
+     * @param to entry to switch number to
+     * @throws ServiceException on error
+     */
+    void swapEntryNumbers(Entry from, Entry to) throws ServiceException;
 }

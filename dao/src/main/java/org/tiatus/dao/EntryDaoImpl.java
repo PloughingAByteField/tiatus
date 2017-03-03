@@ -2,8 +2,7 @@ package org.tiatus.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tiatus.entity.Entry;
-import org.tiatus.entity.Race;
+import org.tiatus.entity.*;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
@@ -99,6 +98,73 @@ public class EntryDaoImpl implements EntryDao {
             tx.commit();
         } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
             LOG.warn("Failed to update entry", e);
+            throw new DaoException(e.getMessage());
+        }
+    }
+
+    /*
+     When swapping entry numbers, we must also must update times, penalties and disqualifications applied against the original number
+     To do this we use an intermediate entry with id of 0
+     */
+    @Override
+    public synchronized void swapEntryNumbers(Entry from, Entry to) throws DaoException {
+        try {
+            Integer fromNumber = from.getNumber();
+            Integer fromRaceOrder = from.getRaceOrder();
+            Integer toNumber = to.getNumber();
+            Integer toRaceOrder = to.getRaceOrder();
+
+            tx.begin();
+            // create intermediate -- needs to be done in separate block as postgres has fk constraints setup
+            Entry intermediate = new Entry();
+            intermediate.setEvent(from.getEvent());
+            intermediate.setRace(from.getRace());
+            intermediate = em.merge(intermediate);
+            tx.commit();
+
+            tx.begin();
+            // swap from entries in position_time, penalty and disqualification to intermediate entry
+            em.createQuery("UPDATE EntryPositionTime set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", intermediate.getId()).setParameter("from_id", from.getId()).executeUpdate();
+            em.createQuery("UPDATE Penalty set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", intermediate.getId()).setParameter("from_id", from.getId()).executeUpdate();
+            em.createQuery("UPDATE Disqualification set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", intermediate.getId()).setParameter("from_id", from.getId()).executeUpdate();
+
+            // swap to entries in position_time, penalty and disqualification to the from entry
+            em.createQuery("UPDATE EntryPositionTime set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", from.getId()).setParameter("from_id", to.getId()).executeUpdate();
+            em.createQuery("UPDATE Penalty set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", from.getId()).setParameter("from_id", to.getId()).executeUpdate();
+            em.createQuery("UPDATE Disqualification set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", from.getId()).setParameter("from_id", to.getId()).executeUpdate();
+
+            // swap intermediate entries in position_time, penalty and disqualification to the to entry
+            em.createQuery("UPDATE EntryPositionTime set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", to.getId()).setParameter("from_id", intermediate.getId()).executeUpdate();
+            em.createQuery("UPDATE Penalty set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", to.getId()).setParameter("from_id", intermediate.getId()).executeUpdate();
+            em.createQuery("UPDATE Disqualification set entry_id = :to_id where entry_id = :from_id")
+                    .setParameter("to_id", to.getId()).setParameter("from_id", intermediate.getId()).executeUpdate();
+
+            // delete intermediate
+            em.remove(em.contains(intermediate) ? intermediate : em.merge(intermediate));
+
+            // swap entry numbers
+            from.setNumber(toNumber);
+            from.setRaceOrder(toRaceOrder);
+            to.setNumber(fromNumber);
+            to.setRaceOrder(fromRaceOrder);
+
+            em.merge(from);
+            em.merge(to);
+
+            tx.commit();
+        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+            LOG.warn("Failed to swap entries", e);
+            throw new DaoException(e.getMessage());
+        } catch (Exception e) {
+            LOG.warn("Failed to swap entries", e);
             throw new DaoException(e.getMessage());
         }
     }

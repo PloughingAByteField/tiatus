@@ -50,4 +50,11 @@ public interface EntryDao {
      */
     void updateEntry(Entry entry) throws DaoException;
 
+    /**
+     * Swap the numbers of two entries
+     * @param from entry to switch number from
+     * @param to entry to switch number to
+     * @throws DaoException on error
+     */
+    void swapEntryNumbers(Entry from, Entry to) throws DaoException;
 }

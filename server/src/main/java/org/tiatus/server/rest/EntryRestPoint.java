@@ -157,6 +157,27 @@ public class EntryRestPoint {
         }
     }
 
+    @RolesAllowed({Role.ADJUDICATOR})
+    @POST
+    @Path("swapEntries/{fromId}/{toId}")
+    @Produces("application/json")
+    public Response swapEntries(@PathParam("fromId") String fromId, @PathParam("toId") String toId) {
+        try {
+            Entry from = service.getEntryForId(Long.parseLong(fromId));
+            Entry to = service.getEntryForId(Long.parseLong(toId));
+            service.swapEntryNumbers(from, to);
+            return Response.ok().build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception: ", e.getSuppliedException());
+            throw new InternalServerErrorException();
+
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
+    }
+
     @Inject
     // sonar want constructor injection which jaxrs does not support
     public void setService(EntryService service) {
