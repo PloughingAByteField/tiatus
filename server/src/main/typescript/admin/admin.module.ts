@@ -9,7 +9,8 @@ import { ENV_PROVIDERS } from './environment';
 
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
-import { ConfigService } from '../http-services/config.service';
+import { ConfigService } from '../config/config.service';
+import { ConfigHttpService } from '../config/config-http.service';
 
 import { adminRoutes } from './admin.routes';
 import { AdminComponent } from './admin.component';
@@ -47,6 +48,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacesService,
     RacesHttpService,
     ConfigService,
+    ConfigHttpService,
     Title
   ]
 })

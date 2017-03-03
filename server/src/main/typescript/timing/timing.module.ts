@@ -13,7 +13,8 @@ import { ClubsService } from '../clubs/clubs.service';
 import { ClubsHttpService } from '../clubs/clubs-http.service';
 import { PositionsService } from '../positions/positions.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
-import { ConfigService } from '../http-services/config.service';
+import { ConfigService } from '../config/config.service';
+import { ConfigHttpService } from '../config/config-http.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { timingRouting } from './timing.routes';
@@ -62,6 +63,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     PositionsService,
     PositionsHttpService,
     ConfigService,
+    ConfigHttpService,
     Title
   ]
 })

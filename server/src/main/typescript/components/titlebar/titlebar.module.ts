@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 
-import { ConfigService } from '../../http-services/config.service';
+import { ConfigService } from '../../config/config.service';
+import { ConfigHttpService } from '../../config/config-http.service';
 
 import { TitlebarComponent } from './titlebar.component';
 
@@ -9,6 +10,6 @@ import { TitlebarComponent } from './titlebar.component';
         TitlebarComponent
     ],
     exports: [ TitlebarComponent ],
-    providers: [ ConfigService ]
+    providers: [ ConfigService, ConfigHttpService ]
 })
 export class TitlebarModule { }

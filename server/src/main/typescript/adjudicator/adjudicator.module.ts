@@ -16,7 +16,8 @@ import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 import { TimesService } from '../times/times.service';
 import { TimesHttpService } from '../times/times-http.service';
-import { ConfigService } from '../http-services/config.service';
+import { ConfigService } from '../config/config.service';
+import { ConfigHttpService } from '../config/config-http.service';
 import { PenaltiesHttpService } from '../penalties/penalties-http.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
 import { PositionsService } from '../positions/positions.service';
@@ -81,6 +82,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     TimesService,
     TimesHttpService,
     ConfigService,
+    ConfigHttpService,
     PenaltiesHttpService,
     PenaltiesService,
     PositionsService,

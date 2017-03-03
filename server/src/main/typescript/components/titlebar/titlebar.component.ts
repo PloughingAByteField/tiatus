@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ConfigService } from '../../http-services/config.service';
+import { ConfigService } from '../../config/config.service';
 
 @Component({
   selector: 'titlebar',
