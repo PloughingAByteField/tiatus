@@ -78,13 +78,11 @@ export class EntriesComponent implements OnInit {
 
         this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
             this.penalties = penalties;
-            console.log(this.penalties);
         });
 
         this.disqualificationService.getDisqualifications()
             .subscribe((disqualifications: Disqualification[]) => {
                 this.disqualifications = disqualifications;
-                console.log(this.disqualifications);
         });
     }
 
@@ -221,12 +219,10 @@ export class EntriesComponent implements OnInit {
 
     private getTimesForRace(race: Race): void {
         if (race) {
-            console.log('Get times for race ' + race.id);
             this.entryTimesService.getEntriesForRace(this.race)
                 .subscribe((data: EntryTime[]) => {
                     this.entryTimes = data;
                     this.filteredEntryTimes = this.entryTimes;
-                    console.log(this.entryTimes);
             });
         }
     }

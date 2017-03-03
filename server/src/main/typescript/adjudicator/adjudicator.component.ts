@@ -31,8 +31,6 @@ export class AdjudicatorComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-      console.log('hello from penalties');
-      // the lang to use, if the lang isn't available, it will use the current loader to get them
       this.translate.use('en');
 
       this.races = this.racesService.getRaces();
