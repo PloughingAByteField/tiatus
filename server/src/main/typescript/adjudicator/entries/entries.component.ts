@@ -40,14 +40,14 @@ export class EntriesComponent implements OnInit {
     public numberFilter: string = '';
     public clubFilter: string = '';
     public eventFilter: string = '';
-
+    public race: Race;
     public filteredEntryTimes: EntryTime[];
 
     private penalties: Penalty[];
     private disqualifications: Disqualification[];
     private raceId: number = 0;
     private races: Race[];
-    private race: Race;
+
     private entryTimes: EntryTime[];
 
     constructor(
@@ -61,7 +61,6 @@ export class EntriesComponent implements OnInit {
     ) {}
 
     public ngOnInit() {
-        console.log('hello from entries');
         this.racesService.getRaces().subscribe((races: Race[]) => {
             this.races = races;
             if (this.raceId) {
@@ -164,7 +163,7 @@ export class EntriesComponent implements OnInit {
 
     public raceIsOpen(): boolean {
         if (this.race) {
-            return this.race.closed;
+            return !this.race.closed;
         }
         return true;
     }

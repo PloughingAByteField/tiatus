@@ -4,11 +4,13 @@ import { NoContentComponent } from '../components/no-content/no-content.componen
 import { DisqualificationComponent } from './disqaulification';
 import { EntriesComponent } from './entries';
 import { PenaltiesComponent } from './penalties';
+import { SwapEntriesComponent } from './swap-entries';
 
 export const adjudicatorRoutes: Routes = [
   { path: '',      component: LandingComponent },
   { path: 'penalty/:entryId',  component: PenaltiesComponent },
   { path: 'disqualify/:entryId',  component: DisqualificationComponent },
   { path: 'race/:raceId',  component: EntriesComponent },
+  { path: 'swap/:raceId',  component: SwapEntriesComponent },
   { path: '**',    component: NoContentComponent }
 ];

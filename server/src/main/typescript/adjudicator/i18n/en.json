@@ -30,5 +30,8 @@
     "BACK_TO_ENTRIES": "Back to entries in",
     "FOR_PENALTIES_IN": "Penalties in",
     "FOR_DISQUALIFICATION_IN": "Disqualification in",
-    "FOR_ENTRY": "for entry"
+    "FOR_ENTRY": "for entry",
+    "REOPEN_RACE": "Reopen race",
+    "CLOSE_RACE": "Close race",
+    "SWAP_ENTRIES": "Swap entries"
 }

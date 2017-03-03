@@ -14,14 +14,17 @@ export class DisqualificationService {
         = new BehaviorSubject<Disqualification[]>(this.disqualifications);
 
     constructor(protected service: DisqualificationHttpService) {
-        this.service.getDisqualifications().subscribe((disqualifications: Disqualification[]) => {
-            this.disqualifications = disqualifications;
-            this.penaltiesSubject.next(this.disqualifications);
-        });
+        this.refresh();
     }
 
     public getDisqualifications(): BehaviorSubject<Disqualification[]> {
         return this.penaltiesSubject;
     }
 
+    public refresh(): void {
+        this.service.getDisqualifications().subscribe((disqualifications: Disqualification[]) => {
+            this.disqualifications = disqualifications;
+            this.penaltiesSubject.next(this.disqualifications);
+        });
+    }
 }

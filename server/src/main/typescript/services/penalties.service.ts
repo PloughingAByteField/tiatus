@@ -14,14 +14,17 @@ export class PenaltiesService {
         = new BehaviorSubject<Penalty[]>(this.penalties);
 
     constructor(protected service: PenaltiesHttpService) {
-        this.service.getPenalties().subscribe((penalties: Penalty[]) => {
-            this.penalties = penalties;
-            this.penaltiesSubject.next(this.penalties);
-        });
+        this.refresh();
     }
 
     public getPenalties(): BehaviorSubject<Penalty[]> {
         return this.penaltiesSubject;
     }
 
+    public refresh(): void {
+        this.service.getPenalties().subscribe((penalties: Penalty[]) => {
+            this.penalties = penalties;
+            this.penaltiesSubject.next(this.penalties);
+        });
+    }
 }

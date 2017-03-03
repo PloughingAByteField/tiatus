@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Penalty } from '../../models/penalty.model';
+import { Race } from '../../models/race.model';
 
 import { PenaltiesHttpService } from '../../http-services/penalties.service';
 
@@ -14,7 +14,7 @@ export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
     super(http);
   }
 
-  public createPenalty(penalty: Penalty): Promise<Penalty> {
+  public createPenalty(penalty: Race): Promise<Race> {
     return this.http
       .post(this.endpoint,
         JSON.stringify(penalty), {headers: this.headers})
@@ -31,24 +31,4 @@ export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
       .catch((err) => Promise.reject(err));
   }
 
-  public removePenalty(penalty: Penalty): Promise<Penalty> {
-    return this.http
-       .delete(this.endpoint + '/' + penalty.id)
-      .toPromise()
-      .then(() => {
-        return penalty;
-      })
-      .catch((err) => Promise.reject(err));
-  }
-
-  public updatePenalty(penalty: Penalty): Promise<Penalty> {
-    return this.http
-       .put(this.endpoint,
-        JSON.stringify(penalty), {headers: this.headers})
-      .toPromise()
-      .then(() => {
-        return penalty;
-      })
-      .catch((err) => Promise.reject(err));
-  }
 }

@@ -29,6 +29,7 @@ import { LandingComponent } from './landing';
 import { DisqualificationComponent } from './disqaulification';
 import { EntriesComponent } from './entries';
 import { PenaltiesComponent } from './penalties';
+import { SwapEntriesComponent } from './swap-entries';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -45,7 +46,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     LandingComponent,
     PenaltiesComponent,
     EntriesComponent,
-    DisqualificationComponent
+    DisqualificationComponent,
+    SwapEntriesComponent
   ],
   imports: [
     BrowserModule,
