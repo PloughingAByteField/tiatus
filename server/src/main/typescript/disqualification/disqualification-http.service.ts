@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Disqualification, convertJsonToDisqualification } from '../models/disqualification.model';
+import { Disqualification, convertJsonToDisqualification } from './disqualification.model';
 
 @Injectable()
 export class DisqualificationHttpService {

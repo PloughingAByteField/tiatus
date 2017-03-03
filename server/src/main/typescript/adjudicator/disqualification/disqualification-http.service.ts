@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Disqualification } from '../../models/disqualification.model';
+import { Disqualification } from '../../disqualification/disqualification.model';
 
-import { DisqualificationHttpService } from '../../http-services/disqualification.service';
+import { DisqualificationHttpService } from '../../disqualification/disqualification-http.service';
 
 @Injectable()
 export class AdjudicatorHttpDisqualificationsService extends DisqualificationHttpService {

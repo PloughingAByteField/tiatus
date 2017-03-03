@@ -8,7 +8,7 @@ import { Position } from '../../models/position.model';
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
 import { Penalty } from '../../models/penalty.model';
-import { Disqualification } from '../../models/disqualification.model';
+import { Disqualification } from '../../disqualification/disqualification.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
     from '../../models/postion-time.model';
 import { EntryTime } from '../../models/entry-time.model';

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Disqualification } from '../../models/disqualification.model';
+import { Disqualification } from '../../disqualification/disqualification.model';
 
-import { DisqualificationService } from '../../services/disqualification.service';
+import { DisqualificationService } from '../../disqualification/disqualification.service';
 
 import { AdjudicatorHttpDisqualificationsService } from './disqualification-http.service';
 

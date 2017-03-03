@@ -14,7 +14,7 @@ import { SwapEntriesService } from './swap-entries.service';
 import { RacesService } from '../../races/races.service';
 import { EntriesService } from '../../entries/entries.service';
 import { PenaltiesService } from '../../services/penalties.service';
-import { DisqualificationService } from '../../services/disqualification.service';
+import { DisqualificationService } from '../../disqualification/disqualification.service';
 import { TimesService } from '../../times/times.service';
 
 @Component({

@@ -5,7 +5,7 @@ import { Location }                 from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 
 import { TranslateService } from 'ng2-translate';
-import { Disqualification } from '../../models/disqualification.model';
+import { Disqualification } from '../../disqualification/disqualification.model';
 import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
