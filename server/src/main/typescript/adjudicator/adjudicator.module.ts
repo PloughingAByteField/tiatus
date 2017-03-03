@@ -21,8 +21,8 @@ import { DisqualificationHttpService } from '../http-services/disqualification.s
 import { AdjudicatorHttpDisqualificationsService }
     from './disqualification/disqualification-http.service';
 import { AdjudicatorDisqualificationService } from './disqualification/disqualification.service';
-import { AdjudicatorHttpPenaltiesService } from './http-services/penalties.service';
-import { AdjudicatorPenaltiesService } from './services/penalties.service';
+import { AdjudicatorHttpPenaltiesService } from './penalties/penalties-http.service';
+import { AdjudicatorPenaltiesService } from './penalties/penalties.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';

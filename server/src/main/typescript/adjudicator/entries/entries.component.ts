@@ -18,7 +18,7 @@ import { RacesService } from '../../races/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 
 import { AdjudicatorDisqualificationService } from '../disqualification/disqualification.service';
-import { AdjudicatorPenaltiesService } from '../services/penalties.service';
+import { AdjudicatorPenaltiesService } from '../penalties/penalties.service';
 
 @Component({
     selector: 'entries',

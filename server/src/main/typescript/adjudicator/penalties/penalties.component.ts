@@ -10,8 +10,8 @@ import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
 import { EntriesService } from '../../entries/entries.service';
-import { AdjudicatorHttpPenaltiesService } from '../http-services/penalties.service';
-import { AdjudicatorPenaltiesService } from '../services/penalties.service';
+import { AdjudicatorHttpPenaltiesService } from './penalties-http.service';
+import { AdjudicatorPenaltiesService } from './penalties.service';
 
 @Component({
     selector: 'penalties',
