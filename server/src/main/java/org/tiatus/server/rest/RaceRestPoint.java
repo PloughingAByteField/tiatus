@@ -93,6 +93,30 @@ public class RaceRestPoint {
         }
     }
 
+    /**
+     * Update race, restricted to Adjudicator and Admin users
+     * @param race of race to update
+     * @return response with 204
+     */
+    @RolesAllowed({Role.ADMIN, Role.ADJUDICATOR})
+    @PUT
+    @Produces("application/json")
+    public Response updateRace(Race race) {
+        LOG.debug("Updating race with id " + race.getId());
+        try {
+            service.updateRace(race);
+            return Response.noContent().build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception: ", e.getSuppliedException());
+            throw new InternalServerErrorException();
+
+        } catch (Exception e) {
+            LOG.warn("Got general exception ", e);
+            throw new InternalServerErrorException();
+        }
+    }
+
     @Inject
     // sonar want constructor injection which jaxrs does not support
     public void setService(RaceService service) {

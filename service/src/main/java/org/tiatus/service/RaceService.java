@@ -30,6 +30,13 @@ public interface RaceService {
     void deleteRace(Race race) throws ServiceException;
 
     /**
+     * Update race
+     * @param race to update
+     * @throws ServiceException on error
+     */
+    void updateRace(Race race) throws ServiceException;
+
+    /**
      * Get races
      * @return list of races
      */

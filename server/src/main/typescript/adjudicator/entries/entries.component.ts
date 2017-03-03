@@ -14,7 +14,7 @@ import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
 import { EntryTime } from '../../models/entry-time.model';
 
 import { PositionsService } from '../../http-services/positions.service';
-import { RacesService } from '../../races/races.service';
+import { AdjudicatorRacesService } from '../races/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 
 import { AdjudicatorDisqualificationService } from '../disqualification/disqualification.service';
@@ -53,7 +53,7 @@ export class EntriesComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private translate: TranslateService,
-        private racesService: RacesService,
+        private racesService: AdjudicatorRacesService,
         private positionsService: PositionsService,
         private entryTimesService: EntryTimesService,
         private disqualificationService: AdjudicatorDisqualificationService,
@@ -171,13 +171,14 @@ export class EntriesComponent implements OnInit {
     public closeRace(): void {
         if (this.race) {
             this.race.closed = true;
-            // this.racesService.
+            this.racesService.updateRace(this.race);
         }
     }
 
     public reopenRace(): void {
         if (this.race) {
             this.race.closed = false;
+            this.racesService.updateRace(this.race);
         }
     }
 

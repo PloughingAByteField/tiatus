@@ -10,6 +10,8 @@ import { DisqualificationService } from '../services/disqualification.service';
 
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
+import { AdjudicatorRacesService } from './races/races.service';
+import { AdjudicatorRacesHttpService } from './races/races-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 import { TimesService } from '../times/times.service';
@@ -70,6 +72,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     ENV_PROVIDERS,
     RacesService,
     RacesHttpService,
+    AdjudicatorRacesService,
+    AdjudicatorRacesHttpService,
     EntriesService,
     EntriesHttpService,
     TimesService,
