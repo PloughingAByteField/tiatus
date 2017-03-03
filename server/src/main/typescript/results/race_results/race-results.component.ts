@@ -5,13 +5,13 @@ import { Observable } from 'rxjs/Observable';
 import { TranslateService } from 'ng2-translate';
 
 import { Position } from '../../models/position.model';
-import { Race } from '../../models/race.model';
+import { Race } from '../../races/race.model';
 import { Club } from '../../models/club.model';
 import { PositionTime, convertFromTimeStamp } from '../../models/postion-time.model';
 import { EntryTime } from '../../models/entry-time.model';
 
 import { PositionsService } from '../../http-services/positions.service';
-import { RacesService } from '../../services/races.service';
+import { RacesService } from '../../races/races.service';
 import { EntryTimesService } from '../../services/entry-times.service';
 
 @Component({

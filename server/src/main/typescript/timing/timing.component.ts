@@ -4,10 +4,10 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Title }     from '@angular/platform-browser';
-import { RacesService } from '../services/races.service';
+import { RacesService } from '../races/races.service';
 import { Observable } from 'rxjs/Observable';
 
-import { Race } from '../models/race.model';
+import { Race } from '../races/race.model';
 import { Position } from '../models/position.model';
 
 import { TimingPositionService } from './services/timing-position.service';

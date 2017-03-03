@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { Race } from '../models/race.model';
+import { Race } from './race.model';
 
-import { RacesHttpService } from '../http-services/races.service';
+import { RacesHttpService } from './races-http.service';
 
 @Injectable()
 export class RacesService {

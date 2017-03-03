@@ -8,8 +8,8 @@ import { TranslateModule } from 'ng2-translate';
 import { PenaltiesService } from '../services/penalties.service';
 import { DisqualificationService } from '../services/disqualification.service';
 
-import { RacesService } from '../services/races.service';
-import { RacesHttpService } from '../http-services/races.service';
+import { RacesService } from '../races/races.service';
+import { RacesHttpService } from '../races/races-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 import { TimesService } from '../times/times.service';

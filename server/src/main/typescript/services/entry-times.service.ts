@@ -10,7 +10,7 @@ import { TimesService } from '../times/times.service';
 import { EntryTime } from '../models/entry-time.model';
 import { Position } from '../models/position.model';
 import { Entry } from '../entries/entry.model';
-import { Race } from '../models/race.model';
+import { Race } from '../races/race.model';
 import { PositionTime } from '../models/postion-time.model';
 
 import { RaceEntryTimes } from '../models/race-entry-times.model';
@@ -38,15 +38,8 @@ export class EntryTimesService {
             raceEntryTimes.race = race;
             raceEntryTimes.entries = new Array<EntryTime>();
             let entriesObs = this.entriesService.getEntriesForRace(race);
-            // let entriesObs = this.entriesService.getEntries();
-            console.log('entriesObs');
-            console.log(entriesObs);
             let entryTimesObs = this.timesService.getTimesForRace(race);
-            console.log('entryTimesObs');
-            console.log(entryTimesObs);
             Observable.forkJoin(entriesObs, entryTimesObs).subscribe((data) => {
-                    console.log('fired');
-                    console.log(entriesObs);
                     let entries: Entry[] = data[0];
                     let entryTimes: EntryTime[] = data[1];
                     entries.forEach((entry: Entry) => {

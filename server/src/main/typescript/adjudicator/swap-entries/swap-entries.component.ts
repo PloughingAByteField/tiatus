@@ -5,13 +5,13 @@ import { Location }                 from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 
 import { TranslateService } from 'ng2-translate';
-import { Race } from '../../models/race.model';
+import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
 import { SwapEntriesHttpService } from './swap-entries-http.service';
 import { SwapEntriesService } from './swap-entries.service';
-import { RacesService } from '../../services/races.service';
+import { RacesService } from '../../races/races.service';
 import { EntriesService } from '../../entries/entries.service';
 import { PenaltiesService } from '../../services/penalties.service';
 import { DisqualificationService } from '../../services/disqualification.service';

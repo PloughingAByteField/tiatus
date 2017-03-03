@@ -3,7 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import { Entry, convertJsonToEntry } from './entry.model';
-import { Race } from '../models/race.model';
+import { Race } from '../races/race.model';
 
 @Injectable()
 export class EntriesHttpService {

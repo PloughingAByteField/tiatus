@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Entry } from './entry.model';
 import { RaceEntriesSubject } from './race-entries-subject.model';
-import { Race } from '../models/race.model';
+import { Race } from '../races/race.model';
 
 import { EntriesHttpService } from './entries-http.service';
 

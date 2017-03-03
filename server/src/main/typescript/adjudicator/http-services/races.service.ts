@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Race } from '../../models/race.model';
+import { Race } from '../../races/race.model';
 
 import { PenaltiesHttpService } from '../../http-services/penalties.service';
 

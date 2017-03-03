@@ -5,8 +5,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { TranslateModule } from 'ng2-translate';
 
-import { RacesService } from '../services/races.service';
-import { RacesHttpService } from '../http-services/races.service';
+import { RacesService } from '../races/races.service';
+import { RacesHttpService } from '../races/races-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 import { ClubsService } from '../http-services/clubs.service';

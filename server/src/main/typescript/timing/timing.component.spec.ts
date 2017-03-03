@@ -6,8 +6,8 @@ import { Observable } from 'rxjs/Observable';
 import { Title }     from '@angular/platform-browser';
 import { TranslateService, TranslateModule } from 'ng2-translate';
 
-import { RacesService } from '../services/races.service';
-import { RacesHttpService } from '../http-services/races.service';
+import { RacesService } from '../races/races.service';
+import { RacesHttpService } from '../races/races-http.service';
 import { PositionsService } from '../http-services/positions.service';
 import { TimingPositionService } from './services/timing-position.service';
 import { TimingComponent } from './timing.component';

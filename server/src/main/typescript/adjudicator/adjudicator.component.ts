@@ -4,9 +4,11 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Title }     from '@angular/platform-browser';
-import { RacesService } from '../services/races.service';
+
 import { Observable } from 'rxjs/Observable';
-import { Race } from '../models/race.model';
+
+import { RacesService } from '../races/races.service';
+import { Race } from '../races/race.model';
 
 /*
  * App Component

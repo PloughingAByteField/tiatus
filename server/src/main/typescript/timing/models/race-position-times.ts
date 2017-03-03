@@ -1,5 +1,5 @@
 import { PositionTime } from '../../models/postion-time.model';
-import { Race } from '../../models/race.model';
+import { Race } from '../../races/race.model';
 import { Position } from '../../models/position.model';
 
 export class RacePositionTimes {
