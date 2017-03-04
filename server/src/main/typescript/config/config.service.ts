@@ -11,6 +11,7 @@ import { ConfigHttpService } from './config-http.service';
 export class ConfigService {
     private logo: BehaviorSubject<string> = new BehaviorSubject<string>(null);
     private title: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+    private footer: BehaviorSubject<string> = new BehaviorSubject<string>(null);
     private config: Object;
 
     constructor(private service: ConfigHttpService) {
@@ -18,7 +19,12 @@ export class ConfigService {
             this.config = data;
             this.logo.next(data['logo']);
             this.title.next(data['title']);
+            this.footer.next(data['footer']);
         });
+    }
+
+    public getFooter(): Subject<string>  {
+        return this.footer;
     }
 
     public getLogo(): Subject<string>  {
