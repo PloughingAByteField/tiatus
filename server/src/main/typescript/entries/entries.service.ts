@@ -41,7 +41,6 @@ export class EntriesService {
             this.service.getEntriesForRace(race).subscribe((entries: Entry[]) => {
                 subject.entries = entries;
                 subject.subject.next(subject.entries);
-                subject.subject.complete();
             });
         }
     }
@@ -64,7 +63,6 @@ export class EntriesService {
             this.service.getEntriesForRace(race).subscribe((entries: Entry[]) => {
                 raceEntriesSubject.entries = entries;
                 raceEntriesSubject.subject.next(raceEntriesSubject.entries);
-                raceEntriesSubject.subject.complete();
             });
             return raceEntriesSubject.subject;
         }

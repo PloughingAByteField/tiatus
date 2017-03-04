@@ -5,7 +5,6 @@ import 'rxjs/add/operator/toPromise';
 
 import { EntryTime } from './entry-time.model';
 import { PositionTime, convertJsonToPositionTime } from './postion-time.model';
-import { RaceEntryTimes } from './race-entry-times.model';
 import { Race } from '../races/race.model';
 import { Entry } from '../entries/entry.model';
 
@@ -26,11 +25,9 @@ export class TimesHttpService {
         return this.http.get(url)
           .map((response) => {
             let data = response.json();
-            let rpt: RaceEntryTimes = new RaceEntryTimes();
-            rpt.race = race;
-            rpt.entries = new Array<EntryTime>();
+            let entries = new Array<EntryTime>();
             data.filter((positionTime: PositionTime) => {
-              let entryTimesForEntry: EntryTime[] = rpt.entries
+              let entryTimesForEntry: EntryTime[] = entries
                 .filter((entryTime: EntryTime) => entryTime.entry.id === positionTime.entry);
               let entryTimeForEntry: EntryTime;
               if (entryTimesForEntry.length === 0) {
@@ -38,13 +35,13 @@ export class TimesHttpService {
                   entryTimeForEntry.entry = new Entry();
                   entryTimeForEntry.entry.id = positionTime.entry;
                   entryTimeForEntry.times = new Array<PositionTime>();
-                  rpt.entries.push(entryTimeForEntry);
+                  entries.push(entryTimeForEntry);
               } else {
                 entryTimeForEntry = entryTimesForEntry[0];
               }
               entryTimeForEntry.times.push(convertJsonToPositionTime(positionTime));
             });
-            return rpt.entries;
+            return entries;
 
           }).share();
       }

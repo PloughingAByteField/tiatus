@@ -26,14 +26,12 @@ export class TimesService {
         if (subject) {
             return subject.subject;
         } else {
-            // create new RaceEntriesSubject
             let raceTimesSubject: RaceTimesSubject = new RaceTimesSubject();
             raceTimesSubject.race = race;
             this.raceEntries.push(raceTimesSubject);
             this.service.getTimesForRace(race).subscribe((times: EntryTime[]) => {
                 raceTimesSubject.times = times;
                 raceTimesSubject.subject.next(raceTimesSubject.times);
-                raceTimesSubject.subject.complete();
             });
             return raceTimesSubject.subject;
         }
@@ -46,7 +44,6 @@ export class TimesService {
             this.service.getTimesForRace(race).subscribe((times: EntryTime[]) => {
                 subject.times = times;
                 subject.subject.next(subject.times);
-                subject.subject.complete();
             });
         }
     }

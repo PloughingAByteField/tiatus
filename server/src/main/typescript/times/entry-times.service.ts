@@ -16,54 +16,31 @@ import { RaceEntryTimes } from './race-entry-times.model';
 
 @Injectable()
 export class EntryTimesService {
-    public  entryTimesSubject: Subject<EntryTime[]> =
-        new BehaviorSubject<EntryTime[]>(new Array<EntryTime>());
     private raceEntries: RaceEntryTimes[] = new Array<RaceEntryTimes>();
 
     constructor(protected entriesService: EntriesService, protected timesService: TimesService) {}
+
+    public refreshForRace(race: Race): void {
+        this.timesService.refreshForRace(race);
+        this.entriesService.refreshForRace(race);
+    }
 
     public getEntriesForRace(race: Race): Subject<EntryTime[]> {
         if (race) {
             for (let entry of this.raceEntries) {
                 if (entry.race.id === race.id) {
-                    this.entryTimesSubject.next(entry.entries);
-                    return this.entryTimesSubject;
+                    return entry.entryTimesSubject;
                 }
             }
         }
 
         if (race) {
-            let raceEntryTimes: RaceEntryTimes = new RaceEntryTimes();
-            raceEntryTimes.race = race;
-            raceEntryTimes.entries = new Array<EntryTime>();
-            let entriesObs = this.entriesService.getEntriesForRace(race);
-            let entryTimesObs = this.timesService.getTimesForRace(race);
-            Observable.forkJoin(entriesObs, entryTimesObs).subscribe((data) => {
-                    let entries: Entry[] = data[0];
-                    let entryTimes: EntryTime[] = data[1];
-                    entries.forEach((entry: Entry) => {
-                        let found: boolean = false;
-                        entryTimes.forEach((entryTime: EntryTime) => {
-                            if (entryTime.entry.id === entry.id
-                                && entryTime.entry.event === undefined) {
-                                entryTime.entry = entry;
-                                raceEntryTimes.entries.push(entryTime);
-                                found = true;
-                                return;
-                            }
-                        });
-                        if (!found) {
-                            let entryTime: EntryTime = new EntryTime();
-                            entryTime.entry = entry;
-                            entryTime.times = new Array<PositionTime>();
-                            raceEntryTimes.entries.push(entryTime);
-                        }
-                    });
-                    this.entryTimesSubject.next(raceEntryTimes.entries);
-            });
+            let raceEntryTimes: RaceEntryTimes
+                = new RaceEntryTimes(race, this.entriesService, this.timesService);
             this.raceEntries.push(raceEntryTimes);
+            return raceEntryTimes.entryTimesSubject;
         }
 
-        return this.entryTimesSubject;
+        return null;
     }
 }

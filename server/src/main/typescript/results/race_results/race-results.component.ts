@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-
+import 'rxjs/add/observable/interval';
 import { TranslateService } from 'ng2-translate';
 
 import { Position } from '../../positions/position.model';
@@ -24,7 +24,7 @@ import { DisqualificationService } from '../../disqualification/disqualification
     templateUrl: './race-results.component.html',
     providers: [ EntryTimesService ]
 })
-export class RaceResultsComponent implements OnInit {
+export class RaceResultsComponent implements OnInit, OnDestroy {
     public page: number = 1;
     public itemsPerPage: number = 10;
     public positions: Position[];
@@ -36,6 +36,7 @@ export class RaceResultsComponent implements OnInit {
     public eventFilter: string = '';
     public filteredEntryTimes: EntryTime[];
 
+    private pollingPeriod: number = 20000;
     private raceId: number = 0;
     private races: Race[];
     private race: Race;
@@ -44,6 +45,7 @@ export class RaceResultsComponent implements OnInit {
     private penaltyText: string;
     private penalties: Penalty[];
     private disqualifications: Disqualification[];
+    private polling: any;
 
     constructor(
         private route: ActivatedRoute,
@@ -86,12 +88,29 @@ export class RaceResultsComponent implements OnInit {
             this.clubFilter = '';
             this.eventFilter = '';
         });
+
         this.translate.get('DISQUALIFIED').subscribe((res: string) => {
             this.disqualifiedText = res;
         });
         this.translate.get('PENALTY').subscribe((res: string) => {
             this.penaltyText = res;
         });
+
+        this.polling = Observable.interval(this.pollingPeriod).map(() => {
+            console.log('polling');
+            this.racesService.refresh();
+            this.positionsService.refresh();
+            this.penaltiesService.refresh();
+            this.disqualificationService.refresh();
+            if (this.race) {
+                this.entryTimesService.refreshForRace(this.race);
+            }
+        }).subscribe();
+    }
+
+    public ngOnDestroy() {
+        console.log('bye');
+        this.polling.unsubscribe();
     }
 
     public onKey(value: string, field: string) {
@@ -235,7 +254,6 @@ export class RaceResultsComponent implements OnInit {
                 .subscribe((data: EntryTime[]) => {
                     this.entryTimes = data;
                     this.filteredEntryTimes = this.entryTimes;
-                    console.log(this.entryTimes);
             });
         }
     }

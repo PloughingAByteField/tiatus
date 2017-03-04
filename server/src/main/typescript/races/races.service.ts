@@ -14,10 +14,7 @@ export class RacesService {
         = new BehaviorSubject<Race[]>(this.races);
 
     constructor(protected service: RacesHttpService) {
-        this.service.getRaces().subscribe((races: Race[]) => {
-            this.races = races;
-            this.racesSubject.next(this.races);
-        });
+       this.refresh();
     }
 
     public getRaceForId(id: number): Race {
@@ -28,4 +25,10 @@ export class RacesService {
         return this.racesSubject;
     }
 
+    public refresh(): void {
+         this.service.getRaces().subscribe((races: Race[]) => {
+            this.races = races;
+            this.racesSubject.next(this.races);
+        });
+    }
 }
