@@ -26,8 +26,8 @@
             <td>{{e.entry.getClubNames()}}</td>
             <td>{{e.entry.event.name}}</td>
             <td>{{e.entry.crew}}</td>
-            <td><input #time type="text" [value]="convertFromTimeStamp(e.time.time)" (blur)="enterTime(time.value, e)"></td>
-            <td>{{e.time.synced}}</td>
+            <td><input #time type="text" [value]="convertFromTimeStamp(e)" (blur)="enterTime(time.value, e)"></td>
+            <td>{{ getSyncedForPosition(e) }}</td>
         </tr>
     </tbody>
 </table>

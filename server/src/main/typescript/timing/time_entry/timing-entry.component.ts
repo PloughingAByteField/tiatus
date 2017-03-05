@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { TimesService } from '../times/times.service';
+import { TimingTimesService } from '../times/times.service';
 import { RacesService } from '../../races/races.service';
 
 import { Club } from '../../clubs/club.model';
@@ -11,15 +11,16 @@ import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
     from '../../times/postion-time.model';
-import { EntryTime } from '../times/entry-time.model';
+import { EntryTime } from '../../times/entry-time.model';
 
 import { TimingPositionService } from '../times/timing-position.service';
-import { EntryTimesService } from '../times/entry-times.service';
+import { TimingEntryTimesService } from '../times/entry-times.service';
+// import { EntryTimesService } from '../../times/entry-times.service';
 
 @Component({
     styleUrls: [ './timing-entry.component.css' ],
     templateUrl: './timing-entry.component.html',
-    providers: [ TimesService, EntryTimesService ]
+    providers: [ TimingTimesService, TimingEntryTimesService ]
 })
 export class TimingEntryComponent implements OnInit {
     public raceEntries: Entry[];
@@ -43,9 +44,9 @@ export class TimingEntryComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private timingPositionService: TimingPositionService,
-        private timesService: TimesService,
+        private timesService: TimingTimesService,
         private racesService: RacesService,
-        private entryTimesService: EntryTimesService
+        private entryTimesService: TimingEntryTimesService
     ) {}
 
     public ngOnInit() {
@@ -80,7 +81,9 @@ export class TimingEntryComponent implements OnInit {
     public enterTime(value: string, entryTime: EntryTime) {
         if (value) {
             let timeStamp: number = convertToTimeStamp(value);
-            this.entryTimesService.addTimeForPosition(this.position, timeStamp, entryTime);
+            let positonTime: PositionTime = this.getPositionTimeForPosition(entryTime);
+            this.entryTimesService
+                .addTimeForPosition(this.position, timeStamp, positonTime, entryTime.entry);
         }
     }
 
@@ -122,16 +125,18 @@ export class TimingEntryComponent implements OnInit {
     public sortByTime(direction: string): void {
         this.reverseTimeSort = !this.reverseTimeSort;
         this.filteredEntryTimes.sort((a, b) => {
-            if (a.time.time === undefined) {
+            let apt: PositionTime = this.getPositionTimeForPosition(a);
+            let bpt: PositionTime = this.getPositionTimeForPosition(b);
+            if (apt.time === undefined) {
                 return 1;
-            } else if (b.time.time === undefined) {
+            } else if (bpt.time === undefined) {
                 return -1;
-            } else if (a.time.time === b.time.time) {
+            } else if (apt.time === bpt.time) {
                 return 0;
             } else if (direction === 'up') {
-                return a.time.time < b.time.time ? -1 : 1;
+                return apt.time < bpt.time ? -1 : 1;
             } else if (direction !== 'up') {
-                return a.time.time < b.time.time ? 1 : -1;
+                return apt.time < bpt.time ? 1 : -1;
             }
          });
     }
@@ -139,28 +144,50 @@ export class TimingEntryComponent implements OnInit {
     public sortBySynced(direction: string): void {
         this.reverseSyncedSort = !this.reverseSyncedSort;
         this.filteredEntryTimes.sort((a, b) => {
-            if (a.time.synced === undefined) {
+            let apt: PositionTime = this.getPositionTimeForPosition(a);
+            let bpt: PositionTime = this.getPositionTimeForPosition(b);
+            if (apt.synced === undefined) {
                 return 1;
-            } else if (b.time.synced === undefined) {
+            } else if (bpt.synced === undefined) {
                 return -1;
-            } else if (a.time.synced === b.time.synced) {
+            } else if (apt.synced === bpt.synced) {
                 return 0;
             } else if (direction === 'up') {
-                return a.time.synced < b.time.synced ? -1 : 1;
+                return apt.synced < bpt.synced ? -1 : 1;
             } else if (direction !== 'up') {
-                return a.time.synced < b.time.synced ? 1 : -1;
+                return apt.synced < bpt.synced ? 1 : -1;
             }
          });
     }
 
-    public convertFromTimeStamp(timeStamp: string): string {
-        return convertFromTimeStamp(+timeStamp);
+    public convertFromTimeStamp(entryTime: EntryTime): string {
+        let timeForPosition: PositionTime = this.getPositionTimeForPosition(entryTime);
+        if (timeForPosition) {
+            return convertFromTimeStamp(+timeForPosition.time);
+        }
+        return null;
     };
+
+    public getSyncedForPosition(entryTime: EntryTime): boolean {
+        let timeForPosition: PositionTime = this.getPositionTimeForPosition(entryTime);
+        if (timeForPosition) {
+            return timeForPosition.synced;
+        }
+        return false;
+    };
+
+    private getPositionTimeForPosition(entryTime: EntryTime): PositionTime {
+        return entryTime.times
+            .filter((pt: PositionTime) => pt.position === this.position.id).shift();
+    }
 
     private getTimesForRace(raceId): void {
         if (this.position && this.race) {
-            this.entryTimesService.getEntriesForRace(this.race, this.position)
+            console.log('get entries');
+            this.entryTimesService.getTimesForPositionInRace(this.position, this.race)
+            // this.entryTimesService.getEntriesForRace(this.race)
                 .subscribe((data: EntryTime[]) => {
+                console.log(data);
                 this.entryTimes = data;
                 this.filteredEntryTimes = this.entryTimes;
                 console.log(data);

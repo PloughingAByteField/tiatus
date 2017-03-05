@@ -7,6 +7,10 @@ import { TranslateModule } from 'ng2-translate';
 
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
+import { TimesService } from '../times/times.service';
+import { TimesHttpService } from '../times/times-http.service';
+import { TimingTimesService } from './times/times.service';
+import { TimingTimesHttpService } from './times/times-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 import { ClubsService } from '../clubs/clubs.service';
@@ -56,6 +60,10 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     ENV_PROVIDERS,
     RacesService,
     RacesHttpService,
+    TimesService,
+    TimingTimesService,
+    TimingTimesHttpService,
+    TimesHttpService,
     EntriesService,
     EntriesHttpService,
     ClubsService,
