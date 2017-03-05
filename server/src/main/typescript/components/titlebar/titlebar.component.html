@@ -1,9 +1,8 @@
 <nav class="navbar navbar-inverse bg-inverse" >
   <div class="container">
     <div class="titlebar">
-      <img border="0" [src]="getLogo()" height="60" />
+      <img *ngIf="getLogo()" border="0" [src]="getLogo()" height="60" />
       {{ getEventTitle() }}
     </div>
-
   </div>
 </nav>
