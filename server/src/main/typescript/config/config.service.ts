@@ -14,7 +14,7 @@ export class ConfigService {
     private footer: BehaviorSubject<string> = new BehaviorSubject<string>(null);
     private config: Object;
 
-    constructor(private service: ConfigHttpService) {
+    constructor(protected service: ConfigHttpService) {
         this.service.getConfig().subscribe((data: Object) => {
             this.config = data;
             this.logo.next(data['logo']);

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 export class ConfigHttpService {
     protected endpoint: string = '/tiatus/config/config.json';
 
-    constructor(private http: Http) {}
+    constructor(protected http: Http) {}
 
     public getConfig(): Observable<Object> {
         return this.http.get(this.endpoint)
