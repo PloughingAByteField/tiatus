@@ -7,8 +7,6 @@ import { TranslateModule } from 'ng2-translate';
 
 import { ENV_PROVIDERS } from './environment';
 
-import { RacesService } from '../races/races.service';
-import { RacesHttpService } from '../races/races-http.service';
 import { ConfigService } from '../config/config.service';
 import { ConfigHttpService } from '../config/config-http.service';
 
@@ -29,6 +27,10 @@ import { UsersComponent } from './users';
 import { AdminPositionsService } from './positions/positions.service';
 import { AdminPositionsHttpService } from './positions/positions-http.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
+
+import { AdminRacesService } from './races/races.service';
+import { AdminRacesHttpService } from './races/races-http.service';
+import { RacesHttpService } from '../races/races-http.service';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -65,7 +67,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   ],
   providers: [
     ENV_PROVIDERS,
-    RacesService,
+    AdminRacesService,
+    AdminRacesHttpService,
     RacesHttpService,
     ConfigService,
     ConfigHttpService,
