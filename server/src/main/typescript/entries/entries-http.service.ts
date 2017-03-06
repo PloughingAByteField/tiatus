@@ -7,7 +7,7 @@ import { Race } from '../races/race.model';
 
 @Injectable()
 export class EntriesHttpService {
-  constructor(private http: Http) {}
+  constructor(protected http: Http) {}
 
   public getEntries(): Observable<Entry[]> {
     return this.http.get('/rest/entries')

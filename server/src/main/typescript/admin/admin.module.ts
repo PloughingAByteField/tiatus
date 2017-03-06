@@ -40,6 +40,10 @@ import { ClubsHttpService } from '../clubs/clubs-http.service';
 import { AdminDrawService } from './draw/draw.service';
 import { AdminDrawHttpService } from './draw/draw-http.service';
 
+import { AdminEntriesService } from './entries/entries.service';
+import { AdminEntriesHttpService } from './entries/entries-http.service';
+import { EntriesHttpService } from '../entries/entries-http.service';
+
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
@@ -89,6 +93,9 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     ClubsHttpService,
     AdminDrawService,
     AdminDrawHttpService,
+    AdminEntriesService,
+    AdminEntriesHttpService,
+    EntriesHttpService,
     Title
   ]
 })

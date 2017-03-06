@@ -1,1 +1,9 @@
 hello from entries
+
+<div *ngIf="entries">
+    <table>
+        <tr *ngFor="let entry of entries">
+            <td>{{ entry.number }} {{ entry.race.name }}</td>
+        </tr>
+    </table>
+</div>

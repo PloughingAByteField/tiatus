@@ -12,6 +12,7 @@ export class ClubsComponent implements OnInit {
   public clubs: Club[];
 
   constructor(private clubsService: AdminClubsService) {}
+
   public ngOnInit() {
     console.log('hello from clubs');
     this.clubsService.getClubs()
