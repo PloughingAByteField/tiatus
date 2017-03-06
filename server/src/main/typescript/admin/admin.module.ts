@@ -15,6 +15,16 @@ import { ConfigHttpService } from '../config/config-http.service';
 import { adminRoutes } from './admin.routes';
 import { AdminComponent } from './admin.component';
 import { LandingComponent } from './landing';
+import { MenuComponent } from './menu';
+
+import { ClubsComponent } from './clubs';
+import { ConfigComponent } from './config';
+import { DrawComponent } from './draw';
+import { EntriesComponent } from './entries';
+import { EventsComponent } from './events';
+import { PositionsComponent } from './positions';
+import { RacesComponent } from './races';
+import { UsersComponent } from './users';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -27,7 +37,16 @@ import { NoContentModule } from '../components/no-content/no-content.module';
   bootstrap: [ AdminComponent ],
   declarations: [
     AdminComponent,
-    LandingComponent
+    LandingComponent,
+    MenuComponent,
+    ClubsComponent,
+    ConfigComponent,
+    DrawComponent,
+    EntriesComponent,
+    EventsComponent,
+    PositionsComponent,
+    RacesComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

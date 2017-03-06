@@ -2,13 +2,9 @@
 
 <div class="container-fluid">
     <div class="row">
-        <sidebar [races]="races" [showLogout]="true"></sidebar>
+        <menu></menu>
         <main>
             <router-outlet></router-outlet>
-
-                <div *ngFor="let race of races | async" >
-                    <span>name: {{race.name}} id: {{race.id}}</span>
-                </div>
         </main>
     </div>
 
