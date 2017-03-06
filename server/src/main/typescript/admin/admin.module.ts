@@ -33,6 +33,10 @@ import { AdminConfigService } from './config/config.service';
 import { AdminConfigHttpService } from './config/config-http.service';
 import { ConfigHttpService } from '../config/config-http.service';
 
+import { AdminClubsService } from './clubs/clubs.service';
+import { AdminClubsHttpService } from './clubs/clubs-http.service';
+import { ClubsHttpService } from '../clubs/clubs-http.service';
+
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
@@ -77,6 +81,9 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     AdminPositionsService,
     AdminPositionsHttpService,
     PositionsHttpService,
+    AdminClubsService,
+    AdminClubsHttpService,
+    ClubsHttpService,
     Title
   ]
 })

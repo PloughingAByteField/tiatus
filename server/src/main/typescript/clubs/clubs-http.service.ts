@@ -9,7 +9,7 @@ export class ClubsHttpService {
 
   protected endPoint: string = '/rest/clubs';
 
-  constructor(private http: Http) {}
+  constructor(protected http: Http) {}
 
   public getClubs(): Observable<Club[]> {
     return this.http.get(this.endPoint)
