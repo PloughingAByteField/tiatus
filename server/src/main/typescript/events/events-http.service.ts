@@ -9,7 +9,7 @@ export class EventsHttpService {
 
   protected endpoint: string = '/rest/events';
 
-  constructor(private http: Http) {}
+  constructor(protected http: Http) {}
 
   public getEvents(): Observable<Event[]> {
     return this.http.get(this.endpoint)

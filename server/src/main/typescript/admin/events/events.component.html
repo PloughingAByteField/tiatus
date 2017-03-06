@@ -1,1 +1,9 @@
 hello from events
+
+<div *ngIf="events">
+    <table>
+        <tr *ngFor="let event of events">
+            <td>{{ event.name }}</td>
+        </tr>
+    </table>
+</div>

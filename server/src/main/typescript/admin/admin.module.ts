@@ -44,6 +44,10 @@ import { AdminEntriesService } from './entries/entries.service';
 import { AdminEntriesHttpService } from './entries/entries-http.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 
+import { AdminEventsService } from './events/events.service';
+import { AdminEventsHttpService } from './events/events-http.service';
+import { EventsHttpService } from '../events/events-http.service';
+
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
@@ -96,6 +100,9 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     AdminEntriesService,
     AdminEntriesHttpService,
     EntriesHttpService,
+    AdminEventsService,
+    AdminEventsHttpService,
+    EventsHttpService,
     Title
   ]
 })
