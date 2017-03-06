@@ -26,7 +26,9 @@ import { PositionsComponent } from './positions';
 import { RacesComponent } from './races';
 import { UsersComponent } from './users';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AdminPositionsService } from './positions/positions.service';
+import { AdminPositionsHttpService } from './positions/positions-http.service';
+import { PositionsHttpService } from '../positions/positions-http.service';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -56,7 +58,6 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     SidebarModule,
     TitlebarModule,
     NoContentModule,
-    NgbModule.forRoot(),
     TranslateModule.forRoot(),
     RouterModule.forRoot(
       adminRoutes, { useHash: false, preloadingStrategy: PreloadAllModules}
@@ -68,6 +69,9 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacesHttpService,
     ConfigService,
     ConfigHttpService,
+    AdminPositionsService,
+    AdminPositionsHttpService,
+    PositionsHttpService,
     Title
   ]
 })

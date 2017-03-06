@@ -8,7 +8,7 @@ import { Position, convertJsonToPosition } from './position.model';
 export class PositionsHttpService {
   protected endpoint: string = '/rest/positions';
 
-  constructor(private http: Http) {}
+  constructor(protected http: Http) {}
 
   public getPositions(): Observable<Position[]> {
     return this.http.get(this.endpoint)

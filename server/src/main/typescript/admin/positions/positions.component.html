@@ -1,1 +1,9 @@
 hello from positions
+
+<div *ngIf="positions">
+    <table>
+        <tr *ngFor="let position of positions">
+            <td>{{ position.name}}</td>
+        </tr>
+    </table>
+</div>
