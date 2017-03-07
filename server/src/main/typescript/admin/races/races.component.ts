@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
 import { Race } from '../../races/race.model';
 import { AdminRacesService } from './races.service';
+import { ExistingRaceNameValidator } from './ExistingRaceNameValidator';
 
 @Component({
   selector: 'races',
@@ -9,49 +11,84 @@ import { AdminRacesService } from './races.service';
   templateUrl: './races.component.html'
 })
 export class RacesComponent implements OnInit {
-  public model: Race = new Race();
-  public existingName: boolean = false;
-  public existingNumber: boolean = false;
-  public invalidNumber: boolean = false;
+  public raceForm: FormGroup;
 
-  public races: Race[];
+  public races: Race[] = new Array<Race>();
 
   constructor(private racesService: AdminRacesService) {}
+
   public ngOnInit() {
-    console.log('hello from races');
+    this.raceForm = new FormGroup({
+      name: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(10),
+          this.validateRaceName()
+      ]),
+      raceOrder: new FormControl(this.races.length + 1, [
+          Validators.required, this.validateRaceOrder()
+      ])
+    });
     this.racesService.getRaces()
       .subscribe((races: Race[]) => {
+        console.log(races);
         this.races = races;
-        this.model.raceOrder = this.races.length + 1;
+        this.raceForm.patchValue({
+          raceOrder: this.races.length + 1
+        });
       });
   }
 
-  public addRace(model: Race): void {
-    console.log(model);
+  public onSubmit({ value, valid }: { value: Race, valid: boolean }) {
+    console.log(value);
+    console.log(valid);
+    let race: Race = new Race();
+    race.name = value.name;
+    race.raceOrder = value.raceOrder;
+    this.racesService.addRace(race);
+    this.raceForm.reset({
+      name: '',
+      raceOrder: race.raceOrder + 1
+    });
   }
 
-  public checkName(model: Race): void {
-    this.existingName = false;
-    let existingName: Race = this.races.filter((race: Race) => race.name === model.name).shift();
-    if (existingName) {
-      this.existingName = true;
-    }
+  private isEmptyInputValue(value: any): boolean {
+    return value == null || value.length === 0;
   }
 
-  public checkNumber(model: Race): void {
-    this.invalidNumber = false;
-    if (model.raceOrder < 0 || model.raceOrder > this.races.length + 1) {
-      console.log('invalid number');
-      this.invalidNumber = true;
-      return;
-    }
+  private validateRaceName(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} => {
+      for (let race of this.races) {
+        if (race.name === control.value) {
+          return { existingName: true };
+        }
+      }
 
-    this.existingNumber = false;
-    let existingOrder: Race = this.races
-      .filter((race: Race) => race.raceOrder === model.raceOrder).shift();
-    if (existingOrder) {
-      this.existingNumber = true;
-    }
+      return null;
+    };
+  }
 
+  private validateRaceOrder(): ValidatorFn {
+    return (control: AbstractControl): {[key: string]: any} => {
+      if (this.isEmptyInputValue(control.value)) {
+        return { tooSmall: true };
+      }
+
+      if (control.value <= 0) {
+        return { tooSmall: true };
+      }
+
+      if (control.value > this.races.length + 1) {
+        return { tooLarge: true };
+      }
+
+      for (let race of this.races) {
+        if (race.raceOrder === control.value) {
+          return { existingNumber: true };
+        }
+      }
+
+      return null;
+    };
   }
 }

@@ -1,41 +1,28 @@
-hello from races
-
 <p>{{ 'ADD_RACE' | translate }}</p>
 
-<div>
-    <form #raceForm="ngForm" class="form-group" novalidate>
-        <div class="form-group">
-            <label>{{ 'RACE_NAME' | translate }}:</label>
-            <input type="text" name="name" id="name" [(ngModel)]="model.name" required minlength="3" maxlength="10" #name="ngModel" (keyup)="checkName(model)"/>
-            <div *ngIf="name.dirty || name.touched">
-                <div *ngIf="name.errors" class="alert alert-danger">
-                    <div [hidden]="!name.errors.required">{{ 'RACE_NAME_REQUIRED' | translate }}</div>
-                    <div [hidden]="!name.errors.minlength">{{ 'RACE_NAME_TOO_SHORT' | translate }}</div>
-                    <div [hidden]="!name.errors.maxlength">{{ 'RACE_NAME_TOO_LONG' | translate }}</div>
-                </div>
-                <div [hidden]="!existingName" class="alert alert-danger">{{ 'RACE_NAME_ALREADY_EXISTS' | translate }}</div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>{{ 'RACE_ORDER' | translate }}:</label>
-            <input type="number" name="order" id="order" [(ngModel)]="model.raceOrder" required min="1" max="10" #order="ngModel" (keyup)="checkNumber(model)" (change)="checkNumber(model)"/>
-            <div *ngIf="order.dirty || order.touched" >
-                <div *ngIf="order.errors" class="alert alert-danger">
-                    <div [hidden]="!order.errors.required">{{ 'RACE_ORDER_REQUIRED' | translate }}</div>
-                    <div [hidden]="!order.errors.minlength">{{ 'RACE_ORDER_TOO_SMALL' | translate }}</div>
-                    <div [hidden]="!order.errors.maxlength">{{ 'RACE_ORDER_TOO_LARGE' | translate }}</div>
-                </div>
-                <div [hidden]="!existingNumber" class="alert alert-danger">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</div>
-                <div [hidden]="!invalidNumber" class="alert alert-danger">{{ 'RACE_ORDER_INVLAID_NUMBER' | translate }}</div>
-            </div>
-        </div>  
-        
-        <div class="form-group">
-            <button [disabled]="!raceForm.form.valid && !existingName && !existingNumber && !invalidNumber" (click)="addRace(model)">{{ 'ADD_RACE' | translate }}</button>
-        </div>
-    </form>
-</div>
+<form [formGroup]="raceForm" class="form-group" (ngSubmit)="onSubmit(raceForm)" novalidate>
+  <div class="form-group">
+    <label>{{ 'RACE_NAME' | translate }}:</label>
+      <input type="text" class="form-control" formControlName="name" placeholder="{{ 'ENTER_RACE_NAME' | translate }}">
+      <div *ngIf="raceForm.get('name').errors && raceForm.get('name').touched" class="alert alert-danger">
+        <div [hidden]="!raceForm.get('name').hasError('required')">{{ 'RACE_NAME_REQUIRED' | translate }}</div>
+        <div [hidden]="!raceForm.get('name').hasError('minlength')">{{ 'RACE_NAME_TOO_SHORT' | translate }}</div>
+        <div [hidden]="!raceForm.get('name').hasError('maxlength')">{{ 'RACE_NAME_TOO_LONG' | translate }}</div>
+        <div [hidden]="!raceForm.get('name').hasError('existingName')">{{ 'RACE_NAME_ALREADY_EXISTS' | translate }}</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>{{ 'RACE_ORDER' | translate }}:</label>
+      <input type="number" class="form-control" formControlName="raceOrder" required>
+      <div *ngIf="raceForm.get('raceOrder').errors && raceForm.get('raceOrder').touched" class="alert alert-danger">
+        <div [hidden]="!raceForm.get('raceOrder').hasError('required')">{{ 'RACE_ORDER_REQUIRED' | translate }}</div>
+        <div [hidden]="!raceForm.get('raceOrder').hasError('tooSmall')">{{ 'RACE_ORDER_TOO_SMALL' | translate }}</div>
+        <div [hidden]="!raceForm.get('raceOrder').hasError('tooLarge')">{{ 'RACE_ORDER_TOO_LARGE' | translate }}</div>
+        <div [hidden]="!raceForm.get('raceOrder').hasError('existingNumber')">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</div>
+   </div>
+  </div>
+    <button type="submit" [disabled]="!raceForm.valid">{{ 'ADD_RACE' | translate }}</button>
+</form>
 
 <div *ngIf="races">
     <table id="races" table class="table table-condensed table-bordered table-striped" >
@@ -48,7 +35,7 @@ hello from races
             <tr *ngFor="let race of races">
                 <td data-title="'RACE_NAME' | translate">{{race.name}}</td>
                 <td data-title="'RACE_ORDER' | translate">{{race.raceOrder}}</td>
-                <td><button class="btn primary" ng-click="emoveRace(race)">{{ 'REMOVE_RACE' | translate }}</button></td>
+                <td><button class="btn primary" ng-click="removeRace(race)">{{ 'REMOVE_RACE' | translate }}</button></td>
             </tr>
         </tbody>
     </table>

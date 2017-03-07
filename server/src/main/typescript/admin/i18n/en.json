@@ -12,6 +12,7 @@
     "CREATE_RACE" : "Create Race",
     "REMOVE_RACE" : "Remove Race",
     "RACE_NAME" : "Race Name",
+    "ENTER_RACE_NAME" : "Enter race Name",
     "RACE_ORDER" : "Race Order",
     "RACE_NAME_REQUIRED" : "Race name is required.",
     "RACE_NAME_TOO_SHORT" : "Race name is too short.",
@@ -20,6 +21,6 @@
     "RACE_ORDER_REQUIRED" : "Race order number is required.",
     "RACE_ORDER_TOO_SMALL" : "Race order number is too small.",
     "RACE_ORDER_TOO_LARGE" : "Race order number is too large.",
-    "RACE_ORDER_ALREADY_EXISTS" : "Race number already exists.",
-    "RACE_ORDER_INVLAID_NUMBER" : "Invalid race number."
+    "RACE_ORDER_ALREADY_EXISTS" : "Race order number already exists.",
+    "RACE_ORDER_INVLAID_NUMBER" : "Invalid race order number."
 }
