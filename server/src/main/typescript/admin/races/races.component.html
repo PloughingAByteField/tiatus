@@ -33,9 +33,11 @@
         </thead>
         <tbody>
             <tr *ngFor="let race of races">
-                <td data-title="'RACE_NAME' | translate">{{race.name}}</td>
-                <td data-title="'RACE_ORDER' | translate">{{race.raceOrder}}</td>
-                <td><button class="btn primary" ng-click="removeRace(race)">{{ 'REMOVE_RACE' | translate }}</button></td>
+                <td><input type="text" [(ngModel)]="race.name"></td>
+                <td>{{ race.raceOrder }}</td>
+                <td><button class="btn primary" (click)="updateRace(race)">{{ 'UPDATE_RACE' | translate }}</button></td>
+                <td><button class="btn primary" (click)="removeRace(race)">{{ 'REMOVE_RACE' | translate }}</button></td>
+                <td></td>
             </tr>
         </tbody>
     </table>

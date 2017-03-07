@@ -7,7 +7,7 @@ import { ExistingRaceNameValidator } from './ExistingRaceNameValidator';
 
 @Component({
   selector: 'races',
-  styleUrls: [ './races.component.css' ],
+  styleUrls: ['./races.component.css'],
   templateUrl: './races.component.html'
 })
 export class RacesComponent implements OnInit {
@@ -15,18 +15,18 @@ export class RacesComponent implements OnInit {
 
   public races: Race[] = new Array<Race>();
 
-  constructor(private racesService: AdminRacesService) {}
+  constructor(private racesService: AdminRacesService) { }
 
   public ngOnInit() {
     this.raceForm = new FormGroup({
       name: new FormControl('', [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(10),
-          this.validateRaceName()
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(10),
+        this.validateRaceName()
       ]),
       raceOrder: new FormControl(this.races.length + 1, [
-          Validators.required, this.validateRaceOrder()
+        Validators.required, this.validateRaceOrder()
       ])
     });
     this.racesService.getRaces()
@@ -37,6 +37,14 @@ export class RacesComponent implements OnInit {
           raceOrder: this.races.length + 1
         });
       });
+  }
+
+  public removeRace(race: Race): void {
+    this.racesService.removeRace(race);
+  }
+
+  public updateRace(race: Race): void {
+    this.racesService.updateRace(race);
   }
 
   public onSubmit({ value, valid }: { value: Race, valid: boolean }) {
@@ -57,7 +65,7 @@ export class RacesComponent implements OnInit {
   }
 
   private validateRaceName(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
+    return (control: AbstractControl): { [key: string]: any } => {
       for (let race of this.races) {
         if (race.name === control.value) {
           return { existingName: true };
@@ -69,7 +77,7 @@ export class RacesComponent implements OnInit {
   }
 
   private validateRaceOrder(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
+    return (control: AbstractControl): { [key: string]: any } => {
       if (this.isEmptyInputValue(control.value)) {
         return { tooSmall: true };
       }
