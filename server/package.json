@@ -6,7 +6,7 @@
   "scripts": {
     "build:aot:prod": "npm run clean && npm run ngc -p tsconfig.webpack.json -- --webpack webpack/webpack.prod.js && webpack --config webpack/webpack.prod.js  --progress --profile --bail",
     "build:aot": "npm run build:aot:prod",
-    "clean": "rimraf compiled ${TARGET}/common ${TARGET}/vendor ${TARGET}/common ${TARGET}/polyfills ${TARGET}/adjudicator ${TARGET}/results ${TARGET}/timing ${TARGET}/assets",
+    "clean": "rimraf compiled ${TARGET}/common ${TARGET}/vendor ${TARGET}/common ${TARGET}/polyfills ${TARGET}/adjudicator ${TARGET}/admin ${TARGET}/results ${TARGET}/timing ${TARGET}/assets",
     "build": "npm run test && npm run build:aot",
     "ngc": "./node_modules/.bin/ngc -w -p tsconfig.webpack.json",
     "rimraf": "rimraf",
