@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
+import { Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
 import { Race } from '../../races/race.model';
 import { AdminRacesService } from './races.service';
@@ -11,14 +12,17 @@ import { ExistingRaceNameValidator } from './ExistingRaceNameValidator';
   templateUrl: './races.component.html'
 })
 export class RacesComponent implements OnInit {
-  public raceForm: FormGroup;
+  public addRaceForm: FormGroup;
+  public racesForm: FormGroup;
 
   public races: Race[] = new Array<Race>();
+
+  private alteredRaceName: string;
 
   constructor(private racesService: AdminRacesService) { }
 
   public ngOnInit() {
-    this.raceForm = new FormGroup({
+    this.addRaceForm = new FormGroup({
       name: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
@@ -29,37 +33,83 @@ export class RacesComponent implements OnInit {
         Validators.required, this.validateRaceOrder()
       ])
     });
+
     this.racesService.getRaces()
       .subscribe((races: Race[]) => {
-        console.log(races);
         this.races = races;
-        this.raceForm.patchValue({
+        this.addRaceForm.patchValue({
           raceOrder: this.races.length + 1
         });
+        this.racesForm = new FormGroup({
+          races: new FormArray([])
+        });
+        this.races.map((race: Race) => this.addRaceToArray(race));
       });
   }
 
-  public removeRace(race: Race): void {
-    this.racesService.removeRace(race);
+  public addRaceToArray(race: Race) {
+    let orderControl: FormControl = new FormControl(race.raceOrder);
+    let nameControl: FormControl = new FormControl(race.name, [
+              Validators.required,
+              Validators.minLength(3),
+              Validators.maxLength(10),
+              this.validateRaceName()]);
+    // do not need to check the changes as validateRaceName wil kick in
+    // nameControl.valueChanges
+    //       .subscribe((data) => {
+    //         this.onValueChanged(race, data);
+    //       });
+    let raceGroup = new FormGroup({
+      name: nameControl,
+      order: orderControl
+    });
+
+    let array = <FormArray> this.racesForm.get('races');
+    array.push(raceGroup);
   }
 
-  public updateRace(race: Race): void {
-    this.racesService.updateRace(race);
+  get getRacesArray(): FormArray { return this.racesForm.get('races') as FormArray; }
+
+  public removeRace(data: any): void {
+    let race: Race = this.getRaceForOrder(data.value.order);
+    if (race) {
+      this.racesService.removeRace(race);
+    }
+  }
+
+  public updateRace(data: any): void {
+    let race: Race = this.getRaceForOrder(data.value.order);
+    if (race) {
+      race.name = data.value.name;
+      this.racesService.updateRace(race);
+    }
+  }
+
+  public onValueChanged(race: Race, data?: any) {
+    console.log('data');
+    console.log(data);
+    console.log(race);
   }
 
   public onSubmit({ value, valid }: { value: Race, valid: boolean }) {
-    console.log(value);
-    console.log(valid);
     let race: Race = new Race();
     race.name = value.name;
     race.raceOrder = value.raceOrder;
     this.racesService.addRace(race);
-    this.raceForm.reset({
+    this.addRaceForm.reset({
       name: '',
       raceOrder: race.raceOrder + 1
     });
   }
 
+  private getRaceForOrder(order: number): Race {
+    for (let race of this.races) {
+        if (race.raceOrder === order) {
+          return race;
+        }
+    }
+    return null;
+  }
   private isEmptyInputValue(value: any): boolean {
     return value == null || value.length === 0;
   }
