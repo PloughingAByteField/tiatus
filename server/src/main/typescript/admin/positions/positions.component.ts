@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
+import { Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
 import { Position } from '../../positions/position.model';
 import { AdminPositionsService } from './positions.service';
@@ -10,14 +12,90 @@ import { AdminPositionsService } from './positions.service';
 })
 export class PositionsComponent implements OnInit {
 
-  public positions: Position[];
+  public addPositionForm: FormGroup;
+  public positionsForm: FormGroup;
+
+  public positions: Position[] = new Array<Position>();
 
   constructor(private positionsService: AdminPositionsService) {}
 
   public ngOnInit() {
-    console.log('hello from positions');
+    this.addPositionForm = new FormGroup({
+      name: this.getNameControlWithValidators('')
+    });
     this.positionsService.getPositions()
-      .subscribe((positions: Position[]) => this.positions = positions);
+      .subscribe((positions: Position[]) => {
+        this.positions = positions;
+        this.positionsForm = new FormGroup({
+          positions: new FormArray([])
+        });
+        this.positions.map((position: Position) => this.addPositionToFormArray(position));
+      });
   }
 
+  public addPositionToFormArray(position: Position): void {
+    let nameControl: FormControl = this.getNameControlWithValidators(position.name);
+    let positionControl: FormControl = new FormControl(position);
+    let positionGroup = new FormGroup({
+      name: nameControl,
+      position: positionControl
+    });
+    let array: FormArray = this.getPositionFormArray();
+    array.push(positionGroup);
+  }
+
+  public removePosition(position: Position): void {
+    console.log(position);
+    // let position: Position = this.getRaceForOrder(data.value.order);
+    // if (position) {
+      // this.racesService.removeRace(race);
+    // }
+  }
+
+  public updatePosition(data: string, position: Position): void {
+    console.log(data);
+    console.log(position);
+    position.name = data;
+    // let position: Position = this.getRaceForOrder(data.value.order);
+    // if (position) {
+    //   position.name = data.value.name;
+    //   // this.racesService.updateRace(race);
+    // }
+  }
+
+  public onSubmit({ value, valid }: { value: Position, valid: boolean }) {
+    let position: Position = new Position();
+    position.name = value.name;
+    // this.positionsService.addPosition(position);
+    this.addPositionForm.reset({
+      name: ''
+    });
+  }
+
+  private getPositionFormArray(): FormArray {
+    if (this.positionsForm) {
+      return this.positionsForm.get('positions') as FormArray;
+    }
+  }
+
+  private getNameControlWithValidators(value: string): FormControl {
+    return new FormControl(value, [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(250),
+        this.validatePositionName()
+      ]);
+  }
+
+  private validatePositionName(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } => {
+      for (let position of this.positions) {
+        if (position.name === control.value) {
+          return { existingName: true };
+        }
+      }
+
+      return null;
+    };
+  }
 }

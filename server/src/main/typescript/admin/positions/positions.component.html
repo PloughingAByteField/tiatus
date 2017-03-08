@@ -1,9 +1,38 @@
-hello from positions
+<p>{{ 'ADD_POSITION' | translate }}</p>
 
-<div *ngIf="positions">
-    <table>
-        <tr *ngFor="let position of positions">
-            <td>{{ position.name}}</td>
-        </tr>
-    </table>
+<div>
+    <form [formGroup]="addPositionForm" (ngSubmit)="onSubmit(addPositionForm)" novalidate>
+        <div class="form-group">
+            <label>{{ 'POSITION_NAME' | translate }}</label>
+            <input type="text" class="form-control" formControlName="name" placeholder="{{ 'ENTER_POSITION_NAME' | translate }}">
+            <div *ngIf="addPositionForm.get('name').errors && addPositionForm.get('name').touched" class="alert alert-danger">
+                <div [hidden]="!addPositionForm.get('name').hasError('required')">{{ 'POSITION_NAME_REQUIRED' | translate }}</div>
+                <div [hidden]="!addPositionForm.get('name').hasError('minlength')">{{ 'POSITION_NAME_TOO_SHORT' | translate }}</div>
+                <div [hidden]="!addPositionForm.get('name').hasError('maxlength')">{{ 'POSITION_NAME_TOO_LONG' | translate }}</div>
+                <div [hidden]="!addPositionForm.get('name').hasError('existingName')">{{ 'POSITION_NAME_ALREADY_EXISTS' | translate }}</div>
+            </div>
+        </div>
+
+        <button type="submit" [disabled]="!addPositionForm.valid">{{ 'CREATE_POSITION' | translate }}</button>
+    </form> 
 </div>
+
+<div *ngIf="positions" [formGroup]="positionsForm">
+    <div formArrayName="positions">
+        <table id="positions" class="table table-condensed table-bordered table-striped">
+            <thead>
+                <th>{{ 'POSITION_NAME' | translate }}</th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let position of positionsForm.get('positions').controls; let i=index" [formGroupName]="i">
+                    <td><input type="text" formControlName="name"/></td>
+                    <td><button class="btn primary update-position" [disabled]="!position.get('name').valid" (click)="updatePosition(position.get('name').value, position.get('position').value)">{{ 'UPDATE_POSITION' | translate }}</button></td>
+                    <td><button class="btn primary delete-position" (click)="removePosition(position.get('position').value)">{{ 'DELETE_POSITION' | translate }}</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
