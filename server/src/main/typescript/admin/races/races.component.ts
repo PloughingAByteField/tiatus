@@ -29,7 +29,8 @@ export class RacesComponent implements OnInit {
         Validators.maxLength(10),
         this.validateRaceName()
       ]),
-      raceOrder: new FormControl(this.races.length + 1, [
+      raceOrder: new FormControl(
+          this.races.length > 0 ? this.races[this.races.length - 1].raceOrder + 1 : 1, [
         Validators.required, this.validateRaceOrder()
       ])
     });
@@ -38,7 +39,7 @@ export class RacesComponent implements OnInit {
       .subscribe((races: Race[]) => {
         this.races = races;
         this.addRaceForm.patchValue({
-          raceOrder: this.races.length + 1
+          raceOrder: this.races.length > 0 ? this.races[this.races.length - 1].raceOrder + 1 : 1
         });
         this.racesForm = new FormGroup({
           races: new FormArray([])
