@@ -17,6 +17,7 @@
         <class>org.tiatus.entity.EntryPositionTime</class>
         <class>org.tiatus.entity.Penalty</class>
         <class>org.tiatus.entity.Disqualification</class>
+        <class>org.tiatus.entity.EventPosition</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:h2:target/st_h2" />

@@ -7,6 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by johnreynolds on 10/10/2016.
@@ -39,6 +41,10 @@ public class Event implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "finishing_position")
 	private Position finishingPosition;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "event")
+	@OrderBy("positionOrder")
+	private Set<EventPosition> positions = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -88,6 +94,14 @@ public class Event implements Serializable {
 
 	public void setFinishingPosition(Position finishingPosition) {
 		this.finishingPosition = finishingPosition;
+	}
+
+	public Set<EventPosition> getPositions() {
+		return positions;
+	}
+
+	public void setPositions(Set<EventPosition> positions) {
+		this.positions = positions;
 	}
 
 	@Override

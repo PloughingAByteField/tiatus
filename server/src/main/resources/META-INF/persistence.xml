@@ -17,6 +17,7 @@
         <class>org.tiatus.entity.EntryPositionTime</class>
         <class>org.tiatus.entity.Penalty</class>
         <class>org.tiatus.entity.Disqualification</class>
+        <class>org.tiatus.entity.EventPosition</class>
         <properties>
             <!-- Properties for Hibernate -->
             <property name="hibernate.show_sql" value="true" />
