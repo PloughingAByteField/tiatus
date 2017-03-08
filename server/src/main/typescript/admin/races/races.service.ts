@@ -22,6 +22,24 @@ export class AdminRacesService extends RacesService {
         this.service.removeRace(race).then((r: Race) => {
             let index = this.races.indexOf(r);
             let sliced = this.races.splice(index, 1);
+            // reorganise race order
+            let updatedRaces = this.races.filter((raceToUpdate: Race) => {
+                if (raceToUpdate.raceOrder > r.raceOrder) {
+                    raceToUpdate.raceOrder = raceToUpdate.raceOrder - 1;
+                    return raceToUpdate;
+                }
+            });
+            updatedRaces.forEach((updatedRace: Race) => this.updateRace(updatedRace));
+
+            this.races.sort((a: Race, b: Race) => {
+                if (a.raceOrder < b.raceOrder) {
+                    return -1;
+                } else if (a.raceOrder === b.raceOrder) {
+                    return 0;
+                } else if (a.raceOrder > b.raceOrder) {
+                    return 1;
+                }
+            });
             this.racesSubject.next(this.races);
         });
     }
