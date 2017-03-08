@@ -6,6 +6,7 @@ import { DrawComponent } from './draw';
 import { EntriesComponent } from './entries';
 import { EventsComponent } from './events';
 import { PositionsComponent } from './positions';
+import { RacePositionsComponent } from './race-positions';
 import { RacesComponent } from './races';
 import { UsersComponent } from './users';
 import { NoContentComponent } from '../components/no-content/no-content.component';
@@ -18,6 +19,7 @@ export const adminRoutes: Routes = [
   { path: 'entries',      component: EntriesComponent },
   { path: 'events',      component: EventsComponent },
   { path: 'positions',      component: PositionsComponent },
+  { path: 'race-positions',      component: RacePositionsComponent },
   { path: 'races',      component: RacesComponent },
   { path: 'users',      component: UsersComponent },
   { path: '**',    component: NoContentComponent }

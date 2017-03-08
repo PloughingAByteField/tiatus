@@ -19,6 +19,7 @@ import { DrawComponent } from './draw';
 import { EntriesComponent } from './entries';
 import { EventsComponent } from './events';
 import { PositionsComponent } from './positions';
+import { RacePositionsComponent } from './race-positions';
 import { RacesComponent } from './races';
 import { UsersComponent } from './users';
 
@@ -29,6 +30,9 @@ import { PositionsHttpService } from '../positions/positions-http.service';
 import { AdminRacesService } from './races/races.service';
 import { AdminRacesHttpService } from './races/races-http.service';
 import { RacesHttpService } from '../races/races-http.service';
+
+import { RacePositionsService } from './race-positions/race-positions.service';
+import { RacePositionsHttpService } from './race-positions/race-positions-http.service';
 
 import { AdminConfigService } from './config/config.service';
 import { AdminConfigHttpService } from './config/config-http.service';
@@ -70,7 +74,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     EventsComponent,
     PositionsComponent,
     RacesComponent,
-    UsersComponent
+    UsersComponent,
+    RacePositionsComponent
   ],
   imports: [
     BrowserModule,
@@ -110,6 +115,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     EventsHttpService,
     AdminUsersService,
     AdminUsersHttpService,
+    RacePositionsService,
+    RacePositionsHttpService,
     Title
   ]
 })
