@@ -2,7 +2,7 @@ import { platformBrowser } from '@angular/platform-browser';
 import { decorateModuleRef } from './environment';
 
 import { AdminModuleNgFactory } from
-  '../../../../compiled/src/main/typescript/admin/admin.module.ngfactory';
+  '../../../../target/ts_compiled/src/main/typescript/admin/admin.module.ngfactory';
 
 export function main(): Promise<any> {
   return platformBrowser()

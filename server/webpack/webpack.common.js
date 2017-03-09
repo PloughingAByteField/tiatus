@@ -32,6 +32,7 @@ const METADATA = {
 };
 
 const TARGET = process.env.TARGET;
+const COMPILED_DIR='../target/ts_compiled';
 
 /*
  * Webpack configuration
@@ -82,7 +83,7 @@ module.exports = function (options) {
       extensions: ['.ts', '.js', '.json'],
 
       // An array of directory names to be resolved to the current directory
-      modules: isProd ? [ helpers.root('./compiled/src'), helpers.root('./compiled/node_modules'), helpers.root('node_modules')] : [helpers.root('src'), helpers.root('node_modules')],
+      modules: isProd ? [ helpers.root(COMPILED_DIR + '/src'), helpers.root(COMPILED_DIR + '/node_modules'), helpers.root('node_modules')] : [helpers.root('src'), helpers.root('node_modules')],
 
     },
 
@@ -108,7 +109,7 @@ module.exports = function (options) {
             '@angularclass/hmr-loader?pretty=' + !isProd + '&prod=' + isProd,
             'awesome-typescript-loader?{configFileName: "tsconfig.webpack.json"}',
             'angular2-template-loader',
-            'angular-router-loader?loader=system&genDir=compiled&aot=' + AOT
+            'angular-router-loader?loader=system&genDir=' + COMPILED_DIR + '&aot=' + AOT
           ],
           exclude: [/\.(spec|e2e)\.ts$/]
         },

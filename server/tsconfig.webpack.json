@@ -43,7 +43,7 @@
     "useWebpackText": true
   },
   "angularCompilerOptions": {
-   "genDir": "./compiled",
+   "genDir": "./target/ts_compiled",
    "skipMetadataEmit": true
   },
   "compileOnSave": false,

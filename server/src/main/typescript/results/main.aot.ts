@@ -2,7 +2,7 @@ import { platformBrowser } from '@angular/platform-browser';
 import { decorateModuleRef } from './environment';
 
 import { ResultsModuleNgFactory } from
-  '../../../../compiled/src/main/typescript/results/results.module.ngfactory';
+  '../../../../target/ts_compiled/src/main/typescript/results/results.module.ngfactory';
 
 export function main(): Promise<any> {
   return platformBrowser()

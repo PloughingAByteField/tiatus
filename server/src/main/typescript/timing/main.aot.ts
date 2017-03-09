@@ -2,7 +2,7 @@ import { platformBrowser } from '@angular/platform-browser';
 import { decorateModuleRef } from './environment';
 
 import { TimingModuleNgFactory } from
-  '../../../../compiled/src/main/typescript/timing/timing.module.ngfactory';
+  '../../../../target/ts_compiled/src/main/typescript/timing/timing.module.ngfactory';
 
 export function main(): Promise<any> {
   return platformBrowser()
