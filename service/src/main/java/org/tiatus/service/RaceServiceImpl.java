@@ -59,10 +59,9 @@ public class RaceServiceImpl implements RaceService {
 
     @Override
     public void updateRace(Race race) throws ServiceException {
-        LOG.debug("Update race " + race);
+        LOG.debug("Delete race " + race.getId());
         try {
-            dao.updateRace(race);
-
+            dao.removeRace(race);
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);

@@ -18,6 +18,8 @@
         <class>org.tiatus.entity.Penalty</class>
         <class>org.tiatus.entity.Disqualification</class>
         <class>org.tiatus.entity.EventPosition</class>
+        <class>org.tiatus.entity.RacePositionTemplate</class>
+        <class>org.tiatus.entity.RacePositionTemplateEntry</class>
         <properties>
             <!-- Properties for Hibernate -->
             <property name="hibernate.show_sql" value="true" />

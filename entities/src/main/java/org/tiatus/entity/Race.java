@@ -51,6 +51,12 @@ public class Race implements Serializable {
         drawLocked = false;
     }
 
+    public Race() {}
+
+    public Race(Long id) {
+        this.setId(id);
+    }
+
     public boolean isDrawLocked() {
         return drawLocked;
     }

@@ -2,10 +2,12 @@
 
 CREATE TABLE race_position_template (
     id bigint NOT NULL PRIMARY KEY,
-    name character varying(255) UNIQUE,
+    name character varying(255) NOT NULL,
     default_template boolean,
     race_id bigint NOT NULL REFERENCES race (id)
 );
+
+ALTER TABLE race_position_template ADD CONSTRAINT race_position_template_constraint UNIQUE (race_id, name);
 
 CREATE SEQUENCE race_position_template_id_sequence
     START WITH 1

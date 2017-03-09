@@ -18,6 +18,8 @@
         <class>org.tiatus.entity.Penalty</class>
         <class>org.tiatus.entity.Disqualification</class>
         <class>org.tiatus.entity.EventPosition</class>
+        <class>org.tiatus.entity.RacePositionTemplate</class>
+        <class>org.tiatus.entity.RacePositionTemplateEntry</class>
         <properties>
             <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
             <property name="hibernate.connection.url" value="jdbc:h2:target/st_h2" />
