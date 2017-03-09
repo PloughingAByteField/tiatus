@@ -6,7 +6,7 @@
     function PositionController($log, positionService, alertService, $translate) {
         var vm = this;
         vm.alert = alertService.getAlert();
-        vm.position = {timing: false, showAllEntries: false, active: false, canStart: false};
+        vm.position = {};
 
         positionService.getPositions().then(function(data) {
             vm.positions = data;
@@ -14,7 +14,7 @@
 
         vm.addPosition = function(position) {
             positionService.addPosition(position).then(function() {
-                vm.position = {timing: false, showAllEntries: false, active: false, canStart: false};
+                vm.position = {};
                 vm.addPositionForm.$setPristine();
                 vm.addPositionForm.$setUntouched();
 

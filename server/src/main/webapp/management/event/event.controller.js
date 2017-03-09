@@ -10,10 +10,6 @@
 
         positionService.getPositions().then(function(data) {
             vm.positions = data;
-            vm.startingPosition = vm.positions[0];
-            vm.finishingPosition = vm.positions[vm.positions.length - 1];
-            vm.event.startingPosition = vm.startingPosition;
-            vm.event.finishingPosition = vm.finishingPosition;
         });
 
         eventAssignedService.addEventChangeListener(function() {
@@ -56,8 +52,8 @@
         };
 
         vm.createEvent = function(e) {
-            eventUnassignedService.createUnassignedEvent({'name': e.name, 'weighted': e.weighted, 'startingPosition': e.startingPosition, 'finishingPosition': e.finishingPosition}).then(function() {
-                vm.event = { weighted: false, startingPosition: vm.startingPosition, finishingPosition: vm.finishingPosition };
+            eventUnassignedService.createUnassignedEvent({'name': e.name, 'weighted': e.weighted}).then(function() {
+                vm.event = { weighted: false,  };
                 vm.addEventForm.$setPristine();
                 vm.addEventForm.$setUntouched();
 

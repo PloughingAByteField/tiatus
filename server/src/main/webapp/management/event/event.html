@@ -19,12 +19,6 @@
             <label>{{ 'WEIGHTED_EVENT' | translate }}</label><input type="checkbox" name="weighted" id="weighted" ng-model="ctrl.event.weighted"/>
             <br />
             <br />
-            <label>{{ 'STARTING_POSITION' | translate }}</label>
-            <select name="startingPosition" ng-model="ctrl.event.startingPosition" ng-options="position as position.name for position in ctrl.positions">
-            </select>
-            <label>{{ 'FINISHING_POSITION' | translate }}</label>
-            <select name="startingPosition" ng-model="ctrl.event.finishingPosition" ng-options="position as position.name for position in ctrl.positions">
-            </select>
         </div>
         <button id="createEvent" data-ng-click="ctrl.createEvent(ctrl.event)" ng-disabled="ctrl.addEventForm.$invalid">{{ 'CREATE_EVENT' | translate }}</button>
     </form>

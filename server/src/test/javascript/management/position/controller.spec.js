@@ -39,7 +39,7 @@ describe("src.test.javascript.management.position.controller.spec.js", function(
         }));
 
         function getPositions() {
-            deferredQuery.resolve([{id: 1, name: 'Position 1', order: 1}, {id: 2, name: 'Position 2', order: 2}]);
+            deferredQuery.resolve([{id: 1, name: 'Position 1'}, {id: 2, name: 'Position 2'}]);
             scope.$apply();
         };
 
@@ -57,7 +57,7 @@ describe("src.test.javascript.management.position.controller.spec.js", function(
 
         it('should call create position', function() {
             getPositions();
-            ctrl.position = {name: 'Position X', timing: true, active: true, canStart: false, showAllEntries: false};
+            ctrl.position = {name: 'Position X'};
             ctrl.addPositionForm = {
                 $setPristine: function() {},
                 $setUntouched: function() {}
@@ -70,15 +70,11 @@ describe("src.test.javascript.management.position.controller.spec.js", function(
 
             expect(positionService.addPosition).toHaveBeenCalled();
             expect(ctrl.position.name).toBeUndefined();
-            expect(ctrl.position.timing).toBe(false);
-            expect(ctrl.position.active).toBe(false);
-            expect(ctrl.position.canStart).toBe(false);
-            expect(ctrl.position.showAllEntries).toBe(false);
         });
 
         it('should call create position but throw error', function() {
             getPositions();
-            ctrl.position = {name: 'Position X', timing: true, active: true, canStart: false, showAllEntries: false};
+            ctrl.position = {name: 'Position X'};
             expect(ctrl.positions.length).toBe(2);
             ctrl.addPosition(ctrl.position);
             deferredSave.reject();
@@ -86,10 +82,6 @@ describe("src.test.javascript.management.position.controller.spec.js", function(
 
             expect(positionService.addPosition).toHaveBeenCalled();
             expect(ctrl.position.name).toBe('Position X');
-            expect(ctrl.position.timing).toBe(true);
-            expect(ctrl.position.active).toBe(true);
-            expect(ctrl.position.canStart).toBe(false);
-            expect(ctrl.position.showAllEntries).toBe(false);
             expect(alertService.getAlert().msg).toBe('FAILED_ADD');
         });
 

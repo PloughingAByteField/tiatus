@@ -239,7 +239,6 @@ public class PositionRestPointTest extends RestTestBase {
                 List<Position> positions = new ArrayList<>();
                 Position position = new Position();
                 position.setId(1L);
-                position.setOrder(1);
                 position.setName("Position 1");
                 positions.add(position);
                 return positions;
@@ -247,28 +246,6 @@ public class PositionRestPointTest extends RestTestBase {
         };
 
         MockHttpRequest request = MockHttpRequest.get("positions");
-        MockHttpResponse response = new MockHttpResponse();
-        dispatcher.invoke(request, response);
-        Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    }
-
-
-    @Test
-    public void getActiveTimingPositions() throws Exception {
-        new MockUp<PositionServiceImpl>() {
-            @Mock
-            public List<Position> getActiveTimingPositions() {
-                List<Position> positions = new ArrayList<>();
-                Position position = new Position();
-                position.setId(1L);
-                position.setOrder(1);
-                position.setName("Position 1");
-                positions.add(position);
-                return positions;
-            }
-        };
-
-        MockHttpRequest request = MockHttpRequest.get("positions/activeTiming");
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(request, response);
         Assert.assertEquals(HttpServletResponse.SC_OK, response.getStatus());
@@ -288,30 +265,6 @@ public class PositionRestPointTest extends RestTestBase {
         }
 
         if (!endPointDetail.getMethodName().equals("getPositions")) {
-            System.out.println("End point method name has changed");
-            throw new Exception();
-        }
-
-        if (endPointDetail.isAllowAll() == null || !endPointDetail.isAllowAll()) {
-            System.out.println("End point is not allowed all");
-            throw new Exception();
-        }
-    }
-
-    @Test
-    public void checkGetActiveTimingPositionsAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "positions/activeTiming", "GET");
-        if (endPointDetail == null) {
-            System.out.println("Failed to find end point for GET:position");
-            throw new Exception();
-        }
-
-        if (!EndPointDetail.isValid(endPointDetail)) {
-            System.out.println("End point for GET:position is not valid");
-            throw new Exception();
-        }
-
-        if (!endPointDetail.getMethodName().equals("getActiveTimingPositions")) {
             System.out.println("End point method name has changed");
             throw new Exception();
         }

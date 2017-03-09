@@ -63,7 +63,7 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
         });
 
         function getPositions() {
-           positionServiceQuery.resolve([{"name":"Start","active":true,"showAllEntries":true,"order":1,"timing":true,"canStart":true,"id":1},{"name":"Dangan","active":true,"showAllEntries":true,"order":2,"timing":true,"canStart":true,"id":2},{"name":"Finish","active":true,"showAllEntries":true,"order":3,"timing":true,"canStart":false,"id":3}]);
+           positionServiceQuery.resolve([{"name":"Start", "id":1}, {"name":"Dangan", "id":2}, {"name":"Finish", "id":3}]);
            scope.$apply();
         };
 
@@ -72,10 +72,6 @@ describe("src.test.javascript.management.event.controller.spec.js", function() {
             expect(positionService.getPositions).toHaveBeenCalled();
             getPositions();
             expect(ctrl.positions.length).toBe(3);
-            expect(ctrl.startingPosition.id).toBe(1);
-            expect(ctrl.startingPosition.name).toBe('Start');
-            expect(ctrl.finishingPosition.id).toBe(3);
-            expect(ctrl.finishingPosition.name).toBe('Finish');
         });
 
         function getAssignedEvents() {

@@ -46,27 +46,25 @@ export class PositionsComponent implements OnInit {
 
   public removePosition(position: Position): void {
     console.log(position);
-    // let position: Position = this.getRaceForOrder(data.value.order);
-    // if (position) {
-      // this.racesService.removeRace(race);
-    // }
+    if (position) {
+      this.positionsService.removePosition(position);
+    }
   }
 
   public updatePosition(data: string, position: Position): void {
     console.log(data);
     console.log(position);
     position.name = data;
-    // let position: Position = this.getRaceForOrder(data.value.order);
-    // if (position) {
-    //   position.name = data.value.name;
-    //   // this.racesService.updateRace(race);
-    // }
+    if (position) {
+      position.name = data;
+      this.positionsService.updatePosition(position);
+    }
   }
 
   public onSubmit({ value, valid }: { value: Position, valid: boolean }) {
     let position: Position = new Position();
     position.name = value.name;
-    // this.positionsService.addPosition(position);
+    this.positionsService.addPosition(position);
     this.addPositionForm.reset({
       name: ''
     });

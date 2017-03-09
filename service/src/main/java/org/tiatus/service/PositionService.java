@@ -21,12 +21,6 @@ public interface PositionService {
     List<Position> getPositions();
 
     /**
-     * Get Active Timing Positions
-     * @return a list of Active Timing Positions
-     */
-    List<Position> getActiveTimingPositions();
-
-    /**
      * Add a new Position
      * @param position Position to add
      * @return Position Added race

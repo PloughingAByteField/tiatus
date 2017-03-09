@@ -34,13 +34,6 @@ public class Event implements Serializable {
 	@Column(name = "id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "starting_position")
-	private Position startingPosition;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "finishing_position")
-	private Position finishingPosition;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "event")
 	@OrderBy("positionOrder")
@@ -68,32 +61,6 @@ public class Event implements Serializable {
 
 	public void setWeighted(boolean weighted) {
 		isWeighted = weighted;
-	}
-
-	@JsonGetter("startingPosition")
-	public Long getStartingPositionId() {
-		return startingPosition.getId();
-	}
-
-	public Position getStartingPosition() {
-		return startingPosition;
-	}
-
-	public void setStartingPosition(Position startingPosition) {
-		this.startingPosition = startingPosition;
-	}
-
-	@JsonGetter("finishingPosition")
-	public Long getFinishingPositionId() {
-		return finishingPosition.getId();
-	}
-
-	public Position getFinishingPosition() {
-		return finishingPosition;
-	}
-
-	public void setFinishingPosition(Position finishingPosition) {
-		this.finishingPosition = finishingPosition;
 	}
 
 	public Set<EventPosition> getPositions() {

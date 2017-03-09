@@ -64,11 +64,6 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public List<Position> getActiveTimingPositions() {
-        return dao.getActiveTimingPositions();
-    }
-
-    @Override
     public void updatePosition(Position position) throws ServiceException {
         try {
             dao.updatePosition(position);

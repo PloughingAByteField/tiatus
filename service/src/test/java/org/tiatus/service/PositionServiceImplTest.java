@@ -102,7 +102,6 @@ public class PositionServiceImplTest {
                 List<Position> positions = new ArrayList<>();
                 Position position = new Position();
                 position.setId(1L);
-                position.setOrder(1);
                 position.setName("Position 1");
                 positions.add(position);
                 return positions;
@@ -110,24 +109,5 @@ public class PositionServiceImplTest {
         };
         PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
         service.getPositions();
-    }
-
-
-    @Test
-    public void testGetActiveTimingPositions() throws Exception {
-        new MockUp<PositionDaoImpl>() {
-            @Mock
-            public List<Position> getActiveTimingPositions() {
-                List<Position> positions = new ArrayList<>();
-                Position position = new Position();
-                position.setId(1L);
-                position.setOrder(1);
-                position.setName("Position 1");
-                positions.add(position);
-                return positions;
-            }
-        };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
-        service.getActiveTimingPositions();
     }
 }

@@ -3,6 +3,7 @@
 CREATE TABLE race_position_template (
     id bigint NOT NULL PRIMARY KEY,
     name character varying(255) UNIQUE,
+    default_template boolean,
     race_id bigint NOT NULL REFERENCES race (id)
 );
 

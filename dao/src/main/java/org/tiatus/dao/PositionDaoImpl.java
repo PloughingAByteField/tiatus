@@ -31,13 +31,7 @@ public class PositionDaoImpl implements PositionDao {
 
     @Override
     public List<Position> getPositions() {
-        TypedQuery<Position> query = em.createQuery("FROM Position order by order", Position.class);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Position> getActiveTimingPositions() {
-        TypedQuery<Position> query = em.createQuery("FROM Position where timing = 't' and active = 't' order by order", Position.class);
+        TypedQuery<Position> query = em.createQuery("FROM Position order by name", Position.class);
         return query.getResultList();
     }
 

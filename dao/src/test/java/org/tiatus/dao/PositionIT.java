@@ -59,48 +59,6 @@ public class PositionIT {
     }
 
     @Test
-    public void getActiveTimingPositions() {
-        List<Position> positions = dao.getPositions();
-        List<Position> activePositions = dao.getActiveTimingPositions();
-        Assert.assertTrue(positions.isEmpty());
-        Assert.assertTrue(activePositions.isEmpty());
-
-        // add position
-        em.getTransaction().begin();
-        Position position1 = new Position();
-        position1.setId(1L);
-        position1.setName("Position 1");
-        position1.setTiming(true);
-        position1.setActive(true);
-        Position position2 = new Position();
-        position2.setId(2L);
-        position2.setName("Position 2");
-        position2.setTiming(false);
-        position2.setActive(true);
-        Position position3 = new Position();
-        position3.setId(3L);
-        position3.setName("Position 3");
-        position3.setTiming(true);
-        position3.setActive(false);
-        Position position4 = new Position();
-        position4.setId(4L);
-        position4.setName("Position 4");
-        position4.setTiming(false);
-        position4.setActive(false);
-        em.merge(position1);
-        em.merge(position2);
-        em.merge(position3);
-        em.merge(position4);
-        em.getTransaction().commit();
-
-        positions = dao.getPositions();
-        Assert.assertTrue(!positions.isEmpty());
-        Assert.assertTrue(positions.size() == 4);
-        activePositions = dao.getActiveTimingPositions();
-        Assert.assertTrue(activePositions.size() == 1);
-    }
-
-    @Test
     public void addPosition() throws Exception {
         List<Position> positions = dao.getPositions();
         Assert.assertTrue(positions.isEmpty());

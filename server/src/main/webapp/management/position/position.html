@@ -20,24 +20,6 @@
             </div>
         </div>
 
-        <div class="form-group" >
-            <label>{{ 'POSITION_ORDER' | translate }}</label>
-            <input class="ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" type="number" name="order" ng-model="ctrl.position.order" not-existing-position-order required min="0" max="10"/>
-            <div class="errors order-error-message" ng-messages="ctrl.addPositionForm.order.$error" ng-if="(ctrl.addPositionForm.order.$dirty && ctrl.addPositionForm.order.$invalid) || (ctrl.addPositionForm.name.$dirty)">
-                <p ng-message="min">{{ 'POSITION_ORDER_TOO_SMALL' | translate }}</p>
-                <p ng-message="max">{{ 'POSITION_ORDER_TOO_LARGE' | translate }}</p>
-                <p ng-message="required">{{ 'POSITION_ORDER_REQUIRED' | translate }}</p>
-                <p ng-message="positionOrderExists">{{ 'POSITION_ORDER_ALREADY_EXISTS' | translate }}</p>
-            </div>
-            <br />
-            <label>{{ 'POSITION_IS_TIMING' | translate }} <input type="checkbox" name="isTiming" data-ng-model="ctrl.position.timing"/></label>
-            <br />
-            <label>{{ 'POSITION_IS_SHOW_ALL_ENTRIES' | translate }} <input type="checkbox" name="isShowAllEntries" data-ng-model="ctrl.position.showAllEntries"/></label>
-            <br />
-            <label>{{ 'POSITION_IS_ACTIVE' | translate }} <input type="checkbox" name="isActive" data-ng-model="ctrl.position.active"/></label>
-            <br />
-            <label>{{ 'POSITION_CAN_START' | translate }} <input type="checkbox" name="canStart" data-ng-model="ctrl.position.canStart"/></label>
-        </div>
         <button id="createPosition" data-ng-click="ctrl.addPosition(ctrl.position)" ng-disabled="ctrl.addPositionForm.$invalid">{{ 'CREATE_POSITION' | translate }}</button>
     </form>
     </div>
@@ -49,12 +31,6 @@
         <table id="positions" data-ng-table class="table table-condensed table-bordered table-striped" >
             <tr data-ng-repeat="position in ctrl.positions">
                 <td data-title="'POSITION_NAME' | translate">{{position.name}}</td>
-                <td data-title="'POSITION_ORDER' | translate">{{position.order}}</td>
-                <td data-title="'POSITION_IS_TIMING' | translate"><input type="checkbox" data-ng-model="position.timing"/></td>
-                <td data-title="'POSITION_IS_SHOW_ALL_ENTRIES' | translate"><input type="checkbox" data-ng-model="position.showAllEntries"/></td>
-                <td data-title="'POSITION_IS_ACTIVE' | translate"><input type="checkbox" data-ng-model="position.active"/></td>
-                <td data-title="'POSITION_CAN_START' | translate"><input type="checkbox" data-ng-model="position.canStart"/></td>
-                <td><button class="btn primary update-position" data-ng-click="ctrl.updatePosition(position)">{{ 'UPDATE_POSITION' | translate }}</button></td>
                 <td><button class="btn primary delete-position" data-ng-click="ctrl.deletePosition(position)">{{ 'DELETE_POSITION' | translate }}</button></td>
             </tr>
         </table>

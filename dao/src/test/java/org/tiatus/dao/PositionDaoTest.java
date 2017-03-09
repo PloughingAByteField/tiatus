@@ -148,30 +148,6 @@ public class PositionDaoTest {
     }
 
     @Test
-    public void testGetActiveTimingPositions() {
-        TypedQuery typedQuery = new MockUp<TypedQuery>() {
-            @Mock
-            public List<Position> getResultList() {
-                List<Position> list = new ArrayList<>();
-                Position position = new Position();
-                list.add(position);
-                return list;
-            }
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public TypedQuery createQuery(String qlString, Class resultClass) {
-                return typedQuery;
-            }
-        }.getMockInstance();
-
-        PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        Assert.assertFalse(dao.getActiveTimingPositions().isEmpty());
-    }
-
-    @Test
     public void testRemovePosition() throws Exception {
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock

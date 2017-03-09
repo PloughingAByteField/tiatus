@@ -35,11 +35,6 @@ public class EventPosition implements Serializable {
 	@Column(name = "starting_position")
 	private Boolean startingPosition;
 
-	@JsonGetter("event")
-	public Long getEntryId() {
-		return event.getId();
-	}
-
 	@JsonGetter("position")
 	public Long getPositionId() {
 		return position.getId();
@@ -59,6 +54,11 @@ public class EventPosition implements Serializable {
 
 	public void setPosition(Position position) {
 		this.position = position;
+	}
+
+	@JsonGetter("event")
+	public Long getEventId() {
+		return event.getId();
 	}
 
 	public Event getEvent() {
@@ -112,11 +112,11 @@ public class EventPosition implements Serializable {
 			return false;
 		}
 
-		EventPosition entryPositionTime = (EventPosition) o;
+		EventPosition eventPosition = (EventPosition) o;
 		return new EqualsBuilder()
-				.append(this.position, entryPositionTime.position)
-				.append(this.event, entryPositionTime.event)
-				.append(this.positionOrder, entryPositionTime.positionOrder)
+				.append(this.position, eventPosition.position)
+				.append(this.event, eventPosition.event)
+				.append(this.positionOrder, eventPosition.positionOrder)
 				.isEquals();
 	}
 }

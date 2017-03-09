@@ -40,15 +40,6 @@ public class PositionRestPoint {
         return Response.ok(positions).build();
     }
 
-    @PermitAll
-    @GET
-    @Path("activeTiming")
-    @Produces("application/json")
-    public Response getActiveTimingPositions() {
-        List<Position> positions = service.getActiveTimingPositions();
-        return Response.ok(positions).build();
-    }
-
     /**
      * Add position, restricted to Admin users
      * @param uriInfo location details
