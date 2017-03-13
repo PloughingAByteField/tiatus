@@ -1,6 +1,7 @@
 package org.tiatus.dao;
 
 import org.tiatus.entity.RacePositionTemplate;
+import org.tiatus.entity.RacePositionTemplateEntry;
 
 import java.util.List;
 
@@ -39,4 +40,13 @@ public interface RacePositionTemplateDao {
      */
     List<RacePositionTemplate> getRacePositionTemplates();
 
+    /**
+     * Get RacePositionTemplate for a given id
+     * @return RacePositionTemplate or null
+     */
+    RacePositionTemplate getTemplateForId(Long id);
+
+    RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws DaoException;
+    void deleteTemplateEntry(RacePositionTemplateEntry entry) throws DaoException;
+    void updateTemplateEntry(RacePositionTemplateEntry entry) throws DaoException;
 }

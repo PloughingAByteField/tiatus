@@ -9,6 +9,7 @@ import { PositionsComponent } from './positions';
 import { RacePositionsComponent } from './race-positions';
 import { RacesComponent } from './races';
 import { UsersComponent } from './users';
+import { RacePositionTemplatesComponent } from './race-position-templates';
 import { NoContentComponent } from '../components/no-content/no-content.component';
 
 export const adminRoutes: Routes = [
@@ -20,6 +21,8 @@ export const adminRoutes: Routes = [
   { path: 'events',      component: EventsComponent },
   { path: 'positions',      component: PositionsComponent },
   { path: 'race-positions',      component: RacePositionsComponent },
+  { path: 'race-positions/:raceId',      component: RacePositionsComponent },
+  { path: 'race-position-template/:templateId',      component: RacePositionTemplatesComponent },
   { path: 'races',      component: RacesComponent },
   { path: 'users',      component: UsersComponent },
   { path: '**',    component: NoContentComponent }

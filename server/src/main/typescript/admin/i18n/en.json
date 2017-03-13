@@ -45,5 +45,17 @@
     "POSITION_IS_TIMING": "Is Timing",
     "POSITION_IS_SHOW_ALL_ENTRIES": "Show All Entries",
     "POSITION_IS_ACTIVE": "Is Active",
-    "POSITION_CAN_START": "Can Start"
+    "POSITION_CAN_START": "Can Start",
+    "TEMPLATE_POSITION_NAME": "Position name",
+    "TEMPLATE_POSITION_ORDER": "Position order",
+    "TEMPLATE_CAN_START": "Can Start",
+    "TEMPLATE_IS_STARTING_POSITION": "Starting Position",
+    "TEMPLATE_IS_FINISHING_POSITION": "Finishing Position",
+    "TEMPLATE_DELETE_ENTRY": "Delete entry",
+    "TEMPLATE_ADD_ENTRY": "Add position template entry",
+    "REMOVE_TEMPLATE_ENTRY": "Remove position template entry",
+    "UPDATE_TEMPLATE_ENTRY": "Update position template entry",
+    "TEMPLATE_POSITION_IN": "in",
+    "TEMPLATE_POSITION_FOR": "For template",
+    "BACK_TO_TEMPLATES": "Back to templates for"
 }

@@ -3,37 +3,45 @@ package org.tiatus.entity;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "race_position_template_entry", uniqueConstraints = { @UniqueConstraint(columnNames = { "template_id", "position_id", "position_order" }) })
+@Table(name = "race_position_template_entry", uniqueConstraints = { @UniqueConstraint(columnNames = { "template_id", "position_id" }), @UniqueConstraint(columnNames = { "template_id", "position_id", "position_order" }) })
 public class RacePositionTemplateEntry implements Serializable {
 
 	private static final long serialVersionUID = 486592711129352048L;
 
-	@Id
 	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "position_id", nullable = false, updatable = true, insertable = true)
 	private Position position;
 
-	@Id
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "template_id", nullable = false, updatable = true, insertable = true)
 	private RacePositionTemplate template;
 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
+	@GenericGenerator(name="UseExistingOrGenerateIdGenerator",
+			strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
+			parameters = {
+					@org.hibernate.annotations.Parameter(name = "sequence_name", value = "race_position_template_entry_sequence")
+			})
+	@Column(name = "id")
+	private Long id;
+
     @Column(name = "position_order")
     private Integer positionOrder;
 
-	@Column(name = "can_start")
-	private Boolean canStart;
+	public Long getId() {
+		return id;
+	}
 
-	@Column(name = "finishing_position")
-	private Boolean finishingPosition;
-
-	@Column(name = "starting_position")
-	private Boolean startingPosition;
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	@JsonGetter("position")
 	public Long getPositionId() {
@@ -67,30 +75,6 @@ public class RacePositionTemplateEntry implements Serializable {
 
 	public void setTemplate(RacePositionTemplate template) {
 		this.template = template;
-	}
-
-	public Boolean getCanStart() {
-		return canStart;
-	}
-
-	public void setCanStart(Boolean canStart) {
-		this.canStart = canStart;
-	}
-
-	public Boolean getFinishingPosition() {
-		return finishingPosition;
-	}
-
-	public void setFinishingPosition(Boolean finishingPosition) {
-		this.finishingPosition = finishingPosition;
-	}
-
-	public Boolean getStartingPosition() {
-		return startingPosition;
-	}
-
-	public void setStartingPosition(Boolean startingPosition) {
-		this.startingPosition = startingPosition;
 	}
 
 	@Override

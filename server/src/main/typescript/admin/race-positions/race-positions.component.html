@@ -1,9 +1,9 @@
 
-<select [(ngModel)]="selectedRace" name="selectedRace" (change)="changedRace(selectedRace)">
-        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
-</select>
-
 <div *ngIf="selectedRace">
+    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changedRace(selectedRace)">
+        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
+    </select>
+
     <p>{{ 'ADD_TEMPLATE' | translate }} for {{ selectedRace.name }}</p>
 
     <div>
@@ -36,6 +36,7 @@
             <tr *ngFor="let template of templatesForRace">
                 <td>{{ template.name }}</td>
                 <td>{{ template.defaultTemplate }}</td>
+                <td><button class="btn primary" [routerLink]="['/race-position-template', template.id]">{{ 'EDIT_TEMPLATE_POSITIONS' | translate }}</button></td>
                 <td><button class="btn primary" (click)="removeTemplate(template)">{{ 'REMOVE_TEMPLATE' | translate }}</button></td>
             </tr>
         </table>

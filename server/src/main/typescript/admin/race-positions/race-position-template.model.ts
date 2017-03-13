@@ -1,6 +1,6 @@
 import { Race, convertJsonToRace } from '../../races/race.model';
 import { RacePositionTemplateEntry, convertJsonToRacePositionTemplateEntry }
-    from './race-position-template-entry.model';
+    from '../race-position-templates/race-position-template-entry.model';
 
 export class RacePositionTemplate {
     public name: string;

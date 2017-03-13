@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RacePositionTemplateDao;
 import org.tiatus.entity.RacePositionTemplate;
+import org.tiatus.entity.RacePositionTemplateEntry;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -51,7 +52,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
 
     @Override
     public void updateRacePositionTemplate(RacePositionTemplate template) throws ServiceException {
-        LOG.debug("Delete template " + template.getId());
+        LOG.debug("Update template " + template.getId());
         try {
             dao.updateRacePositionTemplate(template);
         } catch (DaoException e) {
@@ -63,5 +64,40 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
     @Override
     public List<RacePositionTemplate> getRacePositionTemplates() {
         return dao.getRacePositionTemplates();
+    }
+
+    @Override
+    public RacePositionTemplate getTemplateForId(Long id) {
+        return dao.getTemplateForId(id);
+    }
+
+    @Override
+    public RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException {
+        try {
+            return dao.addTemplateEntry(entry);
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void deleteTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException {
+        try {
+            dao.deleteTemplateEntry(entry);
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void updateTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException {
+        try {
+            dao.updateTemplateEntry(entry);
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        }
     }
 }

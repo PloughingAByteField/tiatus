@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import { Race } from '../../races/race.model';
 import { Position } from '../../positions/position.model';
@@ -15,7 +16,7 @@ import { AdminPositionsService } from '../positions/positions.service';
   styleUrls: [ './race-positions.component.css' ],
   templateUrl: './race-positions.component.html'
 })
-export class RacePositionsComponent implements OnInit {
+export class RacePositionsComponent implements OnInit, OnDestroy {
   public templates: RacePositionTemplate[] = new Array<RacePositionTemplate>();
   public templatesForRace: RacePositionTemplate[] = new Array<RacePositionTemplate>();
   public addPositionForm: FormGroup;
@@ -23,10 +24,16 @@ export class RacePositionsComponent implements OnInit {
   public races: Race[] = new Array<Race>();
   public positions: Position[] = new Array<Position>();
 
+  private raceId: number;
+  private templatesSubscription: any;
+  private racesSubscription: any;
+  private positionsSubscription: any;
+
   constructor(
     private templateService: RacePositionsService,
     private racesService: AdminRacesService,
-    private positionsService: AdminPositionsService
+    private positionsService: AdminPositionsService,
+    private route: ActivatedRoute
   ) {}
 
   public ngOnInit() {
@@ -34,25 +41,40 @@ export class RacePositionsComponent implements OnInit {
       name: this.getNameControlWithValidators(''),
       defaultTemplate: new FormControl(false, [ this.validateNotExistingDefault() ])
     });
-    this.racesService.getRaces()
+    this.racesSubscription = this.racesService.getRaces()
       .subscribe((races: Race[]) => {
         this.races = races;
-        if (!this.selectedRace && this.races.length > 0) {
-          this.selectedRace = this.races[0];
-          this.changedRace(this.selectedRace);
+        this.selectedRace = this.races[0];
+        if (this.raceId) {
+          this.selectedRace = this.getRaceForId(this.raceId);
         }
+        this.changedRace(this.selectedRace);
     });
-    this.positionsService.getPositions()
+    this.positionsSubscription = this.positionsService.getPositions()
       .subscribe((positions: Position[]) => {
         this.positions = positions;
     });
-    this.templateService.getTemplates()
+    this.templatesSubscription = this.templateService.getTemplates()
       .subscribe((templates: RacePositionTemplate[]) => {
         this.templates = templates;
         if (this.selectedRace) {
           this.templatesForRace = this.getTemplatesForRace(this.selectedRace);
         }
     });
+    this.route.params.subscribe((params: Params) => {
+      this.raceId = +params['raceId'];
+      console.log('raceId ' + this.raceId);
+      if (this.raceId && this.races.length > 0) {
+        this.selectedRace = this.getRaceForId(this.raceId);
+        this.changedRace(this.selectedRace);
+      }
+    });
+  }
+
+  public ngOnDestroy() {
+    this.racesSubscription.unsubscribe();
+    this.templatesSubscription.unsubscribe();
+    this.positionsSubscription.unsubscribe();
   }
 
   public changedRace(race: Race): void {
@@ -80,6 +102,15 @@ export class RacePositionsComponent implements OnInit {
 
   public removeTemplate(template: RacePositionTemplate): void {
     this.templateService.removeTemplate(template);
+  }
+
+  private getRaceForId(id: number): Race {
+    for (let race of this.races) {
+      if (race.id === id) {
+        return race;
+      }
+    }
+    return null;
   }
 
   private getTemplatesForRace(race: Race): RacePositionTemplate[] {

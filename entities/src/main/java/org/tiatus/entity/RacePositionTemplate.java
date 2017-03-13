@@ -42,6 +42,12 @@ public class RacePositionTemplate implements Serializable {
     @OrderBy("positionOrder")
     private Set<RacePositionTemplateEntry> templates = new HashSet<>();
 
+    public RacePositionTemplate() {}
+
+    public RacePositionTemplate(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
