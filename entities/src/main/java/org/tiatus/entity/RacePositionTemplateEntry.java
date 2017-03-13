@@ -14,11 +14,11 @@ public class RacePositionTemplateEntry implements Serializable {
 
 	private static final long serialVersionUID = 486592711129352048L;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "position_id", nullable = false, updatable = true, insertable = true)
 	private Position position;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "template_id", nullable = false, updatable = true, insertable = true)
 	private RacePositionTemplate template;
 

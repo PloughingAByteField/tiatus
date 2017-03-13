@@ -1,10 +1,11 @@
 
 <div *ngIf="selectedRace">
+    {{ 'TEMPLATE_FOR' | translate }}
     <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changedRace(selectedRace)">
         <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
     </select>
 
-    <p>{{ 'ADD_TEMPLATE' | translate }} for {{ selectedRace.name }}</p>
+    <p>{{ 'ADD_TEMPLATE' | translate }} {{ 'TEMPLATE_IN' | translate }} {{ selectedRace.name }}</p>
 
     <div>
         <form [formGroup]="addPositionForm" (ngSubmit)="onSubmit(addPositionForm)" novalidate>
@@ -12,17 +13,17 @@
                 <label>{{ 'TEMPLATE_NAME' | translate }}:</label>
                 <input type="text" class="form-control" formControlName="name" placeholder="{{ 'ENTER_TEMPLATE_NAME' | translate }}">
                 <div *ngIf="addPositionForm.get('name').errors && addPositionForm.get('name').touched" class="alert alert-danger">
-                    <div [hidden]="!addPositionForm.get('name').hasError('required')">{{ 'POSITION_NAME_REQUIRED' | translate }}</div>
-                    <div [hidden]="!addPositionForm.get('name').hasError('minlength')">{{ 'POSITION_NAME_TOO_SHORT' | translate }}</div>
-                    <div [hidden]="!addPositionForm.get('name').hasError('maxlength')">{{ 'POSITION_NAME_TOO_LONG' | translate }}</div>
-                    <div [hidden]="!addPositionForm.get('name').hasError('existingName')">{{ 'POSITION_NAME_ALREADY_EXISTS' | translate }}</div>
+                    <div [hidden]="!addPositionForm.get('name').hasError('required')">{{ 'TEMPLATE_NAME_REQUIRED' | translate }}</div>
+                    <div [hidden]="!addPositionForm.get('name').hasError('minlength')">{{ 'TEMPLATE_NAME_TOO_SHORT' | translate }}</div>
+                    <div [hidden]="!addPositionForm.get('name').hasError('maxlength')">{{ 'TEMPLATE_NAME_TOO_LONG' | translate }}</div>
+                    <div [hidden]="!addPositionForm.get('name').hasError('existingName')">{{ 'TEMPLATE_NAME_ALREADY_EXISTS' | translate }}</div>
                 </div>
 
                 <div>
                     <label>{{ 'DEFAULT_TEMPLATE' | translate }}:</label>
                     <input type="checkbox" class="form-control" formControlName="defaultTemplate" >
                     <div *ngIf="addPositionForm.get('defaultTemplate').errors && addPositionForm.get('defaultTemplate').touched" class="alert alert-danger">
-                        <div [hidden]="!addPositionForm.get('defaultTemplate').hasError('existingDefault')">{{ 'POSITION_EXISTING_DEFAULT' | translate }}</div>
+                        <div [hidden]="!addPositionForm.get('defaultTemplate').hasError('existingDefault')">{{ 'TEMPLATE_EXISTING_DEFAULT' | translate }}</div>
                     </div>
                 </div>
             </div>
@@ -32,13 +33,19 @@
     </div>
 
     <div *ngIf="templatesForRace">
-        <table>
-            <tr *ngFor="let template of templatesForRace">
-                <td>{{ template.name }}</td>
-                <td>{{ template.defaultTemplate }}</td>
-                <td><button class="btn primary" [routerLink]="['/race-position-template', template.id]">{{ 'EDIT_TEMPLATE_POSITIONS' | translate }}</button></td>
-                <td><button class="btn primary" (click)="removeTemplate(template)">{{ 'REMOVE_TEMPLATE' | translate }}</button></td>
-            </tr>
+        <table id="templates" class="table table-condensed table-bordered table-striped">
+            <thead>
+                <th>{{ 'TEMPLATE_NAME' | translate }}</th>
+                <th>{{ 'DEFAULT_TEMPLATE' | translate }}</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let template of templatesForRace">
+                    <td>{{ template.name }}</td>
+                    <td>{{ template.defaultTemplate }}</td>
+                    <td><button class="btn primary" [routerLink]="['/race-position-template', template.id]">{{ 'EDIT_TEMPLATE_POSITIONS' | translate }}</button></td>
+                    <td><button class="btn primary" (click)="removeTemplate(template)">{{ 'REMOVE_TEMPLATE' | translate }}</button></td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </div>

@@ -60,6 +60,12 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
             }
             if (existing != null) {
                 tx.begin();
+                // remove the template entries
+                List<RacePositionTemplateEntry> entries = em.createQuery("FROM RacePositionTemplateEntry where template_id = :template").setParameter("template", template.getId()).getResultList();
+                for (int i = entries.size() - 1; i >= 0; i--) {
+                    RacePositionTemplateEntry entry = entries.get(i);
+                    em.remove(em.contains(entry) ? entry : em.merge(entry));
+                }
                 em.remove(em.contains(template) ? template : em.merge(template));
                 tx.commit();
             } else {

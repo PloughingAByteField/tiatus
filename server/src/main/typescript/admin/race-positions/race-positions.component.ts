@@ -129,9 +129,11 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
 
   private validateNotExistingDefault(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      if (this.selectedRace) {
-        for (let template of this.templates) {
-          if (template.defaultTemplate === control.value && this.selectedRace.id !== template.id) {
+      if (this.selectedRace && this.templatesForRace) {
+        for (let template of this.templatesForRace) {
+          if (template.defaultTemplate === control.value) {
+            console.log('existing default');
+            console.log(this.templatesForRace);
             return { existingDefault: true };
           }
         }
@@ -143,9 +145,11 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
 
   private validateRacePositionName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      if (this.selectedRace) {
-        for (let template of this.templates) {
-          if (template.name === control.value && this.selectedRace.id !== template.id) {
+      if (this.selectedRace && this.templatesForRace) {
+        for (let template of this.templatesForRace) {
+          if (template.name === control.value) {
+            console.log('selected race ' + this.selectedRace.id);
+            console.log('template ' + template.id);
             return { existingName: true };
           }
         }

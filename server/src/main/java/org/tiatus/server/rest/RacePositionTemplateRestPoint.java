@@ -81,8 +81,7 @@ public class RacePositionTemplateRestPoint {
     public Response deleteTemplate(@PathParam("id") String id) {
         LOG.debug("Removing template with id " + id);
         try {
-            RacePositionTemplate template = new RacePositionTemplate();
-            template.setId(Long.parseLong(id));
+            RacePositionTemplate template = service.getTemplateForId(Long.parseLong(id));
             service.deleteRacePositionTemplate(template);
             return Response.noContent().build();
 
@@ -107,7 +106,10 @@ public class RacePositionTemplateRestPoint {
     public Response updateTemplate(RacePositionTemplate template) {
         LOG.debug("Updating template with id " + template.getId());
         try {
-            service.updateRacePositionTemplate(template);
+            RacePositionTemplate templateToUpdate = service.getTemplateForId(template.getId());
+            templateToUpdate.setName(template.getName());
+            templateToUpdate.setDefaultTemplate(template.getDefaultTemplate());
+            service.updateRacePositionTemplate(templateToUpdate);
             return Response.noContent().build();
 
         } catch (ServiceException e) {
