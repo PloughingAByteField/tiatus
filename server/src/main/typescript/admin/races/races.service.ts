@@ -47,4 +47,13 @@ export class AdminRacesService extends RacesService {
     public updateRace(race: Race): void {
         this.service.updateRace(race).then();
     }
+
+    public getRaceForId(id: number): Race {
+        for (let race of this.races) {
+            if (race.id === id) {
+                return race;
+            }
+        }
+        return null;
+    }
 }

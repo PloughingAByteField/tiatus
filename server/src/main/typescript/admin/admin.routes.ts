@@ -10,6 +10,8 @@ import { RacePositionsComponent } from './race-positions';
 import { RacesComponent } from './races';
 import { UsersComponent } from './users';
 import { RacePositionTemplatesComponent } from './race-position-templates';
+import { CreateEventComponent } from './events/create-event';
+
 import { NoContentComponent } from '../components/no-content/no-content.component';
 
 export const adminRoutes: Routes = [
@@ -18,7 +20,8 @@ export const adminRoutes: Routes = [
   { path: 'config',      component: ConfigComponent },
   { path: 'draw',      component: DrawComponent },
   { path: 'entries',      component: EntriesComponent },
-  { path: 'events',      component: EventsComponent },
+  { path: 'events',      component: EventsComponent, },
+  { path: 'events/create', component: CreateEventComponent },
   { path: 'positions',      component: PositionsComponent },
   { path: 'race-positions',      component: RacePositionsComponent },
   { path: 'race-positions/:raceId',      component: RacePositionsComponent },

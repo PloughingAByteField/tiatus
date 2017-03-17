@@ -1,5 +1,17 @@
 hello from events
 
+<div *ngIf="selectedRace">
+    {{ 'TEMPLATE_FOR' | translate }}
+    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
+        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
+    </select>
+
+    add event<br /> 
+<button class="btn primary" routerLink="/events/create">{{ 'CREATE_EVENT' | translate }}</button>
+</div>
+
+
+get race events for race - not events<br />
 <div *ngIf="events">
     <table>
         <tr *ngFor="let event of events">
@@ -7,3 +19,5 @@ hello from events
         </tr>
     </table>
 </div>
+<br />
+display non race assigned events

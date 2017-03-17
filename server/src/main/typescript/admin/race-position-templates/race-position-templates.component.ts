@@ -67,6 +67,7 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
         this.templates = templates;
         this.populateTemplates();
     });
+
     this.racesSubscription = this.racesService.getRaces()
       .subscribe((races: Race[]) => {
         this.races = races;

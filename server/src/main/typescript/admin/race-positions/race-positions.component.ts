@@ -46,7 +46,7 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
         this.races = races;
         this.selectedRace = this.races[0];
         if (this.raceId) {
-          this.selectedRace = this.getRaceForId(this.raceId);
+          this.selectedRace = this.racesService.getRaceForId(this.raceId);
         }
         this.changedRace(this.selectedRace);
     });
@@ -65,7 +65,7 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
       this.raceId = +params['raceId'];
       console.log('raceId ' + this.raceId);
       if (this.raceId && this.races.length > 0) {
-        this.selectedRace = this.getRaceForId(this.raceId);
+        this.selectedRace = this.racesService.getRaceForId(this.raceId);
         this.changedRace(this.selectedRace);
       }
     });
@@ -102,15 +102,6 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
 
   public removeTemplate(template: RacePositionTemplate): void {
     this.templateService.removeTemplate(template);
-  }
-
-  private getRaceForId(id: number): Race {
-    for (let race of this.races) {
-      if (race.id === id) {
-        return race;
-      }
-    }
-    return null;
   }
 
   private getTemplatesForRace(race: Race): RacePositionTemplate[] {

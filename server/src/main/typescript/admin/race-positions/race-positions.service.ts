@@ -1,19 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subscription } from 'rxjs/Subscription';
 
 import { RacePositionsHttpService } from './race-positions-http.service';
 import { RacePositionTemplate } from './race-position-template.model';
 
+import { Race } from '../../races/race.model';
+
 @Injectable()
-export class RacePositionsService {
+export class RacePositionsService implements OnDestroy {
 
     public templates: RacePositionTemplate[] = new Array<RacePositionTemplate>();
     private subject: BehaviorSubject<RacePositionTemplate[]>
         = new BehaviorSubject<RacePositionTemplate[]>(this.templates);
+    private subscription: Subscription;
 
     constructor(private service: RacePositionsHttpService) {
         this.refresh();
+    }
+
+    public ngOnDestroy() {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
     public getTemplates(): BehaviorSubject<RacePositionTemplate[]> {
@@ -21,8 +31,6 @@ export class RacePositionsService {
     }
 
     public addTemplate(template: RacePositionTemplate): void {
-        console.log('Add');
-        console.log(template);
         this.service.createTemplate(template).then((r: RacePositionTemplate) => {
             this.templates.push(r);
             this.subject.next(this.templates);
@@ -41,8 +49,13 @@ export class RacePositionsService {
         this.service.updateTemplate(template).then();
     }
 
+    public getTemplatesForRace(race: Race): RacePositionTemplate[] {
+        return this.templates.filter((template: RacePositionTemplate) => template.race === race.id);
+    }
+
     public refresh(): void {
-        this.service.getTemplates().subscribe((templates: RacePositionTemplate[]) => {
+        this.subscription =
+            this.service.getTemplates().subscribe((templates: RacePositionTemplate[]) => {
             this.templates = templates;
             this.subject.next(this.templates);
         });

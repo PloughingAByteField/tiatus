@@ -27,6 +27,7 @@ import { AdminPositionsService } from './positions/positions.service';
 import { AdminPositionsHttpService } from './positions/positions-http.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
 
+import { SelectedRaceService } from './races/selected-race.service';
 import { AdminRacesService } from './races/races.service';
 import { AdminRacesHttpService } from './races/races-http.service';
 import { RacesHttpService } from '../races/races-http.service';
@@ -62,6 +63,7 @@ import { AdminUsersService } from './users/users.service';
 import { AdminUsersHttpService } from './users/users-http.service';
 
 import { RacePositionTemplatesComponent } from './race-position-templates';
+import { CreateEventComponent } from './events/create-event';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -83,7 +85,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacesComponent,
     UsersComponent,
     RacePositionsComponent,
-    RacePositionTemplatesComponent
+    RacePositionTemplatesComponent,
+    CreateEventComponent
   ],
   imports: [
     BrowserModule,
@@ -127,6 +130,7 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacePositionsHttpService,
     RacePositionTemplatesService,
     RacePositionTemplatesHttpService,
+    SelectedRaceService,
     Title
   ]
 })

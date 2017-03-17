@@ -1,0 +1,71 @@
+{{ 'CREATE_EVENT' | translate }}<br /> 
+
+<div *ngIf="selectedRace">
+    {{ 'SELECTED_RACE' | translate }} {{ selectedRace.name }}
+        <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
+        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
+    </select>
+
+    <div *ngIf="templates">
+        {{ 'SELECTED_TEMPLATE' | translate }} {{ selectedRace.name }}
+            <select [(ngModel)]="selectedTemplate" name="selectedTemplate" (change)="changeTemplate(selectedTemplate)">
+            <option *ngFor="let template of templates" [ngValue]="template">{{ template.name }}</option>
+        </select>
+    </div>
+</div>
+
+populate the positions off the default template for race<br />
+fill drop down for templates for race<br />
+is there to be non-race assigned events?<br />
+<br />
+when creating, create event first then create race event entry using the id sent back in the location<br />
+<br />
+<br />
+
+<!--<div *ngIf="template && race"> -->
+    <!--{{ 'TEMPLATE_POSITION_FOR' | translate }} {{ template.name }} {{ 'TEMPLATE_POSITION_IN' | translate }} {{ race.name }}-->
+<!--</div>-->
+
+<!--<div *ngIf="template && unassignedPositions.length > 0">-->
+    <!--<p>{{ 'TEMPLATE_ADD_ENTRY' | translate }}</p>-->
+
+    <!--<form [formGroup]="addEntryForm" (ngSubmit)="onSubmit(addEntryForm)" novalidate>-->
+        <!--<div class="form-group">-->
+            <!--<label>{{ 'TEMPLATE_POSITION_NAME' | translate }}</label>-->
+            <!--<select formControlName="position">-->
+                <!--<option *ngFor="let position of unassignedPositions" [ngValue]="position">{{ position.name }}</option>-->
+            <!--</select>-->
+        <!--</div>-->
+            <!---->
+        <!--<button type="submit">{{ 'CREATE_POSITION' | translate }}</button>-->
+    <!--</form> -->
+<!--</div>-->
+
+<!--<div *ngIf="template">-->
+    <!--<div *ngIf="template.templates && template.templates.length > 0" [formGroup]="positionsForm">-->
+        <!--<div formArrayName="positions">-->
+            <!--<table id="entries" class="table table-condensed table-bordered table-striped">-->
+                <!--<thead>-->
+                    <!--<th>{{ 'TEMPLATE_POSITION_NAME' | translate }}</th>-->
+                    <!--<th>{{ 'TEMPLATE_POSITION_ORDER' | translate }}</th>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                    <!--<tr *ngFor="let entry of positionsForm.get('positions').controls; let i=index" [formGroupName]="i">-->
+                        <!--<td>-->
+                            <!--<select formControlName="position">-->
+                                <!--<option *ngFor="let position of racePositions" [value]="position.id" [selected]="entry.get('entry').value.position === position.id">{{ position.name }}</option>-->
+                            <!--</select>-->
+                        <!--</td>-->
+                        <!--<td>{{ entry.get('positionOrder').value }}</td>-->
+                        <!--<td><button (click)="updateTemplateEntry(entry.get('position').value, entry.get('entry').value, entry)" [disabled]="(entry.hasError('samePosition') || entry.hasError('existingPosition'))">{{ 'UPDATE_TEMPLATE_ENTRY' | translate }}</button></td>-->
+                        <!--<td><button (click)="removeTemplateEntry(entry.get('entry').value)" [disabled]="entry.hasError('existingPosition')">{{ 'REMOVE_TEMPLATE_ENTRY' | translate }}</button></td>-->
+                    <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<!--<div *ngIf="race">-->
+    <!--<button class="btn primary" (click)="goBack()">{{ 'BACK_TO_TEMPLATES' | translate }} {{ race.name }}</button>-->
+<!--</div>-->
