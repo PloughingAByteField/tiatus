@@ -67,6 +67,10 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     this.racesSubscription = this.racesService.getRaces()
       .subscribe((races: Race[]) => {
         this.races = races;
+        if (races.length > 0 && this.selectedRaceService.getSelectedRace.getValue() === null) {
+          this.selectedRace = this.races[0];
+          this.changedRace(this.selectedRace);
+        }
     });
 
     this.positionsSubscription = this.positionsService.getPositions()
@@ -99,12 +103,28 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     console.log(race);
     this.selectedRace = race;
     this.templates = this.templatesService.getTemplatesForRace(race);
-    this.templates.map((template: RacePositionTemplate) => {
-      if (template.defaultTemplate) {
-        this.changedTemplate(template);
-      }
-    });
+    this.processTemplates(this.templates);
     console.log(this.templates);
+  }
+
+  private processTemplates(templates: RacePositionTemplate[]): void {
+    if (templates.length > 0) {
+      let found: boolean = false;
+      for (let template of templates) {
+        if (template.defaultTemplate) {
+          this.changedTemplate(template);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        // take first if we have no default
+        this.selectedTemplate = templates[0];
+      }
+    } else {
+      // if we have no templates reset selected template to null
+      this.selectedTemplate = null;
+    }
   }
 
   private changedTemplate(template: RacePositionTemplate): void {

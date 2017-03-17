@@ -2,17 +2,18 @@
 
 <div *ngIf="selectedRace">
     {{ 'SELECTED_RACE' | translate }} {{ selectedRace.name }}
-        <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
+    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
         <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
     </select>
-
-    <div *ngIf="templates">
-        {{ 'SELECTED_TEMPLATE' | translate }} {{ selectedRace.name }}
-            <select [(ngModel)]="selectedTemplate" name="selectedTemplate" (change)="changeTemplate(selectedTemplate)">
-            <option *ngFor="let template of templates" [ngValue]="template">{{ template.name }}</option>
-        </select>
-    </div>
 </div>
+
+<div *ngIf="selectedTemplate">
+    {{ 'SELECTED_TEMPLATE' | translate }} {{ selectedRace.name }}
+    <select [(ngModel)]="selectedTemplate" name="selectedTemplate" (change)="changeTemplate(selectedTemplate)">
+        <option *ngFor="let template of templates" [ngValue]="template">{{ template.name }}</option>
+    </select>
+</div>
+
 
 populate the positions off the default template for race<br />
 fill drop down for templates for race<br />
