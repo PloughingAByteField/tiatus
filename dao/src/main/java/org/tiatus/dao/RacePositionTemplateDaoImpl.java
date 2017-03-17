@@ -133,7 +133,8 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
             RacePositionTemplateEntry existing = query.setParameter("template", entry.getTemplate()).setParameter("position", entry.getPosition()).getSingleResult();
             if (existing != null) {
                 tx.begin();
-                em.remove(em.contains(entry) ? entry : em.merge(entry));
+                RacePositionTemplateEntry merged = em.merge(existing);
+                em.remove(merged);
                 tx.commit();
             } else {
                 LOG.warn("No such template entry of template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId());
