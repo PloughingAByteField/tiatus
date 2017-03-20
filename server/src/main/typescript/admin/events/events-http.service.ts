@@ -9,4 +9,6 @@ export class AdminEventsHttpService extends EventsHttpService {
     constructor(protected http: Http) {
         super(http);
     }
+
+    // add remove update event and race event
 }

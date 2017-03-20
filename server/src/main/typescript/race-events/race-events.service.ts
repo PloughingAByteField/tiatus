@@ -4,20 +4,20 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Event } from './event.model';
+import { RaceEvent } from './race-event.model';
 import { Race } from '../races/race.model';
 
-import { EventsHttpService } from './events-http.service';
+import { RaceEventsHttpService } from './race-events-http.service';
 
 @Injectable()
-export class EventsService implements OnDestroy {
-    protected events: Event[] = new Array<Event>();
-    protected subject: BehaviorSubject<Event[]>
-        = new BehaviorSubject<Event[]>(this.events);
+export class RaceEventsService implements OnDestroy {
+    protected events: RaceEvent[] = new Array<RaceEvent>();
+    protected subject: BehaviorSubject<RaceEvent[]>
+        = new BehaviorSubject<RaceEvent[]>(this.events);
 
     private subscription: Subscription;
 
-    constructor(protected service: EventsHttpService) {
+    constructor(protected service: RaceEventsHttpService) {
         this.refresh();
     }
 
@@ -27,17 +27,20 @@ export class EventsService implements OnDestroy {
         }
     }
 
-    public getEvents(): BehaviorSubject<Event[]> {
+    public getEvents(): BehaviorSubject<RaceEvent[]> {
         return this.subject;
     }
 
-    public getEventsForRace(race: Race): Event[] {
+    public getEventsForRace(race: Race): RaceEvent[] {
         // return this.events.filter((event: Event) => event.)
         return this.events;
     }
 
     public refresh(): void {
-        this.subscription = this.service.getEvents().subscribe((events: Event[]) => {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+        this.subscription = this.service.getRaceEvents().subscribe((events: RaceEvent[]) => {
             this.events = events;
             this.subject.next(this.events);
         });

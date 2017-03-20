@@ -71,5 +71,18 @@
     "CREATE_TEMPLATE": "Create template",
     "EDIT_TEMPLATE_POSITIONS": "Edit template positions",
     "REMOVE_TEMPLATE": "Remove template",
-    "BACK_TO_TEMPLATES": "Back to templates for"
+    "BACK_TO_TEMPLATES": "Back to templates for",
+    "CREATE_EVENT": "Create Event",
+    "SELECTED_RACE": "Selected Race",
+    "SELECTED_TEMPLATE": "Selected Positions Template",
+    "EVENT_NAME": "Event name",
+    "ENTER_EVENT_NAME": "Enter event name",
+    "IS_NON_RACE_ASSIGNED_EVENT": "Is non race assigned event",
+    "POSITIONS_FOR_EVENT": "Positions for event",
+    "EVENT_POSITION_NAME": "Position name",
+    "EVENT_POSITION_ORDER": "Position order",
+    "EVENT_REMOVE_POSITION": "Remove position",
+    "EVENT_ADD_POSITION": "Add position to list",
+    "CREATE_EVENT_SUBMIT": "Create event",
+    "EVENT_BACK_TO": "Go back"
 }

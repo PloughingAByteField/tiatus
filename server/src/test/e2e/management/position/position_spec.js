@@ -45,26 +45,26 @@ describe('src.test.e2e.management.position.position_spec.js', function() {
         expect(rows.count()).toBe(2);
     });
 
-    it('should trigger name check directive', function() {
-        var table = element(by.id('positions'));
-        expect(table.isPresent());
-        var rows = table.$$('tr');
-        expect(rows.count()).toBe(2);
-
-        element(by.model('ctrl.position.name')).sendKeys('Position 1');
-
-        var errors = $('.errors.name-error-message');
-        expect(errors.isPresent()).toBe(true);
-
-        expect(errors.$('[ng-message=positionOrderExists]').isPresent()).toBe(false);
-        expect(errors.$('[ng-message=required]').isPresent()).toBe(false);
-        expect(errors.$('[ng-message=max]').isPresent()).toBe(false);
-        expect(errors.$('[ng-message=min]').isPresent()).toBe(false);
-        expect(errors.$('[ng-message=positionNameExists]').isPresent()).toBe(true);
-        expect(errors.$('[ng-message=minlength]').isPresent()).toBe(false);
-        expect(errors.$('[ng-message=maxlength]').isPresent()).toBe(false);
-
-        element(by.model('ctrl.position.name')).clear();
-    });
+//    it('should trigger name check directive', function() {
+//        var table = element(by.id('positions'));
+//        expect(table.isPresent());
+//        var rows = table.$$('tr');
+//        expect(rows.count()).toBe(2);
+//
+//        element(by.model('ctrl.position.name')).sendKeys('Position 1');
+//
+//        var errors = $('.errors.name-error-message');
+//        expect(errors.isPresent()).toBe(true);
+//
+//        expect(errors.$('[ng-message=positionOrderExists]').isPresent()).toBe(false);
+//        expect(errors.$('[ng-message=required]').isPresent()).toBe(false);
+//        expect(errors.$('[ng-message=max]').isPresent()).toBe(false);
+//        expect(errors.$('[ng-message=min]').isPresent()).toBe(false);
+//        expect(errors.$('[ng-message=positionNameExists]').isPresent()).toBe(true);
+//        expect(errors.$('[ng-message=minlength]').isPresent()).toBe(false);
+//        expect(errors.$('[ng-message=maxlength]').isPresent()).toBe(false);
+//
+//        element(by.model('ctrl.position.name')).clear();
+//    });
 
 });

@@ -4,20 +4,20 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Event } from './event.model';
+import { Event } from '../events/event.model';
 import { Race } from '../races/race.model';
 
-import { EventsHttpService } from './events-http.service';
+import { UnassignedEventsHttpService } from './unassigned-events-http.service';
 
 @Injectable()
-export class EventsService implements OnDestroy {
+export class UnassignedEventsService implements OnDestroy {
     protected events: Event[] = new Array<Event>();
     protected subject: BehaviorSubject<Event[]>
         = new BehaviorSubject<Event[]>(this.events);
 
     private subscription: Subscription;
 
-    constructor(protected service: EventsHttpService) {
+    constructor(protected service: UnassignedEventsHttpService) {
         this.refresh();
     }
 
@@ -31,13 +31,11 @@ export class EventsService implements OnDestroy {
         return this.subject;
     }
 
-    public getEventsForRace(race: Race): Event[] {
-        // return this.events.filter((event: Event) => event.)
-        return this.events;
-    }
-
     public refresh(): void {
-        this.subscription = this.service.getEvents().subscribe((events: Event[]) => {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+        this.subscription = this.service.getUnassignedEvents().subscribe((events: Event[]) => {
             this.events = events;
             this.subject.next(this.events);
         });
