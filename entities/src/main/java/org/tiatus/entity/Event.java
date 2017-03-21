@@ -39,6 +39,12 @@ public class Event implements Serializable {
 	@OrderBy("positionOrder")
 	private Set<EventPosition> positions = new HashSet<>();
 
+	public Event(){}
+
+	public Event(Long id){
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}

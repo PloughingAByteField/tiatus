@@ -1,5 +1,6 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
@@ -45,12 +46,22 @@ public class RaceEvent implements Serializable {
         this.id = id;
     }
 
+    @JsonGetter("race")
+    public Long getRaceId() {
+        return race.getId();
+    }
+
     public Race getRace() {
         return race;
     }
 
     public void setRace(Race race) {
         this.race = race;
+    }
+
+    @JsonGetter("event")
+    public Long getEventId() {
+        return event.getId();
     }
 
     public Event getEvent() {
