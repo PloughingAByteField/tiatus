@@ -3,6 +3,7 @@ package org.tiatus.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.EventPosition;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
@@ -36,18 +37,24 @@ public class EventDaoImpl implements EventDao {
             }
             if (existing == null) {
                 tx.begin();
-                Event merged = em.merge(event);
+                em.persist(event);
+                for (EventPosition position: event.getPositions()) {
+                    position.setEvent(event);
+                    position.setPosition(em.merge(position.getPosition()));
+                    em.persist(position);
+                }
                 tx.commit();
 
-                return merged;
+                return event;
             } else {
                 String message = "Failed to add event due to existing event with same id " + event.getId();
                 LOG.warn(message);
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist event", e.getMessage());
-            throw new DaoException(e);
+        } catch (Exception e) {
+            LOG.warn("Failed to persist event", e);
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -65,8 +72,9 @@ public class EventDaoImpl implements EventDao {
             } else {
                 LOG.warn("No such event of id " + event.getId());
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to delete event", e);
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -77,8 +85,9 @@ public class EventDaoImpl implements EventDao {
             tx.begin();
             em.merge(event);
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to update event", e);
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }

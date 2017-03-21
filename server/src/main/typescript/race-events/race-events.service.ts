@@ -30,7 +30,10 @@ export class RaceEventsService implements OnDestroy {
     }
 
     public getEventsForRace(race: Race): RaceEvent[] {
-        return this.events.filter((raceEvent: RaceEvent) => raceEvent.race === race.id);
+        if (race) {
+            return this.events.filter((raceEvent: RaceEvent) => raceEvent.race === race.id);
+        }
+        return new Array<RaceEvent>();
     }
 
     public refresh(): void {

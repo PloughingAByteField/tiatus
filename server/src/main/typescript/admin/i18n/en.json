@@ -87,5 +87,7 @@
     "EVENT_RACE_SELECT": "Select race or unassigned",
     "EVENTS_FOR_RACE": "Events for",
     "UNASSIGNED_EVENTS": "Unassigned events",
+    "EDIT_EVENT": "Edit event",
+    "REMOVE_EVENT": "Remove event",
     "EVENT_BACK_TO": "Go back"
 }

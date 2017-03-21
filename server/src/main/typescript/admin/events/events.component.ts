@@ -30,13 +30,11 @@ export class EventsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    console.log('init');
     this.eventsSubscription = this.eventsService.getEvents()
       .subscribe((events: Event[]) => this.events = events);
 
     this.selectedRaceSubscription =
       this.selectedRaceService.getSelectedRace.subscribe((race: Race) => {
-        console.log(race);
         if (race !== null) {
           this.selectedRace = convertJsonToRace(race);
           this.changedRace(this.selectedRace);
@@ -45,7 +43,6 @@ export class EventsComponent implements OnInit, OnDestroy {
 
     this.racesSubscription = this.racesService.getRaces()
       .subscribe((races: Race[]) => {
-        console.log(races);
         if (races.length > 0) {
           for (let i = this.races.length; i > 0; i--) {
             this.races.pop();

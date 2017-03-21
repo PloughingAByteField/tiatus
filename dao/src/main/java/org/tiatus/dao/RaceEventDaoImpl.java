@@ -3,6 +3,7 @@ package org.tiatus.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.EventPosition;
 import org.tiatus.entity.RaceEvent;
 
 import javax.annotation.Resource;
@@ -37,6 +38,13 @@ public class RaceEventDaoImpl implements RaceEventDao {
             }
             if (existing == null) {
                 tx.begin();
+                // persist event
+                em.persist(raceEvent.getEvent());
+                for (EventPosition position: raceEvent.getEvent().getPositions()) {
+                    position.setEvent(raceEvent.getEvent());
+                    position.setPosition(em.merge(position.getPosition()));
+                    em.persist(position);
+                }
                 RaceEvent merged = em.merge(raceEvent);
                 tx.commit();
 
@@ -46,9 +54,10 @@ public class RaceEventDaoImpl implements RaceEventDao {
                 LOG.warn(message);
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist event", e.getMessage());
-            throw new DaoException(e);
+        } catch (Exception e) {
+            LOG.warn("Failed to persist race event", e);
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 
@@ -66,8 +75,9 @@ public class RaceEventDaoImpl implements RaceEventDao {
             } else {
                 LOG.warn("No such event of id " + raceEvent.getId());
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to delete raceEvent", e);
+        } catch (Exception e) {
+            LOG.warn("Failed to delete race event", e);
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -79,8 +89,9 @@ public class RaceEventDaoImpl implements RaceEventDao {
             tx.begin();
             em.merge(raceEvent);
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to update raceEvent", e);
+        } catch (Exception e) {
+            LOG.warn("Failed to update race event", e);
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }

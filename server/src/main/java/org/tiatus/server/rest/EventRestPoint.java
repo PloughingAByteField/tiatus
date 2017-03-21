@@ -3,9 +3,12 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.EventPosition;
+import org.tiatus.entity.Position;
 import org.tiatus.entity.RaceEvent;
 import org.tiatus.role.Role;
 import org.tiatus.service.EventService;
+import org.tiatus.service.PositionService;
 import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
@@ -26,6 +29,8 @@ import java.util.List;
 public class EventRestPoint {
 
     private EventService service;
+    private PositionService positionService;
+
     private static final String GENERAL_EXCEPTION = "Got general exception: ";
     private static final Logger LOG = LoggerFactory.getLogger(EventRestPoint.class);
 
@@ -43,8 +48,12 @@ public class EventRestPoint {
         // call service which will place in db and queue
         LOG.debug("Adding event name " + event.getName());
         try {
+            for (EventPosition eventPosition: event.getPositions()) {
+                Position position = positionService.getPositionForId(eventPosition.getPositionId());
+                eventPosition.setPosition(position);
+            }
             Event saved = service.addEvent(event);
-            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
+            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
@@ -149,7 +158,7 @@ public class EventRestPoint {
     public Response addAssignedEvent(RaceEvent raceEvent, @Context UriInfo uriInfo) {
         try {
             RaceEvent saved = service.addRaceEvent(raceEvent);
-            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
+            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
             throw new InternalServerErrorException();
@@ -202,5 +211,10 @@ public class EventRestPoint {
     // sonar want constructor injection which jaxrs does not support
     public void setService(EventService service) {
         this.service = service;
+    }
+
+    @Inject
+    public void setPositionService(PositionService service) {
+        this.positionService = service;
     }
 }

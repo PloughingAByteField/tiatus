@@ -29,6 +29,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
   private racesSubscription: Subscription;
   private unassignedEventsSubscription: Subscription;
   private events: Event[] = new Array<Event>();
+  private raceEventsFromService: RaceEvent[] = new Array<RaceEvent>();
 
   constructor(
     private route: ActivatedRoute,
@@ -39,8 +40,6 @@ export class EventsTableComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    console.log('init');
-
     this.route.params.subscribe((params: Params) => {
         this.raceId = +params['raceId'];
         this.race = this.racesService.getRaceForId(this.raceId);
@@ -48,6 +47,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
           this.racesSubscription = this.racesService.getRaces()
             .subscribe((races: Race[]) => {
               this.race = this.racesService.getRaceForId(this.raceId);
+              this.getEventsForRace(this.raceId);
             });
         }
 
@@ -61,12 +61,8 @@ export class EventsTableComponent implements OnInit, OnDestroy {
         this.raceEventsSubscription = this.raceEventsService.getEvents()
           .subscribe((events: RaceEvent[]) => {
             if (events.length > 0) {
-              if (this.raceId !== 0) {
-                this.raceEvents = this.raceEventsService.getEventsForRace(this.race);
-              } else {
-                 this.unassignedEventsSubscription = this.unassignedEventsService.getEvents()
-                  .subscribe((unassigned: Event[]) => this.unassignedEvents = unassigned);
-              }
+              this.raceEventsFromService = events;
+              this.getEventsForRace(this.raceId);
             }
         });
     });
@@ -109,6 +105,18 @@ export class EventsTableComponent implements OnInit, OnDestroy {
 
   public removeUnassignedEvent(event: Event): void {
     console.log(event);
+  }
+
+  private getEventsForRace(raceId: number): void {
+    if (raceId !== 0) {
+      let race: Race = this.racesService.getRaceForId(raceId);
+      this.raceEvents = this.raceEventsService.getEventsForRace(race);
+    } else {
+      if (!this.unassignedEventsSubscription) {
+        this.unassignedEventsSubscription = this.unassignedEventsService.getEvents()
+          .subscribe((unassigned: Event[]) => this.unassignedEvents = unassigned);
+      }
+    }
   }
 
   private getEventForEventId(id: number): Event {

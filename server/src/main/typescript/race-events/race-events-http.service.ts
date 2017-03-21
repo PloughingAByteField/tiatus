@@ -8,12 +8,12 @@ import { Race } from '../races/race.model';
 @Injectable()
 export class RaceEventsHttpService {
 
-  protected endpoint: string = '/rest/events';
+  protected endpoint: string = '/rest/events/assigned';
 
   constructor(protected http: Http) {}
 
   public getRaceEvents(): Observable<RaceEvent[]> {
-    return this.http.get(this.endpoint + '/assigned')
+    return this.http.get(this.endpoint)
       .map(convertJsonToRaceEvents).share();
   }
 }

@@ -14,7 +14,6 @@ public class EventPosition implements Serializable {
 
 	private static final long serialVersionUID = 486592711029352048L;
 
-	@Id
 	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "position_id", nullable = false, updatable = true, insertable = true)
 	private Position position;
@@ -23,6 +22,7 @@ public class EventPosition implements Serializable {
     @JoinColumn(name = "event_id", nullable = false, updatable = true, insertable = true)
 	private Event event;
 
+	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
 	@GenericGenerator(name="UseExistingOrGenerateIdGenerator",
 			strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",

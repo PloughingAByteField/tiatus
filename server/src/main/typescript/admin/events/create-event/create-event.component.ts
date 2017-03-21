@@ -8,6 +8,7 @@ import { SelectedRaceService } from '../../races/selected-race.service';
 import { AdminRacesService } from '../../races/races.service';
 
 import { Event } from '../../../events/event.model';
+import { EventPosition } from '../../../events/event-positions.model';
 import { AdminEventsService } from '../events.service';
 
 import { RacePositionTemplate } from '../../race-positions/race-position-template.model';
@@ -21,6 +22,11 @@ import { RacePositionTemplatesService } from
 import { RacePositionsService } from '../../race-positions/race-positions.service';
 
 import { AdminPositionsService } from '../../positions/positions.service';
+import { AdminRaceEventsService } from '../race-events.service';
+
+import { RaceEvent } from '../../../race-events/race-event.model';
+import { RaceEventPojo } from './race-event-pojo.model';
+import { AdminUnassignedEventsService } from '../unassigned-events.service';
 
 @Component({
   selector: 'create-event',
@@ -52,7 +58,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     private racesService: AdminRacesService,
     private positionsService: AdminPositionsService,
     private templatesService: RacePositionsService,
+    private raceEventsService: AdminRaceEventsService,
     private eventsService: AdminEventsService,
+    private unassignedEventsService: AdminUnassignedEventsService,
     private fb: FormBuilder,
     private location: Location
   ) {}
@@ -73,7 +81,6 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
     this.selectedRaceSubscription =
       this.selectedRaceService.getSelectedRace.subscribe((race: Race) => {
-        console.log(race);
         if (race !== null) {
           this.selectedRace = race;
           this.changedRace(this.selectedRace);
@@ -91,7 +98,6 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
     this.positionsSubscription = this.positionsService.getPositions()
       .subscribe((positions: Position[]) => {
-        console.log('psoitions');
         this.positions = positions;
         this.fillUnassignedPositions();
         console.log(this.unassignedPositions);
@@ -111,6 +117,31 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log('on submit');
+    // create event
+    let event: Event = new Event();
+    event.name = value.name;
+    event.positions = new Array<EventPosition>();
+    for (let position of value.positions) {
+      let eventPosition: EventPosition = new EventPosition();
+      eventPosition.position = position.position;
+      eventPosition.positionOrder = position.positionOrder;
+      event.positions.push(eventPosition);
+    }
+    if (value.isNonRaceAssigned) {
+      this.eventsService.createEvent(event).then((newEvent: Event) => {
+        console.log(newEvent);
+        this.unassignedEventsService.addEvent(newEvent);
+        this.goBack();
+      });
+
+    } else {
+      let raceEvent: RaceEventPojo = new RaceEventPojo();
+      raceEvent.race = this.selectedRace.id;
+      raceEvent.event = event;
+      this.raceEventsService.createRaceEvent(raceEvent).then((newRaceEvent: RaceEvent) => {
+        this.goBack();
+      });
+    }
   }
 
   public changeRace(race: Race): void {
