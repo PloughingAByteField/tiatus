@@ -22,6 +22,7 @@ export class RacesService {
     }
 
     public getRaces(): BehaviorSubject<Race[]> {
+        console.log(this.races);
         return this.racesSubject;
     }
 

@@ -12,7 +12,8 @@ export class SelectedRaceService {
         return this.selected;
     }
 
-    public set setSelectedRace(p: Race) {
-        this.selected.next(p);
+    public set setSelectedRace(race: Race) {
+        console.log('seleting selected to ' + race.id);
+        this.selected.next(race);
     }
 }

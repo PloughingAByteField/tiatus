@@ -15,11 +15,9 @@ export class RaceEventsService implements OnDestroy {
     protected subject: BehaviorSubject<RaceEvent[]>
         = new BehaviorSubject<RaceEvent[]>(this.events);
 
-    private subscription: Subscription;
+    protected subscription: Subscription;
 
-    constructor(protected service: RaceEventsHttpService) {
-        this.refresh();
-    }
+    constructor(protected service: RaceEventsHttpService) {}
 
     public ngOnDestroy() {
         if (this.subscription) {
@@ -32,8 +30,7 @@ export class RaceEventsService implements OnDestroy {
     }
 
     public getEventsForRace(race: Race): RaceEvent[] {
-        // return this.events.filter((event: Event) => event.)
-        return this.events;
+        return this.events.filter((raceEvent: RaceEvent) => raceEvent.race === race.id);
     }
 
     public refresh(): void {

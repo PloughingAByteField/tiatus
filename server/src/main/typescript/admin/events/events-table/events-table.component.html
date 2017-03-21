@@ -1,0 +1,35 @@
+
+<div *ngIf="race !== null && race.id > 0">{{ 'EVENTS_FOR_RACE' | translate }} {{ race.name }}
+    <table id="events" class="table table-condensed table-bordered table-striped">
+        <thead>
+            <th>{{ 'EVENT_NAME' | translate }}</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let raceEvent of raceEvents">
+                <td>{{ getEventName(raceEvent) }}</td>
+                <td><button (click)="editRaceEvent(raceEvent)">{{ 'EDIT_EVENT' | translate }}</button></td>
+                <td><button (click)="removeRaceEvent(raceEvent)" >{{ 'REMOVE_EVENT' | translate }}</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div *ngIf="race === null">{{ 'UNASSIGNED_EVENTS' | translate }}
+    <table id="events" class="table table-condensed table-bordered table-striped">
+        <thead>
+            <th>{{ 'EVENT_NAME' | translate }}</th>
+            <th></th>
+            <th></th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let event of unassignedEvents">
+                <td>{{ event.name }}</td>
+                <td><button (click)="editUnassignedEvent(event)">{{ 'EDIT_EVENT' | translate }}</button></td>
+                <td><button (click)="removeUnassignedEvent(event)" >{{ 'REMOVE_EVENT' | translate }}</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

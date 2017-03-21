@@ -17,9 +17,7 @@ export class UnassignedEventsService implements OnDestroy {
 
     private subscription: Subscription;
 
-    constructor(protected service: UnassignedEventsHttpService) {
-        this.refresh();
-    }
+    constructor(protected service: UnassignedEventsHttpService) {}
 
     public ngOnDestroy() {
         if (this.subscription) {

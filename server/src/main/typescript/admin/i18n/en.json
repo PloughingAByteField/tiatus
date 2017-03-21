@@ -84,5 +84,8 @@
     "EVENT_REMOVE_POSITION": "Remove position",
     "EVENT_ADD_POSITION": "Add position to list",
     "CREATE_EVENT_SUBMIT": "Create event",
+    "EVENT_RACE_SELECT": "Select race or unassigned",
+    "EVENTS_FOR_RACE": "Events for",
+    "UNASSIGNED_EVENTS": "Unassigned events",
     "EVENT_BACK_TO": "Go back"
 }

@@ -16,11 +16,6 @@ export class RaceEventsHttpService {
     return this.http.get(this.endpoint + '/assigned')
       .map(convertJsonToRaceEvents).share();
   }
-
-  public getRaceEventsForRace(race: Race): Observable<RaceEvent[]> {
-    return this.http.get(this.endpoint + '/assigned')
-      .map(convertJsonToRaceEvents).share();
-  }
 }
 
 function convertJsonToRaceEvents(response: Response): RaceEvent[] {

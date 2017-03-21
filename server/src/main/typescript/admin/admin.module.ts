@@ -64,6 +64,13 @@ import { AdminUsersHttpService } from './users/users-http.service';
 
 import { RacePositionTemplatesComponent } from './race-position-templates';
 import { CreateEventComponent } from './events/create-event';
+import { EventsTableComponent } from './events/events-table';
+import { AdminRaceEventsHttpService } from './events/race-events-http.service';
+import { AdminRaceEventsService } from './events/race-events.service';
+import { AdminUnassignedEventsHttpService } from './events/unassigned-events-http.service';
+import { AdminUnassignedEventsService } from './events/unassigned-events.service';
+import { RaceEventsHttpService } from '../race-events/race-events-http.service';
+import { RaceEventsService } from '../race-events/race-events.service';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -86,7 +93,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     UsersComponent,
     RacePositionsComponent,
     RacePositionTemplatesComponent,
-    CreateEventComponent
+    CreateEventComponent,
+    EventsTableComponent
   ],
   imports: [
     BrowserModule,
@@ -130,6 +138,12 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     RacePositionsHttpService,
     RacePositionTemplatesService,
     RacePositionTemplatesHttpService,
+    RaceEventsHttpService,
+    RaceEventsService,
+    AdminRaceEventsService,
+    AdminRaceEventsHttpService,
+    AdminUnassignedEventsHttpService,
+    AdminUnassignedEventsService,
     SelectedRaceService,
     Title
   ]
