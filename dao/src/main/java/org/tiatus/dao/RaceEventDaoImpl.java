@@ -69,13 +69,14 @@ public class RaceEventDaoImpl implements RaceEventDao {
     @Override
     public void deleteRaceEvent(RaceEvent raceEvent) throws DaoException {
         try {
+            tx.begin();
             RaceEvent existing = null;
             if (raceEvent.getId() != null) {
                 existing = em.find(RaceEvent.class, raceEvent.getId());
             }
             if (existing != null) {
-                tx.begin();
-                em.remove(em.contains(raceEvent) ? raceEvent : em.merge(raceEvent));
+                em.remove(existing);
+                em.remove(em.contains(existing.getEvent()) ? existing.getEvent() : em.merge(existing.getEvent()));
                 tx.commit();
             } else {
                 LOG.warn("No such event of id " + raceEvent.getId());

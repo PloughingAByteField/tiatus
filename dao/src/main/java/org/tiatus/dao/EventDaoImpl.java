@@ -73,12 +73,12 @@ public class EventDaoImpl implements EventDao {
     @Override
     public void deleteEvent(Event event) throws DaoException {
         try {
+            tx.begin();
             Event existing = null;
             if (event.getId() != null) {
                 existing = em.find(Event.class, event.getId());
             }
             if (existing != null) {
-                tx.begin();
                 em.remove(em.contains(event) ? event : em.merge(event));
                 tx.commit();
             } else {

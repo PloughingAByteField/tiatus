@@ -47,6 +47,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
           this.racesSubscription = this.racesService.getRaces()
             .subscribe((races: Race[]) => {
               this.race = this.racesService.getRaceForId(this.raceId);
+              this.getEventsForRace(this.raceId);
             });
         }
         this.getEventsForRace(this.raceId);
@@ -93,6 +94,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
 
   public removeRaceEvent(raceEvent: RaceEvent): void {
     console.log(raceEvent);
+    this.raceEventsService.removeRaceEvent(raceEvent);
   }
 
   public editUnassignedEvent(event: Event): void {
@@ -101,12 +103,16 @@ export class EventsTableComponent implements OnInit, OnDestroy {
 
   public removeUnassignedEvent(event: Event): void {
     console.log(event);
+    this.unassignedEventsService.removeEvent(event);
   }
 
   private getEventsForRace(raceId: number): void {
     if (raceId !== 0) {
       let race: Race = this.racesService.getRaceForId(raceId);
+      console.log(raceId);
+      console.log(race);
       this.raceEvents = this.raceEventsService.getEventsForRace(race);
+      console.log(this.raceEvents);
     } else {
       if (!this.unassignedEventsSubscription) {
         this.unassignedEventsSubscription = this.unassignedEventsService.getEvents()

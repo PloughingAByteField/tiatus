@@ -93,6 +93,33 @@ public class EventRestPoint {
     }
 
     /**
+     * Remove event, restricted to Admin users
+     * @param id of event to remove
+     * @return response with 204
+     */
+    @DELETE
+    @RolesAllowed({Role.ADMIN})
+    @Path("unassigned/{id}")
+    @Produces("application/json")
+    public Response removeUnassignedEvent(@PathParam("id") Long id) {
+        // call service which will place in db and queue
+        LOG.debug("Got event id " + id);
+        Event event = new Event();
+        event.setId(id);
+        try {
+            service.deleteEvent(event);
+            return Response.noContent().build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Failed to delete event: " + event.getName(), e);
+            throw new InternalServerErrorException();
+        } catch (Exception e) {
+            LOG.warn(GENERAL_EXCEPTION, e);
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
      * Get events
      * @return response containing list of events
      */

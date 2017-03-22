@@ -32,4 +32,14 @@ export class AdminRaceEventsHttpService extends RaceEventsHttpService {
             })
             .catch((err) => Promise.reject(err));
     }
+
+    public removeRaceEvent(raceEvent: RaceEvent): Promise<RaceEvent> {
+        return this.http
+            .delete(this.endpoint + '/' + raceEvent.id)
+            .toPromise()
+            .then(() => {
+                return raceEvent;
+            })
+            .catch((err) => Promise.reject(err));
+    }
 }

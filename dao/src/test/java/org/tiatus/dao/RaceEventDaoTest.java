@@ -238,16 +238,24 @@ public class RaceEventDaoTest {
 
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
-            public RaceEvent find(Class<Race> entityClass, Object primaryKey) {
-                RaceEvent raceEvent = new RaceEvent();
-                Race race = new Race();
-                race.setId(1L);
-                Event event = new Event();
-                event.setId(1L);
-                raceEvent.setId(1L);
-                raceEvent.setEvent(event);
-                raceEvent.setRace(race);
-                return raceEvent;
+            public Object find(Class<?> entityClass, Object primaryKey) {
+                if (entityClass.isAssignableFrom(RaceEvent.class)) {
+                    RaceEvent raceEvent = new RaceEvent();
+                    Race race = new Race();
+                    race.setId(1L);
+                    Event event = new Event();
+                    event.setId(1L);
+                    raceEvent.setId(1L);
+                    raceEvent.setEvent(event);
+                    raceEvent.setRace(race);
+                    return raceEvent;
+                }
+                if (entityClass.isAssignableFrom(Event.class)) {
+                    Event event = new Event();
+                    event.setId(1L);
+                    return event;
+                }
+                return null;
             }
 
             @Mock

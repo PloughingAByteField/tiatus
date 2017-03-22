@@ -14,11 +14,11 @@ public class EventPosition implements Serializable {
 
 	private static final long serialVersionUID = 486592711029352048L;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "position_id", nullable = false, updatable = true, insertable = true)
 	private Position position;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id", nullable = false, updatable = true, insertable = true)
 	private Event event;
 

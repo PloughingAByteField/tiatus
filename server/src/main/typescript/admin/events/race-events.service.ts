@@ -28,4 +28,12 @@ export class AdminRaceEventsService extends RaceEventsService {
             })
         );
     }
+
+    public removeRaceEvent(raceEvent: RaceEvent): void {
+        this.service.removeRaceEvent(raceEvent).then((e: RaceEvent) => {
+            let index = this.events.indexOf(raceEvent);
+            this.events.splice(index, 1);
+            this.subject.next(this.events);
+        });
+    }
 }

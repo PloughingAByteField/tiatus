@@ -35,7 +35,7 @@ public class Event implements Serializable {
 	private Long id;
 
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "event")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = true)
 	@OrderBy("positionOrder")
 	private Set<EventPosition> positions = new HashSet<>();
 
