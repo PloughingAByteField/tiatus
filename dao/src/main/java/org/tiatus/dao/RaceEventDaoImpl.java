@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
 import org.tiatus.entity.EventPosition;
+import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 
 import javax.annotation.Resource;
@@ -37,8 +38,15 @@ public class RaceEventDaoImpl implements RaceEventDao {
                 existing = em.find(RaceEvent.class, raceEvent.getId());
             }
             if (existing == null) {
+                List<RaceEvent> raceEvents = getRaceEventsForRace(raceEvent.getRace());
+                for (RaceEvent re: raceEvents) {
+                    if (re.getEvent().getName().equals(raceEvent.getEvent().getName())) {
+                        String message = "Failed to add raceEvent due to existing raceEvent with event of same name " + raceEvent.getEvent().getName();
+                        LOG.warn(message);
+                        throw new DaoException(message);
+                    }
+                }
                 tx.begin();
-                // persist event
                 em.persist(raceEvent.getEvent());
                 for (EventPosition position: raceEvent.getEvent().getPositions()) {
                     position.setEvent(raceEvent.getEvent());
@@ -94,6 +102,12 @@ public class RaceEventDaoImpl implements RaceEventDao {
             try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<RaceEvent> getRaceEventsForRace(Race race) {
+        TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent re where re.race.id = :race_id order by raceEventOrder", RaceEvent.class);
+        return query.setParameter("race_id", race.getId()).getResultList();
     }
 
     @Override

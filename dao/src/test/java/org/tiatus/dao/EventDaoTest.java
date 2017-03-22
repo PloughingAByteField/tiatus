@@ -18,6 +18,13 @@ import java.util.List;
 public class EventDaoTest {
     @Test
     public void testAddEvent() throws DaoException {
+        TypedQuery typedQuery = new MockUp<TypedQuery>() {
+            @Mock
+            public List<Event> getResultList() {
+                return new ArrayList<>();
+            }
+        }.getMockInstance();
+
         EntityManager em = new MockUp<EntityManager>() {
             @Mock
             public Event find(Class entityClass, Object primaryKey) {
@@ -27,6 +34,11 @@ public class EventDaoTest {
             @Mock
             public void persist(Object entity) {
 
+            }
+
+            @Mock
+            public TypedQuery createQuery(String qlString, Class resultClass) {
+                return typedQuery;
             }
         }.getMockInstance();
 

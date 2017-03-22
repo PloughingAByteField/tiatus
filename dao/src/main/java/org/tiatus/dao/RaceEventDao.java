@@ -1,6 +1,7 @@
 package org.tiatus.dao;
 
 import org.tiatus.entity.Event;
+import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 
 import java.util.List;
@@ -39,6 +40,14 @@ public interface RaceEventDao {
      * @return list of race events
      */
     List<RaceEvent> getRaceEvents();
+
+    /**
+     * Get list of RaceEvents for a race
+     *
+     * @param race Race
+     * @return list of race events
+     */
+    List<RaceEvent> getRaceEventsForRace(Race race);
 
     /**
      * Get RaceEvent

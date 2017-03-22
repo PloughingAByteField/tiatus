@@ -19,7 +19,7 @@ public class Event implements Serializable {
 	
 	private static final long serialVersionUID = -8203697323141728439L;
 
-	@Column(name = "name", unique = true)
+	@Column(name = "name")
 	private String name;
 
 	@Column(name = "is_weighted")

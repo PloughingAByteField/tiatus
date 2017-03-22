@@ -27,6 +27,9 @@ public class EventDaoImpl implements EventDao {
     @Resource
     protected UserTransaction tx;
 
+    /*
+        Only unassigned events are created here, race assigned events are created in RaceEvent
+     */
     @Override
     public Event addEvent(Event event) throws DaoException {
         LOG.debug("Adding event " + event);
@@ -36,6 +39,15 @@ public class EventDaoImpl implements EventDao {
                 existing = em.find(Event.class, event.getId());
             }
             if (existing == null) {
+                // check to see if name is already used in unassigned
+                List<Event> unassignedEvents = getUnassignedEvents();
+                for (Event unassigned: unassignedEvents) {
+                    if (unassigned.getName().equals(event.getName())) {
+                        String message = "Failed to add event due to existing unassigned event with same name " + event.getName();
+                        LOG.warn(message);
+                        throw new DaoException(message);
+                    }
+                }
                 tx.begin();
                 em.persist(event);
                 for (EventPosition position: event.getPositions()) {

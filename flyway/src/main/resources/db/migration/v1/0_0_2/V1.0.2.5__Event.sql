@@ -1,7 +1,7 @@
 CREATE TABLE event (
     id bigint NOT NULL PRIMARY KEY,
     is_weighted boolean,
-    name character varying(255) UNIQUE
+    name character varying(255)
 );
 
 CREATE SEQUENCE event_id_sequence
