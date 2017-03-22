@@ -2,10 +2,7 @@ package org.tiatus.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tiatus.entity.Event;
-import org.tiatus.entity.EventPosition;
-import org.tiatus.entity.Race;
-import org.tiatus.entity.RaceEvent;
+import org.tiatus.entity.*;
 
 import javax.annotation.Resource;
 import javax.enterprise.inject.Default;
@@ -50,7 +47,7 @@ public class RaceEventDaoImpl implements RaceEventDao {
                 em.persist(raceEvent.getEvent());
                 for (EventPosition position: raceEvent.getEvent().getPositions()) {
                     position.setEvent(raceEvent.getEvent());
-                    position.setPosition(em.merge(position.getPosition()));
+                    position.setPosition(getPositionForId(position.getPositionId()));
                     em.persist(position);
                 }
                 RaceEvent merged = em.merge(raceEvent);
@@ -120,6 +117,11 @@ public class RaceEventDaoImpl implements RaceEventDao {
     public RaceEvent getRaceEventByEvent(Event event) {
         TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent re where re.event.id = :event_id", RaceEvent.class);
         return query.setParameter("event_id", event.getId()).getSingleResult();
+    }
+
+
+    private Position getPositionForId(Long id) {
+        return em.find(Position.class, id);
     }
 
 }
