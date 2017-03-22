@@ -105,7 +105,6 @@ public class EventIT {
         List<Event> events = dao.getEvents();
         Assert.assertTrue(events.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addEvent(event1);
@@ -121,9 +120,7 @@ public class EventIT {
         List<Event> events = dao.getEvents();
         Assert.assertTrue(events.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
-        em.merge(event1);
         dao.tx = new EntityUserTransaction(em);
         dao.addEvent(event1);
         dao.addEvent(event1);
@@ -134,7 +131,6 @@ public class EventIT {
         List<Event> events = dao.getEvents();
         Assert.assertTrue(events.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
         em.merge(event1);
         EntityManager em = new MockUp<EntityManager>(){
@@ -153,7 +149,6 @@ public class EventIT {
         List<Event> events = dao.getEvents();
         Assert.assertTrue(events.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addEvent(event1);
@@ -172,7 +167,6 @@ public class EventIT {
         List<Event> events = dao.getEvents();
         Assert.assertTrue(events.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addEvent(event1);
@@ -182,7 +176,6 @@ public class EventIT {
         Assert.assertTrue(events.size() == 1);
 
         Event event2 = new Event();
-        event2.setId(2L);
         event2.setName("Event 2");
 
         dao.deleteEvent(event2);
@@ -197,14 +190,15 @@ public class EventIT {
         List<Event> events = dao.getEvents();
         Assert.assertTrue(events.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
+        event1.setId(1L);
         EntityManager em = new MockUp<EntityManager>(){
             @Mock
             public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
                 throw new NotSupportedException();
             }
         }.getMockInstance();
+        dao.tx = new EntityUserTransaction(em);
         dao.em = em;
         dao.deleteEvent(event1);
     }
@@ -214,7 +208,6 @@ public class EventIT {
         List<Event> events = dao.getEvents();
         Assert.assertTrue(events.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addEvent(event1);
@@ -237,7 +230,6 @@ public class EventIT {
         List<Event> raceEvents = dao.getEvents();
         Assert.assertTrue(raceEvents.isEmpty());
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
         UserTransaction tx = new MockUp<UserTransaction>() {
             @Mock

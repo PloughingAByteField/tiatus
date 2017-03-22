@@ -15,6 +15,9 @@ public class EntityUserTransaction implements UserTransaction {
 
     @Override
     public void begin() throws NotSupportedException, SystemException {
+        if (em.getTransaction() == null) {
+            throw new SystemException();
+        }
         if (em.getTransaction().isActive()) {
             throw new NotSupportedException();
         }
@@ -23,11 +26,17 @@ public class EntityUserTransaction implements UserTransaction {
 
     @Override
     public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
+        if (em.getTransaction() == null) {
+            throw new SystemException();
+        }
         em.getTransaction().commit();
     }
 
     @Override
     public int getStatus() throws SystemException {
+        if (em.getTransaction() == null) {
+            throw new SystemException();
+        }
         if (em.getTransaction().isActive()) {
             return Status.STATUS_ACTIVE;
         } else {
@@ -37,11 +46,17 @@ public class EntityUserTransaction implements UserTransaction {
 
     @Override
     public void rollback() throws IllegalStateException, SecurityException, SystemException {
+        if (em.getTransaction() == null) {
+            throw new SystemException();
+        }
         em.getTransaction().rollback();
     }
 
     @Override
     public void setRollbackOnly() throws IllegalStateException, SystemException {
+        if (em.getTransaction() == null) {
+            throw new SystemException();
+        }
         em.getTransaction().setRollbackOnly();
     }
 

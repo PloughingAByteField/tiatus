@@ -53,7 +53,7 @@ public class EventDaoImpl implements EventDao {
             }
         } catch (Exception e) {
             LOG.warn("Failed to persist event", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -74,7 +74,7 @@ public class EventDaoImpl implements EventDao {
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete event", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -87,7 +87,7 @@ public class EventDaoImpl implements EventDao {
             tx.commit();
         } catch (Exception e) {
             LOG.warn("Failed to update event", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }

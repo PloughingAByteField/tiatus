@@ -89,9 +89,7 @@ public class RaceEventIT {
         race1.setName("Race 1");
         em.merge(race1);
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
-        em.merge(event1);
         RaceEvent raceEvent1 = new RaceEvent();
         raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
@@ -135,9 +133,7 @@ public class RaceEventIT {
         race1.setName("Race 1");
         em.merge(race1);
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
-        em.merge(event1);
         RaceEvent raceEvent1 = new RaceEvent();
         raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
@@ -148,8 +144,8 @@ public class RaceEventIT {
                 throw new NotSupportedException();
             }
         }.getMockInstance();
+        dao.tx = new EntityUserTransaction(em);
         dao.em = em;
-
         dao.addRaceEvent(raceEvent1);
     }
 
@@ -162,9 +158,7 @@ public class RaceEventIT {
         race1.setName("Race 1");
         em.merge(race1);
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
-        em.merge(event1);
         RaceEvent raceEvent1 = new RaceEvent();
         raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
@@ -190,9 +184,7 @@ public class RaceEventIT {
         race1.setName("Race 1");
         em.merge(race1);
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
-        em.merge(event1);
         RaceEvent raceEvent1 = new RaceEvent();
         raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
@@ -226,7 +218,6 @@ public class RaceEventIT {
         race1.setId(1L);
         race1.setName("Race 1");
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
         RaceEvent raceEvent1 = new RaceEvent();
         raceEvent1.setId(1L);
@@ -238,6 +229,7 @@ public class RaceEventIT {
                 throw new NotSupportedException();
             }
         }.getMockInstance();
+        dao.tx = new EntityUserTransaction(em);
         dao.em = em;
         dao.deleteRaceEvent(raceEvent1);
     }
@@ -251,9 +243,7 @@ public class RaceEventIT {
         race1.setName("Race 1");
         em.merge(race1);
         Event event1 = new Event();
-        event1.setId(1L);
         event1.setName("Event 1");
-        em.merge(event1);
         RaceEvent raceEvent1 = new RaceEvent();
         raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
