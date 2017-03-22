@@ -45,13 +45,18 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   public templates: RacePositionTemplate[] = new Array<RacePositionTemplate>();
 
   private events: Event[];
-  private unassignedEvents: Event[];
+  private raceEventsFromService: RaceEvent[] = new Array<RaceEvent>();
+  private raceEventsForRace: RaceEvent[] = new Array<RaceEvent>();
+  private eventsForRace: Event[] = new Array<Event>();
+  private unassignedEvents: Event[] = new Array<Event>();
 
   private racesSubscription: any;
   private selectedRaceSubscription: any;
   private templatesSubscription: any;
   private positionsSubscription: any;
   private eventsSubscription: any;
+  private raceEventsSubscription: any;
+  private unassignedEventsSubscription: any;
 
   constructor(
     private selectedRaceService: SelectedRaceService,
@@ -106,6 +111,19 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
     this.eventsSubscription = this.eventsService.getEvents()
       .subscribe((events: Event[]) => this.events = events);
+
+    this.raceEventsSubscription = this.raceEventsService.getEvents()
+          .subscribe((events: RaceEvent[]) => {
+            if (events.length > 0) {
+              this.raceEventsFromService = events;
+              if (this.selectedRace) {
+                this.populateEventsForRace(this.selectedRace);
+              }
+            }
+        });
+
+    this.unassignedEventsSubscription = this.unassignedEventsService.getEvents()
+      .subscribe((events: Event[]) => this.unassignedEvents = events);
   }
 
   public ngOnDestroy() {
@@ -113,6 +131,8 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     this.racesSubscription.unsubscribe();
     this.positionsSubscription.unsubscribe();
     this.eventsSubscription.unsubscribe();
+    this.unassignedEventsSubscription.unsubscribe();
+    this.raceEventsSubscription.unsubscribe();
   }
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
@@ -200,6 +220,20 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     this.location.back();
   }
 
+  private populateEventsForRace(race: Race): void {
+    this.eventsForRace = new Array<Event>();
+    this.raceEventsForRace = this.raceEventsService.getEventsForRace(this.selectedRace);
+    if (this.events) {
+      this.events.map((event: Event) => {
+        for (let raceEvent of this.raceEventsForRace) {
+          if (raceEvent.event === event.id) {
+            this.eventsForRace.push(event);
+          }
+        }
+      });
+    }
+  }
+
   private fillUnassignedPositions(): void {
     this.unassignedPositions = this.positions.filter((position: Position) =>
           !this.positionInForm(position));
@@ -212,6 +246,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     console.log('changed race');
     console.log(race);
     this.selectedRace = race;
+    this.populateEventsForRace(this.selectedRace);
     this.templates = this.templatesService.getTemplatesForRace(race);
     this.processTemplates(this.templates);
     console.log(this.templates);
@@ -330,6 +365,22 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   private existingEventName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       // check to see if check box is ticked if so check unassigned else check assigned for race
+      if (this.addEntryForm && this.addEntryForm.get('isNonRaceAssigned')) {
+        let isNonRaceAssigned: boolean = this.addEntryForm.get('isNonRaceAssigned').value;
+        if (isNonRaceAssigned) {
+          for (let unassigned of this.unassignedEvents) {
+            if (unassigned.name === control.value) {
+              return { existingName: true };
+            }
+          }
+        } else {
+          for (let event of this.eventsForRace) {
+            if (event.name === control.value) {
+              return { existingName: true };
+            }
+          }
+        }
+      }
       return null;
     };
   }

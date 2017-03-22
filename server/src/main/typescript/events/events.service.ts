@@ -31,12 +31,6 @@ export class EventsService implements OnDestroy {
         return this.subject;
     }
 
-    public getEventsForRace(race: Race): Event[] {
-        // return this.events.filter((event: Event) => event.)
-        console.log(this.events);
-        return this.events;
-    }
-
     public refresh(): void {
         this.subscription = this.service.getEvents().subscribe((events: Event[]) => {
             console.log(events);
