@@ -47,9 +47,9 @@ export class EventsTableComponent implements OnInit, OnDestroy {
           this.racesSubscription = this.racesService.getRaces()
             .subscribe((races: Race[]) => {
               this.race = this.racesService.getRaceForId(this.raceId);
-              this.getEventsForRace(this.raceId);
             });
         }
+        this.getEventsForRace(this.raceId);
     });
 
     this.eventsSubscription = this.eventsService.getEvents()

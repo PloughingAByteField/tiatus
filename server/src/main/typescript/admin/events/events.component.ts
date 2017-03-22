@@ -84,7 +84,6 @@ export class EventsComponent implements OnInit, OnDestroy {
     console.log('changed race');
     console.log(race);
     this.router.navigate(['/events', race.id]);
-
   }
 
   private getRaceFromRaces(race: Race): Race {
