@@ -125,31 +125,17 @@ export class EditEventComponent implements OnInit, OnDestroy {
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log('on submit');
-    // create event
-    // let event: Event = new Event();
-    // event.name = value.name;
-    // event.positions = new Array<EventPosition>();
-    // for (let position of value.positions) {
-    //   let eventPosition: EventPosition = new EventPosition();
-    //   eventPosition.position = position.position;
-    //   eventPosition.positionOrder = position.positionOrder;
-    //   event.positions.push(eventPosition);
-    // }
-    // if (value.isNonRaceAssigned) {
-    //   this.eventsService.createEvent(event).then((newEvent: Event) => {
-    //     console.log(newEvent);
-    //     this.unassignedEventsService.addEvent(newEvent);
-    //     this.goBack();
-    //   });
-
-    // } else {
-//      let raceEvent: RaceEventPojo = new RaceEventPojo();
-//      raceEvent.race = this.selectedRace.id;
-//      raceEvent.event = event;
-//      this.raceEventsService.createRaceEvent(raceEvent).then((newRaceEvent: RaceEvent) => {
-//        this.goBack();
-//      });
-    // }
+    console.log(this.selectedEvent);
+    let updatedEvent: Event = new Event();
+    updatedEvent.name = this.editEventForm.get('name').value;
+    updatedEvent.positions = new Array<EventPosition>();
+    let array: FormArray = this.editEventForm.get('positions') as FormArray;
+    for (let group of array.controls) {
+      console.log(group);
+      // updatedEvent.positions.push();
+    }
+    console.log(updatedEvent);
+    // this.eventsService.updateEvent(updatedEvent);
   }
 
   public removePosition(index: number): void {
@@ -179,23 +165,11 @@ export class EditEventComponent implements OnInit, OnDestroy {
       newEventPosition.positionOrder =
         array.controls[array.controls.length - 1].get('positionOrder').value + 1;
     }
-    let eventPositionControl: FormControl = this.fb.control(newEventPosition);
-    let positionControl: FormControl = this.fb.control(newPosition.id);
-    let positionOrderControl: FormControl =
-      this.fb.control(newEventPosition.positionOrder);
-    let group: FormGroup = this.fb.group({
-      eventPosition: eventPositionControl,
-      position: positionControl,
-      positionOrder: positionOrderControl
-    });
-    array.push(group);
+    this.addPositionToForm(newEventPosition, array, true);
 
     // remove from unassigned
     this.unassignedPositions.splice(this.unassignedPositions.indexOf(newPosition), 1);
     this.fillUnassignedPositions();
-
-    // have form revalidate
-    group.markAsDirty();
   }
 
   public goBack(): void {
@@ -293,6 +267,26 @@ export class EditEventComponent implements OnInit, OnDestroy {
     }
   }
 
+  private addPositionToForm(
+    eventPosition: EventPosition, positionsFormArray: FormArray, markDirty: boolean): void {
+    let eventPositionControl: FormControl = this.fb.control(eventPosition);
+    let positionControl: FormControl = this.fb.control(eventPosition.position);
+    let positionOrderControl: FormControl = this.fb.control(eventPosition.positionOrder);
+    let group: FormGroup = this.fb.group({
+      eventPosition: eventPositionControl,
+      position: positionControl,
+      positionOrder: positionOrderControl
+    }, {
+      validator: this.checkExistingPosition()
+    });
+    positionsFormArray.push(group);
+
+    if (markDirty) {
+      // have form revalidate
+      group.markAsDirty();
+    }
+  }
+
   private setSelectedEvent(event: Event): void {
     this.selectedEvent = event;
     if (this.selectedEvent !== null) {
@@ -300,15 +294,7 @@ export class EditEventComponent implements OnInit, OnDestroy {
       this.editEventForm.get('name').setValue(event.name);
       let positionsFormArray: FormArray = this.fb.array([]);
       for (let eventPosition of this.selectedEvent.positions) {
-        let eventPositionControl: FormControl = this.fb.control(eventPosition);
-        let positionControl: FormControl = this.fb.control(eventPosition.position);
-        let positionOrderControl: FormControl = this.fb.control(eventPosition.positionOrder);
-        let group: FormGroup = this.fb.group({
-          eventPosition: eventPositionControl,
-          position: positionControl,
-          positionOrder: positionOrderControl
-        });
-        positionsFormArray.push(group);
+        this.addPositionToForm(eventPosition, positionsFormArray, false);
       }
       this.editEventForm.setControl('positions', positionsFormArray);
       this.fillUnassignedPositions();
@@ -347,43 +333,20 @@ export class EditEventComponent implements OnInit, OnDestroy {
 
   private checkExistingPosition(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      // let position: number;
-      // if (control.get('position')) {
-      //   position = +control.get('position').value as number;
-      // }
-      // let positionOrder: number;
-      // if (control.get('positionOrder')) {
-      //   positionOrder = +control.get('positionOrder').value as number;
-      // }
-      // let entry: RacePositionTemplateEntry;
-      // if (control.get('entry')) {
-      //   entry = control.get('entry').value;
-      // }
-      // if (entry) {
-      //   if (+entry.position === +position && +entry.positionOrder !== +positionOrder) {
-      //     return { samePosition: true };
-      //   }
-      // }
-      // let array: FormArray =  this.editEventForm.get('positions') as FormArray;
-      // for (let group of array.controls) {
-      //   if (control !== group) {
-      //     let groupPositon: number = +group.get('position').value as number;
-      //     if (position === groupPositon) {
-      //       return { existingPosition: true };
-      //     }
-      //   }
-      // }
-      // // now check to see if matching against the backing
-      // // templates when 2 positions have been swapped
-      // if (this.selectedTemplate && entry) {
-      //   for (let template of this.selectedTemplate.templates) {
-      //     if (entry.position !== template.position) {
-      //       if (+template.position === +position) {
-      //         return { existingPosition: true };
-      //       }
-      //     }
-      //   }
-      // }
+      if (control.dirty) {
+        console.log(control.value);
+        let position: number = +control.get('position').value as number;
+        let array: FormArray =  this.editEventForm.get('positions') as FormArray;
+        for (let group of array.controls) {
+          if (control !== group) {
+            let groupPositon: number = +group.get('position').value as number;
+            if (position === groupPositon) {
+              console.log('have same position');
+              return { existingPosition: true };
+            }
+          }
+        }
+      }
       return null;
     };
   }
@@ -391,30 +354,23 @@ export class EditEventComponent implements OnInit, OnDestroy {
   private existingEventName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       if (this.selectedEvent) {
-        for (let event of this.eventsInRace) {
-          if (event.name === control.value && event.name !== this.selectedEvent.name) {
-            console.log('match for ' + event.name);
-            return { existingName: true };
+        if (this.eventInRace) {
+          for (let event of this.eventsInRace) {
+            if (event.name === control.value && event.name !== this.selectedEvent.name) {
+              console.log('match for ' + event.name);
+              return { existingName: true };
+            }
+          }
+        } else {
+          for (let event of this.unassignedEvents) {
+            if (event.name === control.value && event.name !== this.selectedEvent.name) {
+              console.log('match for ' + event.name);
+              return { existingName: true };
+            }
           }
         }
       }
-      // check to see if check box is ticked if so check unassigned else check assigned for race
-      // if (this.editEventForm && this.editEventForm.get('isNonRaceAssigned')) {
-      //   let isNonRaceAssigned: boolean = this.editEventForm.get('isNonRaceAssigned').value;
-      //   if (isNonRaceAssigned) {
-      //     for (let unassigned of this.unassignedEvents) {
-      //       if (unassigned.name === control.value) {
-      //         return { existingName: true };
-      //       }
-      //     }
-      //   } else {
-      //     for (let event of this.eventsForRace) {
-      //       if (event.name === control.value) {
-      //         return { existingName: true };
-      //       }
-      //     }
-      //   }
-      // }
+
       return null;
     };
   }
