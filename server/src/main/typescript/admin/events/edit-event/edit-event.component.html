@@ -1,36 +1,10 @@
-{{ 'CREATE_EVENT' | translate }}<br /> 
-
-<div *ngIf="selectedRace">
-    {{ 'SELECTED_RACE' | translate }} {{ selectedRace.name }}
-    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
-        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
-    </select>
-</div>
-<div *ngIf="selectedRace">
-    {{ 'EVENT_RACE_SELECT' | translate }}
-    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
-        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
-    </select>
-
-    <button class="btn primary" routerLink="/events/create">{{ 'CREATE_EVENT' | translate }}</button>
-</div>
-
-<div *ngIf="selectedTemplate">
-    {{ 'SELECTED_TEMPLATE' | translate }} {{ selectedRace.name }}
-    <select [(ngModel)]="selectedTemplate" name="selectedTemplate" (change)="changeTemplate(selectedTemplate)">
-        <option *ngFor="let template of templates" [ngValue]="template">{{ template.name }}</option>
-    </select>
-</div>
+{{ 'EDIT_EVENT' | translate }}<br /> 
 
 <div *ngIf="addEntryForm">
     <form [formGroup]="addEntryForm" (ngSubmit)="onSubmit(addEntryForm)" novalidate>
         <div>
             <label>{{ 'EVENT_NAME' | translate }}: </label>
             <input type="text" formControlName="name" placeholder="{{ 'ENTER_EVENT_NAME' | translate }}">
-        </div>
-        <div>
-            <label>{{ 'IS_NON_RACE_ASSIGNED_EVENT' | translate }}: </label>
-            <input type="checkbox" formControlName="isNonRaceAssigned">
         </div>
         <div>
             {{ 'POSITIONS_FOR_EVENT' | translate }}
@@ -65,7 +39,7 @@
                 <button type="button" (click)="addPosition()">{{ 'EVENT_ADD_POSITION' | translate }}</button>
             </div>
         </div>
-        <button type="submit" [disabled]="!addEntryForm.valid || addEntryForm.get('positions').controls.length < 2">{{ 'CREATE_EVENT_SUBMIT' | translate }}</button>
+        <button type="submit" [disabled]="!addEntryForm.valid || addEntryForm.get('positions').controls.length < 2">{{ 'EDIT_EVENT_SUBMIT' | translate }}</button>
     </form>
 </div>
 <div >

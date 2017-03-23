@@ -1,5 +1,13 @@
+<div *ngIf="selectedRace">
+    {{ 'EVENT_RACE_SELECT' | translate }}
+    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
+        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
+    </select>
 
-<div *ngIf="race !== null && race.id > 0">{{ 'EVENTS_FOR_RACE' | translate }} {{ race.name }}
+    <button class="btn primary" routerLink="/events/create">{{ 'CREATE_EVENT' | translate }}</button>
+</div>
+
+<div *ngIf="selectedRace !== null && selectedRace.id > 0">{{ 'EVENTS_FOR_RACE' | translate }} {{ selectedRace.name }}
     <table id="events" class="table table-condensed table-bordered table-striped">
         <thead>
             <th>{{ 'EVENT_NAME' | translate }}</th>
@@ -17,7 +25,7 @@
 </div>
 
 
-<div *ngIf="race === null">{{ 'UNASSIGNED_EVENTS' | translate }}
+<div *ngIf="selectedRace !== null && selectedRace.id === 0">{{ 'UNASSIGNED_EVENTS' | translate }}
     <table id="events" class="table table-condensed table-bordered table-striped">
         <thead>
             <th>{{ 'EVENT_NAME' | translate }}</th>

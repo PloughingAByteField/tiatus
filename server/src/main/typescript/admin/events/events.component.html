@@ -1,10 +1,2 @@
-<div *ngIf="selectedRace">
-    {{ 'EVENT_RACE_SELECT' | translate }}
-    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
-        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
-    </select>
-
-    <button class="btn primary" routerLink="/events/create">{{ 'CREATE_EVENT' | translate }}</button>
-</div>
 
 <router-outlet></router-outlet>
