@@ -3,6 +3,8 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
+import { Subscription } from 'rxjs/Subscription';
+
 import { Race } from '../../../races/race.model';
 import { SelectedRaceService } from '../../races/selected-race.service';
 import { AdminRacesService } from '../../races/races.service';
@@ -50,13 +52,13 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   private eventsForRace: Event[] = new Array<Event>();
   private unassignedEvents: Event[] = new Array<Event>();
 
-  private racesSubscription: any;
-  private selectedRaceSubscription: any;
-  private templatesSubscription: any;
-  private positionsSubscription: any;
-  private eventsSubscription: any;
-  private raceEventsSubscription: any;
-  private unassignedEventsSubscription: any;
+  private racesSubscription: Subscription;
+  private selectedRaceSubscription: Subscription;
+  private templatesSubscription: Subscription;
+  private positionsSubscription: Subscription;
+  private eventsSubscription: Subscription;
+  private raceEventsSubscription: Subscription;
+  private unassignedEventsSubscription: Subscription;
 
   constructor(
     private selectedRaceService: SelectedRaceService,

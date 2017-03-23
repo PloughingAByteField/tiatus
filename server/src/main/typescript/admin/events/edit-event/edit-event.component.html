@@ -1,35 +1,40 @@
-{{ 'EDIT_EVENT' | translate }}<br /> 
+<div *ngIf="selectedEvent">
+    {{ 'EDIT_EVENT' | translate }} {{ selectedEvent.name }}
+</div>
 
-<div *ngIf="addEntryForm">
-    <form [formGroup]="addEntryForm" (ngSubmit)="onSubmit(addEntryForm)" novalidate>
+<div *ngIf="editEventForm">
+    <form [formGroup]="editEventForm" (ngSubmit)="onSubmit(editEventForm)" novalidate>
         <div>
             <label>{{ 'EVENT_NAME' | translate }}: </label>
             <input type="text" formControlName="name" placeholder="{{ 'ENTER_EVENT_NAME' | translate }}">
         </div>
+
         <div>
             {{ 'POSITIONS_FOR_EVENT' | translate }}
         </div>
-        <div *ngIf="addEntryForm.get('positions').controls && addEntryForm.get('positions').controls.length > 0" >
+        <div *ngIf="editEventForm.get('positions').controls && editEventForm.get('positions').controls.length > 0" >
             <div formArrayName="positions">
-                <table id="entries" class="table table-condensed table-bordered table-striped">
+                <table id="positions" class="table table-condensed table-bordered table-striped">
                     <thead>
                         <th>{{ 'EVENT_POSITION_NAME' | translate }}</th>
                         <th>{{ 'EVENT_POSITION_ORDER' | translate }}</th>
+                        <th></th>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let entry of addEntryForm.get('positions').controls; let i=index" [formGroupName]="i">
+                        <tr *ngFor="let positionGroup of editEventForm.get('positions').controls; let i=index" [formGroupName]="i">
                             <td>
                                 <select formControlName="position">
-                                    <option *ngFor="let position of positions" [value]="position.id" [selected]="entry.get('entry').value.position === position.id">{{ position.name }}</option>
+                                    <option *ngFor="let position of positions" [value]="position.id" [selected]="positionGroup.get('position').value === position.id">{{ position.name }}</option>
                                 </select>
                             </td>
-                            <td>{{ entry.get('positionOrder').value }}</td>
-                            <td><button type="button" (click)="removePosition(i)" [disabled]="entry.hasError('existingPosition')">{{ 'EVENT_REMOVE_POSITION' | translate }}</button></td>
+                            <td>{{ positionGroup.get('positionOrder').value }}</td>
+                            <td><button type="button" (click)="removePosition(i)" [disabled]="positionGroup.hasError('existingPosition')">{{ 'EVENT_REMOVE_POSITION' | translate }}</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
         <div *ngIf="unassignedPositions.length > 0">
             <div class="form-group">
                 <label>{{ 'EVENT_POSITION_NAME' | translate }}</label>
@@ -39,9 +44,11 @@
                 <button type="button" (click)="addPosition()">{{ 'EVENT_ADD_POSITION' | translate }}</button>
             </div>
         </div>
-        <button type="submit" [disabled]="!addEntryForm.valid || addEntryForm.get('positions').controls.length < 2">{{ 'EDIT_EVENT_SUBMIT' | translate }}</button>
+
+        <button type="submit" [disabled]="!canEnableSubmitButton()">{{ 'EDIT_EVENT_SUBMIT' | translate }}</button>
     </form>
 </div>
+
 <div >
     <button class="btn primary" (click)="goBack()">{{ 'EVENT_BACK_TO' | translate }}</button>
 </div>

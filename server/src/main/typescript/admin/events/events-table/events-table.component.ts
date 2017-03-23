@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router   } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -30,7 +30,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
   private raceEventsSubscription: Subscription;
   private racesSubscription: Subscription;
   private unassignedEventsSubscription: Subscription;
-  private selectedRaceSubscription: any;
+  private selectedRaceSubscription: Subscription;
 
   private events: Event[] = new Array<Event>();
   private raceEventsFromService: RaceEvent[] = new Array<RaceEvent>();
@@ -128,7 +128,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
 
   public editRaceEvent(raceEvent: RaceEvent): void {
     console.log(raceEvent);
-    this.router.navigate(['/events/edit', raceEvent.id]);
+    this.router.navigate(['/events/edit', raceEvent.event]);
   }
 
   public removeRaceEvent(raceEvent: RaceEvent): void {
