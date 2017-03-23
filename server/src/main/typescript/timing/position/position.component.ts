@@ -22,7 +22,7 @@ export class PositionComponent implements OnInit {
     };
     public positions: Observable<Position[]>;
 
-    private selectedPosition: Position;
+    public selectedPosition: Position;
 
     constructor(
       private positionsService: PositionsService,
