@@ -1,9 +1,34 @@
-hello from clubs
+{{ 'ADD_CLUB' | translate }}
+<form [formGroup]="addClubForm" class="form-group" (ngSubmit)="onSubmit(addClubForm)" novalidate>
+    <div class="form-group">
+        <label>{{ 'CLUB_NAME' | translate }}:</label>
+        <input type="text" formControlName="name" placeholder="{{ 'ENTER_CLUB_NAME' | translate }}">
+        <div *ngIf="addClubForm.get('name').errors && addClubForm.get('name').touched" class="alert alert-danger">
+            <div [hidden]="!addClubForm.get('name').hasError('required')">{{ 'CLUB_NAME_REQUIRED' | translate }}</div>
+            <div [hidden]="!addClubForm.get('name').hasError('minlength')">{{ 'CLUB_NAME_TOO_SHORT' | translate }}</div>
+            <div [hidden]="!addClubForm.get('name').hasError('maxlength')">{{ 'CLUB_NAME_TOO_LONG' | translate }}</div>
+            <div [hidden]="!addClubForm.get('name').hasError('existingClubName')">{{ 'CLUB_NAME_ALREADY_EXISTS' | translate }}</div>
+        </div>
+    </div>
 
-<div *ngIf="clubs">
-    <table>
-        <tr *ngFor="let club of clubs">
-            <td>{{ club.clubName }}</td>
-        </tr>
-    </table>
+    <button type="submit" [disabled]="!addClubForm.valid">{{ 'ADD_CLUB' | translate }}</button>
+</form>
+
+<div *ngIf="clubs" [formGroup]="clubsForm">
+    <div formArrayName="clubs">
+        <table id="clubs" table class="table table-condensed table-bordered table-striped">
+            <thead>
+                <th>{{ 'CLUB_NAME' | translate }}</th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let clubControl of clubsForm.get('clubs').controls; let i=index" [formGroupName]="i">
+                    <td><input type="text" formControlName="name"></td>
+                    <td><button class="btn primary" [disabled]="!clubControl.get('name').valid" (click)="updateClub(clubControl)">{{ 'UPDATE_CLUBNAME' | translate }}</button></td>
+                    <td><button class="btn primary" (click)="removeClub(clubControl)">{{ 'REMOVE_CLUB' | translate }}</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

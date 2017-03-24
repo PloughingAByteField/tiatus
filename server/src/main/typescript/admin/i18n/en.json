@@ -90,5 +90,10 @@
     "EDIT_EVENT": "Edit event",
     "EDIT_EVENT_SUBMIT": "Edit event",
     "REMOVE_EVENT": "Remove event",
-    "EVENT_BACK_TO": "Go back"
+    "EVENT_BACK_TO": "Go back",
+    "ADD_CLUB": "Add club",
+    "CLUB_NAME": "Club name",
+    "ENTER_CLUB_NAME": "Enter club name",
+    "REMOVE_CLUB": "Remove club",
+    "UPDATE_CLUBNAME": "Update clubname"
 }

@@ -33,7 +33,6 @@ export class EventsService implements OnDestroy {
 
     public refresh(): void {
         this.subscription = this.service.getEvents().subscribe((events: Event[]) => {
-            console.log(events);
             this.events = events;
             this.subject.next(this.events);
         });
