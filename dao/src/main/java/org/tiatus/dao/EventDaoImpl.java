@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,11 +93,63 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public void updateEvent(Event event) throws DaoException {
+    public Event updateEvent(Event event) throws DaoException {
         try {
             tx.begin();
-            em.merge(event);
+            List<EventPosition> addedPositions = new ArrayList<>();
+            List<EventPosition> deletedPositions = new ArrayList<>();
+            List<EventPosition> updatedPositions = new ArrayList<>();
+            Event existing = em.find(Event.class, event.getId());
+            for (EventPosition position: existing.getPositions()) {
+                boolean foundInUpdatedList = false;
+                for (EventPosition updatedPosition: event.getPositions()) {
+                    if (position.getPositionOrder() == updatedPosition.getPositionOrder()) {
+                        foundInUpdatedList = true;
+                        // has position changed
+                        if (position.getPosition().getId() != updatedPosition.getPosition().getId()) {
+                            position.setPosition(updatedPosition.getPosition());
+                            updatedPositions.add(position);
+                        }
+                        break;
+                    }
+                }
+                if (!foundInUpdatedList) {
+                    // lost position
+                    deletedPositions.add(position);
+                }
+            }
+            for (EventPosition updatedPosition: event.getPositions()) {
+                boolean foundInExistingList = false;
+                for (EventPosition position: existing.getPositions()) {
+                    if (position.getPositionOrder() == updatedPosition.getPositionOrder()) {
+                        foundInExistingList = true;
+                        break;
+                    }
+                }
+                if (!foundInExistingList) {
+                    // added position
+                    updatedPosition.setEvent(existing);
+                    addedPositions.add(updatedPosition);
+                }
+            }
+
+            for (EventPosition position: addedPositions) {
+                em.persist(position);
+            }
+            for (EventPosition position: deletedPositions) {
+                em.remove(em.contains(position) ? position : em.merge(position));
+            }
+            for (EventPosition position: updatedPositions) {
+                em.merge(position);
+            }
+            if (!existing.getName().equals(event.getName())) {
+                existing.setName(event.getName());
+                em.merge(existing);
+            }
             tx.commit();
+
+            existing = em.find(Event.class, event.getId());
+            return existing;
         } catch (Exception e) {
             LOG.warn("Failed to update event", e);
             try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }

@@ -26,9 +26,10 @@ public interface EventDao {
     /**
      * Update a Event
      * @param event Event to update
+     * @return updated event
      * @throws DaoException on error
      */
-    void updateEvent(Event event) throws DaoException;
+    Event updateEvent(Event event) throws DaoException;
 
     /**
      * Get events

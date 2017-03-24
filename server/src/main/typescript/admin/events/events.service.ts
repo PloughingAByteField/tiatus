@@ -22,4 +22,25 @@ export class AdminEventsService extends EventsService {
             resolve(e);
         }));
     }
+
+    public updateEvent(event: Event): Promise<Event> {
+        return new Promise((resolve) => this.service.updateEvent(event).then((e: Event) => {
+            let eventBeingUpdated = this.getEventForId(e.id);
+            if (eventBeingUpdated !== null) {
+                eventBeingUpdated.name = e.name;
+                eventBeingUpdated.positions = e.positions;
+            }
+            this.subject.next(this.events);
+            resolve(e);
+        }));
+    }
+
+    public getEventForId(eventId: number): Event {
+        for (let event of this.events) {
+            if (event.id === eventId) {
+                return event;
+            }
+        }
+        return null;
+    }
 }

@@ -31,4 +31,16 @@ export class AdminEventsHttpService extends EventsHttpService {
             })
             .catch((err) => Promise.reject(err));
     }
+
+    public updateEvent(event: Event): Promise<Event> {
+        return this.http
+            .put(this.endpoint,
+            JSON.stringify(event), { headers: this.headers })
+            .toPromise()
+            .then((res: Response) => {
+                let updatedEvent: Event = convertJsonToEvent(res.json());
+                return updatedEvent;
+            })
+            .catch((err) => Promise.reject(err));
+    }
 }

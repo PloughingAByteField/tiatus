@@ -66,6 +66,36 @@ public class EventRestPoint {
     }
 
     /**
+     * Update event, restricted to Admin users
+     * @param event to update
+     * @return 201 response with location containing uri of newly created event or an error code
+     */
+    @PUT
+    @RolesAllowed({Role.ADMIN})
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response updateEvent(Event event, @Context UriInfo uriInfo) {
+        // call service which will place in db and queue
+        LOG.debug("Updating event of id " + event.getId());
+        try {
+            for (EventPosition eventPosition: event.getPositions()) {
+                Position position = positionService.getPositionForId(eventPosition.getPositionId());
+                eventPosition.setPosition(position);
+            }
+            Event saved = service.updateEvent(event);
+            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
+
+        } catch (ServiceException e) {
+            LOG.warn("Got service exception: ", e.getSuppliedException());
+            throw new InternalServerErrorException();
+
+        } catch (Exception e) {
+            LOG.warn(GENERAL_EXCEPTION, e);
+            throw new InternalServerErrorException();
+        }
+    }
+
+    /**
      * Remove event, restricted to Admin users
      * @param id of event to remove
      * @return response with 204

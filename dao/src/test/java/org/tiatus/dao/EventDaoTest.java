@@ -327,6 +327,14 @@ public class EventDaoTest {
             public <T> T merge(T entity) {
                 return entity;
             }
+
+            @Mock
+            public Event find(Class<Event> entityClass, Object primaryKey) {
+                Event event = new Event();
+                event.setId(1L);
+                event.setName("name");
+                return event;
+            }
         }.getMockInstance();
 
         EventDaoImpl dao = new EventDaoImpl();
@@ -334,6 +342,7 @@ public class EventDaoTest {
         dao.tx = tx;
         Event event = new Event();
         event.setId(1L);
+        event.setName("name");
         dao.updateEvent(event);
     }
 

@@ -26,6 +26,14 @@ public interface EventService {
     RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException;
 
     /**
+     * Update Event
+     * @param event Event to update
+     * @return updated Event
+     * @throws ServiceException on error
+     */
+    Event updateEvent(Event event) throws ServiceException;
+
+    /**
      * Remove a Event
      * @param event Event to remove
      * @throws ServiceException on error

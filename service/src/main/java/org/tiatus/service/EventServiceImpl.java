@@ -59,6 +59,18 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Event updateEvent(Event event) throws ServiceException {
+        LOG.debug("Updating event " + event);
+        try {
+            return dao.updateEvent(event);
+
+        } catch (DaoException e) {
+            LOG.warn(DAO_EXCEPTION);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
     public void deleteEvent(Event event) throws ServiceException {
         LOG.debug("Delete event " + event.getId());
         try {
