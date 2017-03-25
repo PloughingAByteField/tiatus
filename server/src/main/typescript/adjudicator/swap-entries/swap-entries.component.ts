@@ -4,7 +4,6 @@ import { Location }                 from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
-import { TranslateService } from 'ng2-translate';
 import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
@@ -36,7 +35,6 @@ export class SwapEntriesComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private translate: TranslateService,
         private racesService: RacesService,
         private entriesService: EntriesService,
         private swapService: SwapEntriesService,

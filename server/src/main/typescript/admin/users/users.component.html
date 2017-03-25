@@ -1,1 +1,59 @@
-hello from users
+{{ 'ADD_USER' | translate }}
+<form [formGroup]="addUserForm" class="form-group" (ngSubmit)="onSubmit(addUserForm)" novalidate>
+    <div class="form-group">
+        <label>{{ 'USER_NAME' | translate }}:</label>
+        <input type="text" formControlName="name" placeholder="{{ 'ENTER_USER_NAME' | translate }}">
+        <div *ngIf="addUserForm.get('name').errors && addUserForm.get('name').touched" class="alert alert-danger">
+            <div [hidden]="!addUserForm.get('name').hasError('required')">{{ 'USER_NAME_REQUIRED' | translate }}</div>
+            <div [hidden]="!addUserForm.get('name').hasError('minlength')">{{ 'USER_NAME_TOO_SHORT' | translate }}</div>
+            <div [hidden]="!addUserForm.get('name').hasError('maxlength')">{{ 'USER_NAME_TOO_LONG' | translate }}</div>
+            <div [hidden]="!addUserForm.get('name').hasError('existingUserName')">{{ 'USER_NAME_ALREADY_EXISTS' | translate }}</div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>{{ 'USER_PASSWORD' | translate }}:</label>
+        <input type="password" formControlName="password" placeholder="{{ 'ENTER_USER_PASSWORD' | translate }}">
+        <div *ngIf="addUserForm.get('password').errors && addUserForm.get('password').touched" class="alert alert-danger">
+            <div [hidden]="!addUserForm.get('password').hasError('required')">{{ 'PASSWORD_REQUIRED' | translate }}</div>
+            <div [hidden]="!addUserForm.get('password').hasError('minlength')">{{ 'PASSWORD_TOO_SHORT' | translate }}</div>
+            <div [hidden]="!addUserForm.get('password').hasError('maxlength')">{{ 'PASSWORD_TOO_LONG' | translate }}</div>
+        </div>
+    </div>
+
+    <div class="form-group" *ngIf="roles.length > 0">
+        <label>{{ 'USER_TYPE' | translate }}:</label>
+         <select formControlName="type">
+                <option *ngFor="let role of roles" [ngValue]="role">{{ role.roleName }}</option>
+        </select>
+    </div>
+
+    <button type="submit" [disabled]="!addUserForm.valid">{{ 'ADD_USER' | translate }}</button>
+</form>
+
+<div *ngIf="users" [formGroup]="usersForm">
+    <div formArrayName="users">
+        <table id="users" table class="table table-condensed table-bordered table-striped">
+            <thead>
+                <th>{{ 'USER_NAME' | translate }}</th>
+                <th>{{ 'USER_TYPE' | translate }}</th>
+                <th>{{ 'USER_PASSWORD' | translate }}</th>
+                <th></th>
+                <th></th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let userControl of usersForm.get('users').controls; let i=index" [formGroupName]="i">
+                    <td><input type="text" formControlName="name"></td>
+                    <td>
+                        <select formControlName="type">
+                            <option *ngFor="let role of roles" [value]="role.id" [selected]="userControl.get('type').value === role.id">{{ role.roleName }}</option>
+                        </select>
+                    </td>
+                    <td><input type="password" formControlName="password"></td>
+                    <td><button class="btn primary" [disabled]="!canUpdateUser(userControl)" (click)="updateUser(userControl)">{{ 'UPDATE_USER' | translate }}</button></td>
+                    <td><button class="btn primary" [disabled]="!canRemoveUser(userControl)" (click)="removeUser(userControl)">{{ 'REMOVE_USER' | translate }}</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

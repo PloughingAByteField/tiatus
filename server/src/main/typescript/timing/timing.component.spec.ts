@@ -4,7 +4,8 @@ import { XHRBackend, HttpModule } from '@angular/http';
 import { MockConnection, MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
 import { Title }     from '@angular/platform-browser';
-import { TranslateService, TranslateModule } from 'ng2-translate';
+
+import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
@@ -13,9 +14,9 @@ import { TimingPositionService } from './times/timing-position.service';
 import { TimingComponent } from './timing.component';
 
 describe('Timing', () => {
-    let translate: TranslateService;
+    let translate: any;
     let injector: Injector;
-    let backend: MockBackend;
+    let backend: any;
     let connection: MockConnection;
 
     beforeEach(() => {

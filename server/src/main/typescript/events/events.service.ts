@@ -14,12 +14,11 @@ export class EventsService implements OnDestroy {
     protected events: Event[] = new Array<Event>();
     protected subject: BehaviorSubject<Event[]>
         = new BehaviorSubject<Event[]>(this.events);
+    protected requested: boolean = false;
 
     private subscription: Subscription;
 
-    constructor(protected service: EventsHttpService) {
-        this.refresh();
-    }
+    constructor(protected service: EventsHttpService) {}
 
     public ngOnDestroy() {
         if (this.subscription) {
@@ -28,6 +27,10 @@ export class EventsService implements OnDestroy {
     }
 
     public getEvents(): BehaviorSubject<Event[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.subject;
     }
 

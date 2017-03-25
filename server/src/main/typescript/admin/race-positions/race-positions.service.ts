@@ -15,10 +15,9 @@ export class RacePositionsService implements OnDestroy {
     private subject: BehaviorSubject<RacePositionTemplate[]>
         = new BehaviorSubject<RacePositionTemplate[]>(this.templates);
     private subscription: Subscription;
+    private requested: boolean = false;
 
-    constructor(private service: RacePositionsHttpService) {
-        this.refresh();
-    }
+    constructor(private service: RacePositionsHttpService) {}
 
     public ngOnDestroy() {
         if (this.subscription) {
@@ -27,6 +26,10 @@ export class RacePositionsService implements OnDestroy {
     }
 
     public getTemplates(): BehaviorSubject<RacePositionTemplate[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.subject;
     }
 

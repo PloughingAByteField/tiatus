@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { TranslateService } from 'ng2-translate';
-
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
 import { Penalty } from '../../penalties/penalty.model';
@@ -51,7 +49,6 @@ export class EntriesComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private translate: TranslateService,
         private racesService: AdjudicatorRacesService,
         private positionsService: PositionsService,
         private entryTimesService: EntryTimesFullService,

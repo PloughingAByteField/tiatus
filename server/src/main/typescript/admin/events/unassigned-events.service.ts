@@ -10,7 +10,6 @@ export class AdminUnassignedEventsService extends UnassignedEventsService {
 
     constructor(protected service: AdminUnassignedEventsHttpService) {
         super(service);
-        this.refresh();
     }
 
     public addEvent(event: Event): void {

@@ -5,21 +5,33 @@ import { MockConnection, MockBackend } from '@angular/http/testing';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 
-import { TranslateService, TranslateModule } from 'ng2-translate';
+import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { AdminComponent } from './admin.component';
 
+let translations: any = { TEST: 'This is a test' };
+class FakeLoader implements TranslateLoader {
+    public getTranslation(lang: string): Observable<any> {
+        return Observable.of(translations);
+    }
+}
+
 describe('Admin', () => {
-    let translate: TranslateService;
+    let translate: any;
     let injector: Injector;
-    let backend: MockBackend;
+    let backend: any;
     let connection: MockConnection;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, TranslateModule.forRoot()],
+            imports: [
+                HttpModule,
+                TranslateModule.forRoot({
+                    loader: {provide: TranslateLoader, useClass: FakeLoader}
+                })
+            ],
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,

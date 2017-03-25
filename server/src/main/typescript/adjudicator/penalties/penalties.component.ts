@@ -4,7 +4,6 @@ import { Location }                 from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
-import { TranslateService } from 'ng2-translate';
 import { Penalty } from '../../penalties/penalty.model';
 import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../times/postion-time.model';
@@ -31,7 +30,6 @@ export class PenaltiesComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private translate: TranslateService,
         private entriesService: EntriesService,
         private penaltiesService: AdjudicatorPenaltiesService,
         private location: Location

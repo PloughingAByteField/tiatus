@@ -14,6 +14,7 @@ export class UnassignedEventsService implements OnDestroy {
     protected events: Event[] = new Array<Event>();
     protected subject: BehaviorSubject<Event[]>
         = new BehaviorSubject<Event[]>(this.events);
+    protected requested: boolean = false;
 
     private subscription: Subscription;
 
@@ -26,6 +27,10 @@ export class UnassignedEventsService implements OnDestroy {
     }
 
     public getEvents(): BehaviorSubject<Event[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.subject;
     }
 

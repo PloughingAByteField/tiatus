@@ -14,7 +14,6 @@ export class AdminRaceEventsService extends RaceEventsService {
         protected service: AdminRaceEventsHttpService,
         private eventsService: AdminEventsService) {
             super(service);
-            this.refresh();
     }
 
     public createRaceEvent(pojo: RaceEventPojo): Promise<RaceEvent> {

@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by johnreynolds on 02/09/2016.
@@ -39,12 +40,13 @@ public class UserDaoImpl implements UserDao {
     public User addUser(User user) throws DaoException {
         LOG.debug("Adding user " + user);
         try {
+            tx.begin();
             User existing = null;
             if (user.getId() != null) {
                 existing = em.find(User.class, user.getId());
             }
             if (existing == null) {
-                tx.begin();
+
                 em.persist(user);
                 tx.commit();
 
@@ -53,11 +55,14 @@ public class UserDaoImpl implements UserDao {
             } else {
                 String message = "Failed to add user due to existing user with same id " + user.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
 
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to persist user", e.getMessage());
+            try { tx.rollback(); } catch (Exception se) {
+                LOG.warn("Failed to rollback", se); }
             throw new DaoException(e);
         }
     }
@@ -76,9 +81,10 @@ public class UserDaoImpl implements UserDao {
             } else {
                 LOG.warn("No such user of id " + user.getId());
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to delete user", e);
-            throw new DaoException(e.getMessage());
+        } catch (Exception e) {
+            LOG.warn("Failed to delete user", e.getMessage());
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e);
         }
 
     }
@@ -87,11 +93,43 @@ public class UserDaoImpl implements UserDao {
     public void updateUser(User user) throws DaoException {
         try {
             tx.begin();
-            em.merge(user);
-            tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to update race", e);
-            throw new DaoException(e.getMessage());
+            User existing = null;
+            if (user.getId() != null) {
+                existing = em.find(User.class, user.getId());
+            }
+            if (existing != null) {
+                if (user.getPassword().length() > 0) {
+                    existing.setPassword(user.getPassword());
+                }
+                if (!user.getUserName().equals(existing.getUserName())) {
+                    existing.setUserName(user.getUserName());
+                }
+
+                UserRole updatedRoles[] = new UserRole[user.getRoles().size()];
+                user.getRoles().toArray(updatedRoles);
+                UserRole existingRoles[] = new UserRole[existing.getRoles().size()];
+                existing.getRoles().toArray(existingRoles);
+                for (int i = 0; i < updatedRoles.length; i++) {
+                    UserRole existingUserRole = existingRoles[i];
+                    Role existingRole = existingUserRole.getRole();
+                    UserRole updatedUserRole = updatedRoles[i];
+                    Role updatedRole = updatedUserRole.getRole();
+                    if (existingRole.getId() != updatedRole.getId()) {
+                        existing.getRoles().remove(existingUserRole);
+                        existing.getRoles().add(updatedUserRole);
+                    }
+                }
+                em.merge(existing);
+                tx.commit();
+            } else {
+                LOG.warn("No such user of id " + user.getId());
+                tx.rollback();
+            }
+
+        } catch (Exception e) {
+            LOG.warn("Failed to update user", e.getMessage());
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e);
         }
     }
 

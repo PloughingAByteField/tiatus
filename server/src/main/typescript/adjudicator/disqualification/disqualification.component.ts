@@ -4,7 +4,6 @@ import { Location }                 from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
-import { TranslateService } from 'ng2-translate';
 import { Disqualification } from '../../disqualification/disqualification.model';
 import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
@@ -30,7 +29,6 @@ export class DisqualificationComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private translate: TranslateService,
         private entriesService: EntriesService,
         private disqualificationService: AdjudicatorDisqualificationService,
         private location: Location

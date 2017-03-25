@@ -1,9 +1,11 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
-import { TranslateModule } from 'ng2-translate';
+
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -35,6 +37,14 @@ import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
+export function HttpLoaderFactory(http: Http) {
+    return new TranslateHttpLoader(http);
+}
+
+export function createTranslateLoader(http: Http) {
+    return new TranslateHttpLoader(http, './i18n/', '.json');
+}
+
 @NgModule({
   bootstrap: [ ResultsComponent ],
   declarations: [
@@ -52,7 +62,13 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     NoContentModule,
     Ng2PaginationModule,
     NgbModule.forRoot(),
-    TranslateModule.forRoot(),
+    TranslateModule.forRoot({
+        loader: {
+            provide: TranslateLoader,
+            useFactory: (createTranslateLoader),
+            deps: [Http]
+        }
+    }),
     RouterModule.forRoot(resultsRoutes, { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
   providers: [

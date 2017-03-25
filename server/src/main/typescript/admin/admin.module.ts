@@ -2,9 +2,11 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
-import { TranslateModule } from 'ng2-translate';
+
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ENV_PROVIDERS } from './environment';
 
@@ -59,6 +61,8 @@ import { AdminEventsService } from './events/events.service';
 import { AdminEventsHttpService } from './events/events-http.service';
 import { EventsHttpService } from '../events/events-http.service';
 
+import { AdminRolesService } from './users/roles.service';
+import { AdminRolesHttpService } from './users/roles-http.service';
 import { AdminUsersService } from './users/users.service';
 import { AdminUsersHttpService } from './users/users-http.service';
 
@@ -77,6 +81,14 @@ import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
+
+export function HttpLoaderFactory(http: Http) {
+    return new TranslateHttpLoader(http);
+}
+
+export function createTranslateLoader(http: Http) {
+    return new TranslateHttpLoader(http, './i18n/', '.json');
+}
 
 @NgModule({
   bootstrap: [ AdminComponent ],
@@ -107,7 +119,13 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     SidebarModule,
     TitlebarModule,
     NoContentModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forRoot({
+        loader: {
+            provide: TranslateLoader,
+            useFactory: (createTranslateLoader),
+            deps: [Http]
+        }
+    }),
     RouterModule.forRoot(
       adminRoutes, { useHash: false, preloadingStrategy: PreloadAllModules}
     )
@@ -146,6 +164,8 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     AdminRaceEventsHttpService,
     AdminUnassignedEventsHttpService,
     AdminUnassignedEventsService,
+    AdminRolesHttpService,
+    AdminRolesService,
     SelectedRaceService,
     Title
   ]

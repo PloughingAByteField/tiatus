@@ -1,9 +1,11 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
-import { TranslateModule } from 'ng2-translate';
+
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
@@ -36,6 +38,14 @@ import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
+export function HttpLoaderFactory(http: Http) {
+    return new TranslateHttpLoader(http);
+}
+
+export function createTranslateLoader(http: Http) {
+    return new TranslateHttpLoader(http, './i18n/', '.json');
+}
+
 @NgModule({
   bootstrap: [ TimingComponent ],
   declarations: [
@@ -53,7 +63,13 @@ import { NoContentModule } from '../components/no-content/no-content.module';
     TitlebarModule,
     NoContentModule,
     NgbModule.forRoot(),
-    TranslateModule.forRoot(),
+    TranslateModule.forRoot({
+        loader: {
+            provide: TranslateLoader,
+            useFactory: (createTranslateLoader),
+            deps: [Http]
+        }
+    }),
     timingRouting
   ],
   providers: [

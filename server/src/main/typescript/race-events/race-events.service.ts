@@ -14,7 +14,7 @@ export class RaceEventsService implements OnDestroy {
     protected events: RaceEvent[] = new Array<RaceEvent>();
     protected subject: BehaviorSubject<RaceEvent[]>
         = new BehaviorSubject<RaceEvent[]>(this.events);
-
+    protected requested: boolean = false;
     protected subscription: Subscription;
 
     constructor(protected service: RaceEventsHttpService) {}
@@ -26,6 +26,10 @@ export class RaceEventsService implements OnDestroy {
     }
 
     public getEvents(): BehaviorSubject<RaceEvent[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.subject;
     }
 

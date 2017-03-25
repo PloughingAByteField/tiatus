@@ -95,5 +95,13 @@
     "CLUB_NAME": "Club name",
     "ENTER_CLUB_NAME": "Enter club name",
     "REMOVE_CLUB": "Remove club",
-    "UPDATE_CLUBNAME": "Update clubname"
+    "UPDATE_CLUBNAME": "Update clubname",
+    "ADD_USER": "Add user",
+    "USER_NAME": "User name",
+    "USER_TYPE": "User type",
+    "ENTER_USER_NAME": "Enter user name",
+    "USER_PASSWORD": "User password",
+    "ENTER_USER_PASSWORD": "Enter user password",
+    "UPDATE_USER": "Update user",
+    "REMOVE_USER": "Remove user"
 }
