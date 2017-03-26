@@ -100,6 +100,7 @@ module: {
            {
              loader: 'tslint-loader',
              options: {
+               typeCheck: false,
                configFile: 'tslint.json'
              }
            }
