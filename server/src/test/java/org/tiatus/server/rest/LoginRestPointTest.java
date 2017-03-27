@@ -52,7 +52,7 @@ public class LoginRestPointTest {
 
         Response response = logoutRestPoint.login(uriInfo, httpServletRequest, securityContext);
         Assert.assertEquals(Response.Status.SEE_OTHER.getStatusCode(), response.getStatus());
-        Assert.assertEquals(response.getLocation(), new URI("https://127.0.0.1:8080/management/management.html"));
+        Assert.assertEquals(response.getLocation(), new URI("https://127.0.0.1:8080/admin/index.html"));
     }
 
     @Test

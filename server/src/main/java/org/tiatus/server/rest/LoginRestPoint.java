@@ -53,7 +53,7 @@ public class LoginRestPoint {
             // get user type and figure where to redirect to
             String page = "timing/index.html";
             if (securityContext.isUserInRole(Role.ADMIN)) {
-                page = "management/management.html";
+                page = "admin/index.html";
             } else if (securityContext.isUserInRole(Role.ADJUDICATOR)) {
                 page = "adjudicator/index.html";
             }
