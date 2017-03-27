@@ -4,12 +4,6 @@ exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: [
     'setup/*.js',
-    'login/*.js',
-    'management/race/race_spec.js',
-    'management/race/create_races_for_events_spec.js',
-    'management/position/position_spec.js',
-    'management/club/club_spec.js',
-    'management/club/create_clubs_spec.js'
   ],
 
   capabilities: {

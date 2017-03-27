@@ -173,18 +173,18 @@
                         </configuration>
                     </execution>
 
-                    <execution>
-                        <id>grunt protractor</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>grunt</goal>
-                        </goals>
+                    <!--<execution>-->
+                        <!--<id>grunt protractor</id>-->
+                        <!--<phase>integration-test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>grunt</goal>-->
+                        <!--</goals>-->
 
-                        <configuration>
-                            <skip>${docker.skip}</skip>
-                            <arguments>--no-color protractor --baseUrl=http://${local.ip}:7080</arguments>
-                        </configuration>
-                    </execution>
+                        <!--<configuration>-->
+                            <!--<skip>${docker.skip}</skip>-->
+                            <!--<arguments>&#45;&#45;no-color protractor &#45;&#45;baseUrl=http://${local.ip}:7080</arguments>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
 
                     <execution>
                         <id>javascript tests</id>
