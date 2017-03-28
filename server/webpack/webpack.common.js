@@ -59,13 +59,12 @@ module.exports = function (options) {
      * See: http://webpack.github.io/docs/configuration.html#entry
      */
     entry: {
-
       'polyfills': './src/main/typescript/polyfills.browser.ts',
       'results':  isProd ? './src/main/typescript/results/main.aot.ts' : './src/main/typescript/results/main.ts',
       'timing':  isProd ? './src/main/typescript/timing/main.aot.ts' : './src/main/typescript/timing/main.ts',
       'adjudicator': isProd ? './src/main/typescript/adjudicator/main.aot.ts' : './src/main/typescript/adjudicator/main.ts',
-      'admin': isProd ? './src/main/typescript/admin/main.aot.ts' : './src/main/typescript/admin/main.ts'
-
+      'admin': isProd ? './src/main/typescript/admin/main.aot.ts' : './src/main/typescript/admin/main.ts',
+      'setup': isProd ? './src/main/typescript/setup/main.aot.ts' : './src/main/typescript/setup/main.ts'
     },
 
     /*
@@ -142,7 +141,13 @@ module.exports = function (options) {
         {
           test: /\.html$/,
           use: 'raw-loader',
-          exclude: [helpers.root('src/main/typescript/results/index.html'), helpers.root('src/main/typescript/timing/index.html'), helpers.root('src/main/typescript/adjudicator/index.html'), helpers.root('src/main/typescript/admin/index.html')]
+          exclude: [
+            helpers.root('src/main/typescript/results/index.html'),
+            helpers.root('src/main/typescript/timing/index.html'),
+            helpers.root('src/main/typescript/adjudicator/index.html'),
+            helpers.root('src/main/typescript/admin/index.html'),
+            helpers.root('src/main/typescript/setup/index.html')
+          ]
         },
 
         /* File loader for supporting images, for example, in CSS files.
@@ -199,7 +204,7 @@ module.exports = function (options) {
       // This enables tree shaking of the vendor modules
       new CommonsChunkPlugin({
         name: 'vendor',
-        chunks: ['results', 'timing', 'adjudicator', 'admin'],
+        chunks: ['results', 'timing', 'adjudicator', 'admin', 'setup'],
         filename: 'vendor/vendor.bundle.js',
         minChunks: (module) => /node_modules\//.test(module.resource)
       }),
@@ -246,7 +251,8 @@ module.exports = function (options) {
         { from: 'src/main/typescript/results/i18n', to: 'results/i18n' },
         { from: 'src/main/typescript/timing/i18n', to: 'timing/i18n' },
         { from: 'src/main/typescript/adjudicator/i18n', to: 'adjudicator/i18n' },
-        { from: 'src/main/typescript/admin/i18n', to: 'admin/i18n' }
+        { from: 'src/main/typescript/admin/i18n', to: 'admin/i18n' },
+        { from: 'src/main/typescript/setup/i18n', to: 'setup/i18n' }
       ]),
 
 
@@ -296,6 +302,16 @@ module.exports = function (options) {
           inject: 'head',
           chunks: ['admin', 'polyfills', 'vendor', 'common'],
           filename: 'admin/index.html'
+      }),
+
+      new HtmlWebpackPlugin({
+          template: 'src/main/typescript/setup/index.html',
+          title: METADATA.title,
+          chunksSortMode: 'dependency',
+          metadata: METADATA,
+          inject: 'head',
+          chunks: ['setup', 'polyfills', 'vendor', 'common'],
+          filename: 'setup/index.html'
       }),
 
       /*
