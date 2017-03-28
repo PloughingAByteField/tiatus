@@ -13,6 +13,9 @@ import { RacePositionTemplatesComponent } from './race-position-templates';
 import { CreateEventComponent } from './events/create-event';
 import { EventsTableComponent } from './events/events-table';
 import { EditEventComponent } from './events/edit-event';
+import { EntriesTableComponent } from './entries/entries-table';
+import { CreateEntryComponent } from './entries/create-entry';
+import { EditEntryComponent } from './entries/edit-entry';
 
 import { NoContentComponent } from '../components/no-content/no-content.component';
 
@@ -21,10 +24,15 @@ export const adminRoutes: Routes = [
   { path: 'clubs',      component: ClubsComponent },
   { path: 'config',      component: ConfigComponent },
   { path: 'draw',      component: DrawComponent },
-  { path: 'entries',      component: EntriesComponent },
-  { path: 'events/create', component: CreateEventComponent },
+  { path: 'entries',      component: EntriesComponent,
+    children: [
+      { path: 'create', component: CreateEntryComponent, pathMatch: 'full' },
+      { path: ':raceId', component: EntriesTableComponent },
+      { path: 'edit/:entryId', component: EditEntryComponent }
+    ]},
   { path: 'events',      component: EventsComponent,
     children: [
+    { path: 'create', component: CreateEventComponent },
     { path: ':raceId', component: EventsTableComponent },
     { path: 'edit/:eventId', component: EditEventComponent }
     ]

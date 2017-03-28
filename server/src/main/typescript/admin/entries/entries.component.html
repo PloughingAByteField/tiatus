@@ -1,9 +1,7 @@
-hello from entries
-
-<div *ngIf="entries">
-    <table>
-        <tr *ngFor="let entry of entries">
-            <td>{{ entry.number }} {{ entry.race.name }}</td>
-        </tr>
-    </table>
+hello there - select race 
+<br />
+<div>
+    <button class="btn primary" (click)="changeRace()">{{ 'CHANGE_RACE' | translate }}</button>
 </div>
+
+<router-outlet></router-outlet>

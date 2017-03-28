@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import { Entry } from '../../entries/entry.model';
-import { AdminEntriesService } from './entries.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'entries',
@@ -10,14 +8,15 @@ import { AdminEntriesService } from './entries.service';
 })
 export class EntriesComponent implements OnInit {
 
-  public entries: Entry[];
-
-  constructor(private entriesService: AdminEntriesService) {}
-
-  public ngOnInit() {
-    console.log('hello from entries');
-    this.entriesService.getEntries()
-      .subscribe((entries: Entry[]) => this.entries = entries);
+  constructor(private router: Router) {
+    // this.router.navigate(['/entries', 1]);
   }
 
+  public ngOnInit() {
+    this.router.navigate(['/entries', 1]);
+  }
+
+  public changeRace(): void {
+    this.router.navigate(['/entries', 1]);
+  }
 }

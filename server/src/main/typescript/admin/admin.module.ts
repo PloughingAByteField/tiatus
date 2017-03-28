@@ -10,6 +10,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ENV_PROVIDERS } from './environment';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { Ng2PaginationModule } from 'ng2-pagination';
+
 import { adminRoutes } from './admin.routes';
 import { AdminComponent } from './admin.component';
 import { LandingComponent } from './landing';
@@ -56,6 +60,9 @@ import { AdminDrawHttpService } from './draw/draw-http.service';
 import { AdminEntriesService } from './entries/entries.service';
 import { AdminEntriesHttpService } from './entries/entries-http.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
+import { CreateEntryComponent } from './entries/create-entry';
+import { EditEntryComponent } from './entries/edit-entry';
+import { EntriesTableComponent } from './entries/entries-table';
 
 import { AdminEventsService } from './events/events.service';
 import { AdminEventsHttpService } from './events/events-http.service';
@@ -108,17 +115,22 @@ export function createTranslateLoader(http: Http) {
     RacePositionTemplatesComponent,
     CreateEventComponent,
     EventsTableComponent,
-    EditEventComponent
+    EditEventComponent,
+    CreateEntryComponent,
+    EditEntryComponent,
+    EntriesTableComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    Ng2PaginationModule,
     FooterModule,
     SidebarModule,
     TitlebarModule,
     NoContentModule,
+    NgbModule.forRoot(),
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,

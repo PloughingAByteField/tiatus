@@ -1,0 +1,18 @@
+
+hello from entries
+<div>
+    <button class="btn primary" routerLink="/entries/create">{{ 'ADD_ENTRY' | translate }}</button>
+</div>
+
+<div *ngIf="entries">
+    <table>
+        <tr *ngFor="let entry of entries | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+            <td>{{ entry.number }} {{ entry.race.name }}</td>
+            <td><button class="btn primary" [routerLink]="['/entries/edit', entry.id]">{{ 'EDIT_ENTRY' | translate }}</button></td>
+            <td><button class="btn primary"(click)="removeEntry(entry)">{{ 'REMOVE_ENTRY' | translate }}</button></td>
+        </tr>
+    </table>
+
+    <ngb-pagination [collectionSize]="entries?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
+
+</div>
