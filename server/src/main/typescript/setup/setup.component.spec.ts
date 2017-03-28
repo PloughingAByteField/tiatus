@@ -1,13 +1,21 @@
 import { inject, getTestBed, TestBed } from '@angular/core/testing';
 import { Injector } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { XHRBackend, HttpModule } from '@angular/http';
 import { MockConnection, MockBackend } from '@angular/http/testing';
 import { Observable } from 'rxjs/Observable';
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
 import { SetupComponent } from './setup.component';
+import { SetupService } from './setup.service';
+import { SetupHttpService } from './setup-http.service';
+
+let mockRouter = {
+  navigate: jasmine.createSpy('navigate')
+};
 
 describe('Setup', () => {
     let translate: any;
@@ -19,9 +27,13 @@ describe('Setup', () => {
         TestBed.configureTestingModule({
             imports: [HttpModule, TranslateModule.forRoot()],
             providers: [
-                {provide: XHRBackend, useClass: MockBackend},
+                { provide: XHRBackend, useClass: MockBackend },
                 Title,
-                SetupComponent
+                SetupComponent,
+                SetupService,
+                SetupHttpService,
+                FormBuilder,
+                { provide: Router, useValue: mockRouter }
             ]
         });
 
