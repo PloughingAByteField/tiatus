@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Subscription } from 'rxjs/Subscription';
 
 import { ConfigService } from '../../config/config.service';
 
@@ -7,30 +9,34 @@ import { ConfigService } from '../../config/config.service';
   styleUrls: [ './titlebar.component.css' ],
   templateUrl: './titlebar.component.html',
 })
-export class TitlebarComponent implements OnInit {
-  private logo: string;
-  private eventTitle: string;
+export class TitlebarComponent implements OnInit, OnDestroy {
+  public logo: string;
+  public eventTitle: string;
+
+  private logoSubscription: Subscription;
+  private titleSubscription: Subscription;
 
   constructor(private configService: ConfigService) {}
 
   public ngOnInit() {
     if ( !this.logo) {
-      this.configService.getLogo().subscribe((data: string) => {
+      this.logoSubscription = this.configService.getLogo().subscribe((data: string) => {
         this.logo = data;
       });
     }
     if ( !this.eventTitle) {
-      this.configService.getEventTitle().subscribe((data: string) => {
+      this.titleSubscription = this.configService.getEventTitle().subscribe((data: string) => {
         this.eventTitle = data;
       });
     }
   }
 
-  public getLogo(): string {
-    return this.logo;
-  }
-
-  public getEventTitle(): string {
-    return this.eventTitle;
+  public ngOnDestroy() {
+    if (this.titleSubscription) {
+      this.titleSubscription.unsubscribe();
+    }
+    if (this.logoSubscription) {
+      this.logoSubscription.unsubscribe();
+    }
   }
 }

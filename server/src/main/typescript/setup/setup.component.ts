@@ -19,7 +19,6 @@ import { SetupService } from './setup.service';
   templateUrl: './setup.component.html'
 })
 export class SetupComponent implements OnInit {
-  public logo = '/assets/img/stopwatch.svg';
   public tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
   public addUserForm: FormGroup;
 

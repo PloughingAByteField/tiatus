@@ -9,9 +9,10 @@ import { ConfigHttpService } from './config-http.service';
 
 @Injectable()
 export class ConfigService {
-    private logo: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-    private title: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-    private footer: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+    protected logo: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+    protected title: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+    protected footer: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
     private config: Object;
 
     constructor(protected service: ConfigHttpService) {
