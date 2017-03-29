@@ -1,21 +1,41 @@
 
-<div>{{ 'SELECT_RACE' | translate }}
-    <button class="btn primary" (click)="changeRace()">{{ 'CHANGE_RACE' | translate }}</button>
+<div *ngIf="selectedRace">{{ 'SELECT_RACE' | translate }}:
+    <select [(ngModel)]="selectedRace" name="selectedRace" (change)="changedRace(selectedRace)">
+        <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
+    </select>
 </div>
 
 <div>
     <button class="btn primary" routerLink="/entries/create">{{ 'ADD_ENTRY' | translate }}</button>
 </div>
 
-<div *ngIf="entries">
-    <table>
-        <tr *ngFor="let entry of entries | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
-            <td>{{ entry.number }} {{ entry.race.name }}</td>
-            <td><button class="btn primary" [routerLink]="['/entries/edit', entry.id]">{{ 'EDIT_ENTRY' | translate }}</button></td>
-            <td><button class="btn primary"(click)="removeEntry(entry)">{{ 'REMOVE_ENTRY' | translate }}</button></td>
-        </tr>
-    </table>
+<div *ngIf="selectedRace">
+    <div>
+        {{ 'ENTRIES_FOR_RACE' | translate }}: {{ selectedRace.name }}
+    </div>
+    <div *ngIf="entriesForRace">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>{{ 'NUMBER' | translate }}</th>
+                    <th>{{ 'CLUB' | translate }}</th>
+                    <th>{{ 'EVENT' | translate }}</th>
+                    <th>{{ 'CREW' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let entry of entriesForRace | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
+                    <td>{{ entry.number }}</td>
+                    <td>{{ getClubNamesForEntry(entry) }}</td>
+                    <td>{{ getEventNameForEntry(entry) }}</td>
+                    <td>{{ entry.crew }}</td>
+                    <td><button class="btn primary" [routerLink]="['/entries/edit', entry.id]">{{ 'EDIT_ENTRY' | translate }}</button></td>
+                    <td><button class="btn primary"(click)="removeEntry(entry)">{{ 'REMOVE_ENTRY' | translate }}</button></td>
+                </tr>
+            </tbody>
+        </table>
 
-    <ngb-pagination [collectionSize]="entries?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
+        <ngb-pagination [collectionSize]="entriesForRace?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
 
+    </div>
 </div>

@@ -112,5 +112,13 @@
     "UPLOAD_FOOTER": "Upload new footer",
     "CURRENT_EVENT_LOGO": "Current logo",
     "NEW_EVENT_LOGO": "Choose new logo",
-    "UPLOAD_LOGO": "Upload new logo"
+    "SELECT_RACE": "Select race",
+    "ADD_ENTRY": "Create entry",
+    "EDIT_ENTRY": "Edit entry",
+    "REMOVE_ENTRY": "Remove entry",
+    "CLUB": "Club",
+    "NUMBER": "Number",
+    "EVENT": "Event",
+    "CREW": "Crew",
+    "ENTRIES_FOR_RACE": "Entries for race"
 }
