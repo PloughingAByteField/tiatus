@@ -1,6 +1,7 @@
 {
   "USER_NAME" : "User Name",
   "PASSWORD" : "Password",
+  "CREATE_ADMIN_USER" : "Create administration user",
   "CREATE_USER" : "Complete setup",
   "ENTER_USERNAME" : "Enter user name",
   "ENTER_PASSWORD" : "Enter user password",

@@ -1,24 +1,30 @@
-<form [formGroup]="addUserForm" class="form-group" (ngSubmit)="onSubmit(addUserForm)" novalidate>
-    <div class="form-group">
-        <label>{{ 'USER_NAME' | translate }}:</label>
-        <input type="text" formControlName="name" placeholder="{{ 'ENTER_USERNAME' | translate }}">
-        <div *ngIf="addUserForm.get('name').errors && addUserForm.get('name').touched" class="alert alert-danger">
-            <div [hidden]="!addUserForm.get('name').hasError('required')">{{ 'USER_NAME_REQUIRED' | translate }}</div>
-            <div [hidden]="!addUserForm.get('name').hasError('minlength')">{{ 'USER_NAME_TOO_SHORT' | translate }}</div>
-            <div [hidden]="!addUserForm.get('name').hasError('maxlength')">{{ 'USER_NAME_TOO_LONG' | translate }}</div>
-            <div [hidden]="!addUserForm.get('name').hasError('existingUserName')">{{ 'USER_NAME_ALREADY_EXISTS' | translate }}</div>
-        </div>
-    </div>
+<div class="center">
+    <h1>{{ 'CREATE_ADMIN_USER' | translate }}</h1>
+    <br />
+    <div>
+        <form [formGroup]="addUserForm" class="form-group" (ngSubmit)="onSubmit(addUserForm)" novalidate>
+            <div class="form-group">
+                <label>{{ 'USER_NAME' | translate }}:</label>
+                <input type="text" formControlName="name" placeholder="{{ 'ENTER_USERNAME' | translate }}">
+                <div *ngIf="addUserForm.get('name').errors && addUserForm.get('name').touched" class="alert alert-danger">
+                    <div [hidden]="!addUserForm.get('name').hasError('required')">{{ 'USER_NAME_REQUIRED' | translate }}</div>
+                    <div [hidden]="!addUserForm.get('name').hasError('minlength')">{{ 'USER_NAME_TOO_SHORT' | translate }}</div>
+                    <div [hidden]="!addUserForm.get('name').hasError('maxlength')">{{ 'USER_NAME_TOO_LONG' | translate }}</div>
+                    <div [hidden]="!addUserForm.get('name').hasError('existingUserName')">{{ 'USER_NAME_ALREADY_EXISTS' | translate }}</div>
+                </div>
+            </div>
 
-    <div class="form-group">
-        <label>{{ 'PASSWORD' | translate }}:</label>
-        <input type="password" formControlName="password" placeholder="{{ 'ENTER_PASSWORD' | translate }}">
-        <div *ngIf="addUserForm.get('password').errors && addUserForm.get('password').touched" class="alert alert-danger">
-            <div [hidden]="!addUserForm.get('password').hasError('required')">{{ 'PASSWORD_REQUIRED' | translate }}</div>
-            <div [hidden]="!addUserForm.get('password').hasError('minlength')">{{ 'PASSWORD_TOO_SHORT' | translate }}</div>
-            <div [hidden]="!addUserForm.get('password').hasError('maxlength')">{{ 'PASSWORD_TOO_LONG' | translate }}</div>
-        </div>
-    </div>
+            <div class="form-group">
+                <label>{{ 'PASSWORD' | translate }}:</label>
+                <input type="password" formControlName="password" placeholder="{{ 'ENTER_PASSWORD' | translate }}">
+                <div *ngIf="addUserForm.get('password').errors && addUserForm.get('password').touched" class="alert alert-danger">
+                    <div [hidden]="!addUserForm.get('password').hasError('required')">{{ 'PASSWORD_REQUIRED' | translate }}</div>
+                    <div [hidden]="!addUserForm.get('password').hasError('minlength')">{{ 'PASSWORD_TOO_SHORT' | translate }}</div>
+                    <div [hidden]="!addUserForm.get('password').hasError('maxlength')">{{ 'PASSWORD_TOO_LONG' | translate }}</div>
+                </div>
+            </div>
 
-    <button type="submit" [disabled]="!addUserForm.valid">{{ 'CREATE_USER' | translate }}</button>
-</form>
+            <button type="submit" [disabled]="!addUserForm.valid">{{ 'CREATE_USER' | translate }}</button>
+        </form>
+    </div>
+</div>
