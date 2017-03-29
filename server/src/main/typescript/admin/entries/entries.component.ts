@@ -8,15 +8,9 @@ import { Router } from '@angular/router';
 })
 export class EntriesComponent implements OnInit {
 
-  constructor(private router: Router) {
-    // this.router.navigate(['/entries', 1]);
-  }
+  constructor(private router: Router) {}
 
   public ngOnInit() {
-    this.router.navigate(['/entries', 1]);
-  }
-
-  public changeRace(): void {
     this.router.navigate(['/entries', 1]);
   }
 }

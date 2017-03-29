@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 
-import { Event, convertJsonToEvent } from '../../events/event.model';
+import { Event, convertObjectToEvent } from '../../events/event.model';
 
 import { EventsHttpService } from '../../events/events-http.service';
 
@@ -20,7 +20,7 @@ export class AdminEventsHttpService extends EventsHttpService {
             JSON.stringify(event), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
-                let newEvent: Event = convertJsonToEvent(res.json());
+                let newEvent: Event = convertObjectToEvent(res.json());
                 if (res.status === 201) {
                     let location: string = res.headers.get('location');
                     let locationParts = location.split('/');
@@ -38,7 +38,7 @@ export class AdminEventsHttpService extends EventsHttpService {
             JSON.stringify(event), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
-                let updatedEvent: Event = convertJsonToEvent(res.json());
+                let updatedEvent: Event = convertObjectToEvent(res.json());
                 return updatedEvent;
             })
             .catch((err) => Promise.reject(err));

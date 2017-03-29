@@ -1,5 +1,8 @@
 
-hello from entries
+<div>{{ 'SELECT_RACE' | translate }}
+    <button class="btn primary" (click)="changeRace()">{{ 'CHANGE_RACE' | translate }}</button>
+</div>
+
 <div>
     <button class="btn primary" routerLink="/entries/create">{{ 'ADD_ENTRY' | translate }}</button>
 </div>

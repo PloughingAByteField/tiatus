@@ -5,7 +5,7 @@ export class EventPosition {
     public id: number;
 }
 
-export function convertJsonToEventPosition(json: EventPosition): EventPosition {
+export function convertObjectToEventPosition(json: EventPosition): EventPosition {
     let event: EventPosition = new EventPosition();
     event.event = json.event;
     event.id = json.id;

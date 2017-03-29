@@ -3,7 +3,7 @@ export class Club {
     public id: number;
 }
 
-export function convertJsonToClub(json: Club): Club {
+export function convertObjectToClub(json: Club): Club {
     let club: Club = new Club();
     club.clubName = json.clubName;
     club.id = json.id;

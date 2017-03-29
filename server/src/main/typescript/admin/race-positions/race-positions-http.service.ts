@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { RacePositionTemplate, convertJsonToRacePositionTemplate }
+import { RacePositionTemplate, convertObjectToRacePositionTemplate }
     from './race-position-template.model';
 
 @Injectable()
@@ -63,7 +63,7 @@ function convertJsonToRacePositionTemplates(response: Response): RacePositionTem
     let jsonTemplates: RacePositionTemplate[] = response.json();
     let templates: RacePositionTemplate[] = new Array<RacePositionTemplate>();
     jsonTemplates.map((json: RacePositionTemplate) => {
-      templates.push(convertJsonToRacePositionTemplate(json));
+      templates.push(convertObjectToRacePositionTemplate(json));
     });
     return templates;
 }

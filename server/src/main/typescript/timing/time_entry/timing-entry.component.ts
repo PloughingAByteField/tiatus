@@ -7,6 +7,7 @@ import { RacesService } from '../../races/races.service';
 
 import { Club } from '../../clubs/club.model';
 import { Entry } from '../../entries/entry.model';
+import { Event } from '../../events/event.model';
 import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
@@ -15,7 +16,8 @@ import { EntryTime } from '../../times/entry-time.model';
 
 import { TimingPositionService } from '../times/timing-position.service';
 import { TimingEntryTimesService } from '../times/entry-times.service';
-// import { EntryTimesService } from '../../times/entry-times.service';
+import { EventsService } from '../../events/events.service';
+import { ClubsService } from '../../clubs/clubs.service';
 
 @Component({
     styleUrls: [ './timing-entry.component.css' ],
@@ -39,6 +41,8 @@ export class TimingEntryComponent implements OnInit {
     private times: PositionTime[];
     private raceId: number = 0;
     private races: Race[];
+    private clubs: Club[] = new Array<Club>();
+    private events: Event[] = new Array<Event>();
     private race: Race;
 
     constructor(
@@ -46,6 +50,8 @@ export class TimingEntryComponent implements OnInit {
         private timingPositionService: TimingPositionService,
         private timesService: TimingTimesService,
         private racesService: RacesService,
+        private clubsService: ClubsService,
+        private eventsService: EventsService,
         private entryTimesService: TimingEntryTimesService
     ) {}
 
@@ -63,6 +69,14 @@ export class TimingEntryComponent implements OnInit {
                 this.position = position;
                 this.getTimesForRace(this.raceId);
             }
+        });
+
+        this.clubsService.getClubs().subscribe((clubs: Club[]) => {
+            this.clubs = clubs;
+        });
+
+        this.eventsService.getEvents().subscribe((events: Event[]) => {
+            this.events = events;
         });
 
         this.route.params.subscribe((params: Params) => {
@@ -176,6 +190,49 @@ export class TimingEntryComponent implements OnInit {
         return false;
     };
 
+    public getEventNameForEntry(entry: Entry): string {
+        let eventName: string;
+        let event: Event = this.getEventForId(entry.event);
+        if (event) {
+            eventName = event.name;
+        }
+        return eventName;
+    }
+
+    public getClubNamesForEntry(entry: Entry): string {
+        let clubs: string;
+        for (let clubId of entry.clubs) {
+            let club: Club = this.getClubForId(clubId);
+            if (club) {
+                if (!clubs) {
+                    clubs = club.clubName;
+                } else {
+                    clubs = clubs.concat(' / ');
+                    clubs = clubs.concat(club.clubName);
+                }
+            }
+        }
+        return clubs;
+    }
+
+    private getEventForId(eventId: number): Event {
+        for (let event of this.events) {
+            if (event.id === eventId) {
+                return event;
+            }
+        }
+        return null;
+    }
+
+    private getClubForId(clubId: number): Club {
+        for (let club of this.clubs) {
+            if (club.id === clubId) {
+                return club;
+            }
+        }
+        return null;
+    }
+
     private getPositionTimeForPosition(entryTime: EntryTime): PositionTime {
         return entryTime.times
             .filter((pt: PositionTime) => pt.position === this.position.id).shift();
@@ -216,16 +273,28 @@ export class TimingEntryComponent implements OnInit {
     }
 
     private filterClubs(entryTimes: EntryTime[], value: string): EntryTime[] {
-        return entryTimes.filter((entryTime: EntryTime)  => {
-             if (entryTime.entry.clubs.find((club: Club) => club.clubName.includes(value))) {
-                return entryTime;
-             }
+        return entryTimes.filter((entryTime: EntryTime) => {
+            for (let clubId of entryTime.entry.clubs) {
+                let club: Club = this.getClubForId(clubId);
+                if (club) {
+                    if (club.clubName.includes(value)) {
+                        return entryTime;
+                    }
+                }
+            }
         });
+
     }
 
     private filterEvents(entryTimes: EntryTime[], value: string): EntryTime[] {
-        return entryTimes.filter((entryTime: EntryTime)  =>
-            entryTime.entry.event.name.includes(value));
+        return entryTimes.filter((entryTime: EntryTime) => {
+            let event: Event = this.getEventForId(entryTime.entry.event);
+            if (event) {
+                if (event.name.includes(value)) {
+                    return entryTime;
+                }
+            }
+        });
     }
 
 }

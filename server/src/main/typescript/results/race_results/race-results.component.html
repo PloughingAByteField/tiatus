@@ -26,8 +26,8 @@
     <tbody>
         <tr *ngFor="let e of filteredEntryTimes | paginate: { itemsPerPage: itemsPerPage, currentPage: page }">
             <td>{{e.entry.number}}</td>
-            <td>{{e.entry.getClubNames()}}</td>
-            <td>{{e.entry.event.name}}</td>
+            <td>{{ getClubNamesForEntry(e.entry) }}</td>
+            <td>{{ getEventNameForEntry(e.entry) }}</td>
             <td>{{e.entry.crew}}</td>
             <td *ngFor="let position of displayablePositions">{{ getTimeForEntry(e, position) }}</td>
             <td>{{ getAdjustedTimeForEntry(e) }}</td>

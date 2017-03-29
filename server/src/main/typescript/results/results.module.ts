@@ -24,6 +24,10 @@ import { PenaltiesService } from '../penalties/penalties.service';
 import { PenaltiesHttpService } from '../penalties/penalties-http.service';
 import { DisqualificationService } from '../disqualification/disqualification.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
+import { ClubsService } from '../clubs/clubs.service';
+import { ClubsHttpService } from '../clubs/clubs-http.service';
+import { EventsService } from '../events/events.service';
+import { EventsHttpService } from '../events/events-http.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { resultsRoutes } from './results.routes';
@@ -87,6 +91,10 @@ export function createTranslateLoader(http: Http) {
     PenaltiesHttpService,
     DisqualificationService,
     DisqualificationHttpService,
+    ClubsService,
+    ClubsHttpService,
+    EventsService,
+    EventsHttpService,
     Title
   ]
 })

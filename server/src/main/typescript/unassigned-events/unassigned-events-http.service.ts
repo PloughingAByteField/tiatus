@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Event, convertJsonToEvent } from '../events/event.model';
+import { Event, convertObjectToEvent } from '../events/event.model';
 
 @Injectable()
 export class UnassignedEventsHttpService {
@@ -21,7 +21,7 @@ function convertJsonToUnassignedEvents(response: Response): Event[] {
     let jsonEvents: Event[] = response.json();
     let events: Event[] = new Array<Event>();
     jsonEvents.map((json: Event) => {
-      events.push(convertJsonToEvent(json));
+      events.push(convertObjectToEvent(json));
     });
     return events;
 }

@@ -6,7 +6,7 @@ export class RacePositionTemplateEntry {
 }
 
 export function
-    convertJsonToRacePositionTemplateEntry(json: RacePositionTemplateEntry):
+    convertObjectToRacePositionTemplateEntry(json: RacePositionTemplateEntry):
         RacePositionTemplateEntry {
     let template: RacePositionTemplateEntry = new RacePositionTemplateEntry();
     template.positionOrder = json.positionOrder;

@@ -1,5 +1,6 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -81,6 +82,15 @@ public class Entry implements Serializable {
         this.weighting = weighting;
     }
 
+	@JsonGetter("clubs")
+    public Set<Long> getClubIds() {
+		Set<Long> clubIds = new HashSet<>();
+		for (Club club: clubs) {
+			clubIds.add(club.getId());
+		}
+		return clubIds;
+	}
+
     public Set<Club> getClubs() {
         return clubs;
     }
@@ -113,12 +123,22 @@ public class Entry implements Serializable {
 		this.number = number;
 	}
 
+	@JsonGetter("event")
+	public Long getEventId() {
+		return event.getId();
+	}
+
 	public Event getEvent() {
 		return event;
 	}
 
 	public void setEvent(Event event) {
 		this.event = event;
+	}
+
+	@JsonGetter("race")
+	public Long getRaceId() {
+		return race.getId();
 	}
 
 	public Race getRace() {

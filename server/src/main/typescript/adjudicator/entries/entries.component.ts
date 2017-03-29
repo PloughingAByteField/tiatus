@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
+import { Entry } from '../../entries/entry.model';
+import { Event } from '../../events/event.model';
 import { Penalty } from '../../penalties/penalty.model';
 import { Disqualification } from '../../disqualification/disqualification.model';
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
@@ -16,6 +18,8 @@ import { EntryTimesFullService } from '../times/entry-times.service';
 
 import { AdjudicatorDisqualificationService } from '../disqualification/disqualification.service';
 import { AdjudicatorPenaltiesService } from '../penalties/penalties.service';
+import { EventsService } from '../../events/events.service';
+import { ClubsService } from '../../clubs/clubs.service';
 
 @Component({
     selector: 'entries',
@@ -44,7 +48,8 @@ export class EntriesComponent implements OnInit {
     private disqualifications: Disqualification[];
     private raceId: number = 0;
     private races: Race[];
-
+    private clubs: Club[] = new Array<Club>();
+    private events: Event[] = new Array<Event>();
     private entryTimes: EntryTime[];
 
     constructor(
@@ -53,6 +58,8 @@ export class EntriesComponent implements OnInit {
         private positionsService: PositionsService,
         private entryTimesService: EntryTimesFullService,
         private disqualificationService: AdjudicatorDisqualificationService,
+        private clubsService: ClubsService,
+        private eventsService: EventsService,
         private penaltiesService: AdjudicatorPenaltiesService
     ) {}
 
@@ -70,6 +77,14 @@ export class EntriesComponent implements OnInit {
             this.numberFilter = '';
             this.clubFilter = '';
             this.eventFilter = '';
+        });
+
+        this.clubsService.getClubs().subscribe((clubs: Club[]) => {
+            this.clubs = clubs;
+        });
+
+        this.eventsService.getEvents().subscribe((events: Event[]) => {
+            this.events = events;
         });
 
         this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
@@ -97,6 +112,31 @@ export class EntriesComponent implements OnInit {
 
     public getRace(): Race {
         return this.race;
+    }
+
+    public getEventNameForEntry(entry: Entry): string {
+        let eventName: string;
+        let event: Event = this.getEventForId(entry.event);
+        if (event) {
+            eventName = event.name;
+        }
+        return eventName;
+    }
+
+    public getClubNamesForEntry(entry: Entry): string {
+        let clubs: string;
+        for (let clubId of entry.clubs) {
+            let club: Club = this.getClubForId(clubId);
+            if (club) {
+                if (!clubs) {
+                    clubs = club.clubName;
+                } else {
+                    clubs = clubs.concat(' / ');
+                    clubs = clubs.concat(club.clubName);
+                }
+            }
+        }
+        return clubs;
     }
 
     public sortByNumber(direction: string): void {
@@ -194,11 +234,11 @@ export class EntriesComponent implements OnInit {
                 .shift();
             let eventStartPoint: PositionTime = entryTime.times
                 .filter((positionTime: PositionTime) => positionTime.position
-                    === entryTime.entry.event.startingPosition)
+                    === entryTime.entry.event)
                 .shift();
             let eventFinishPoint: PositionTime = entryTime.times
                 .filter((positionTime: PositionTime) => positionTime.position
-                        === entryTime.entry.event.finishingPosition)
+                        === entryTime.entry.event)
                 .shift();
             if (eventFinishPoint && actualStartPoint) {
                 return eventFinishPoint.time - actualStartPoint.time;
@@ -246,15 +286,44 @@ export class EntriesComponent implements OnInit {
     }
 
     private filterClubs(entryTimes: EntryTime[], value: string): EntryTime[] {
-        return entryTimes.filter((entryTime: EntryTime)  => {
-             if (entryTime.entry.clubs.find((club: Club) => club.clubName.includes(value))) {
-                return entryTime;
-             }
+        return entryTimes.filter((entryTime: EntryTime) => {
+            for (let clubId of entryTime.entry.clubs) {
+                let club: Club = this.getClubForId(clubId);
+                if (club) {
+                    if (club.clubName.includes(value)) {
+                        return entryTime;
+                    }
+                }
+            }
         });
     }
 
     private filterEvents(entryTimes: EntryTime[], value: string): EntryTime[] {
-        return entryTimes.filter((entryTime: EntryTime)  =>
-            entryTime.entry.event.name.includes(value));
+        return entryTimes.filter((entryTime: EntryTime) => {
+            let event: Event = this.getEventForId(entryTime.entry.event);
+            if (event) {
+                if (event.name.includes(value)) {
+                    return entryTime;
+                }
+            }
+        });
+    }
+
+    private getEventForId(eventId: number): Event {
+        for (let event of this.events) {
+            if (event.id === eventId) {
+                return event;
+            }
+        }
+        return null;
+    }
+
+    private getClubForId(clubId: number): Club {
+        for (let club of this.clubs) {
+            if (club.id === clubId) {
+                return club;
+            }
+        }
+        return null;
     }
 }

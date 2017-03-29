@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Event, convertJsonToEvent } from './event.model';
+import { Event, convertObjectToEvent } from './event.model';
 
 @Injectable()
 export class EventsHttpService {
@@ -13,15 +13,15 @@ export class EventsHttpService {
 
   public getEvents(): Observable<Event[]> {
     return this.http.get(this.endpoint)
-      .map(convertJsonToEvents).share();
+      .map(convertResponseToEvents).share();
    }
 }
 
-function convertJsonToEvents(response: Response): Event[] {
+function convertResponseToEvents(response: Response): Event[] {
     let jsonEvents: Event[] = response.json();
     let events: Event[] = new Array<Event>();
-    jsonEvents.map((json: Event) => {
-      events.push(convertJsonToEvent(json));
+    jsonEvents.map((event: Event) => {
+      events.push(convertObjectToEvent(event));
     });
     return events;
 }

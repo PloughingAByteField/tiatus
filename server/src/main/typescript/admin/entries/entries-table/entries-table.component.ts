@@ -34,4 +34,8 @@ export class EntriesTableComponent implements OnInit, OnDestroy {
   public removeEntry(entry: Entry): void {
     console.log('Remove ' + entry.id);
   }
+
+  public changeRace(): void {
+    console.log('chnaged race');
+  }
 }

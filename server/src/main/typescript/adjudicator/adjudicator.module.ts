@@ -33,6 +33,10 @@ import { AdjudicatorHttpDisqualificationsService }
 import { AdjudicatorDisqualificationService } from './disqualification/disqualification.service';
 import { AdjudicatorHttpPenaltiesService } from './penalties/penalties-http.service';
 import { AdjudicatorPenaltiesService } from './penalties/penalties.service';
+import { ClubsService } from '../clubs/clubs.service';
+import { ClubsHttpService } from '../clubs/clubs-http.service';
+import { EventsService } from '../events/events.service';
+import { EventsHttpService } from '../events/events-http.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';
@@ -115,6 +119,10 @@ export function createTranslateLoader(http: Http) {
     AdjudicatorDisqualificationService,
     AdjudicatorHttpPenaltiesService,
     AdjudicatorPenaltiesService,
+    ClubsService,
+    ClubsHttpService,
+    EventsService,
+    EventsHttpService,
     Title
   ]
 })

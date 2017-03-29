@@ -1,5 +1,5 @@
-import { Race, convertJsonToRace } from '../../races/race.model';
-import { RacePositionTemplateEntry, convertJsonToRacePositionTemplateEntry }
+import { Race, convertObjectToRace } from '../../races/race.model';
+import { RacePositionTemplateEntry, convertObjectToRacePositionTemplateEntry }
     from '../race-position-templates/race-position-template-entry.model';
 
 export class RacePositionTemplate {
@@ -11,7 +11,7 @@ export class RacePositionTemplate {
 }
 
 export function
-    convertJsonToRacePositionTemplate(json: RacePositionTemplate): RacePositionTemplate {
+    convertObjectToRacePositionTemplate(json: RacePositionTemplate): RacePositionTemplate {
     let template: RacePositionTemplate = new RacePositionTemplate();
     template.name = json.name;
     template.defaultTemplate = json.defaultTemplate;
@@ -19,7 +19,7 @@ export function
     template.id = json.id;
     template.templates = new Array<RacePositionTemplateEntry>();
     json.templates.map((templateJson: RacePositionTemplateEntry) => {
-      template.templates.push(convertJsonToRacePositionTemplateEntry(templateJson));
+      template.templates.push(convertObjectToRacePositionTemplateEntry(templateJson));
     });
     return template;
 }

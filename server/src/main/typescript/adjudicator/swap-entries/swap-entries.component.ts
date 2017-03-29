@@ -65,7 +65,7 @@ export class SwapEntriesComponent implements OnInit {
 
     public getEntriesForRace(): Entry[] {
         if (this.entries) {
-            return this.entries.filter((entry: Entry) => entry.race.id === this.race.id);
+            return this.entries.filter((entry: Entry) => entry.race === this.race.id);
         }
         return [];
     }
@@ -75,8 +75,8 @@ export class SwapEntriesComponent implements OnInit {
         // force refresh as server has done lots of work behind the sences
         this.penaltiesService.refresh();
         this.disqualificationService.refresh();
-        this.entriesService.refreshForRace(this.from.race);
-        this.timesService.refreshForRace(this.from.race);
+        this.entriesService.refreshForRace(this.racesService.getRaceForId(this.from.race));
+        this.timesService.refreshForRace(this.racesService.getRaceForId(this.from.race));
     }
 
     public isSwapEnabled(): boolean {

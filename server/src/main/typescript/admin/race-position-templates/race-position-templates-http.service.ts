@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { RacePositionTemplateEntry, convertJsonToRacePositionTemplateEntry }
+import { RacePositionTemplateEntry }
     from './race-position-template-entry.model';
 
 @Injectable()

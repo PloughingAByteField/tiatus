@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Entry, convertJsonToEntry } from './entry.model';
+import { Entry, convertObjectToEntry } from './entry.model';
 import { Race } from '../races/race.model';
 
 @Injectable()
@@ -11,20 +11,20 @@ export class EntriesHttpService {
 
   public getEntries(): Observable<Entry[]> {
     return this.http.get('/rest/entries')
-      .map(convertJsonToEntries).share();
+      .map(convertResponseToEntries).share();
   }
 
   public getEntriesForRace(race: Race): Observable<Entry[]> {
-  return this.http.get('/rest/entries/race/' + race.id)
-    .map(convertJsonToEntries).share();
+    return this.http.get('/rest/entries/race/' + race.id)
+      .map(convertResponseToEntries).share();
   }
  }
 
-function convertJsonToEntries(response: Response): Entry[] {
+function convertResponseToEntries(response: Response): Entry[] {
     let jsonEntries: Entry[] = response.json();
     let entries: Entry[] = new Array<Entry>();
-    jsonEntries.map((json: Entry) => {
-      entries.push(convertJsonToEntry(json));
+    jsonEntries.map((entry: Entry) => {
+      entries.push(convertObjectToEntry(entry));
     });
     return entries;
 }

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { RaceEvent } from '../../../race-events/race-event.model';
 import { Event } from '../../../events/event.model';
-import { Race, convertJsonToRace } from '../../../races/race.model';
+import { Race, convertObjectToRace } from '../../../races/race.model';
 import { AdminRacesService } from '../../races/races.service';
 import { AdminEventsService } from '../events.service';
 import { AdminUnassignedEventsService } from '../unassigned-events.service';
@@ -60,7 +60,7 @@ export class EventsTableComponent implements OnInit, OnDestroy {
             this.races.pop();
           }
           races.map((race: Race) => {
-            this.races.push(convertJsonToRace(race));
+            this.races.push(convertObjectToRace(race));
           });
           if (this.selectedRace === null) {
             if (this.raceId) {

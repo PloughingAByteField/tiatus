@@ -21,6 +21,8 @@ import { PositionsService } from '../positions/positions.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
 import { ConfigService } from '../config/config.service';
 import { ConfigHttpService } from '../config/config-http.service';
+import { EventsService } from '../events/events.service';
+import { EventsHttpService } from '../events/events-http.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { timingRouting } from './timing.routes';
@@ -88,6 +90,8 @@ export function createTranslateLoader(http: Http) {
     PositionsHttpService,
     ConfigService,
     ConfigHttpService,
+    EventsService,
+    EventsHttpService,
     Title
   ]
 })
