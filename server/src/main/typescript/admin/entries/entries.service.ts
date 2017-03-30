@@ -27,4 +27,11 @@ export class AdminEntriesService extends EntriesService {
             this.subject.next(this.entries);
         });
     }
+
+    public updateEntry(entry: Entry): Promise<Entry> {
+        return new Promise((resolve) => this.service.updateEntry(entry).then((e: Entry) => {
+            this.subject.next(this.entries);
+            resolve(e);
+        }));
+    }
 }

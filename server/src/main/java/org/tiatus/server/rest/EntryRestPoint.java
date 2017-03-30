@@ -113,10 +113,11 @@ public class EntryRestPoint {
      */
     @RolesAllowed({Role.ADMIN})
     @PUT
+    @Path("{id}")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateEntry(Entry entry) {
-        LOG.debug("Updating entry " + entry);
+    public Response updateEntry(@PathParam("id") String id, Entry entry) {
+        LOG.debug("Updating entry " + id);
         try {
             service.updateEntry(entry);
             return Response.noContent().build();

@@ -128,6 +128,7 @@
     "IS_FIXED_NUMBER": "Is fixed number",
     "FIXED_NUMBER": "Number",
     "CREATE_ENTRY_SUBMIT": "Create entry",
+    "UPDATE_ENTRY_SUBMIT": "Update entry",
     "ENTRY_BACK_TO": "Go back",
     "ENTRIES_FOR_RACE": "Entries for race"
 }

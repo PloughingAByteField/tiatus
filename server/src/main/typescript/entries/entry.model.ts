@@ -3,6 +3,7 @@ export class Entry {
     public crew: string;
     public number: number;
     public raceOrder: number;
+    public fixedNumber: boolean;
     public timeOnly: boolean;
     public clubs: number[];
     public race: number;
@@ -21,5 +22,6 @@ export function convertObjectToEntry(json: Entry): Entry {
     entry.race = json.race;
     entry.raceOrder = json.raceOrder;
     entry.timeOnly = json.timeOnly;
+    entry.fixedNumber = json.fixedNumber;
     return entry;
 }

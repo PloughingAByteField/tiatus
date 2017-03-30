@@ -51,7 +51,6 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
     private eventsService: AdminEventsService,
     private clubsService: AdminClubsService,
     private entriesService: AdminEntriesService,
-
     private raceEventsService: AdminRaceEventsService,
     private unassignedEventsService: AdminUnassignedEventsService,
     private fb: FormBuilder,
@@ -140,6 +139,7 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
     if (value.crew.length > 0) {
       entry.crew = value.crew;
     }
+    entry.fixedNumber = value.fixedNumber;
     if (value.isFixedNumber === true) {
       entry.number = value.fixedNumber;
     } else {
@@ -151,7 +151,7 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
     }
     console.log(entry);
     this.entriesService.createEntry(entry).then((newEntry: Entry) => {
-      console.log(newEntry);
+      this.goBack();
     });
   }
 

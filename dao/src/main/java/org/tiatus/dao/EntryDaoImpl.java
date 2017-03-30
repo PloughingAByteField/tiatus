@@ -63,28 +63,31 @@ public class EntryDaoImpl implements EntryDao {
                 LOG.warn(message);
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist entry", e.getMessage());
-            throw new DaoException(e);
+        } catch (Exception e) {
+            LOG.warn("Failed to persist entry", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 
     @Override
     public void removeEntry(Entry entry) throws DaoException {
         try {
+            tx.begin();
             Entry existing = null;
             if (entry.getId() != null) {
                 existing = em.find(Entry.class, entry.getId());
             }
             if (existing != null) {
-                tx.begin();
+
                 em.remove(em.contains(entry) ? entry : em.merge(entry));
                 tx.commit();
             } else {
                 LOG.warn("No such entry of id " + entry.getId());
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to delete entry", e);
+        } catch (Exception e) {
+            LOG.warn("Failed to remove entry", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
 
@@ -94,10 +97,37 @@ public class EntryDaoImpl implements EntryDao {
     public void updateEntry(Entry entry) throws DaoException {
         try {
             tx.begin();
-            em.merge(entry);
-            tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+            Entry existing = null;
+            if (entry.getId() != null) {
+                existing = em.find(Entry.class, entry.getId());
+            }
+            if (existing != null) {
+                if (entry.getNumber() != null) {
+                    existing.setNumber(entry.getNumber());
+                }
+                if (entry.getRace() != null) {
+                    existing.setRace(entry.getRace());
+                }
+                if (entry.getEvent() != null) {
+                    existing.setEvent(entry.getEvent());
+                }
+                if (entry.getCrew() != null) {
+                    existing.setCrew(entry.getCrew());
+                }
+                if (entry.isFixedNumber()) {
+                    existing.setFixedNumber(entry.isFixedNumber());
+                }
+                if (entry.getClubs() != null) {
+                    existing.setClubs(entry.getClubs());
+                }
+                em.merge(existing);
+                tx.commit();
+            } else {
+                LOG.warn("No such entry of id " + entry.getId());
+            }
+        } catch (Exception e) {
             LOG.warn("Failed to update entry", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -160,11 +190,9 @@ public class EntryDaoImpl implements EntryDao {
             em.merge(to);
 
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to swap entries", e);
-            throw new DaoException(e.getMessage());
         } catch (Exception e) {
             LOG.warn("Failed to swap entries", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }

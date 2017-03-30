@@ -41,4 +41,15 @@ export class AdminEntriesHttpService extends EntriesHttpService {
             })
             .catch((err) => Promise.reject(err));
     }
+
+    public updateEntry(entry: Entry): Promise<Entry> {
+        return this.http
+            .put(this.endPoint + '/' + entry.id,
+            JSON.stringify(entry), { headers: this.headers })
+            .toPromise()
+            .then((res: Response) => {
+                return entry;
+            })
+            .catch((err) => Promise.reject(err));
+    }
 }

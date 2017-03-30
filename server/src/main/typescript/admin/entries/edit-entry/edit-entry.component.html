@@ -1,6 +1,55 @@
 
-hello from edit
+<div *ngIf="editEntryForm" class="form-group">
+    <form [formGroup]="editEntryForm" (ngSubmit)="onSubmit(editEntryForm)" novalidate>
+        <div>
+            <label>{{ 'RACE' | translate }}: </label>
+            <select formControlName="race" name="race" (change)="changeRace(editEntryForm.get('race').value)">
+                <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
+            </select>
+        </div> 
+        <div>
+            <div>
+                <label>{{ 'EVENTS_FOR_CURRENT_RACE' | translate }}: </label>
+                <input type="radio" #current formControlName="eventsType" value="current" [checked]="editEntryForm.get('eventsType').value === 'current'" (change)="onEventTypeChange(current.value)">
+            </div>
+            <div>
+                <label>{{ 'EVENTS_FOR_UNASSIGNED' | translate }}: </label>
+                <input type="radio" #unassigned formControlName="eventsType" value="unassigned" [checked]="editEntryForm.get('eventsType').value === 'unassigned'" (change)="onEventTypeChange(unassigned.value)">
+            </div>
+            <div>
+                <label>{{ 'EVENTS_FOR_OTHER_RACES' | translate }}: </label>
+                <input type="radio" #other formControlName="eventsType" value="other" [checked]="editEntryForm.get('eventsType').value === 'other'" (change)="onEventTypeChange(other.value)">
+            </div>
+        </div>       
+        <div>
+            <label>{{ 'EVENT' | translate }}: </label>
+            <select formControlName="event" name="event">
+                <option *ngFor="let event of eventsForRace" [ngValue]="event">{{ event.name }} -- {{ getRaceNameForEvent(event) }}</option>
+            </select>
+        </div>
+        <div>
+            <label>{{ 'CLUB' | translate }}: </label>
+            <select formControlName="clubs" multiple name="clubs">
+                <option *ngFor="let club of clubs" [ngValue]="club">{{ club.clubName }}</option>
+            </select>
+        </div>
+        <div>
+            <label>{{ 'CREW' | translate }}: </label>
+            <input type="text" formControlName="crew" name="crew" placeholder="{{ 'ENTER_CREW' | translate }}">
+        </div>
+        <div>
+            <label>{{ 'IS_FIXED_NUMBER' | translate }}: </label>
+            <input type="checkbox" formControlName="isFixedNumber" name="isFixedNumber">
+        </div>
+        <div *ngIf="editEntryForm.get('isFixedNumber').value === true">
+            <label>{{ 'FIXED_NUMBER' | translate }}: </label>
+            <input type="number" formControlName="fixedNumber" name="fixedNumber"/>
+        </div>
 
-<div>
+        <button type="submit" [disabled]="!editEntryForm.valid">{{ 'UPDATE_ENTRY_SUBMIT' | translate }}</button>
+    </form>
+</div>
+
+<div >
     <button class="btn primary" (click)="goBack()">{{ 'ENTRY_BACK_TO' | translate }}</button>
 </div>
