@@ -11,7 +11,6 @@ import { RacesComponent } from './races';
 import { UsersComponent } from './users';
 import { RacePositionTemplatesComponent } from './race-position-templates';
 import { CreateEventComponent } from './events/create-event';
-import { EventsTableComponent } from './events/events-table';
 import { EditEventComponent } from './events/edit-event';
 import { CreateEntryComponent } from './entries/create-entry';
 import { EditEntryComponent } from './entries/edit-entry';
@@ -26,13 +25,9 @@ export const adminRoutes: Routes = [
   { path: 'entries',      component: EntriesComponent },
   { path: 'entries/create', component: CreateEntryComponent },
   { path: 'entries/edit/:entryId', component: EditEntryComponent },
-  { path: 'events',      component: EventsComponent,
-    children: [
-    { path: 'create', component: CreateEventComponent, pathMatch: 'full' },
-    { path: ':raceId', component: EventsTableComponent },
-    { path: 'edit/:eventId', component: EditEventComponent }
-    ]
-  },
+  { path: 'events',      component: EventsComponent },
+  { path: 'events/create', component: CreateEventComponent },
+  { path: 'events/edit/:eventId', component: EditEventComponent },
   { path: 'positions',      component: PositionsComponent },
   { path: 'race-positions',      component: RacePositionsComponent },
   { path: 'race-positions/:raceId',      component: RacePositionsComponent },

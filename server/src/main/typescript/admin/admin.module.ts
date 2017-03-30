@@ -75,7 +75,6 @@ import { AdminUsersHttpService } from './users/users-http.service';
 import { RacePositionTemplatesComponent } from './race-position-templates';
 import { CreateEventComponent } from './events/create-event';
 import { EditEventComponent } from './events/edit-event';
-import { EventsTableComponent } from './events/events-table';
 import { AdminRaceEventsHttpService } from './events/race-events-http.service';
 import { AdminRaceEventsService } from './events/race-events.service';
 import { AdminUnassignedEventsHttpService } from './events/unassigned-events-http.service';
@@ -113,7 +112,6 @@ export function createTranslateLoader(http: Http) {
     RacePositionsComponent,
     RacePositionTemplatesComponent,
     CreateEventComponent,
-    EventsTableComponent,
     EditEventComponent,
     CreateEntryComponent,
     EditEntryComponent
