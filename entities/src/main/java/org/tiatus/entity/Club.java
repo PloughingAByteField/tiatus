@@ -28,6 +28,12 @@ public class Club implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    public Club() {}
+
+    public Club(Long id) {
+        this.setId(id);
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -26,11 +26,11 @@ export class EntriesComponent implements OnInit, OnDestroy {
   public selectedRace: Race;
   public page: number = 1;
   public itemsPerPage: number = 10;
-
-  private entries: Entry[];
-  private clubs: Club[] = new Array<Club>();
+  public clubs: Club[] = new Array<Club>();
   private events: Event[] = new Array<Event>();
-  private raceId: number;
+  private entries: Entry[];
+
+  private eventsForRace: Event[] = new Array<Event>();
 
   private entriesSubscription: Subscription;
   private eventsSubscription: Subscription;
@@ -39,7 +39,6 @@ export class EntriesComponent implements OnInit, OnDestroy {
   private selectedRaceSubscription: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
     private clubsService: AdminClubsService,
     private racesService: AdminRacesService,
     private eventsService: AdminEventsService,
@@ -49,53 +48,44 @@ export class EntriesComponent implements OnInit, OnDestroy {
    ) {}
 
   public ngOnInit() {
+    this.selectedRace = this.selectedRaceService.getSelectedRace.value;
     this.entriesSubscription = this.entriesService.getEntries()
       .subscribe((entries: Entry[]) => {
         this.entries = entries;
         if (this.selectedRace) {
-          this.changeRace(this.selectedRace);
+          this.entriesForRace = this.getEntriesForRace(this.selectedRace);
         }
     });
 
     this.clubsSubscription = this.clubsService.getClubs().subscribe((clubs: Club[]) => {
         this.clubs = clubs;
         if (this.selectedRace) {
-          this.changeRace(this.selectedRace);
+          this.entriesForRace = this.getEntriesForRace(this.selectedRace);
         }
     });
 
     this.eventsSubscription = this.eventsService.getEvents().subscribe((events: Event[]) => {
         this.events = events;
         if (this.selectedRace) {
-          this.changeRace(this.selectedRace);
+          this.entriesForRace = this.getEntriesForRace(this.selectedRace);
         }
     });
 
     this.racesSubscription = this.racesService.getRaces().subscribe((races: Race[]) => {
         this.races = races;
         if (races.length > 0) {
-          let race: Race;
-          if (this.raceId) {
-            race = this.racesService.getRaceForId(this.raceId);
-          } else {
-            race = this.races[0];
+          if (!this.selectedRace) {
+            this.selectedRace = this.races[0];
           }
-          this.changeRace(race);
-        }
-    });
-
-    this.route.params.subscribe((params: Params) => {
-        this.raceId = +params['raceId'];
-        let race: Race = this.racesService.getRaceForId(this.raceId);
-        if (race) {
-          this.changeRace(race);
+          this.changeRace(this.selectedRace);
         }
     });
 
     this.selectedRaceSubscription =
       this.selectedRaceService.getSelectedRace.subscribe((race: Race) => {
         if (race !== null) {
-          this.changedRace(race);
+          this.selectedRace = race;
+          this.entriesForRace = this.getEntriesForRace(this.selectedRace);
         }
     });
   }
@@ -110,16 +100,13 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   public removeEntry(entry: Entry): void {
     console.log('Remove ' + entry.id);
+    this.entriesService.removeEntry(entry);
   }
 
   public changeRace(race: Race): void {
     this.selectedRace = race;
     this.selectedRaceService.setSelectedRace = race;
-    this.entriesForRace = this.entries.filter((entry: Entry) => entry.race === race.id);
-  }
-
-  public changedRace(race: Race): void {
-    // this.router.navigate(['/entries', race.id]);
+    this.entriesForRace = this.getEntriesForRace(race);
   }
 
   public getEventNameForEntry(entry: Entry): string {
@@ -145,6 +132,21 @@ export class EntriesComponent implements OnInit, OnDestroy {
           }
       }
       return clubs;
+  }
+
+  private getEntriesForRace(race: Race): Entry[] {
+    let entries: Entry[] = this.entries
+      .filter((entry: Entry) => entry.race === race.id);
+    entries.sort((a: Entry, b: Entry) => {
+        if (a.number < b.number) {
+            return -1;
+        } else if (a.number === b.number) {
+            return 0;
+        } else if (a.number > b.number) {
+            return 1;
+        }
+    });
+    return entries;
   }
 
   private getEventForId(eventId: number): Event {

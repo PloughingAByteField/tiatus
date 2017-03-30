@@ -45,7 +45,6 @@ export class EventsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    console.log('init');
     this.selectedRace = this.selectedRaceService.getSelectedRace.value;
     this.racesSubscription = this.racesService.getRaces()
       .subscribe((races: Race[]) => {
@@ -152,7 +151,6 @@ export class EventsComponent implements OnInit, OnDestroy {
   private changedRace(race: Race): void {
     console.log('changed race');
     console.log(race);
-    // this.router.navigate(['/events', race.id]);
   }
 
   private setSelectedRace(race: Race): void {

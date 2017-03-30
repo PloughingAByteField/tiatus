@@ -1,8 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+
+import { Subscription } from 'rxjs/Subscription';
 
 import { Race } from '../../../races/race.model';
+import { Entry } from '../../../entries/entry.model';
 
+import { SelectedRaceService } from '../../races/selected-race.service';
 import { AdminRacesService } from '../../races/races.service';
 
 @Component({
@@ -12,21 +16,34 @@ import { AdminRacesService } from '../../races/races.service';
 })
 export class EditEntryComponent implements OnInit, OnDestroy {
 
-  private racesSubscription: any;
+  public model: Entry = new Entry();
+  public selectedRace: Race;
+
+  private racesSubscription: Subscription;
   private races: Race[];
 
   constructor(
     private racesService: AdminRacesService,
-    private router: Router
+    private selectedRaceService: SelectedRaceService,
+    private location: Location
   ) {}
 
   public ngOnInit() {
+    this.selectedRace = this.selectedRaceService.getSelectedRace.value;
     this.racesSubscription = this.racesService.getRaces()
       .subscribe((races: Race[]) => this.races = races);
   }
 
   public ngOnDestroy() {
     this.racesSubscription.unsubscribe();
+  }
+
+  public changeRace(race: Race): void {
+    console.log(race);
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 
 }
