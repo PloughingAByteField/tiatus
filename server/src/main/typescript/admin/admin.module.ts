@@ -62,7 +62,6 @@ import { AdminEntriesHttpService } from './entries/entries-http.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
 import { CreateEntryComponent } from './entries/create-entry';
 import { EditEntryComponent } from './entries/edit-entry';
-import { EntriesTableComponent } from './entries/entries-table';
 
 import { AdminEventsService } from './events/events.service';
 import { AdminEventsHttpService } from './events/events-http.service';
@@ -117,8 +116,7 @@ export function createTranslateLoader(http: Http) {
     EventsTableComponent,
     EditEventComponent,
     CreateEntryComponent,
-    EditEntryComponent,
-    EntriesTableComponent
+    EditEntryComponent
   ],
   imports: [
     BrowserModule,

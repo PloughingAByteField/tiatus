@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Race } from '../../../races/race.model';
+import { Entry } from '../../../entries/entry.model';
 
 import { AdminRacesService } from '../../races/races.service';
 
@@ -11,6 +12,8 @@ import { AdminRacesService } from '../../races/races.service';
   templateUrl: './create-entry.component.html'
 })
 export class CreateEntryComponent implements OnInit, OnDestroy {
+
+  public model: Entry = new Entry();
 
   private racesSubscription: any;
   private races: Race[];
