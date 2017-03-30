@@ -2,16 +2,15 @@ import { EventPosition, convertObjectToEventPosition } from './event-positions.m
 
 export class Event {
     public name: string;
+    public weighted: boolean;
     public positions: EventPosition[];
     public id: number;
-    // remove the following TODO
-    public finishingPosition: number;
-    public startingPosition: number;
 }
 
 export function convertObjectToEvent(json: Event): Event {
     let event: Event = new Event();
     event.name = json.name;
+    event.weighted = json.weighted;
     event.id = json.id;
     event.positions = new Array<EventPosition>();
     json.positions.map((eventPosition: EventPosition) => {
