@@ -109,7 +109,7 @@ public class EntryRestPoint {
     /**
      * Update entry, restricted to Admin users
      * @param entry to update
-     * @return 201 response with location containing uri of newly created entry or an error code
+     * @return 404 if entity does not exist else return 204
      */
     @RolesAllowed({Role.ADMIN})
     @PUT
@@ -119,6 +119,10 @@ public class EntryRestPoint {
     public Response updateEntry(@PathParam("id") String id, Entry entry) {
         LOG.debug("Updating entry " + id);
         try {
+            Entry existing = service.getEntryForId(Long.parseLong(id));
+            if (existing == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
             service.updateEntry(entry);
             return Response.noContent().build();
 
