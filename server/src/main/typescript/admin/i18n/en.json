@@ -120,5 +120,14 @@
     "NUMBER": "Number",
     "EVENT": "Event",
     "CREW": "Crew",
+    "ENTER_CREW": "Enter crew",
+    "RACE": "Race",
+    "EVENTS_FOR_CURRENT_RACE": "Events assigned to selected race",
+    "EVENTS_FOR_UNASSIGNED": "Unassigned to any race events",
+    "EVENTS_FOR_OTHER_RACES": "Events assigned to other races",
+    "IS_FIXED_NUMBER": "Is fixed number",
+    "FIXED_NUMBER": "Number",
+    "CREATE_ENTRY_SUBMIT": "Create entry",
+    "ENTRY_BACK_TO": "Go back",
     "ENTRIES_FOR_RACE": "Entries for race"
 }

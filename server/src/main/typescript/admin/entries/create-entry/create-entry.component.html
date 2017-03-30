@@ -50,60 +50,6 @@
     </form>
 </div>
 
-<!--<div>
-    <form name="addEntryForm" novalidate>
-        <div class="form-group">
-            <label>{{ 'FIXED_ENTRY_NUMBER' | translate }}</label>
-            <input type="checkbox" name="fixed" />
-            <div ng-show="ctrl.entry.fixedNumber" >
-                <label>{{ 'ENTRY_NUMBER' | translate }}</label>
-                <input class="ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" type="number" name="number" id="number" ng-model="ctrl.entry.number" not-existing-entry-number ng-required="ctrl.entry.fixedNumber" min="1" max="1000000"/>
-
-                <div class="errors" ng-messages="ctrl.addEntryForm.number.$error" ng-if="ctrl.addEntryForm.number.$invalid">
-                    <p ng-message="required">{{ 'ENTRY_NUMBER_REQUIRED' | translate }}</p>
-                    <p ng-message="min">{{ 'ENTRY_NUMBER_TOO_SMALL' | translate }}</p>
-                    <p ng-message="max">{{ 'ENTRY_NUMBER_TOO_LARGE' | translate }}</p>
-                    <p ng-message="entryNumberExists">{{ 'ENTRY_NUMBER_ALREADY_EXISTS' | translate }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group" ng-show="ctrl.events">
-            <label>{{ 'ENTRY_EVENT' | translate }}</label>
-            <select name="event" ng-model="ctrl.entry.event" ng-options="event as event.name for event in ctrl.events" required></select>
-        </div>
-
-        <div class="form-group" ng-show="ctrl.clubs">
-            <label>{{ 'ENTRY_CLUB' | translate }}</label>
-            <select multiple name="clubs" ng-model="ctrl.entry.clubs" ng-options="club as club.clubName for club in ctrl.clubs track by club.id" ng-change="ctrl.clubChanged(entry)" required></select>
-            {{entry.club}}
-        </div>
-
-        <div class="form-group">
-            <label>{{ 'ENTRY_CREW' | translate }}</label>
-            <input class="ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" type="text" name="crew" id="crew" ng-model="ctrl.entry.crew" ng-maxlength="20"/>
-            <div class="errors" ng-messages="ctrl.addEntryForm.name.$error" ng-if="(ctrl.addEntryForm.name.$dirty && ctrl.addEntryForm.name.$invalid) || (ctrl.addEntryForm.order.$dirty)">
-                <p ng-message="crewmaxlength">{{ 'CREW_NAME_TOO_LONG' | translate }}</p>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>{{ 'ENTRY_WEIGHTING' | translate }}</label>
-            <input class="ng-pristine ng-invalid ng-invalid-required ng-valid-minlength ng-valid-maxlength" type="text" name="weighting" id="weighting" ng-model="ctrl.entry.weighting" ng-minlength="4" ng-maxlength="5"/>
-            <div class="errors" ng-messages="ctrl.addEntryForm.name.$error" ng-if="(ctrl.addEntryForm.name.$dirty && ctrl.addEntryForm.name.$invalid) || (ctrl.addEntryForm.order.$dirty)">
-                <p ng-message="weightminlength">{{ 'WEIGHTING_TOO_SHORT' | translate }}</p>
-                <p ng-message="weightmaxlength">{{ 'WEIGHTING_TOO_LONG' | translate }}</p>
-            </div>
-        </div>
-
-        <div>
-            <button id="addEntry" data-ng-show="{{ctrl.entry.id === undefined}}" class="btn primary" data-ng-click="ctrl.addEntry(ctrl.entry)" ng-disabled="ctrl.addEntryForm.$invalid">{{ 'CREATE_ENTRY' | translate }}</button>
-            <button data-ng-show="{{ctrl.entry.id !== undefined}}" id="updateEntry" class="btn primary" data-ng-click="ctrl.updateEntry(ctrl.entry)" ng-disabled="ctrl.addEntryForm.$invalid">{{ 'UPDATE_ENTRY' | translate }}</button>
-            <button id="back" class="btn primary" data-ng-click="ctrl.back()">{{ 'BACK' | translate }}</button>
-        </div>
-    </form>
-</div>-->
-
 <div >
     <button class="btn primary" (click)="goBack()">{{ 'ENTRY_BACK_TO' | translate }}</button>
 </div>
