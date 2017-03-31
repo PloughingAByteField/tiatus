@@ -1,1 +1,29 @@
 hello from draw
+
+<select [(ngModel)]="selectedRace" name="selectedRace" (change)="changeRace(selectedRace)">
+    <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
+</select>
+
+<div *ngIf="entriesForRace.length > 0">
+    <h4>
+        {{ 'ENTRIES_FOR_RACE' | translate }} {{ selectedRace.name }}
+    </h4>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr id="thead" (dragover)="onDragOver($event)" (drop)="onDrop($event, null)">
+                <th>{{ 'NUMBER' | translate }}</th>
+                <th>{{ 'CLUB' | translate }}</th>
+                <th>{{ 'EVENT' | translate }}</th>
+                <th>{{ 'CREW' | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let entry of entriesForRace" id="{{ entry.id }}" draggable="true" (dragover)="onDragOver($event)" (dragstart)="onDragStart($event, entry)" (drop)="onDrop($event, entry)">
+                <td>{{ entry.number }}</td>
+                <td>{{ getClubNamesForEntry(entry) }}</td>
+                <td>{{ getEventNameForEntry(entry) }}</td>
+                <td>{{ entry.crew }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
