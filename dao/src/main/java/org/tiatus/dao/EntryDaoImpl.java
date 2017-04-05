@@ -120,6 +120,10 @@ public class EntryDaoImpl implements EntryDao {
                 if (entry.getClubs() != null) {
                     existing.setClubs(entry.getClubs());
                 }
+                if (entry.getRaceOrder() != null) {
+                    existing.setRaceOrder(entry.getRaceOrder());
+                }
+
                 em.merge(existing);
                 tx.commit();
             } else {

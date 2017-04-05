@@ -144,9 +144,12 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
       entry.number = value.fixedNumber;
     } else {
       if (this.entriesForRace.length > 0) {
-        entry.number = this.entriesForRace[this.entriesForRace.length - 1].number + 1;
+        let lastEntry: Entry = this.entriesForRace[this.entriesForRace.length - 1];
+        entry.number = lastEntry.number + 1;
+        entry.raceOrder = lastEntry.raceOrder + 1;
       } else {
         entry.number = 1;
+        entry.raceOrder = 1;
       }
     }
     console.log(entry);
