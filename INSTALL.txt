@@ -20,3 +20,9 @@ module add --name=org.postgres --resources=Downloads/postgresql-9.4.1208.jar --d
 And finally create the datasource
 
 data-source add --jndi-name=java:/datasources/TiatusDS --name=TiatusPool --connection-url=jdbc:postgresql://localhost/tiatus --driver-name=postgres --user-name=tiatus --password=tiatus
+
+To create the cache for the rest calls
+
+/subsystem=infinispan/cache-container=RestCache:add()
+
+/subsystem=infinispan/cache-container=RestCache/local-cache=Rest:add(jndi-name=/infinispan/container/rest-cache)

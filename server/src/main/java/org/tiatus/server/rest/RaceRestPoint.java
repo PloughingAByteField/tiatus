@@ -1,5 +1,6 @@
 package org.tiatus.server.rest;
 
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Race;
@@ -11,10 +12,9 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,8 +25,11 @@ import java.util.List;
 public class RaceRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
-
+    private static final String CACHE_NAME = "races";
     private RaceService service;
+
+    @Inject
+    Cache cache;
 
     /**
      * Get races
@@ -35,9 +38,29 @@ public class RaceRestPoint {
     @PermitAll
     @GET
     @Produces("application/json")
-    public Response getRaces() {
-        List<Race> races = service.getRaces();
-        return Response.ok(races).build();
+    public Response getRaces(@Context Request request) {
+        Response.ResponseBuilder builder;
+        LOG.debug("AAA");
+        if (cache.get(CACHE_NAME) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<Race> races = (List<Race>)cacheEntry.getEntry();
+                builder = Response.ok(races).tag(cachedEntryETag);
+            }
+        } else {
+            List<Race> races = service.getRaces();
+            String hashCode = Integer.toString(races.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, races);
+            cache.put(CACHE_NAME, newCacheEntry);
+            builder = Response.ok(races).tag(etag);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -54,6 +77,9 @@ public class RaceRestPoint {
         LOG.debug("Adding race " + race);
         try {
             Race saved = service.addRace(race);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
@@ -81,6 +107,9 @@ public class RaceRestPoint {
             Race race = new Race();
             race.setId(Long.parseLong(id));
             service.deleteRace(race);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -105,6 +134,9 @@ public class RaceRestPoint {
         LOG.debug("Updating race with id " + race.getId());
         try {
             service.updateRace(race);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
