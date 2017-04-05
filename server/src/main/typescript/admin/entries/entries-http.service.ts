@@ -52,4 +52,15 @@ export class AdminEntriesHttpService extends EntriesHttpService {
             })
             .catch((err) => Promise.reject(err));
     }
+
+    public updateEntries(entries: Entry[]): Promise<Entry[]> {
+        return this.http
+            .put(this.endPoint + '/updates',
+            JSON.stringify(entries), { headers: this.headers })
+            .toPromise()
+            .then((res: Response) => {
+                return entries;
+            })
+            .catch((err) => Promise.reject(err));
+    }
 }

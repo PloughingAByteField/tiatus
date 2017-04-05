@@ -20,12 +20,13 @@ export class AdminEntriesService extends EntriesService {
         }));
     }
 
-    public removeEntry(entry: Entry): void {
-        this.service.removeEntry(entry).then((e: Entry) => {
+    public removeEntry(entry: Entry): Promise<Entry> {
+        return new Promise((resolve) => this.service.removeEntry(entry).then((e: Entry) => {
             let index = this.entries.indexOf(entry);
             this.entries.splice(index, 1);
             this.subject.next(this.entries);
-        });
+            resolve(e);
+        }));
     }
 
     public updateEntry(entry: Entry): Promise<Entry> {
@@ -33,5 +34,11 @@ export class AdminEntriesService extends EntriesService {
             this.subject.next(this.entries);
             resolve(e);
         }));
+    }
+
+    public updateEntries(entries: Entry[]): void {
+        this.service.updateEntries(entries).then((e: Entry[]) => {
+            this.subject.next(this.entries);
+        });
     }
 }

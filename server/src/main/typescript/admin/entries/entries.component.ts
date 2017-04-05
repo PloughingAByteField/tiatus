@@ -100,7 +100,32 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   public removeEntry(entry: Entry): void {
     console.log('Remove ' + entry.id);
-    this.entriesService.removeEntry(entry);
+    let indexOfEntry: number = this.entriesForRace.indexOf(entry);
+    let updatedEntries: Entry[] = new Array<Entry>();
+    let lastNumber: number = 1;
+    if (indexOfEntry > 1) {
+      for (let i = indexOfEntry; i >= 0; i--) {
+        let prevEntry: Entry = this.entriesForRace[i];
+        if (!prevEntry.fixedNumber) {
+          lastNumber = prevEntry.number;
+          break;
+        }
+      }
+    }
+    for (let i = indexOfEntry + 1; i < this.entriesForRace.length; i++) {
+      let nextEntry: Entry = this.entriesForRace[i];
+      nextEntry.raceOrder = nextEntry.raceOrder - 1;
+      if (!nextEntry.fixedNumber) {
+        nextEntry.number = lastNumber;
+        lastNumber = lastNumber + 1;
+      }
+      updatedEntries.push(nextEntry);
+    }
+    this.entriesService.removeEntry(entry).then((e: Entry) => {
+      if (updatedEntries.length > 0) {
+        this.entriesService.updateEntries(updatedEntries);
+      }
+    });
   }
 
   public changeRace(race: Race): void {
