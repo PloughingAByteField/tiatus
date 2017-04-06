@@ -1,9 +1,13 @@
 package org.tiatus.server.websocket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.auth.UserPrincipal;
 import org.tiatus.entity.User;
+import org.tiatus.service.Message;
+import org.tiatus.service.WebSocketService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.http.HttpSession;
@@ -18,11 +22,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @ApplicationScoped
 @ServerEndpoint(value = "/ws", configurator = HttpSessionConfigurator.class)
-public class WebSocket {
-    private static final Logger LOG = LoggerFactory.getLogger(WebSocket.class);
+public class WebSocketServiceImpl implements WebSocketService {
+    private static final Logger LOG = LoggerFactory.getLogger(WebSocketServiceImpl.class);
 
     private static ConcurrentLinkedQueue<Session> clients = new ConcurrentLinkedQueue<>();
-    private static ConcurrentHashMap<Session, User> userSessions = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Session, HttpSession> httpSessions = new ConcurrentHashMap<>();
 
     @OnOpen
     public void open(Session session, EndpointConfig config) {
@@ -30,9 +34,7 @@ public class WebSocket {
         clients.add(session);
         HttpSession httpSession = (HttpSession)config.getUserProperties().get(HttpSession.class.getName());
         LOG.debug("http session " + httpSession.getId());
-        UserPrincipal p = (UserPrincipal)httpSession.getAttribute("principal");
-        User user = p.getUser();
-        userSessions.put(session, user);
+        httpSessions.put(session, httpSession);
         LOG.debug("After add Have " + clients.size() + " clients for " + this);
     }
 
@@ -61,11 +63,40 @@ public class WebSocket {
     }
 
     private void removeSession(Session session) {
-        userSessions.remove(session);
+        httpSessions.remove(session);
         clients.remove(session);
     }
 
     private User getUserForSession(Session session) {
-        return userSessions.get(session);
+        HttpSession httpSession = httpSessions.get(session);
+        if (httpSession != null) {
+            UserPrincipal p = (UserPrincipal)httpSession.getAttribute("principal");
+            return p.getUser();
+        }
+        return null;
+    }
+
+    @Override
+    public void sendMessage(Message message) {
+        LOG.debug("Send message");
+        for (Session session: clients) {
+            try {
+                session.getBasicRemote().sendText(convertToJson(message));
+            } catch (IOException e) {
+                LOG.warn("Failed to send message to client", e);
+            }
+        }
+    }
+
+    private String convertToJson(Message message) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(message);
+
+        } catch (JsonProcessingException e) {
+            LOG.warn("Failed to convert to json", e);
+        }
+
+        return null;
     }
 }

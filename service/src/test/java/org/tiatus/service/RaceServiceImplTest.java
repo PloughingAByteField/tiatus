@@ -7,6 +7,7 @@ import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RaceDaoImpl;
 import org.tiatus.entity.Race;
 
+import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class RaceServiceImplTest {
 
     @Test
     public void testConstructor() {
-        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
     }
 
     @Test
@@ -28,9 +29,13 @@ public class RaceServiceImplTest {
                 return race;
             }
         };
-        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        new MockUp<MessageSenderServiceImpl>() {
+            @Mock
+            public void sendMessage(final Message obj) throws JMSException {}
+        };
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
         Race race = new Race();
-        service.addRace(race);
+        service.addRace(race, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -41,9 +46,9 @@ public class RaceServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
         Race race = new Race();
-        service.addRace(race);
+        service.addRace(race, "id");
     }
 
     @Test
@@ -52,7 +57,7 @@ public class RaceServiceImplTest {
             @Mock
             public void removeRace(Race race) throws DaoException {}
         };
-        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
         Race race = new Race();
         service.deleteRace(race);
     }
@@ -65,7 +70,7 @@ public class RaceServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
         Race race = new Race();
         service.deleteRace(race);
     }
@@ -84,7 +89,7 @@ public class RaceServiceImplTest {
                 return races;
             }
         };
-        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl());
+        RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
         service.getRaces();
     }
 }

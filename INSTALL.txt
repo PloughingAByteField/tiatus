@@ -26,3 +26,7 @@ To create the cache for the rest calls
 /subsystem=infinispan/cache-container=RestCache:add()
 
 /subsystem=infinispan/cache-container=RestCache/local-cache=Rest:add(jndi-name=/infinispan/container/rest-cache)
+
+To create the jms queue
+
+jms-queue add --queue-address=messageQueue --entries=queue/message,java:jboss/exported/jms/queue/message

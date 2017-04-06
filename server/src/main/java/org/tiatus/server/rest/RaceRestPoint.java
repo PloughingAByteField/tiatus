@@ -11,6 +11,8 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -40,7 +42,6 @@ public class RaceRestPoint {
     @Produces("application/json")
     public Response getRaces(@Context Request request) {
         Response.ResponseBuilder builder;
-        LOG.debug("AAA");
         if (cache.get(CACHE_NAME) != null) {
             CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
             String cachedEntryETag = cacheEntry.getETag();
@@ -73,10 +74,10 @@ public class RaceRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addRace(@Context UriInfo uriInfo, Race race) {
+    public Response addRace(@Context UriInfo uriInfo, @Context HttpServletRequest request, Race race) {
         LOG.debug("Adding race " + race);
         try {
-            Race saved = service.addRace(race);
+            Race saved = service.addRace(race, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

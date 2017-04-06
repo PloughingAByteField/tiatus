@@ -8,7 +8,6 @@ import org.infinispan.AdvancedCache;
 import org.infinispan.Cache;
 import org.infinispan.CacheCollection;
 import org.infinispan.CacheSet;
-import org.infinispan.cache.impl.CacheImpl;
 import org.infinispan.commons.util.concurrent.NotifyingFuture;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.filter.KeyFilter;
@@ -28,7 +27,9 @@ import org.tiatus.role.Role;
 import org.tiatus.service.RaceServiceImpl;
 import org.tiatus.service.ServiceException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class RaceRestPointTest extends RestTestBase {
             @Mock
             void $init(Invocation invocation) { // need to supply the CDI injected object which we are mocking
                 RaceRestPoint restPoint = invocation.getInvokedInstance();
-                RaceServiceImpl service = new RaceServiceImpl(null);
+                RaceServiceImpl service = new RaceServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
                 Cache cache = new Cache() {
                     @Override
@@ -391,11 +392,24 @@ public class RaceRestPointTest extends RestTestBase {
     public void addRace() throws Exception {
         new MockUp<RaceServiceImpl>() {
             @Mock
-            public Race addRace(Race race) throws ServiceException {
+            public Race addRace(Race race, String sessionId) throws ServiceException {
                 return race;
             }
         };
 
+        HttpSession session = new MockUp<HttpSession>() {
+            @Mock
+            public String getId() {
+                return "id";
+            }
+        }.getMockInstance();
+
+        HttpServletRequest servletRequest = new MockUp<HttpServletRequest>() {
+            @Mock
+            public HttpSession getSession() {
+                return session;
+            }
+        }.getMockInstance();
         String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
 
         MockHttpRequest request = MockHttpRequest.post("races");
@@ -404,6 +418,7 @@ public class RaceRestPointTest extends RestTestBase {
         request.content(payload.getBytes());
 
         MockHttpResponse response = new MockHttpResponse();
+        dispatcher.getDefaultContextObjects().put(HttpServletRequest.class, servletRequest);
         dispatcher.invoke(request, response);
 
         Assert.assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
@@ -413,7 +428,7 @@ public class RaceRestPointTest extends RestTestBase {
     public void addRaceServiceException() throws Exception {
         new MockUp<RaceServiceImpl>() {
             @Mock
-            public Race addRace(Race race) throws ServiceException {
+            public Race addRace(Race race, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -435,7 +450,7 @@ public class RaceRestPointTest extends RestTestBase {
     public void addRaceGeneralException() throws Exception {
         new MockUp<RaceServiceImpl>() {
             @Mock
-            public Race addRace(Race race) throws Exception {
+            public Race addRace(Race race, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };

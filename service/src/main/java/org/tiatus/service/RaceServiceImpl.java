@@ -8,6 +8,7 @@ import org.tiatus.entity.Race;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import java.util.List;
 
 /**
@@ -19,14 +20,16 @@ public class RaceServiceImpl implements RaceService {
     private static final Logger LOG = LoggerFactory.getLogger(RaceServiceImpl.class);
 
     private final RaceDao dao;
+    private MessageSenderService sender;
 
     /**
      * Constructor for service
      * @param dao object injected by cdi
      */
     @Inject
-    public RaceServiceImpl(RaceDao dao) {
+    public RaceServiceImpl(RaceDao dao, MessageSenderService sender) {
        this.dao = dao;
+       this.sender = sender;
     }
 
     @Override
@@ -35,13 +38,22 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
-    public Race addRace(Race race) throws ServiceException {
+    public Race addRace(Race race, String sessionId) throws ServiceException {
         LOG.debug("Adding race " + race);
         try {
-            return dao.addRace(race);
+            Race r = dao.addRace(race);
+            Message message = new Message();
+            message.setData(r);
+            message.setType(MessageType.ADD);
+            message.setSessionId(sessionId);
+            sender.sendMessage(message);
+            return r;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception");
             throw new ServiceException(e);
         }
     }

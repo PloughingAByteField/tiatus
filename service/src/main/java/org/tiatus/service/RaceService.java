@@ -20,7 +20,7 @@ public interface RaceService {
      * @return created race
      * @throws ServiceException on error
      */
-    Race addRace(Race race) throws ServiceException;
+    Race addRace(Race race, String sessionId) throws ServiceException;
 
     /**
      * Remove a race
