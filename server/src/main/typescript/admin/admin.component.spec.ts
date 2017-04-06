@@ -7,6 +7,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
+import { WebSocketService } from '../websocket/websocket-service';
+import { WebSocketWSService } from '../websocket/websocket-ws-service';
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { AdminComponent } from './admin.component';
@@ -36,6 +38,8 @@ describe('Admin', () => {
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
                 RacesHttpService,
+                WebSocketWSService,
+                WebSocketService,
                 Title,
                 AdminComponent
             ]

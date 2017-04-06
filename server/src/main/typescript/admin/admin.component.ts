@@ -4,6 +4,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
+import { WebSocketService } from '../websocket/websocket-service';
 /*
  * App Component
  * Top Level Component
@@ -21,13 +22,13 @@ export class AdminComponent {
   public param = {value: 'world'};
 
   constructor(
-    private translate: TranslateService
+    private translate: TranslateService,
+    private ws: WebSocketService
   ) {
     translate.setDefaultLang('en');
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
     translate.use('en');
-
   }
 
 }

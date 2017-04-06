@@ -82,6 +82,9 @@ import { AdminUnassignedEventsService } from './events/unassigned-events.service
 import { RaceEventsHttpService } from '../race-events/race-events-http.service';
 import { RaceEventsService } from '../race-events/race-events.service';
 
+import { WebSocketWSService } from '../websocket/websocket-ws-service';
+import { WebSocketService } from '../websocket/websocket-service';
+
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
@@ -175,6 +178,8 @@ export function createTranslateLoader(http: Http) {
     AdminRolesHttpService,
     AdminRolesService,
     SelectedRaceService,
+    WebSocketWSService,
+    WebSocketService,
     Title
   ]
 })
