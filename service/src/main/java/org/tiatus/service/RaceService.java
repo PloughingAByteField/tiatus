@@ -27,14 +27,14 @@ public interface RaceService {
      * @param race to remove
      * @throws ServiceException on error
      */
-    void deleteRace(Race race) throws ServiceException;
+    void deleteRace(Race race, String sessionId) throws ServiceException;
 
     /**
      * Update race
      * @param race to update
      * @throws ServiceException on error
      */
-    void updateRace(Race race) throws ServiceException;
+    void updateRace(Race race, String sessionId) throws ServiceException;
 
     /**
      * Get races

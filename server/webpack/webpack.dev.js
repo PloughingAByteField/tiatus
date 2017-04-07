@@ -212,8 +212,8 @@ module: {
         // },
         "/tiatus": "http://127.0.0.1:8080"
       },
-      compress: true,
-      https: true
+      compress: false,
+      https: false
 
     },
 

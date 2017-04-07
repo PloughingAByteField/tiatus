@@ -9,8 +9,9 @@ import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-transla
 
 import { WebSocketService } from '../websocket/websocket-service';
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
-import { RacesService } from '../races/races.service';
-import { RacesHttpService } from '../races/races-http.service';
+import { AdminWebSocketService } from './websocket/websocket-service';
+import { AdminRacesService } from './races/races.service';
+import { AdminRacesHttpService } from './races/races-http.service';
 import { AdminComponent } from './admin.component';
 
 let translations: any = { TEST: 'This is a test' };
@@ -36,10 +37,11 @@ describe('Admin', () => {
             ],
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
-                RacesService,
-                RacesHttpService,
+                AdminRacesService,
+                AdminRacesHttpService,
                 WebSocketWSService,
                 WebSocketService,
+                AdminWebSocketService,
                 Title,
                 AdminComponent
             ]

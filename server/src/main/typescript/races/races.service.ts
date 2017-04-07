@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { Race } from './race.model';
+import { Race, convertObjectToRace } from './race.model';
+
+import { Message } from '../websocket/message.model';
+import { MessageType } from '../websocket/message-type.model';
 
 import { RacesHttpService } from './races-http.service';
 
@@ -32,4 +35,36 @@ export class RacesService {
             this.racesSubject.next(this.races);
         });
     }
+
+    public processRaceMessage(message: Message): void {
+        console.log('process message');
+        console.log(message);
+        if (message.type === MessageType.ADD) {
+            let race: Race = convertObjectToRace(message.data);
+            this.races.push(race);
+
+        } else if (message.type === MessageType.DELETE) {
+            let race: Race = convertObjectToRace(message.data);
+            console.log(race);
+            let deletedRace: Race = this.getRaceForId(race.id);
+            if (deletedRace !== null) {
+                let index = this.races.indexOf(deletedRace);
+                let sliced = this.races.splice(index, 1);
+            }
+
+        } else if (message.type === MessageType.UPDATE) {
+            let race: Race = convertObjectToRace(message.data);
+            let updatedRace: Race = this.getRaceForId(race.id);
+            if (updatedRace !== null) {
+                updatedRace.active = race.active;
+                updatedRace.name = race.name;
+                updatedRace.closed = race.closed;
+                updatedRace.raceOrder = race.raceOrder;
+                updatedRace.drawLocked = race.drawLocked;
+            }
+        }
+
+        this.racesSubject.next(this.races);
+    }
+
 }

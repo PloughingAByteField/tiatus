@@ -4,7 +4,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { WebSocketService } from '../websocket/websocket-service';
+import { AdminWebSocketService } from './websocket/websocket-service';
+
 /*
  * App Component
  * Top Level Component
@@ -23,7 +24,7 @@ export class AdminComponent {
 
   constructor(
     private translate: TranslateService,
-    private ws: WebSocketService
+    private ws: AdminWebSocketService
   ) {
     translate.setDefaultLang('en');
 

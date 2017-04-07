@@ -59,7 +59,7 @@ public class RaceServiceImplTest {
         };
         RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
         Race race = new Race();
-        service.deleteRace(race);
+        service.deleteRace(race, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -72,7 +72,7 @@ public class RaceServiceImplTest {
         };
         RaceServiceImpl service = new RaceServiceImpl(new RaceDaoImpl(), new MessageSenderServiceImpl());
         Race race = new Race();
-        service.deleteRace(race);
+        service.deleteRace(race, "id");
     }
 
     @Test

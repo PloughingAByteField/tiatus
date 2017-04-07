@@ -8,7 +8,7 @@ export class Race {
     public id: number;
 }
 
-export function convertObjectToRace(json: Race): Race {
+export function convertObjectToRace(json: any): Race {
     let race: Race = new Race();
     race.name = json.name;
     race.active = json.active;

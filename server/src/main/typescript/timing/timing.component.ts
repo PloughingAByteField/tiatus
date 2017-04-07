@@ -10,6 +10,8 @@ import { Observable } from 'rxjs/Observable';
 import { Race } from '../races/race.model';
 import { Position } from '../positions/position.model';
 
+import { WebSocketService } from '../websocket/websocket-service';
+
 import { TimingPositionService } from './times/timing-position.service';
 /*
  * App Component
@@ -35,7 +37,8 @@ export class TimingComponent implements OnInit {
     private translate: TranslateService,
     private titleService: Title,
     private racesService: RacesService,
-    private timingPositionService: TimingPositionService
+    private timingPositionService: TimingPositionService,
+    private ws: WebSocketService
   ) {
     translate.setDefaultLang('en');
 

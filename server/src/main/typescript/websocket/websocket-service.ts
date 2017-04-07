@@ -4,12 +4,19 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
+import { Race } from '../races/race.model';
+import { Message, convertObjectToMessage } from './message.model';
+
+import { EventsService } from '../events/events.service';
+import { RacesService } from '../races/races.service';
 import { WebSocketWSService } from './websocket-ws-service';
 
 @Injectable()
 export class WebSocketService implements OnInit {
 
-    constructor(private ws: WebSocketWSService) {
+    constructor(
+        protected racesService: RacesService,
+        protected ws: WebSocketWSService) {
         console.log('con');
         console.log(window.location.hostname);
         let url: string = window.location.host;
@@ -43,5 +50,10 @@ export class WebSocketService implements OnInit {
 
     private onMessage(data: string): void {
         console.log(data);
+        let message: Message = convertObjectToMessage(JSON.parse(data));
+        console.log(message);
+        if (message.objectType === 'Race') {
+            this.racesService.processRaceMessage(message);
+        }
     }
 }

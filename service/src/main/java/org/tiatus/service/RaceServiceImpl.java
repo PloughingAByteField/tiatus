@@ -37,15 +37,20 @@ public class RaceServiceImpl implements RaceService {
         return dao.getRaceForId(id);
     }
 
+    private Message createMessage(Race race, MessageType type, String sessionId) {
+        Message message = new Message();
+        message.setData(race);
+        message.setType(type);
+        message.setSessionId(sessionId);
+        return message;
+    }
+
     @Override
     public Race addRace(Race race, String sessionId) throws ServiceException {
         LOG.debug("Adding race " + race);
         try {
             Race r = dao.addRace(race);
-            Message message = new Message();
-            message.setData(r);
-            message.setType(MessageType.ADD);
-            message.setSessionId(sessionId);
+            Message message = createMessage(race, MessageType.ADD, sessionId);
             sender.sendMessage(message);
             return r;
 
@@ -59,23 +64,33 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
-    public void deleteRace(Race race) throws ServiceException {
+    public void deleteRace(Race race, String sessionId) throws ServiceException {
         LOG.debug("Delete race " + race.getId());
         try {
             dao.removeRace(race);
+            Message message = createMessage(race, MessageType.DELETE, sessionId);
+            sender.sendMessage(message);
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception");
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateRace(Race race) throws ServiceException {
+    public void updateRace(Race race, String sessionId) throws ServiceException {
         LOG.debug("Delete race " + race.getId());
         try {
-            dao.removeRace(race);
+            dao.updateRace(race);
+            Message message = createMessage(race, MessageType.UPDATE, sessionId);
+            sender.sendMessage(message);
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception");
             throw new ServiceException(e);
         }
     }

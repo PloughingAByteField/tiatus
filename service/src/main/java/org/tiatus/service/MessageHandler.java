@@ -2,6 +2,10 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.entity.Disqualification;
+import org.tiatus.entity.EntryPositionTime;
+import org.tiatus.entity.Penalty;
+import org.tiatus.entity.Race;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
@@ -24,10 +28,16 @@ public class MessageHandler implements MessageListener {
     private static final Logger LOG = LoggerFactory.getLogger(MessageHandler.class);
 
     private WebSocketService ws;
+    private ReportService reportService;
 
     @Inject
     public void setWebSocketService(WebSocketService service) {
         this.ws = service;
+    }
+
+    @Inject
+    public void setReportService(ReportService service) {
+        this.reportService = service;
     }
 
     @Override
@@ -36,13 +46,41 @@ public class MessageHandler implements MessageListener {
             LOG.debug("Received message " + message + " instance " + this);
             if (message instanceof ObjectMessage) {
                 Object object = ((ObjectMessage) message).getObject();
-                // ping message onto the websocket service
-                ws.sendMessage((org.tiatus.service.Message)object);
-
-                // check to see if we need to do something else -- on race close we should create result pdf
+                if (object instanceof org.tiatus.service.Message) {
+                    processMessage((org.tiatus.service.Message) object);
+                }
             }
         } catch (JMSException e) {
             LOG.warn("JMSException " + e);
         }
     }
+
+    private void processMessage(org.tiatus.service.Message message) {
+        // ping message onto the websocket service
+        ws.sendMessage(message);
+
+        Race race = null;
+        if (message.getData() instanceof Race) {
+            race = (Race)message.getData();
+
+        } else if (message.getData() instanceof EntryPositionTime) {
+            EntryPositionTime pt = (EntryPositionTime)message.getData();
+            race = pt.getEntry().getRace();
+
+        } else if (message.getData() instanceof Disqualification) {
+            Disqualification disqualification = (Disqualification)message.getData();
+            race = disqualification.getEntry().getRace();
+
+        } else if (message.getData() instanceof Penalty) {
+            Penalty penalty = (Penalty)message.getData();
+            race = penalty.getEntry().getRace();
+        }
+
+        if (race != null) {
+            if (race.isClosed()) {
+                reportService.createReportForRace(race);
+            }
+        }
+    }
+
 }

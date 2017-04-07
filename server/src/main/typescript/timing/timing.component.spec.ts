@@ -13,6 +13,9 @@ import { PositionsService } from '../positions/positions.service';
 import { TimingPositionService } from './times/timing-position.service';
 import { TimingComponent } from './timing.component';
 
+import { WebSocketService } from '../websocket/websocket-service';
+import { WebSocketWSService } from '../websocket/websocket-ws-service';
+
 describe('Timing', () => {
     let translate: any;
     let injector: Injector;
@@ -28,6 +31,8 @@ describe('Timing', () => {
                 RacesHttpService,
                 PositionsService,
                 TimingPositionService,
+                WebSocketService,
+                WebSocketWSService,
                 Title,
                 TimingComponent
             ]

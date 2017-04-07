@@ -7,6 +7,9 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
+import { WebSocketService } from '../websocket/websocket-service';
+import { WebSocketWSService } from '../websocket/websocket-ws-service';
+
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { AdjudicatorComponent } from './adjudicator.component';
@@ -24,6 +27,8 @@ describe('Adjudicator', () => {
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
                 RacesHttpService,
+                WebSocketService,
+                WebSocketWSService,
                 Title,
                 AdjudicatorComponent
             ]

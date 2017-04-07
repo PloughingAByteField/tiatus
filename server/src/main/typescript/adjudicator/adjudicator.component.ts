@@ -10,6 +10,8 @@ import { Observable } from 'rxjs/Observable';
 import { RacesService } from '../races/races.service';
 import { Race } from '../races/race.model';
 
+import { WebSocketService } from '../websocket/websocket-service';
+
 /*
  * App Component
  * Top Level Component
@@ -27,7 +29,8 @@ export class AdjudicatorComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private titleService: Title,
-    private racesService: RacesService
+    private racesService: RacesService,
+    private ws: WebSocketService
   ) {}
 
   public ngOnInit() {

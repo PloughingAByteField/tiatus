@@ -385,18 +385,6 @@ public class RaceRestPointTest extends RestTestBase {
         endPoint = new POJOResourceFactory(RaceRestPoint.class);
         dispatcher.getRegistry().addResourceFactory(endPoint);
         endPointDetails = fillEndPointDetails(endPoint);
-    }
-
-
-    @Test
-    public void addRace() throws Exception {
-        new MockUp<RaceServiceImpl>() {
-            @Mock
-            public Race addRace(Race race, String sessionId) throws ServiceException {
-                return race;
-            }
-        };
-
         HttpSession session = new MockUp<HttpSession>() {
             @Mock
             public String getId() {
@@ -410,6 +398,20 @@ public class RaceRestPointTest extends RestTestBase {
                 return session;
             }
         }.getMockInstance();
+        dispatcher.getDefaultContextObjects().put(HttpServletRequest.class, servletRequest);
+    }
+
+
+    @Test
+    public void addRace() throws Exception {
+        new MockUp<RaceServiceImpl>() {
+            @Mock
+            public Race addRace(Race race, String sessionId) throws ServiceException {
+                return race;
+            }
+        };
+
+
         String payload = "{\"id\":\"1\",\"name\":\"Race 1\"}";
 
         MockHttpRequest request = MockHttpRequest.post("races");
@@ -418,7 +420,6 @@ public class RaceRestPointTest extends RestTestBase {
         request.content(payload.getBytes());
 
         MockHttpResponse response = new MockHttpResponse();
-        dispatcher.getDefaultContextObjects().put(HttpServletRequest.class, servletRequest);
         dispatcher.invoke(request, response);
 
         Assert.assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
@@ -472,7 +473,7 @@ public class RaceRestPointTest extends RestTestBase {
     public void deleteRace() throws Exception {
         new MockUp<RaceServiceImpl>() {
             @Mock
-            public void deleteRace(Race race) throws ServiceException {
+            public void deleteRace(Race race, String sessionId) throws ServiceException {
             }
         };
 
@@ -490,7 +491,7 @@ public class RaceRestPointTest extends RestTestBase {
     public void deleteRaceServiceException() throws Exception {
         new MockUp<RaceServiceImpl>() {
             @Mock
-            public void deleteRace(Race race) throws ServiceException {
+            public void deleteRace(Race race, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -510,7 +511,7 @@ public class RaceRestPointTest extends RestTestBase {
     public void deleteRaceGeneralException() throws Exception {
         new MockUp<RaceServiceImpl>() {
             @Mock
-            public void deleteRace(Race race) throws Exception {
+            public void deleteRace(Race race, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };

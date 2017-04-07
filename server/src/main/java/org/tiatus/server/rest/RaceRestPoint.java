@@ -102,12 +102,12 @@ public class RaceRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removeRace(@PathParam("id") String id) {
+    public Response removeRace(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing race with id " + id);
         try {
             Race race = new Race();
             race.setId(Long.parseLong(id));
-            service.deleteRace(race);
+            service.deleteRace(race, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -131,10 +131,10 @@ public class RaceRestPoint {
     @RolesAllowed({Role.ADMIN, Role.ADJUDICATOR})
     @PUT
     @Produces("application/json")
-    public Response updateRace(Race race) {
+    public Response updateRace(@Context HttpServletRequest request, Race race) {
         LOG.debug("Updating race with id " + race.getId());
         try {
-            service.updateRace(race);
+            service.updateRace(race, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

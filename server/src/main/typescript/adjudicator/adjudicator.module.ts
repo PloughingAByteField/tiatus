@@ -46,6 +46,8 @@ import { DisqualificationComponent } from './disqualification';
 import { EntriesComponent } from './entries';
 import { PenaltiesComponent } from './penalties';
 import { SwapEntriesComponent } from './swap-entries';
+import { WebSocketWSService } from '../websocket/websocket-ws-service';
+import { WebSocketService } from '../websocket/websocket-service';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -123,6 +125,8 @@ export function createTranslateLoader(http: Http) {
     ClubsHttpService,
     EventsService,
     EventsHttpService,
+    WebSocketWSService,
+    WebSocketService,
     Title
   ]
 })

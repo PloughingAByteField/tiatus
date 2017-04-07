@@ -84,6 +84,7 @@ import { RaceEventsService } from '../race-events/race-events.service';
 
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
 import { WebSocketService } from '../websocket/websocket-service';
+import { AdminWebSocketService } from './websocket/websocket-service';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -180,6 +181,7 @@ export function createTranslateLoader(http: Http) {
     SelectedRaceService,
     WebSocketWSService,
     WebSocketService,
+    AdminWebSocketService,
     Title
   ]
 })
