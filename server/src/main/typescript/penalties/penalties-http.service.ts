@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Penalty, convertJsonToPenalty } from './penalty.model';
+import { Penalty, convertObjectToPenalty } from './penalty.model';
 
 @Injectable()
 export class PenaltiesHttpService {
@@ -20,7 +20,7 @@ function convertJsonToPenalties(response: Response): Penalty[] {
     let jsonPenalties: Penalty[] = response.json();
     let penalties: Penalty[] = new Array<Penalty>();
     jsonPenalties.map((json: Penalty) => {
-      penalties.push(convertJsonToPenalty(json));
+      penalties.push(convertObjectToPenalty(json));
     });
     return penalties;
 }

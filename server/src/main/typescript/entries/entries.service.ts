@@ -4,11 +4,14 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { Entry } from './entry.model';
+import { Entry, convertObjectToEntry } from './entry.model';
 import { RaceEntriesSubject } from './race-entries-subject.model';
 import { Race } from '../races/race.model';
 
 import { EntriesHttpService } from './entries-http.service';
+
+import { Message } from '../websocket/message.model';
+import { MessageType } from '../websocket/message-type.model';
 
 @Injectable()
 export class EntriesService {
@@ -66,5 +69,46 @@ export class EntriesService {
             });
             return raceEntriesSubject.subject;
         }
+    }
+
+    public processMessage(message: Message): void {
+        console.log('process message');
+        console.log(message);
+        let entry: Entry = convertObjectToEntry(message.data);
+        console.log(entry);
+        if (message.type === MessageType.ADD) {
+            this.entries.push(entry);
+
+        } else if (message.type === MessageType.DELETE) {
+            let deletedEntry: Entry = this.getEntryForId(entry.id);
+            if (deletedEntry !== null) {
+                let index = this.entries.indexOf(deletedEntry);
+                let sliced = this.entries.splice(index, 1);
+            }
+
+        } else if (message.type === MessageType.UPDATE) {
+            let updatedEntry: Entry = this.getEntryForId(entry.id);
+            if (updatedEntry !== null) {
+                updatedEntry.clubs = entry.clubs;
+                updatedEntry.crew = entry.crew;
+                updatedEntry.event = entry.event;
+                updatedEntry.fixedNumber = entry.fixedNumber;
+                updatedEntry.number = entry.number;
+                updatedEntry.race = entry.race;
+                updatedEntry.raceOrder = entry.raceOrder;
+                updatedEntry.timeOnly = entry.timeOnly;
+            }
+        }
+
+        this.subject.next(this.entries);
+    }
+
+    public getEntryForId(entryId: number): Entry {
+        for (let entry of this.entries) {
+            if (entry.id === entryId) {
+                return entry;
+            }
+        }
+        return null;
     }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Disqualification, convertJsonToDisqualification } from './disqualification.model';
+import { Disqualification, convertObjectToDisqualification } from './disqualification.model';
 
 @Injectable()
 export class DisqualificationHttpService {
@@ -22,7 +22,7 @@ function convertJsonToDisqualifications(response: Response): Disqualification[] 
     let jsonDisqualifications: Disqualification[] = response.json();
     let disqualifications: Disqualification[] = new Array<Disqualification>();
     jsonDisqualifications.map((json: Disqualification) => {
-      disqualifications.push(convertJsonToDisqualification(json));
+      disqualifications.push(convertObjectToDisqualification(json));
     });
     return disqualifications;
 }

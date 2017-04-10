@@ -12,7 +12,13 @@ import { RacesHttpService } from '../races/races-http.service';
 import { PositionsService } from '../positions/positions.service';
 import { TimingPositionService } from './times/timing-position.service';
 import { TimingComponent } from './timing.component';
-
+import { ClubsService } from '../clubs/clubs.service';
+import { ClubsHttpService } from '../clubs/clubs-http.service';
+import { EntriesService } from '../entries/entries.service';
+import { EntriesHttpService } from '../entries/entries-http.service';
+import { EventsService } from '../events/events.service';
+import { EventsHttpService } from '../events/events-http.service';
+import { PositionsHttpService } from '../positions/positions-http.service';
 import { WebSocketService } from '../websocket/websocket-service';
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
 
@@ -30,6 +36,13 @@ describe('Timing', () => {
                 RacesService,
                 RacesHttpService,
                 PositionsService,
+                PositionsHttpService,
+                ClubsService,
+                ClubsHttpService,
+                EntriesService,
+                EntriesHttpService,
+                EventsService,
+                EventsHttpService,
                 TimingPositionService,
                 WebSocketService,
                 WebSocketWSService,

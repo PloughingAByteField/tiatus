@@ -11,12 +11,12 @@ export class Penalty {
     }
 }
 
-export function convertJsonToPenalty(json: Penalty): Penalty {
+export function convertObjectToPenalty(obj: any): Penalty {
     let penalty: Penalty = new Penalty();
-    penalty.comment = json.comment;
-    penalty.note = json.note;
-    penalty.time = json.time;
-    penalty.entry = json.entry;
-    penalty.id = json.id;
+    penalty.comment = obj.comment;
+    penalty.note = obj.note;
+    penalty.time = obj.time;
+    penalty.entry = obj.entry;
+    penalty.id = obj.id;
     return penalty;
 }

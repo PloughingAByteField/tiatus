@@ -15,7 +15,7 @@ export class User {
     }
 }
 
-export function convertObjectToUser(obj: User): User {
+export function convertObjectToUser(obj: any): User {
     if (obj) {
         let user: User = new User();
         user.userName = obj.userName;

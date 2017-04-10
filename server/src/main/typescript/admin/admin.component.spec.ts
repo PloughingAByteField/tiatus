@@ -12,6 +12,22 @@ import { WebSocketWSService } from '../websocket/websocket-ws-service';
 import { AdminWebSocketService } from './websocket/websocket-service';
 import { AdminRacesService } from './races/races.service';
 import { AdminRacesHttpService } from './races/races-http.service';
+import { AdminClubsService } from './clubs/clubs.service';
+import { AdminClubsHttpService } from './clubs/clubs-http.service';
+import { AdminEntriesService } from './entries/entries.service';
+import { AdminEntriesHttpService } from './entries/entries-http.service';
+import { AdminEventsService } from './events/events.service';
+import { AdminEventsHttpService } from './events/events-http.service';
+import { AdminPositionsService } from './positions/positions.service';
+import { AdminPositionsHttpService } from './positions/positions-http.service';
+import { AdminUsersService } from './users/users.service';
+import { AdminUsersHttpService } from './users/users-http.service';
+import { RacePositionsService } from './race-positions/race-positions.service';
+import { RacePositionsHttpService } from './race-positions/race-positions-http.service';
+import { RacePositionTemplatesService }
+    from './race-position-templates/race-position-templates.service';
+import { RacePositionTemplatesHttpService }
+    from './race-position-templates/race-position-templates-http.service';
 import { AdminComponent } from './admin.component';
 
 let translations: any = { TEST: 'This is a test' };
@@ -39,6 +55,20 @@ describe('Admin', () => {
                 {provide: XHRBackend, useClass: MockBackend},
                 AdminRacesService,
                 AdminRacesHttpService,
+                AdminClubsService,
+                AdminClubsHttpService,
+                AdminEntriesService,
+                AdminEntriesHttpService,
+                AdminEventsService,
+                AdminEventsHttpService,
+                AdminPositionsService,
+                AdminPositionsHttpService,
+                AdminUsersService,
+                AdminUsersHttpService,
+                RacePositionsService,
+                RacePositionsHttpService,
+                RacePositionTemplatesService,
+                RacePositionTemplatesHttpService,
                 WebSocketWSService,
                 WebSocketService,
                 AdminWebSocketService,

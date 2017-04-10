@@ -3,7 +3,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { RacePositionTemplatesHttpService } from './race-position-templates-http.service';
-import { RacePositionTemplateEntry } from './race-position-template-entry.model';
+import { RacePositionTemplateEntry, convertObjectToRacePositionTemplateEntry }
+    from './race-position-template-entry.model';
+
+import { Message } from '../../websocket/message.model';
+import { MessageType } from '../../websocket/message-type.model';
 
 @Injectable()
 export class RacePositionTemplatesService {
@@ -62,4 +66,37 @@ export class RacePositionTemplatesService {
         this.service.updateTemplateEntry(template).then();
     }
 
+    public processTemplateMessage(message: Message): void {
+        console.log('process message');
+        let template: RacePositionTemplateEntry =
+            convertObjectToRacePositionTemplateEntry(message.data);
+        console.log(template);
+        if (message.type === MessageType.ADD) {
+            this.templates.push(template);
+        } else if (message.type === MessageType.DELETE) {
+            let deletedTemplate: RacePositionTemplateEntry = this.getTemplateForId(template.id);
+            if (deletedTemplate !== null) {
+                let index = this.templates.indexOf(deletedTemplate);
+                let sliced = this.templates.splice(index, 1);
+            }
+        } else if (message.type === MessageType.UPDATE) {
+            let updatedTemplate: RacePositionTemplateEntry = this.getTemplateForId(template.id);
+            if (updatedTemplate !== null) {
+                updatedTemplate.position = template.position;
+                updatedTemplate.positionOrder = template.positionOrder;
+                updatedTemplate.template = template.template;
+            }
+        }
+
+        this.subject.next(this.templates);
+    }
+
+    public getTemplateForId(templateId: number): RacePositionTemplateEntry {
+        for (let template of this.templates) {
+            if (template.id === templateId) {
+                return template;
+            }
+        }
+        return null;
+    }
 }

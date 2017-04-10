@@ -3,9 +3,9 @@ export class Position {
     public id: number;
 }
 
-export function convertJsonToPosition(json: Position): Position {
+export function convertObjectoPosition(obj: any): Position {
     let position: Position = new Position();
-    position.name = json.name;
-    position.id = json.id;
+    position.name = obj.name;
+    position.id = obj.id;
     return position;
 }

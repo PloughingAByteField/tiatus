@@ -4,10 +4,13 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Event } from './event.model';
+import { Event, convertObjectToEvent } from './event.model';
 import { Race } from '../races/race.model';
 
 import { EventsHttpService } from './events-http.service';
+
+import { Message } from '../websocket/message.model';
+import { MessageType } from '../websocket/message-type.model';
 
 @Injectable()
 export class EventsService implements OnDestroy {
@@ -39,5 +42,41 @@ export class EventsService implements OnDestroy {
             this.events = events;
             this.subject.next(this.events);
         });
+    }
+
+    public processMessage(message: Message): void {
+        console.log('process message');
+        console.log(message);
+        let event: Event = convertObjectToEvent(message.data);
+        console.log(event);
+        if (message.type === MessageType.ADD) {
+            this.events.push(event);
+
+        } else if (message.type === MessageType.DELETE) {
+            let deletedEvent: Event = this.getEventForId(event.id);
+            if (deletedEvent !== null) {
+                let index = this.events.indexOf(deletedEvent);
+                let sliced = this.events.splice(index, 1);
+            }
+
+        } else if (message.type === MessageType.UPDATE) {
+            let updatedEvent: Event = this.getEventForId(event.id);
+            if (updatedEvent !== null) {
+                updatedEvent.name = event.name;
+                updatedEvent.positions = event.positions;
+                updatedEvent.weighted = event.weighted;
+            }
+        }
+
+        this.subject.next(this.events);
+    }
+
+    public getEventForId(eventId: number): Event {
+        for (let event of this.events) {
+            if (event.id === eventId) {
+                return event;
+            }
+        }
+        return null;
     }
 }

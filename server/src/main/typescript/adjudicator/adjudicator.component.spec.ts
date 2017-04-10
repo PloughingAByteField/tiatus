@@ -14,6 +14,15 @@ import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { AdjudicatorComponent } from './adjudicator.component';
 
+import { ClubsService } from '../clubs/clubs.service';
+import { ClubsHttpService } from '../clubs/clubs-http.service';
+import { EntriesService } from '../entries/entries.service';
+import { EntriesHttpService } from '../entries/entries-http.service';
+import { EventsService } from '../events/events.service';
+import { EventsHttpService } from '../events/events-http.service';
+import { PositionsService } from '../positions/positions.service';
+import { PositionsHttpService } from '../positions/positions-http.service';
+
 describe('Adjudicator', () => {
     let translate: any;
     let injector: Injector;
@@ -27,6 +36,14 @@ describe('Adjudicator', () => {
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,
                 RacesHttpService,
+                ClubsService,
+                ClubsHttpService,
+                EntriesService,
+                EntriesHttpService,
+                EventsService,
+                EventsHttpService,
+                PositionsService,
+                PositionsHttpService,
                 WebSocketService,
                 WebSocketWSService,
                 Title,

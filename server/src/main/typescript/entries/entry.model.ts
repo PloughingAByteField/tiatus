@@ -11,17 +11,17 @@ export class Entry {
     public id: number;
 }
 
-export function convertObjectToEntry(json: Entry): Entry {
+export function convertObjectToEntry(obj: any): Entry {
     let entry: Entry = new Entry();
     entry.clubs = new Array<number>();
-    json.clubs.forEach((club: number) => entry.clubs.push(club));
-    entry.number = json.number;
-    entry.crew = json.crew;
-    entry.id = json.id;
-    entry.event = json.event;
-    entry.race = json.race;
-    entry.raceOrder = json.raceOrder;
-    entry.timeOnly = json.timeOnly;
-    entry.fixedNumber = json.fixedNumber;
+    obj.clubs.forEach((club: number) => entry.clubs.push(club));
+    entry.number = obj.number;
+    entry.crew = obj.crew;
+    entry.id = obj.id;
+    entry.event = obj.event;
+    entry.race = obj.race;
+    entry.raceOrder = obj.raceOrder;
+    entry.timeOnly = obj.timeOnly;
+    entry.fixedNumber = obj.fixedNumber;
     return entry;
 }

@@ -3,9 +3,9 @@ export class Club {
     public id: number;
 }
 
-export function convertObjectToClub(json: Club): Club {
+export function convertObjectToClub(obj: any): Club {
     let club: Club = new Club();
-    club.clubName = json.clubName;
-    club.id = json.id;
+    club.clubName = obj.clubName;
+    club.id = obj.id;
     return club;
 }

@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { Penalty } from '../../penalties/penalty.model';
+import { Penalty, convertObjectToPenalty } from '../../penalties/penalty.model';
 import { Entry } from '../../entries/entry.model';
 
 import { PenaltiesService } from '../../penalties/penalties.service';
 import { AdjudicatorHttpPenaltiesService } from './penalties-http.service';
+
+import { Message } from '../../websocket/message.model';
+import { MessageType } from '../../websocket/message-type.model';
 
 @Injectable()
 export class AdjudicatorPenaltiesService extends PenaltiesService {
@@ -39,5 +42,39 @@ export class AdjudicatorPenaltiesService extends PenaltiesService {
         }
 
         return penalties;
+    }
+
+    public processPenaltyMessage(message: Message): void {
+        console.log('process message');
+        let penalty: Penalty = convertObjectToPenalty(message.data);
+        console.log(penalty);
+        if (message.type === MessageType.ADD) {
+            this.penalties.push(penalty);
+        } else if (message.type === MessageType.DELETE) {
+            let deletedPenalty: Penalty = this.getPenaltyForId(penalty.id);
+            if (deletedPenalty !== null) {
+                let index = this.penalties.indexOf(deletedPenalty);
+                let sliced = this.penalties.splice(index, 1);
+            }
+        } else if (message.type === MessageType.UPDATE) {
+            let updatedPenalty: Penalty = this.getPenaltyForId(penalty.id);
+            if (updatedPenalty !== null) {
+                updatedPenalty.comment = penalty.comment;
+                updatedPenalty.entry = penalty.entry;
+                updatedPenalty.note = penalty.note;
+                updatedPenalty.time = penalty.time;
+            }
+        }
+
+        this.penaltiesSubject.next(this.penalties);
+    }
+
+    public getPenaltyForId(penaltyId: number): Penalty {
+        for (let penalty of this.penalties) {
+            if (penalty.id === penaltyId) {
+                return penalty;
+            }
+        }
+        return null;
     }
 }

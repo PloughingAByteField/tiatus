@@ -11,15 +11,15 @@ export class RacePositionTemplate {
 }
 
 export function
-    convertObjectToRacePositionTemplate(json: RacePositionTemplate): RacePositionTemplate {
-    let template: RacePositionTemplate = new RacePositionTemplate();
-    template.name = json.name;
-    template.defaultTemplate = json.defaultTemplate;
-    template.race = json.race;
-    template.id = json.id;
-    template.templates = new Array<RacePositionTemplateEntry>();
-    json.templates.map((templateJson: RacePositionTemplateEntry) => {
-      template.templates.push(convertObjectToRacePositionTemplateEntry(templateJson));
-    });
-    return template;
+    convertObjectToRacePositionTemplate(obj: any): RacePositionTemplate {
+        let template: RacePositionTemplate = new RacePositionTemplate();
+        template.name = obj.name;
+        template.defaultTemplate = obj.defaultTemplate;
+        template.race = obj.race;
+        template.id = obj.id;
+        template.templates = new Array<RacePositionTemplateEntry>();
+        obj.templates.map((templateObj: RacePositionTemplateEntry) => {
+        template.templates.push(convertObjectToRacePositionTemplateEntry(templateObj));
+        });
+        return template;
 }

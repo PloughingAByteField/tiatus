@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Position, convertJsonToPosition } from './position.model';
+import { Position, convertObjectoPosition } from './position.model';
 
 @Injectable()
 export class PositionsHttpService {
@@ -20,7 +20,7 @@ function convertJsonToPositions(response: Response): Position[] {
     let jsonPositions: Position[] = response.json();
     let positions: Position[] = new Array<Position>();
     jsonPositions.map((json: Position) => {
-      positions.push(convertJsonToPosition(json));
+      positions.push(convertObjectoPosition(json));
     });
     return positions;
 }

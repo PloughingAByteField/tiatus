@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { User } from './user.model';
+import { Message } from '../../websocket/message.model';
+import { MessageType } from '../../websocket/message-type.model';
+
+import { User, convertObjectToUser } from './user.model';
 
 import { AdminUsersHttpService } from './users-http.service';
 
@@ -69,4 +72,26 @@ export class AdminUsersService {
         });
     }
 
+    public processUserMessage(message: Message): void {
+        console.log('process message');
+        let user: User = convertObjectToUser(message.data);
+        console.log(user);
+        if (message.type === MessageType.ADD) {
+            this.users.push(user);
+        } else if (message.type === MessageType.DELETE) {
+            let deletedUser: User = this.getUserForId(user.id);
+            if (deletedUser !== null) {
+                let index = this.users.indexOf(deletedUser);
+                let sliced = this.users.splice(index, 1);
+            }
+        } else if (message.type === MessageType.UPDATE) {
+            let updatedUser: User = this.getUserForId(user.id);
+            if (updatedUser !== null) {
+                updatedUser.userName = user.userName;
+                updatedUser.roles = user.roles;
+            }
+        }
+
+        this.subject.next(this.users);
+    }
 }

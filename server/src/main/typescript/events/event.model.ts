@@ -7,13 +7,13 @@ export class Event {
     public id: number;
 }
 
-export function convertObjectToEvent(json: Event): Event {
+export function convertObjectToEvent(obj: any): Event {
     let event: Event = new Event();
-    event.name = json.name;
-    event.weighted = json.weighted;
-    event.id = json.id;
+    event.name = obj.name;
+    event.weighted = obj.weighted;
+    event.id = obj.id;
     event.positions = new Array<EventPosition>();
-    json.positions.map((eventPosition: EventPosition) => {
+    obj.positions.map((eventPosition: EventPosition) => {
       event.positions.push(convertObjectToEventPosition(eventPosition));
     });
     return event;

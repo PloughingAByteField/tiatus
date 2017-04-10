@@ -4,10 +4,12 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Race } from '../races/race.model';
 import { Message, convertObjectToMessage } from './message.model';
 
+import { ClubsService } from '../clubs/clubs.service';
+import { EntriesService } from '../entries/entries.service';
 import { EventsService } from '../events/events.service';
+import { PositionsService } from '../positions/positions.service';
 import { RacesService } from '../races/races.service';
 import { WebSocketWSService } from './websocket-ws-service';
 
@@ -15,10 +17,12 @@ import { WebSocketWSService } from './websocket-ws-service';
 export class WebSocketService implements OnInit {
 
     constructor(
+        protected clubsService: ClubsService,
+        protected entriesService: EntriesService,
+        protected eventsService: EventsService,
+        protected positionsService: PositionsService,
         protected racesService: RacesService,
         protected ws: WebSocketWSService) {
-        console.log('con');
-        console.log(window.location.hostname);
         let url: string = window.location.host;
         if ('production' !== ENV) {
             // hard code port as webpack dev server cannot proxy websockets
@@ -48,12 +52,20 @@ export class WebSocketService implements OnInit {
         }
     }
 
-    private onMessage(data: string): void {
+    protected onMessage(data: string): void {
         console.log(data);
         let message: Message = convertObjectToMessage(JSON.parse(data));
         console.log(message);
         if (message.objectType === 'Race') {
-            this.racesService.processRaceMessage(message);
+            this.racesService.processMessage(message);
+        } else if (message.objectType === 'Position') {
+            this.positionsService.processMessage(message);
+        } else if (message.objectType === 'Club') {
+            this.clubsService.processMessage(message);
+        } else if (message.objectType === 'Entry') {
+            this.entriesService.processMessage(message);
+        } else if (message.objectType === 'Event') {
+            this.eventsService.processMessage(message);
         }
     }
 }

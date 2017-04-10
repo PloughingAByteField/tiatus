@@ -6,12 +6,12 @@ export class RacePositionTemplateEntry {
 }
 
 export function
-    convertObjectToRacePositionTemplateEntry(json: RacePositionTemplateEntry):
+    convertObjectToRacePositionTemplateEntry(obj: any):
         RacePositionTemplateEntry {
     let template: RacePositionTemplateEntry = new RacePositionTemplateEntry();
-    template.positionOrder = json.positionOrder;
-    template.position = json.position;
-    template.template = json.template;
-    template.id = json.id;
+    template.positionOrder = obj.positionOrder;
+    template.position = obj.position;
+    template.template = obj.template;
+    template.id = obj.id;
     return template;
 }

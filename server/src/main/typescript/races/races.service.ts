@@ -36,16 +36,15 @@ export class RacesService {
         });
     }
 
-    public processRaceMessage(message: Message): void {
+    public processMessage(message: Message): void {
         console.log('process message');
         console.log(message);
+        let race: Race = convertObjectToRace(message.data);
+        console.log(race);
         if (message.type === MessageType.ADD) {
-            let race: Race = convertObjectToRace(message.data);
             this.races.push(race);
 
         } else if (message.type === MessageType.DELETE) {
-            let race: Race = convertObjectToRace(message.data);
-            console.log(race);
             let deletedRace: Race = this.getRaceForId(race.id);
             if (deletedRace !== null) {
                 let index = this.races.indexOf(deletedRace);
@@ -53,7 +52,6 @@ export class RacesService {
             }
 
         } else if (message.type === MessageType.UPDATE) {
-            let race: Race = convertObjectToRace(message.data);
             let updatedRace: Race = this.getRaceForId(race.id);
             if (updatedRace !== null) {
                 updatedRace.active = race.active;
