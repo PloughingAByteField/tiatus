@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.auth.TiatusSecurityContext;
 import org.tiatus.auth.UserPrincipal;
 import org.tiatus.entity.User;
+import org.tiatus.role.Role;
 import org.tiatus.service.Message;
 import org.tiatus.service.WebSocketService;
 
@@ -32,13 +34,28 @@ public class WebSocketServiceImpl implements WebSocketService {
         LOG.debug("Socket open " + session.getId());
         HttpSession httpSession = (HttpSession)config.getUserProperties().get(HttpSession.class.getName());
         LOG.debug("http session " + httpSession.getId());
-        clients.put(session, httpSession);
-        LOG.debug("After add Have " + clients.size() + " clients for " + this);
+
+        // are we an authenticated session
+        UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
+        if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADMIN)
+            || TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADJUDICATOR)
+            || TiatusSecurityContext.isUserInRole(userPrincipal, Role.TIMING)) {
+            clients.put(session, httpSession);
+            LOG.debug("After add Have " + clients.size() + " clients for " + this);
+        } else {
+            LOG.warn("Got non logged in websocket attempt");
+            close(session);
+        }
     }
 
     @OnClose
     public void close(Session session) {
         LOG.debug("Socket close");
+        try {
+            session.close();
+        } catch (IOException e) {
+            LOG.warn("Failed to close socket", e);
+        }
         removeSession(session);
         LOG.debug("After error Have " + clients.size() + " clients for " + this);
     }
