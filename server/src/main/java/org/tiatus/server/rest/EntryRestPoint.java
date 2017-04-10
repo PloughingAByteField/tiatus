@@ -1,5 +1,6 @@
 package org.tiatus.server.rest;
 
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Entry;
@@ -13,9 +14,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
@@ -27,9 +26,11 @@ import java.util.List;
 public class EntryRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntryRestPoint.class);
+    private static final String CACHE_NAME = "entries";
 
     private EntryService service;
     private RaceService raceService;
+    private Cache cache;
 
     /**
      * Get entries
@@ -38,19 +39,63 @@ public class EntryRestPoint {
     @PermitAll
     @GET
     @Produces("application/json")
-    public Response getEntries() {
-        List<Entry> entries = service.getEntries();
-        return Response.ok(entries).build();
+    public Response getEntries(@Context Request request) {
+        Response.ResponseBuilder builder;
+        if (cache.get(CACHE_NAME) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<Entry> entries = (List<Entry>)cacheEntry.getEntry();
+                builder = Response.ok(entries).tag(cachedEntryETag);
+            }
+        } else {
+            List<Entry> entries = service.getEntries();
+            String hashCode = Integer.toString(entries.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, entries);
+            cache.put(CACHE_NAME, newCacheEntry);
+            builder = Response.ok(entries).tag(etag);
+        }
+
+        return builder.build();
     }
 
     @PermitAll
     @GET
     @Path("race/{raceId}")
     @Produces("application/json")
-    public Response getEntriesForRace(@PathParam("raceId") String raceId) {
+    public Response getEntriesForRace(@PathParam("raceId") String raceId, @Context Request request) {
         Race race = raceService.getRaceForId(Long.parseLong(raceId));
-        List<Entry> entries = service.getEntriesForRace(race);
-        return Response.ok(entries).build();
+        if (race == null) {
+            LOG.warn("Failed to get race for supplied id");
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Response.ResponseBuilder builder;
+        String cacheName = CACHE_NAME + "_" + raceId;
+        if (cache.get(cacheName) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<Entry> entries = (List<Entry>)cacheEntry.getEntry();
+                builder = Response.ok(entries).tag(cachedEntryETag);
+            }
+        } else {
+            List<Entry> entries = service.getEntriesForRace(race);
+            String hashCode = Integer.toString(entries.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, entries);
+            cache.put(cacheName, newCacheEntry);
+            builder = Response.ok(entries).tag(etag);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -67,6 +112,9 @@ public class EntryRestPoint {
         LOG.debug("Adding entry " + entry);
         try {
             Entry saved = service.addEntry(entry);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
@@ -94,6 +142,9 @@ public class EntryRestPoint {
             Entry entry = new Entry();
             entry.setId(Long.parseLong(id));
             service.deleteEntry(entry);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -121,9 +172,13 @@ public class EntryRestPoint {
         try {
             Entry existing = service.getEntryForId(Long.parseLong(id));
             if (existing == null) {
+                LOG.warn("Failed to get entry for supplied id");
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
             service.updateEntry(entry);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -150,6 +205,9 @@ public class EntryRestPoint {
         LOG.debug("Updating " + entries.size() + " entries");
         try {
             service.updateEntries(entries);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -171,6 +229,9 @@ public class EntryRestPoint {
             Entry from = service.getEntryForId(Long.parseLong(fromId));
             Entry to = service.getEntryForId(Long.parseLong(toId));
             service.swapEntryNumbers(from, to);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.ok().build();
 
         } catch (ServiceException e) {
@@ -192,5 +253,10 @@ public class EntryRestPoint {
     @Inject
     public void setRaceService(RaceService service) {
         this.raceService = service;
+    }
+
+    @Inject
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 }

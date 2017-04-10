@@ -28,10 +28,9 @@ public class RaceRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
     private static final String CACHE_NAME = "races";
-    private RaceService service;
 
-    @Inject
-    Cache cache;
+    private RaceService service;
+    private Cache cache;
 
     /**
      * Get races
@@ -154,5 +153,10 @@ public class RaceRestPoint {
     // sonar want constructor injection which jaxrs does not support
     public void setService(RaceService service) {
         this.service = service;
+    }
+
+    @Inject
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 }

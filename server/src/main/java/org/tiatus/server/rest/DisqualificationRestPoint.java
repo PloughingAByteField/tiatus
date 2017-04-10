@@ -1,5 +1,6 @@
 package org.tiatus.server.rest;
 
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Disqualification;
@@ -11,9 +12,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
@@ -25,8 +24,10 @@ import java.util.List;
 public class DisqualificationRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(DisqualificationRestPoint.class);
+    private static final String CACHE_NAME = "disqualifications";
 
     private DisqualificationService service;
+    private Cache cache;
 
     /**
      * Get disqualifications
@@ -35,9 +36,28 @@ public class DisqualificationRestPoint {
     @PermitAll
     @GET
     @Produces("application/json")
-    public Response getDisqualifications() {
-        List<Disqualification> disqualifications = service.getDisqualifications();
-        return Response.ok(disqualifications).build();
+    public Response getDisqualifications(@Context Request request) {
+        Response.ResponseBuilder builder;
+        if (cache.get(CACHE_NAME) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<Disqualification> disqualifications = (List<Disqualification>)cacheEntry.getEntry();
+                builder = Response.ok(disqualifications).tag(cachedEntryETag);
+            }
+        } else {
+            List<Disqualification> disqualifications = service.getDisqualifications();
+            String hashCode = Integer.toString(disqualifications.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, disqualifications);
+            cache.put(CACHE_NAME, newCacheEntry);
+            builder = Response.ok(disqualifications).tag(etag);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -54,6 +74,9 @@ public class DisqualificationRestPoint {
         LOG.debug("Adding disqualification " + disqualification);
         try {
             Disqualification saved = service.addDisqualification(disqualification);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
@@ -81,6 +104,9 @@ public class DisqualificationRestPoint {
             Disqualification disqualification = new Disqualification();
             disqualification.setId(Long.parseLong(id));
             service.deleteDisqualification(disqualification);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -105,7 +131,9 @@ public class DisqualificationRestPoint {
         LOG.debug("updating disqualification");
         try {
             service.updateDisqualification(disqualification);
-
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -121,5 +149,10 @@ public class DisqualificationRestPoint {
     @Inject
     public void setService(DisqualificationService service) {
         this.service = service;
+    }
+
+    @Inject
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 }

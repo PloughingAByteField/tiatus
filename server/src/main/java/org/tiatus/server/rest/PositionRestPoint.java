@@ -1,5 +1,6 @@
 package org.tiatus.server.rest;
 
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Position;
@@ -11,9 +12,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
@@ -25,8 +24,10 @@ import java.util.List;
 public class PositionRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(PositionRestPoint.class);
+    private static final String CACHE_NAME = "positions";
 
     private PositionService service;
+    private Cache cache;
 
     /**
      * Get positions
@@ -35,9 +36,28 @@ public class PositionRestPoint {
     @PermitAll
     @GET
     @Produces("application/json")
-    public Response getPositions() {
-        List<Position> positions = service.getPositions();
-        return Response.ok(positions).build();
+    public Response getPositions(@Context Request request) {
+        Response.ResponseBuilder builder;
+        if (cache.get(CACHE_NAME) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<Position> positions = (List<Position>)cacheEntry.getEntry();
+                builder = Response.ok(positions).tag(cachedEntryETag);
+            }
+        } else {
+            List<Position> positions = service.getPositions();
+            String hashCode = Integer.toString(positions.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, positions);
+            cache.put(CACHE_NAME, newCacheEntry);
+            builder = Response.ok(positions).tag(etag);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -54,6 +74,9 @@ public class PositionRestPoint {
         LOG.debug("Adding position " + position);
         try {
             Position saved = service.addPosition(position);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
@@ -81,6 +104,9 @@ public class PositionRestPoint {
             Position position = new Position();
             position.setId(Long.parseLong(id));
             service.removePosition(position);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -105,6 +131,9 @@ public class PositionRestPoint {
         LOG.debug("Updating position with id " + position.getId());
         try {
             service.updatePosition(position);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -121,5 +150,10 @@ public class PositionRestPoint {
     // sonar want constructor injection which jaxrs does not support
     public void setService(PositionService service) {
         this.service = service;
+    }
+
+    @Inject
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 }

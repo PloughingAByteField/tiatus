@@ -4,6 +4,7 @@ import mockit.Deencapsulation;
 import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockUp;
+import org.infinispan.Cache;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -19,7 +20,9 @@ import org.tiatus.role.Role;
 import org.tiatus.service.EventServiceImpl;
 import org.tiatus.service.ServiceException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,8 @@ public class EventRestPointTest extends RestTestBase {
                 EventRestPoint restPoint = invocation.getInvokedInstance();
                 EventServiceImpl service = new EventServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
+                Cache cache = new StubbedCache();
+                Deencapsulation.setField(restPoint, "cache", cache);
             }
         };
 
@@ -45,6 +50,20 @@ public class EventRestPointTest extends RestTestBase {
         endPoint = new POJOResourceFactory(EventRestPoint.class);
         dispatcher.getRegistry().addResourceFactory(endPoint);
         endPointDetails = fillEndPointDetails(endPoint);
+        HttpSession session = new MockUp<HttpSession>() {
+            @Mock
+            public String getId() {
+                return "id";
+            }
+        }.getMockInstance();
+
+        HttpServletRequest servletRequest = new MockUp<HttpServletRequest>() {
+            @Mock
+            public HttpSession getSession() {
+                return session;
+            }
+        }.getMockInstance();
+        dispatcher.getDefaultContextObjects().put(HttpServletRequest.class, servletRequest);
     }
 
     @Test

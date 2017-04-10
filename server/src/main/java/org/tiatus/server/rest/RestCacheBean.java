@@ -11,7 +11,6 @@ import org.infinispan.Cache;
 @ApplicationScoped
 public class RestCacheBean {
     @Produces
-//    @Resource(lookup="java:jboss/infinispan/container/rest-cache")
     @Resource(name="RestCache")
     private Cache cache;
 

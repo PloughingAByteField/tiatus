@@ -1,5 +1,6 @@
 package org.tiatus.server.rest;
 
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Penalty;
@@ -11,9 +12,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
@@ -25,8 +24,10 @@ import java.util.List;
 public class PenaltyRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(PenaltyRestPoint.class);
+    private static final String CACHE_NAME = "penalties";
 
     private PenaltyService service;
+    private Cache cache;
 
     /**
      * Get penalties
@@ -35,9 +36,28 @@ public class PenaltyRestPoint {
     @PermitAll
     @GET
     @Produces("application/json")
-    public Response getPenalties() {
-        List<Penalty> penalties = service.getPenalties();
-        return Response.ok(penalties).build();
+    public Response getPenalties(@Context Request request) {
+        Response.ResponseBuilder builder;
+        if (cache.get(CACHE_NAME) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<Penalty> penalties = (List<Penalty>)cacheEntry.getEntry();
+                builder = Response.ok(penalties).tag(cachedEntryETag);
+            }
+        } else {
+            List<Penalty> penalties = service.getPenalties();
+            String hashCode = Integer.toString(penalties.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, penalties);
+            cache.put(CACHE_NAME, newCacheEntry);
+            builder = Response.ok(penalties).tag(etag);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -54,6 +74,9 @@ public class PenaltyRestPoint {
         LOG.debug("Adding penalty " + penalty);
         try {
             Penalty saved = service.addPenalty(penalty);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
@@ -81,6 +104,9 @@ public class PenaltyRestPoint {
             Penalty penalty = new Penalty();
             penalty.setId(Long.parseLong(id));
             service.deletePenalty(penalty);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -105,7 +131,9 @@ public class PenaltyRestPoint {
         LOG.debug("updating penalty");
         try {
             service.updatePenalty(penalty);
-
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -121,5 +149,10 @@ public class PenaltyRestPoint {
     @Inject
     public void setService(PenaltyService service) {
         this.service = service;
+    }
+
+    @Inject
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 }

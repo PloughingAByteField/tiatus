@@ -1,5 +1,6 @@
 package org.tiatus.server.rest;
 
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Club;
@@ -11,9 +12,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
@@ -26,7 +25,9 @@ public class ClubRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClubRestPoint.class);
 
+    private static final String CACHE_NAME = "clubs";
     private ClubService service;
+    private Cache cache;
 
     /**
      * Get clubs
@@ -35,9 +36,28 @@ public class ClubRestPoint {
     @PermitAll
     @GET
     @Produces("application/json")
-    public Response getClubs() {
-        List<Club> clubs = service.getClubs();
-        return Response.ok(clubs).build();
+    public Response getClubs(@Context Request request) {
+        Response.ResponseBuilder builder;
+        if (cache.get(CACHE_NAME) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<Club> clubs = (List<Club>)cacheEntry.getEntry();
+                builder = Response.ok(clubs).tag(cachedEntryETag);
+            }
+        } else {
+            List<Club> clubs = service.getClubs();
+            String hashCode = Integer.toString(clubs.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, clubs);
+            cache.put(CACHE_NAME, newCacheEntry);
+            builder = Response.ok(clubs).tag(etag);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -54,6 +74,9 @@ public class ClubRestPoint {
         LOG.debug("Adding club " + club);
         try {
             Club saved = service.addClub(club);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
@@ -81,6 +104,9 @@ public class ClubRestPoint {
             Club club = new Club();
             club.setId(Long.parseLong(id));
             service.deleteClub(club);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -105,7 +131,9 @@ public class ClubRestPoint {
         LOG.debug("updating club");
         try {
             service.updateClub(club);
-
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -119,8 +147,12 @@ public class ClubRestPoint {
     }
 
     @Inject
-    // sonar want constructor injection which jaxrs does not support
     public void setService(ClubService service) {
         this.service = service;
+    }
+
+    @Inject
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 }

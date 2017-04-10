@@ -1,5 +1,6 @@
 package org.tiatus.server.rest;
 
+import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Position;
@@ -13,9 +14,7 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
@@ -27,9 +26,11 @@ import java.util.List;
 public class RacePositionTemplateRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateRestPoint.class);
+    private static final String CACHE_NAME = "racePositionTemplates";
 
     private RacePositionTemplateService service;
     private PositionService positionService;
+    private Cache cache;
 
     /**
      * Get templates restricted to Admin users
@@ -38,9 +39,28 @@ public class RacePositionTemplateRestPoint {
     @RolesAllowed({Role.ADMIN})
     @GET
     @Produces("application/json")
-    public Response getTemplates() {
-        List<RacePositionTemplate> templates = service.getRacePositionTemplates();
-        return Response.ok(templates).build();
+    public Response getTemplates(@Context Request request) {
+        Response.ResponseBuilder builder;
+        if (cache.get(CACHE_NAME) != null) {
+            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
+            String cachedEntryETag = cacheEntry.getETag();
+
+            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
+            builder = request.evaluatePreconditions(cachedRacesETag);
+            if (builder == null) {
+                List<RacePositionTemplate> templates = (List<RacePositionTemplate>)cacheEntry.getEntry();
+                builder = Response.ok(templates).tag(cachedEntryETag);
+            }
+        } else {
+            List<RacePositionTemplate> templates = service.getRacePositionTemplates();
+            String hashCode = Integer.toString(templates.hashCode());
+            EntityTag etag = new EntityTag(hashCode, false);
+            CacheEntry newCacheEntry = new CacheEntry(hashCode, templates);
+            cache.put(CACHE_NAME, newCacheEntry);
+            builder = Response.ok(templates).tag(etag);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -57,6 +77,9 @@ public class RacePositionTemplateRestPoint {
         LOG.debug("Adding template " + template.getName());
         try {
             RacePositionTemplate saved = service.addRacePositionTemplate(template);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
@@ -83,6 +106,9 @@ public class RacePositionTemplateRestPoint {
         try {
             RacePositionTemplate template = service.getTemplateForId(Long.parseLong(id));
             service.deleteRacePositionTemplate(template);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -110,6 +136,9 @@ public class RacePositionTemplateRestPoint {
             templateToUpdate.setName(template.getName());
             templateToUpdate.setDefaultTemplate(template.getDefaultTemplate());
             service.updateRacePositionTemplate(templateToUpdate);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -141,6 +170,9 @@ public class RacePositionTemplateRestPoint {
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
             entry.setTemplate(template);
             RacePositionTemplateEntry saved = service.addTemplateEntry(entry);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
@@ -172,6 +204,9 @@ public class RacePositionTemplateRestPoint {
             RacePositionTemplate template = service.getTemplateForId(Long.parseLong(templateId));
             entry.setTemplate(template);
             service.deleteTemplateEntry(entry);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -201,6 +236,9 @@ public class RacePositionTemplateRestPoint {
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
             entry.setTemplate(template);
             service.updateTemplateEntry(entry);
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -222,5 +260,10 @@ public class RacePositionTemplateRestPoint {
     @Inject
     public void setPositionService(PositionService service) {
         this.positionService = service;
+    }
+
+    @Inject
+    public void setCache(Cache cache) {
+        this.cache = cache;
     }
 }
