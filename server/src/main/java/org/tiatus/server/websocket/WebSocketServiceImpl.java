@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.auth.TiatusSecurityContext;
 import org.tiatus.auth.UserPrincipal;
-import org.tiatus.entity.User;
+import org.tiatus.entity.*;
 import org.tiatus.role.Role;
 import org.tiatus.service.Message;
 import org.tiatus.service.WebSocketService;
@@ -81,27 +81,46 @@ public class WebSocketServiceImpl implements WebSocketService {
         clients.remove(session);
     }
 
-    private User getUserForSession(Session session) {
-        HttpSession httpSession = clients.get(session);
-        if (httpSession != null) {
-            UserPrincipal p = (UserPrincipal)httpSession.getAttribute("principal");
-            return p.getUser();
-        }
-        return null;
-    }
-
     @Override
     public void sendMessage(Message message) {
         LOG.debug("Send message");
         for (Session session: clients.keySet()) {
-            if (! message.getSessionId().equals(clients.get(session).getId())) {
+            HttpSession httpSession = clients.get(session);
+            if (! message.getSessionId().equals(httpSession.getId())) {
                 try {
-                    session.getBasicRemote().sendText(convertToJson(message));
+                    if (shouldSendMessageToClient(message, httpSession)) {
+                        session.getBasicRemote().sendText(convertToJson(message));
+                    }
                 } catch (IOException e) {
                     LOG.warn("Failed to send message to client", e);
                 }
             }
         }
+    }
+
+    private boolean shouldSendMessageToClient(Message message, HttpSession httpSession) {
+        if (message.getData() instanceof Race
+                || message.getData() instanceof Position
+                || message.getData() instanceof Club
+                || message.getData() instanceof Event
+                || message.getData() instanceof Entry) {
+            return true;
+        }
+
+        UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
+        if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADMIN)) {
+            if (message.getData() instanceof User) {
+                return true;
+            }
+        }
+
+        if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADJUDICATOR)) {
+            if (message.getData() instanceof Disqualification || message.getData() instanceof Penalty) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private String convertToJson(Message message) {
