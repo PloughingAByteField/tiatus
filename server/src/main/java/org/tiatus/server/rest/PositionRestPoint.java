@@ -11,6 +11,7 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -70,10 +71,10 @@ public class PositionRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addPosition(@Context UriInfo uriInfo, Position position) {
+    public Response addPosition(@Context UriInfo uriInfo, @Context HttpServletRequest request, Position position) {
         LOG.debug("Adding position " + position);
         try {
-            Position saved = service.addPosition(position);
+            Position saved = service.addPosition(position, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -98,12 +99,12 @@ public class PositionRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removePosition(@PathParam("id") String id) {
+    public Response removePosition(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing position with id " + id);
         try {
             Position position = new Position();
             position.setId(Long.parseLong(id));
-            service.removePosition(position);
+            service.removePosition(position, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -127,10 +128,10 @@ public class PositionRestPoint {
     @RolesAllowed({Role.ADMIN})
     @PUT
     @Produces("application/json")
-    public Response updatePosition(Position position) {
+    public Response updatePosition(Position position, @Context HttpServletRequest request) {
         LOG.debug("Updating position with id " + position.getId());
         try {
-            service.updatePosition(position);
+            service.updatePosition(position, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

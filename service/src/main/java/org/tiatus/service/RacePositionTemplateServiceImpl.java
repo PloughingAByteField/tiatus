@@ -8,6 +8,7 @@ import org.tiatus.entity.RacePositionTemplate;
 import org.tiatus.entity.RacePositionTemplateEntry;
 
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import java.util.List;
 
 /**
@@ -17,46 +18,66 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateServiceImpl.class);
 
     private final RacePositionTemplateDao dao;
+    private MessageSenderService sender;
 
     /**
      * Constructor for service
      * @param dao object injected by cdi
      */
     @Inject
-    public RacePositionTemplateServiceImpl(RacePositionTemplateDao dao) {
+    public RacePositionTemplateServiceImpl(RacePositionTemplateDao dao, MessageSenderService sender) {
         this.dao = dao;
+        this.sender = sender;
     }
 
     @Override
-    public RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template) throws ServiceException {
+    public RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException {
         LOG.debug("Adding template " + template.getName());
         try {
-            return dao.addRacePositionTemplate(template);
+            RacePositionTemplate rpt = dao.addRacePositionTemplate(template);
+            Message message = Message.createMessage(rpt, MessageType.ADD, sessionId);
+            sender.sendMessage(message);
+            return rpt;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void deleteRacePositionTemplate(RacePositionTemplate template) throws ServiceException {
+    public void deleteRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException {
         LOG.debug("Delete template " + template.getId());
         try {
             dao.deleteRacePositionTemplate(template);
+            Message message = Message.createMessage(template, MessageType.DELETE, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateRacePositionTemplate(RacePositionTemplate template) throws ServiceException {
+    public void updateRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException {
         LOG.debug("Update template " + template.getId());
         try {
             dao.updateRacePositionTemplate(template);
+            Message message = Message.createMessage(template, MessageType.UPDATE, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
@@ -72,31 +93,50 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
     }
 
     @Override
-    public RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException {
+    public RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException {
         try {
-            return dao.addTemplateEntry(entry);
+            RacePositionTemplateEntry rpte = dao.addTemplateEntry(entry);
+            Message message = Message.createMessage(rpte, MessageType.ADD, sessionId);
+            sender.sendMessage(message);
+            return rpte;
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void deleteTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException {
+    public void deleteTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException {
         try {
             dao.deleteTemplateEntry(entry);
+            Message message = Message.createMessage(entry, MessageType.DELETE, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException {
+    public void updateTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException {
         try {
             dao.updateTemplateEntry(entry);
+            Message message = Message.createMessage(entry, MessageType.UPDATE, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }

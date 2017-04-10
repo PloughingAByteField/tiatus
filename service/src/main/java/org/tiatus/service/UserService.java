@@ -20,28 +20,28 @@ public interface UserService {
      * @param user to add
      * @throws ServiceException on error
      */
-    User addAdminUser(User user) throws ServiceException;
+    User addAdminUser(User user, String sessionId) throws ServiceException;
 
     /**
      * Add a user to the system
      * @param user to add
      * @throws ServiceException on error
      */
-    User addUser(User user) throws ServiceException;
+    User addUser(User user, String sessionId) throws ServiceException;
 
     /**
      * Remove a user
      * @param user to remove
      * @throws ServiceException on error
      */
-    void deleteUser(User user) throws ServiceException;
+    void deleteUser(User user, String sessionId) throws ServiceException;
 
     /**
      * update user
      * @param user to update
      * @throws ServiceException on error
      */
-    void updateUser(User user) throws ServiceException;
+    void updateUser(User user, String sessionId) throws ServiceException;
 
     /**
      * Get user for supplied username and password

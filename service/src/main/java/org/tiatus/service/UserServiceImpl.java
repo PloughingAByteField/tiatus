@@ -9,6 +9,7 @@ import org.tiatus.entity.User;
 import org.tiatus.entity.UserRole;
 
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,14 +22,16 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private UserDao dao = null;
+    private MessageSenderService sender;
 
     /**
      * Constructor for service
      * @param dao is injected by CDI
      */
     @Inject
-    public UserServiceImpl(UserDao dao) {
+    public UserServiceImpl(UserDao dao, MessageSenderService sender) {
         this.dao = dao;
+        this.sender = sender;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addAdminUser(User user) throws ServiceException {
+    public User addAdminUser(User user, String sessionId) throws ServiceException {
         // do we have an existing user
         if (hasAdminUser()) {
             LOG.warn("Already have an admin user ");
@@ -63,35 +66,51 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) throws ServiceException {
+    public User addUser(User user, String sessionId) throws ServiceException {
         LOG.debug("Adding user " + user.getUserName());
         try {
-            return dao.addUser(user);
+            User daoUser = dao.addUser(user);
+            Message message = Message.createMessage(daoUser, MessageType.ADD, sessionId);
+            sender.sendMessage(message);
+            return daoUser;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void deleteUser(User user) throws ServiceException {
+    public void deleteUser(User user, String sessionId) throws ServiceException {
         try {
             dao.deleteUser(user);
+            Message message = Message.createMessage(user, MessageType.DELETE, sessionId);
+            sender.sendMessage(message);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateUser(User user) throws ServiceException {
+    public void updateUser(User user, String sessionId) throws ServiceException {
         try {
             dao.updateUser(user);
+            Message message = Message.createMessage(user, MessageType.UPDATE, sessionId);
+            sender.sendMessage(message);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }

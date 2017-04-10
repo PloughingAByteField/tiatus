@@ -82,7 +82,7 @@ public class TimeRestPoint {
     @POST
     @Path("position/{positionId}/entry/{entryId}")
     @Produces("application/json")
-    public Response saveTime(@PathParam("positionId") String positionId, @PathParam("entryId") String entryId, EntryPositionTime entryPositionTime, @Context UriInfo uriInfo) {
+    public Response saveTime(@PathParam("positionId") String positionId, @PathParam("entryId") String entryId, EntryPositionTime entryPositionTime, @Context UriInfo uriInfo, @Context HttpServletRequest request) {
         try {
             Position position = positionService.getPositionForId(Long.parseLong(positionId));
             entryPositionTime.setPosition(position);
@@ -95,7 +95,7 @@ public class TimeRestPoint {
 
             LOG.debug("have entry " + entryPositionTime.getEntry().getId());
             LOG.debug("Have time " + entryPositionTime.getTime());
-            service.createTime(entryPositionTime);
+            service.createTime(entryPositionTime, request.getSession().getId());
             wipeCache(position, entry);
             return Response.created(URI.create(uriInfo.getPath())).build();
 
@@ -119,7 +119,7 @@ public class TimeRestPoint {
             entryPositionTime.setPosition(position);
             Entry entry = entryService.getEntryForId(Long.parseLong(entryId));
             entryPositionTime.setEntry(entry);
-            service.updateTime(entryPositionTime);
+            service.updateTime(entryPositionTime, request.getSession().getId());
             wipeCache(position, entry);
             return Response.ok().build();
 

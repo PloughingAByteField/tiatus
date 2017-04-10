@@ -15,6 +15,7 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -45,7 +46,7 @@ public class EventRestPoint {
     @RolesAllowed({Role.ADMIN})
     @Consumes("application/json")
     @Produces("application/json")
-    public Response createEvent(Event event, @Context UriInfo uriInfo) {
+    public Response createEvent(Event event, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
         // call service which will place in db and queue
         LOG.debug("Adding event name " + event.getName());
         try {
@@ -53,7 +54,7 @@ public class EventRestPoint {
                 Position position = positionService.getPositionForId(eventPosition.getPositionId());
                 eventPosition.setPosition(position);
             }
-            Event saved = service.addEvent(event);
+            Event saved = service.addEvent(event, request.getSession().getId());
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
@@ -75,7 +76,7 @@ public class EventRestPoint {
     @RolesAllowed({Role.ADMIN})
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateEvent(Event event, @Context UriInfo uriInfo) {
+    public Response updateEvent(Event event, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
         // call service which will place in db and queue
         LOG.debug("Updating event of id " + event.getId());
         try {
@@ -83,7 +84,7 @@ public class EventRestPoint {
                 Position position = positionService.getPositionForId(eventPosition.getPositionId());
                 eventPosition.setPosition(position);
             }
-            Event saved = service.updateEvent(event);
+            Event saved = service.updateEvent(event, request.getSession().getId());
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
@@ -105,13 +106,13 @@ public class EventRestPoint {
     @RolesAllowed({Role.ADMIN})
     @Path("{id}")
     @Produces("application/json")
-    public Response removeEvent(@PathParam("id") Long id) {
+    public Response removeEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
         // call service which will place in db and queue
         LOG.debug("Got event id " + id);
         Event event = new Event();
         event.setId(id);
         try {
-            service.deleteEvent(event);
+            service.deleteEvent(event, request.getSession().getId());
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -132,13 +133,13 @@ public class EventRestPoint {
     @RolesAllowed({Role.ADMIN})
     @Path("unassigned/{id}")
     @Produces("application/json")
-    public Response removeUnassignedEvent(@PathParam("id") Long id) {
+    public Response removeUnassignedEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
         // call service which will place in db and queue
         LOG.debug("Got event id " + id);
         Event event = new Event();
         event.setId(id);
         try {
-            service.deleteEvent(event);
+            service.deleteEvent(event, request.getSession().getId());
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -223,12 +224,12 @@ public class EventRestPoint {
     @RolesAllowed({Role.ADMIN})
     @Path("assigned/{id}")
     @Produces("application/json")
-    public Response removeAssignedEvent(@PathParam("id") Long id) {
+    public Response removeAssignedEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
         LOG.debug("Got raceEvent id " + id);
         RaceEvent raceEvent = new RaceEvent();
         raceEvent.setId(id);
         try {
-            service.deleteRaceEvent(raceEvent);
+            service.deleteRaceEvent(raceEvent, request.getSession().getId());
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -251,9 +252,9 @@ public class EventRestPoint {
     @Path("assigned")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addAssignedEvent(RaceEvent raceEvent, @Context UriInfo uriInfo) {
+    public Response addAssignedEvent(RaceEvent raceEvent, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
         try {
-            RaceEvent saved = service.addRaceEvent(raceEvent);
+            RaceEvent saved = service.addRaceEvent(raceEvent, request.getSession().getId());
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
@@ -274,10 +275,10 @@ public class EventRestPoint {
     @RolesAllowed({Role.ADMIN})
     @Path("assigned")
     @Produces("application/json")
-    public Response updateAssignedEvents(List<RaceEvent> raceEvents) {
+    public Response updateAssignedEvents(List<RaceEvent> raceEvents, @Context HttpServletRequest request) {
         LOG.debug("updating assigned events");
         try {
-            service.updateRaceEvents(raceEvents);
+            service.updateRaceEvents(raceEvents, request.getSession().getId());
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
             throw new InternalServerErrorException();

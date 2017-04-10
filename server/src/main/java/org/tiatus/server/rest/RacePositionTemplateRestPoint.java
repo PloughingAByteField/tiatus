@@ -13,6 +13,7 @@ import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -73,10 +74,10 @@ public class RacePositionTemplateRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addTemplate(@Context UriInfo uriInfo, RacePositionTemplate template) {
+    public Response addTemplate(@Context UriInfo uriInfo, RacePositionTemplate template, @Context HttpServletRequest request) {
         LOG.debug("Adding template " + template.getName());
         try {
-            RacePositionTemplate saved = service.addRacePositionTemplate(template);
+            RacePositionTemplate saved = service.addRacePositionTemplate(template, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -101,11 +102,11 @@ public class RacePositionTemplateRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response deleteTemplate(@PathParam("id") String id) {
+    public Response deleteTemplate(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing template with id " + id);
         try {
             RacePositionTemplate template = service.getTemplateForId(Long.parseLong(id));
-            service.deleteRacePositionTemplate(template);
+            service.deleteRacePositionTemplate(template, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -129,13 +130,13 @@ public class RacePositionTemplateRestPoint {
     @RolesAllowed({Role.ADMIN})
     @PUT
     @Produces("application/json")
-    public Response updateTemplate(RacePositionTemplate template) {
+    public Response updateTemplate(RacePositionTemplate template, @Context HttpServletRequest request) {
         LOG.debug("Updating template with id " + template.getId());
         try {
             RacePositionTemplate templateToUpdate = service.getTemplateForId(template.getId());
             templateToUpdate.setName(template.getName());
             templateToUpdate.setDefaultTemplate(template.getDefaultTemplate());
-            service.updateRacePositionTemplate(templateToUpdate);
+            service.updateRacePositionTemplate(templateToUpdate, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -162,14 +163,14 @@ public class RacePositionTemplateRestPoint {
     @Path("entry")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addTemplateEntry(@Context UriInfo uriInfo, RacePositionTemplateEntry entry) {
+    public Response addTemplateEntry(@Context UriInfo uriInfo, RacePositionTemplateEntry entry, @Context HttpServletRequest request) {
         LOG.debug("Adding template " + entry.getTemplate().getId() + " at position " + entry.getPosition().getId());
         try {
             Position position = positionService.getPositionForId(entry.getPositionId());
             entry.setPosition(position);
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
             entry.setTemplate(template);
-            RacePositionTemplateEntry saved = service.addTemplateEntry(entry);
+            RacePositionTemplateEntry saved = service.addTemplateEntry(entry, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -195,7 +196,7 @@ public class RacePositionTemplateRestPoint {
     @DELETE
     @Path("entry/template/{templateId}/position/{positionId}")
     @Produces("application/json")
-    public Response deleteTemplateEntry(@PathParam("templateId") String templateId, @PathParam("positionId") String positionId) {
+    public Response deleteTemplateEntry(@PathParam("templateId") String templateId, @PathParam("positionId") String positionId, @Context HttpServletRequest request) {
         LOG.debug("Removing template with templateId " + templateId + " and positionId " + positionId);
         try {
             RacePositionTemplateEntry entry = new RacePositionTemplateEntry();
@@ -203,7 +204,7 @@ public class RacePositionTemplateRestPoint {
             entry.setPosition(position);
             RacePositionTemplate template = service.getTemplateForId(Long.parseLong(templateId));
             entry.setTemplate(template);
-            service.deleteTemplateEntry(entry);
+            service.deleteTemplateEntry(entry, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -228,14 +229,14 @@ public class RacePositionTemplateRestPoint {
     @PUT
     @Path("entry")
     @Produces("application/json")
-    public Response updateTemplateEntry(RacePositionTemplateEntry entry) {
+    public Response updateTemplateEntry(RacePositionTemplateEntry entry, @Context HttpServletRequest request) {
         LOG.debug("Updating template entry with id " + entry.getTemplate().getId());
         try {
             Position position = positionService.getPositionForId(entry.getPositionId());
             entry.setPosition(position);
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
             entry.setTemplate(template);
-            service.updateTemplateEntry(entry);
+            service.updateTemplateEntry(entry, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

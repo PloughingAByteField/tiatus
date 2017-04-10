@@ -14,21 +14,21 @@ public interface PenaltyService {
      * @return created penalty
      * @throws ServiceException on error
      */
-    Penalty addPenalty(Penalty penalty) throws ServiceException;
+    Penalty addPenalty(Penalty penalty, String sessionId) throws ServiceException;
 
     /**
      * Remove a penalty
      * @param penalty to remove
      * @throws ServiceException on error
      */
-    void deletePenalty(Penalty penalty) throws ServiceException;
+    void deletePenalty(Penalty penalty, String sessionId) throws ServiceException;
 
     /**
      * update penalty
      * @param penalty to update
      * @throws ServiceException on error
      */
-    void updatePenalty(Penalty penalty) throws ServiceException;
+    void updatePenalty(Penalty penalty, String sessionId) throws ServiceException;
 
     /**
      * Get penalties

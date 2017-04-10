@@ -12,6 +12,7 @@ import org.tiatus.entity.Event;
 import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 
+import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class EventServiceImplTest {
 
     @Test
     public void testConstructor() {
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
     }
 
     @Test
@@ -33,9 +34,13 @@ public class EventServiceImplTest {
                 return event;
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        new MockUp<MessageSenderServiceImpl>() {
+            @Mock
+            public void sendMessage(final Message obj) throws JMSException {}
+        };
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         Event event = new Event();
-        service.addEvent(event);
+        service.addEvent(event, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -46,9 +51,9 @@ public class EventServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         Event event = new Event();
-        service.addEvent(event);
+        service.addEvent(event, "id");
     }
 
     @Test
@@ -59,9 +64,9 @@ public class EventServiceImplTest {
                 return event;
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         RaceEvent event = new RaceEvent();
-        service.addRaceEvent(event);
+        service.addRaceEvent(event, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -72,9 +77,9 @@ public class EventServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         RaceEvent event = new RaceEvent();
-        service.addRaceEvent(event);
+        service.addRaceEvent(event, "id");
     }
 
     @Test
@@ -83,9 +88,9 @@ public class EventServiceImplTest {
             @Mock
             public void deleteEvent(Event event) throws DaoException {}
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         Event event = new Event();
-        service.deleteEvent(event);
+        service.deleteEvent(event, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -96,9 +101,9 @@ public class EventServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         Event event = new Event();
-        service.deleteEvent(event);
+        service.deleteEvent(event, "id");
     }
 
     @Test
@@ -107,9 +112,9 @@ public class EventServiceImplTest {
             @Mock
             public void deleteRaceEvent(RaceEvent event) throws DaoException {}
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         RaceEvent event = new RaceEvent();
-        service.deleteRaceEvent(event);
+        service.deleteRaceEvent(event, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -120,9 +125,9 @@ public class EventServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         RaceEvent event = new RaceEvent();
-        service.deleteRaceEvent(event);
+        service.deleteRaceEvent(event, "id");
     }
 
     @Test
@@ -138,7 +143,7 @@ public class EventServiceImplTest {
                 return events;
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         List<Event> events = service.getEvents();
         Assert.assertFalse(events.isEmpty());
         Assert.assertEquals(events.get(0).getName(), "Event 1");
@@ -157,7 +162,7 @@ public class EventServiceImplTest {
                 return events;
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         List<Event> events = service.getUnassignedEvents();
         Assert.assertFalse(events.isEmpty());
         Assert.assertEquals(events.get(0).getName(), "Event 1");
@@ -182,7 +187,7 @@ public class EventServiceImplTest {
                 return raceEvents;
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
         List<RaceEvent> events = service.getAssignedEvents();
         Assert.assertFalse(events.isEmpty());
         Assert.assertEquals(events.get(0).getEvent().getName(), "Event 1");
@@ -216,9 +221,9 @@ public class EventServiceImplTest {
                 return getRaceEvents().get(0);
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
 
-        service.updateRaceEvents(getRaceEvents());
+        service.updateRaceEvents(getRaceEvents(), "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -234,8 +239,8 @@ public class EventServiceImplTest {
                 return getRaceEvents().get(0);
             }
         };
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl());
+        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
 
-        service.updateRaceEvents(getRaceEvents());
+        service.updateRaceEvents(getRaceEvents(), "id");
     }
 }

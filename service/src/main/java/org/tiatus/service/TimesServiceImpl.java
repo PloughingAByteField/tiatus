@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -18,28 +19,42 @@ public class TimesServiceImpl implements TimesService {
     private static final Logger LOG = LoggerFactory.getLogger(TimesServiceImpl.class);
 
     private final EntryPositionTimeDao dao;
+    private MessageSenderService sender;
 
     @Inject
-    public TimesServiceImpl(EntryPositionTimeDao dao) {
+    public TimesServiceImpl(EntryPositionTimeDao dao, MessageSenderService sender) {
         this.dao = dao;
+        this.sender = sender;
     }
 
     @Override
-    public void createTime(EntryPositionTime entryPositionTime) throws ServiceException {
+    public void createTime(EntryPositionTime entryPositionTime, String sessionId) throws ServiceException {
         try {
             dao.createTime(entryPositionTime);
+            Message message = Message.createMessage(entryPositionTime, MessageType.ADD, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateTime(EntryPositionTime entryPositionTime) throws ServiceException {
+    public void updateTime(EntryPositionTime entryPositionTime, String sessionId) throws ServiceException {
         try {
             dao.updateTime(entryPositionTime);
+            Message message = Message.createMessage(entryPositionTime, MessageType.UPDATE, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }

@@ -9,6 +9,7 @@ import org.tiatus.entity.Race;
 
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
+import javax.jms.JMSException;
 import java.util.List;
 
 /**
@@ -20,14 +21,16 @@ public class EntryServiceImpl implements EntryService {
     private static final Logger LOG = LoggerFactory.getLogger(EntryServiceImpl.class);
 
     private final EntryDao dao;
+    private MessageSenderService sender;
 
     /**
      * Constructor for service
      * @param dao object injected by cdi
      */
     @Inject
-    public EntryServiceImpl(EntryDao dao) {
+    public EntryServiceImpl(EntryDao dao, MessageSenderService sender) {
        this.dao = dao;
+        this.sender = sender;
     }
 
     @Override
@@ -36,47 +39,71 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public Entry addEntry(Entry entry) throws ServiceException {
+    public Entry addEntry(Entry entry, String sessionId) throws ServiceException {
         LOG.debug("Adding entry " + entry);
         try {
-            return dao.addEntry(entry);
+            Entry daoEntry = dao.addEntry(entry);
+            Message message = Message.createMessage(daoEntry, MessageType.ADD, sessionId);
+            sender.sendMessage(message);
+            return daoEntry;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void deleteEntry(Entry entry) throws ServiceException {
+    public void deleteEntry(Entry entry, String sessionId) throws ServiceException {
         LOG.debug("Delete entry " + entry.getId());
         try {
             dao.removeEntry(entry);
+            Message message = Message.createMessage(entry, MessageType.DELETE, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateEntry(Entry entry) throws ServiceException {
+    public void updateEntry(Entry entry, String sessionId) throws ServiceException {
         LOG.debug("Update entry " + entry.getId());
         try {
             dao.updateEntry(entry);
+            Message message = Message.createMessage(entry, MessageType.UPDATE, sessionId);
+            sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }
 
     @Override
-    public void updateEntries(List<Entry> entries) throws ServiceException {
+    public void updateEntries(List<Entry> entries, String sessionId) throws ServiceException {
         for (Entry entry: entries) {
             LOG.debug("Update entry " + entry.getId());
             try {
                 dao.updateEntry(entry);
+                Message message = Message.createMessage(entries, MessageType.UPDATE, sessionId);
+                sender.sendMessage(message);
+
             } catch (DaoException e) {
                 LOG.warn("Got dao exception");
+                throw new ServiceException(e);
+            } catch (JMSException e) {
+                LOG.warn("Got jms exception", e);
                 throw new ServiceException(e);
             }
         }
@@ -93,7 +120,7 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public void swapEntryNumbers(Entry from, Entry to) throws ServiceException {
+    public void swapEntryNumbers(Entry from, Entry to, String sessionId) throws ServiceException {
         if (from.getRace().getId() != to.getRace().getId()) {
             String warning = "Entries are not in the same race";
             LOG.warn(warning);
@@ -109,9 +136,16 @@ public class EntryServiceImpl implements EntryService {
         // do swap in single transaction updating any position times in the process
         try {
             dao.swapEntryNumbers(from, to);
+            Message messageFrom = Message.createMessage(from, MessageType.UPDATE, sessionId);
+            sender.sendMessage(messageFrom);
+            Message messageTo = Message.createMessage(to, MessageType.UPDATE, sessionId);
+            sender.sendMessage(messageTo);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
+            throw new ServiceException(e);
+        } catch (JMSException e) {
+            LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
         }
     }

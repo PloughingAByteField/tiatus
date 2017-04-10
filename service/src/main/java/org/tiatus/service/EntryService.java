@@ -21,28 +21,28 @@ public interface EntryService {
      * @return created entry
      * @throws ServiceException on error
      */
-    Entry addEntry(Entry entry) throws ServiceException;
+    Entry addEntry(Entry entry, String sessionId) throws ServiceException;
 
     /**
      * Remove a entry
      * @param entry to remove
      * @throws ServiceException on error
      */
-    void deleteEntry(Entry entry) throws ServiceException;
+    void deleteEntry(Entry entry, String sessionId) throws ServiceException;
 
     /**
      * Update a entry
      * @param entry to update
      * @throws ServiceException on error
      */
-    void updateEntry(Entry entry) throws ServiceException;
+    void updateEntry(Entry entry, String sessionId) throws ServiceException;
 
     /**
      * Update list of entries
      * @param entries to update
      * @throws ServiceException on error
      */
-    void updateEntries(List<Entry> entries) throws ServiceException;
+    void updateEntries(List<Entry> entries, String sessionId) throws ServiceException;
 
     /**
      * Get entries
@@ -62,5 +62,5 @@ public interface EntryService {
      * @param to entry to switch number to
      * @throws ServiceException on error
      */
-    void swapEntryNumbers(Entry from, Entry to) throws ServiceException;
+    void swapEntryNumbers(Entry from, Entry to, String sessionId) throws ServiceException;
 }

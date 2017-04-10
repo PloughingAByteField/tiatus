@@ -39,7 +39,7 @@ public class EventRestPointTest extends RestTestBase {
             @Mock
             void $init(Invocation invocation) { // need to supply the CDI injected object which we are mocking
                 EventRestPoint restPoint = invocation.getInvokedInstance();
-                EventServiceImpl service = new EventServiceImpl(null, null);
+                EventServiceImpl service = new EventServiceImpl(null, null, null);
                 Deencapsulation.setField(restPoint, "service", service);
                 Cache cache = new StubbedCache();
                 Deencapsulation.setField(restPoint, "cache", cache);
@@ -70,7 +70,7 @@ public class EventRestPointTest extends RestTestBase {
     public void addEvent() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public Event addEvent(Event event) throws ServiceException {
+            public Event addEvent(Event event, String sessionId) throws ServiceException {
                 return event;
             }
         };
@@ -92,7 +92,7 @@ public class EventRestPointTest extends RestTestBase {
     public void addEventServiceException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public Event addEvent(Event event) throws ServiceException {
+            public Event addEvent(Event event, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -114,7 +114,7 @@ public class EventRestPointTest extends RestTestBase {
     public void addEventGeneralException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public Event addEvent(Event event) throws Exception {
+            public Event addEvent(Event event, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -136,7 +136,7 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteEvent() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteEvent(Event event) throws ServiceException {
+            public void deleteEvent(Event event, String sessionId) throws ServiceException {
             }
         };
 
@@ -154,7 +154,7 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteEventServiceException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteEvent(Event event) throws ServiceException {
+            public void deleteEvent(Event event, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -174,7 +174,7 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteEventGeneralException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteEvent(Event event) throws Exception {
+            public void deleteEvent(Event event, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -262,7 +262,7 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteAssignedEvent() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteRaceEvent(RaceEvent raceEvent) {
+            public void deleteRaceEvent(RaceEvent raceEvent, String sessionId) {
             }
         };
 
@@ -276,7 +276,7 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteAssignedEventGeneralException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteRaceEvent(RaceEvent raceEvent) throws Exception {
+            public void deleteRaceEvent(RaceEvent raceEvent, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -291,7 +291,7 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteAssignedEventServiceException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void deleteRaceEvent(RaceEvent raceEvent) throws ServiceException {
+            public void deleteRaceEvent(RaceEvent raceEvent, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -307,7 +307,7 @@ public class EventRestPointTest extends RestTestBase {
     public void addAssignedEvent() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException {
+            public RaceEvent addRaceEvent(RaceEvent raceEvent, String sessionId) throws ServiceException {
                 return raceEvent;
             }
         };
@@ -329,7 +329,7 @@ public class EventRestPointTest extends RestTestBase {
     public void addAssignedEventGeneralException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public RaceEvent addRaceEvent(RaceEvent raceEvent) throws Exception {
+            public RaceEvent addRaceEvent(RaceEvent raceEvent, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -351,7 +351,7 @@ public class EventRestPointTest extends RestTestBase {
     public void addAssignedEventServiceException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException {
+            public RaceEvent addRaceEvent(RaceEvent raceEvent, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -373,7 +373,7 @@ public class EventRestPointTest extends RestTestBase {
     public void updateAssignedEvents() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void updateRaceEvents(List<RaceEvent> raceEvents) throws ServiceException {
+            public void updateRaceEvents(List<RaceEvent> raceEvents, String sessionId) throws ServiceException {
             }
         };
 
@@ -394,7 +394,7 @@ public class EventRestPointTest extends RestTestBase {
     public void updateAssignedEventsServiceException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void updateRaceEvents(List<RaceEvent> raceEvents) throws ServiceException {
+            public void updateRaceEvents(List<RaceEvent> raceEvents, String sessionId) throws ServiceException {
                 throw new ServiceException("error");
             }
         };
@@ -416,7 +416,7 @@ public class EventRestPointTest extends RestTestBase {
     public void updateAssignedEventsGeneralException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
-            public void updateRaceEvents(List<RaceEvent> raceEvents) throws Exception {
+            public void updateRaceEvents(List<RaceEvent> raceEvents, String sessionId) throws Exception {
                 throw new Exception();
             }
         };

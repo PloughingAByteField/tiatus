@@ -11,6 +11,7 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -70,10 +71,10 @@ public class ClubRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addClub(@Context UriInfo uriInfo, Club club) {
+    public Response addClub(@Context UriInfo uriInfo, @Context HttpServletRequest request, Club club) {
         LOG.debug("Adding club " + club);
         try {
-            Club saved = service.addClub(club);
+            Club saved = service.addClub(club, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -98,12 +99,12 @@ public class ClubRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removeClub(@PathParam("id") String id) {
+    public Response removeClub(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing club with id " + id);
         try {
             Club club = new Club();
             club.setId(Long.parseLong(id));
-            service.deleteClub(club);
+            service.deleteClub(club, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -127,10 +128,10 @@ public class ClubRestPoint {
     @PUT
     @RolesAllowed({Role.ADMIN})
     @Produces("application/json")
-    public Response updateClub(Club club) {
+    public Response updateClub(@Context HttpServletRequest request, Club club) {
         LOG.debug("updating club");
         try {
-            service.updateClub(club);
+            service.updateClub(club, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

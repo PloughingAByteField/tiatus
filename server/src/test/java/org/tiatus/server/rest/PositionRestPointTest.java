@@ -36,7 +36,7 @@ public class PositionRestPointTest extends RestTestBase {
             @Mock
             void $init(Invocation invocation) { // need to supply the CDI injected object which we are mocking
                 PositionRestPoint restPoint = invocation.getInvokedInstance();
-                PositionServiceImpl service = new PositionServiceImpl(null);
+                PositionServiceImpl service = new PositionServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
                 Cache cache = new StubbedCache();
                 Deencapsulation.setField(restPoint, "cache", cache);
@@ -68,7 +68,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void addPosition() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public Position addPosition(Position position) throws ServiceException {
+            public Position addPosition(Position position, String sessionId) throws ServiceException {
                 return position;
             }
         };
@@ -90,7 +90,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void addPositionServiceException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public Position addPosition(Position position) throws ServiceException {
+            public Position addPosition(Position position, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -112,7 +112,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void addPositionGeneralException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public Position addPosition(Position position) throws Exception {
+            public Position addPosition(Position position, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -134,7 +134,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void deletePosition() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public void removePosition(Position position) throws ServiceException {
+            public void removePosition(Position position, String sessionId) throws ServiceException {
             }
         };
 
@@ -152,7 +152,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void deletePositionServiceException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public void removePosition(Position position) throws ServiceException {
+            public void removePosition(Position position, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -172,7 +172,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void deletePositionGeneralException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public void removePosition(Position position) throws Exception {
+            public void removePosition(Position position, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -191,7 +191,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void updatePosition() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public void updatePosition(Position position) throws ServiceException {
+            public void updatePosition(Position position, String sessionId) throws ServiceException {
             }
         };
 
@@ -211,7 +211,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void updatePositionServiceException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public void updatePosition(Position position) throws ServiceException {
+            public void updatePosition(Position position, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -233,7 +233,7 @@ public class PositionRestPointTest extends RestTestBase {
     public void updatePositionGeneralException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
-            public void updatePosition(Position position) throws Exception {
+            public void updatePosition(Position position, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };

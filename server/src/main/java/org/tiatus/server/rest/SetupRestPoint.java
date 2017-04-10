@@ -51,11 +51,11 @@ public class SetupRestPoint {
     @Path("user")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addUser(@Context UriInfo uriInfo, User user) {
+    public Response addUser(@Context UriInfo uriInfo, @Context HttpServletRequest request, User user) {
         checkIfSetupHasAlreadyRun();
         LOG.debug("Adding admin user " + user);
         try {
-            service.addAdminUser(user);
+            service.addAdminUser(user, request.getSession().getId());
             return Response.created(URI.create(uriInfo.getPath() + "/"+ user.getId())).entity(user).build();
 
         } catch (ServiceException e) {

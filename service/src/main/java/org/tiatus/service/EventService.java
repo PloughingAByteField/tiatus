@@ -15,7 +15,7 @@ public interface EventService {
      * @return created Event
      * @throws ServiceException on error
      */
-    Event addEvent(Event event) throws ServiceException;
+    Event addEvent(Event event, String sessionId) throws ServiceException;
 
     /**
      * Add RaceEvent
@@ -23,7 +23,7 @@ public interface EventService {
      * @return created RaceEvent
      * @throws ServiceException on error
      */
-    RaceEvent addRaceEvent(RaceEvent raceEvent) throws ServiceException;
+    RaceEvent addRaceEvent(RaceEvent raceEvent, String sessionId) throws ServiceException;
 
     /**
      * Update Event
@@ -31,28 +31,28 @@ public interface EventService {
      * @return updated Event
      * @throws ServiceException on error
      */
-    Event updateEvent(Event event) throws ServiceException;
+    Event updateEvent(Event event, String sessionId) throws ServiceException;
 
     /**
      * Remove a Event
      * @param event Event to remove
      * @throws ServiceException on error
      */
-    void deleteEvent(Event event) throws ServiceException;
+    void deleteEvent(Event event, String sessionId) throws ServiceException;
 
     /**
      * Remove a RaceEvent
      * @param raceEvent RaceEvent to remove
      * @throws ServiceException on error
      */
-    void deleteRaceEvent(RaceEvent raceEvent) throws ServiceException;
+    void deleteRaceEvent(RaceEvent raceEvent, String sessionId) throws ServiceException;
 
     /**
      * Update a RaceEvents
      * @param raceEvents List of RaceEvents to update
      * @throws ServiceException on error
      */
-    void updateRaceEvents(List<RaceEvent> raceEvents) throws ServiceException;
+    void updateRaceEvents(List<RaceEvent> raceEvents, String sessionId) throws ServiceException;
 
     /**
      * Get events

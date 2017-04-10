@@ -42,4 +42,12 @@ public class Message implements Serializable {
     public String getObjectType() {
         return objectType;
     }
+
+    public static Message createMessage(Object race, MessageType type, String sessionId) {
+        Message message = new Message();
+        message.setData(race);
+        message.setType(type);
+        message.setSessionId(sessionId);
+        return message;
+    }
 }

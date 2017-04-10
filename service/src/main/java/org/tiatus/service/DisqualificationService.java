@@ -14,21 +14,21 @@ public interface DisqualificationService {
      * @return created disqualification
      * @throws ServiceException on error
      */
-    Disqualification addDisqualification(Disqualification disqualification) throws ServiceException;
+    Disqualification addDisqualification(Disqualification disqualification, String sessionId) throws ServiceException;
 
     /**
      * Remove a disqualification
      * @param disqualification to remove
      * @throws ServiceException on error
      */
-    void deleteDisqualification(Disqualification disqualification) throws ServiceException;
+    void deleteDisqualification(Disqualification disqualification, String sessionId) throws ServiceException;
 
     /**
      * update disqualification
      * @param disqualification to update
      * @throws ServiceException on error
      */
-    void updateDisqualification(Disqualification disqualification) throws ServiceException;
+    void updateDisqualification(Disqualification disqualification, String sessionId) throws ServiceException;
 
     /**
      * Get disqualifications

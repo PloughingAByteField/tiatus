@@ -109,7 +109,9 @@ public class WebSocketServiceImpl implements WebSocketService {
 
         UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
         if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADMIN)) {
-            if (message.getData() instanceof User) {
+            if (message.getData() instanceof User
+                    || message.getData() instanceof RacePositionTemplate
+                    || message.getData() instanceof RacePositionTemplateEntry) {
                 return true;
             }
         }

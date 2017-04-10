@@ -7,6 +7,7 @@ import org.tiatus.dao.DaoException;
 import org.tiatus.dao.ClubDaoImpl;
 import org.tiatus.entity.Club;
 
+import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class ClubServiceImplTest {
 
     @Test
     public void testConstructor() {
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
     }
 
     @Test
@@ -28,9 +29,13 @@ public class ClubServiceImplTest {
                 return club;
             }
         };
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        new MockUp<MessageSenderServiceImpl>() {
+            @Mock
+            public void sendMessage(final Message obj) throws JMSException {}
+        };
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
         Club club = new Club();
-        service.addClub(club);
+        service.addClub(club, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -41,9 +46,9 @@ public class ClubServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
         Club club = new Club();
-        service.addClub(club);
+        service.addClub(club, "id");
     }
 
     @Test
@@ -52,9 +57,9 @@ public class ClubServiceImplTest {
             @Mock
             public void removeClub(Club club) throws DaoException {}
         };
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
         Club club = new Club();
-        service.deleteClub(club);
+        service.deleteClub(club, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -65,9 +70,9 @@ public class ClubServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
         Club club = new Club();
-        service.deleteClub(club);
+        service.deleteClub(club, "id");
     }
 
     @Test
@@ -76,9 +81,9 @@ public class ClubServiceImplTest {
             @Mock
             public void updateClub(Club club) throws DaoException {}
         };
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
         Club club = new Club();
-        service.updateClub(club);
+        service.updateClub(club, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -89,9 +94,9 @@ public class ClubServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
         Club club = new Club();
-        service.updateClub(club);
+        service.updateClub(club, "id");
     }
 
     @Test
@@ -107,7 +112,7 @@ public class ClubServiceImplTest {
                 return clubs;
             }
         };
-        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl());
+        ClubServiceImpl service = new ClubServiceImpl(new ClubDaoImpl(), new MessageSenderServiceImpl());
         service.getClubs();
     }
 

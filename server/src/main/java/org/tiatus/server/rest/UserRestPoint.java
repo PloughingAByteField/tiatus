@@ -10,6 +10,7 @@ import org.tiatus.service.UserService;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -117,10 +118,10 @@ public class UserRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addUser(@Context UriInfo uriInfo, User user) {
+    public Response addUser(@Context UriInfo uriInfo, User user, @Context HttpServletRequest request) {
         LOG.debug("Adding user " + user);
         try {
-            User saved = service.addUser(user);
+            User saved = service.addUser(user, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -145,12 +146,12 @@ public class UserRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removeUser(@PathParam("id") String id) {
+    public Response removeUser(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing user with id " + id);
         try {
             User user = new User();
             user.setId(Long.parseLong(id));
-            service.deleteUser(user);
+            service.deleteUser(user, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -174,10 +175,10 @@ public class UserRestPoint {
     @PUT
     @RolesAllowed({Role.ADMIN})
     @Produces("application/json")
-    public Response updateUser(User user) {
+    public Response updateUser(User user, @Context HttpServletRequest request) {
         LOG.debug("updating user");
         try {
-            service.updateUser(user);
+            service.updateUser(user, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

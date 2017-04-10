@@ -11,6 +11,7 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -70,10 +71,10 @@ public class PenaltyRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addPenalty(@Context UriInfo uriInfo, Penalty penalty) {
+    public Response addPenalty(@Context UriInfo uriInfo, @Context HttpServletRequest request, Penalty penalty) {
         LOG.debug("Adding penalty " + penalty);
         try {
-            Penalty saved = service.addPenalty(penalty);
+            Penalty saved = service.addPenalty(penalty, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -98,12 +99,12 @@ public class PenaltyRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removePenalty(@PathParam("id") String id) {
+    public Response removePenalty(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing penalty with id " + id);
         try {
             Penalty penalty = new Penalty();
             penalty.setId(Long.parseLong(id));
-            service.deletePenalty(penalty);
+            service.deletePenalty(penalty, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -127,10 +128,10 @@ public class PenaltyRestPoint {
     @PUT
     @RolesAllowed({Role.ADJUDICATOR})
     @Produces("application/json")
-    public Response updatePenalty(Penalty penalty) {
+    public Response updatePenalty(Penalty penalty, @Context HttpServletRequest request) {
         LOG.debug("updating penalty");
         try {
-            service.updatePenalty(penalty);
+            service.updatePenalty(penalty, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

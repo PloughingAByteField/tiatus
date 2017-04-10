@@ -13,6 +13,7 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -108,10 +109,10 @@ public class EntryRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addEntry(@Context UriInfo uriInfo, Entry entry) {
+    public Response addEntry(@Context UriInfo uriInfo, @Context HttpServletRequest request, Entry entry) {
         LOG.debug("Adding entry " + entry);
         try {
-            Entry saved = service.addEntry(entry);
+            Entry saved = service.addEntry(entry, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -136,12 +137,12 @@ public class EntryRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removeEntry(@PathParam("id") String id) {
+    public Response removeEntry(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing entry with id " + id);
         try {
             Entry entry = new Entry();
             entry.setId(Long.parseLong(id));
-            service.deleteEntry(entry);
+            service.deleteEntry(entry, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -167,7 +168,7 @@ public class EntryRestPoint {
     @Path("{id}")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateEntry(@PathParam("id") String id, Entry entry) {
+    public Response updateEntry(@PathParam("id") String id, @Context HttpServletRequest request, Entry entry) {
         LOG.debug("Updating entry " + id);
         try {
             Entry existing = service.getEntryForId(Long.parseLong(id));
@@ -175,7 +176,7 @@ public class EntryRestPoint {
                 LOG.warn("Failed to get entry for supplied id");
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
-            service.updateEntry(entry);
+            service.updateEntry(entry, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -201,10 +202,10 @@ public class EntryRestPoint {
     @Path("updates")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateEntries(List<Entry> entries) {
+    public Response updateEntries(@Context HttpServletRequest request, List<Entry> entries) {
         LOG.debug("Updating " + entries.size() + " entries");
         try {
-            service.updateEntries(entries);
+            service.updateEntries(entries, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -224,11 +225,11 @@ public class EntryRestPoint {
     @POST
     @Path("swapEntries/{fromId}/{toId}")
     @Produces("application/json")
-    public Response swapEntries(@PathParam("fromId") String fromId, @PathParam("toId") String toId) {
+    public Response swapEntries(@PathParam("fromId") String fromId, @PathParam("toId") String toId, @Context HttpServletRequest request) {
         try {
             Entry from = service.getEntryForId(Long.parseLong(fromId));
             Entry to = service.getEntryForId(Long.parseLong(toId));
-            service.swapEntryNumbers(from, to);
+            service.swapEntryNumbers(from, to, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

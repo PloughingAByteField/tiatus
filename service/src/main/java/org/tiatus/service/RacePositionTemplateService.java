@@ -16,21 +16,21 @@ public interface RacePositionTemplateService {
      * @return created template
      * @throws ServiceException on error
      */
-    RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template) throws ServiceException;
+    RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException;
 
     /**
      * Remove a template
      * @param template to remove
      * @throws ServiceException on error
      */
-    void deleteRacePositionTemplate(RacePositionTemplate template) throws ServiceException;
+    void deleteRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException;
 
     /**
      * Update template
      * @param template to update
      * @throws ServiceException on error
      */
-    void updateRacePositionTemplate(RacePositionTemplate template) throws ServiceException;
+    void updateRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException;
 
     /**
      * Get races
@@ -44,7 +44,7 @@ public interface RacePositionTemplateService {
      */
     RacePositionTemplate getTemplateForId(Long id);
 
-    RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException;
-    void deleteTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException;
-    void updateTemplateEntry(RacePositionTemplateEntry entry) throws ServiceException;
+    RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException;
+    void deleteTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException;
+    void updateTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException;
 }

@@ -11,6 +11,7 @@ import org.tiatus.service.ServiceException;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -70,10 +71,10 @@ public class DisqualificationRestPoint {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addDisqualification(@Context UriInfo uriInfo, Disqualification disqualification) {
+    public Response addDisqualification(@Context UriInfo uriInfo, @Context HttpServletRequest request, Disqualification disqualification) {
         LOG.debug("Adding disqualification " + disqualification);
         try {
-            Disqualification saved = service.addDisqualification(disqualification);
+            Disqualification saved = service.addDisqualification(disqualification, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -98,12 +99,12 @@ public class DisqualificationRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removeDisqualification(@PathParam("id") String id) {
+    public Response removeDisqualification(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing disqualification with id " + id);
         try {
             Disqualification disqualification = new Disqualification();
             disqualification.setId(Long.parseLong(id));
-            service.deleteDisqualification(disqualification);
+            service.deleteDisqualification(disqualification, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }
@@ -127,10 +128,10 @@ public class DisqualificationRestPoint {
     @PUT
     @RolesAllowed({Role.ADJUDICATOR})
     @Produces("application/json")
-    public Response updateDisqualification(Disqualification disqualification) {
+    public Response updateDisqualification(@Context HttpServletRequest request, Disqualification disqualification) {
         LOG.debug("updating disqualification");
         try {
-            service.updateDisqualification(disqualification);
+            service.updateDisqualification(disqualification, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
             }

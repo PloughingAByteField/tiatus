@@ -14,21 +14,21 @@ public interface ClubService {
      * @return created club
      * @throws ServiceException on error
      */
-    Club addClub(Club club) throws ServiceException;
+    Club addClub(Club club, String sessionId) throws ServiceException;
 
     /**
      * Remove a club
      * @param club to remove
      * @throws ServiceException on error
      */
-    void deleteClub(Club club) throws ServiceException;
+    void deleteClub(Club club, String sessionId) throws ServiceException;
 
     /**
      * update club
      * @param club to update
      * @throws ServiceException on error
      */
-    void updateClub(Club club) throws ServiceException;
+    void updateClub(Club club, String sessionId) throws ServiceException;
 
     /**
      * Get clubs

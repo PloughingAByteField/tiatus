@@ -36,7 +36,7 @@ public class ClubRestPointTest extends RestTestBase {
             @Mock
             void $init(Invocation invocation) { // need to supply the CDI injected object which we are mocking
                 ClubRestPoint restPoint = invocation.getInvokedInstance();
-                ClubServiceImpl service = new ClubServiceImpl(null);
+                ClubServiceImpl service = new ClubServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
                 Cache cache = new StubbedCache();
                 Deencapsulation.setField(restPoint, "cache", cache);
@@ -68,7 +68,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void addClub() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public Club addClub(Club club) throws ServiceException {
+            public Club addClub(Club club, String sessionId) throws ServiceException {
                 return club;
             }
         };
@@ -90,7 +90,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void addClubServiceException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public Club addClub(Club club) throws ServiceException {
+            public Club addClub(Club club, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -112,7 +112,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void addClubGeneralException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public Club addClub(Club club) throws Exception {
+            public Club addClub(Club club, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -134,7 +134,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void deleteClub() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public void deleteClub(Club club) throws ServiceException {
+            public void deleteClub(Club club, String sessionId) throws ServiceException {
             }
         };
 
@@ -152,7 +152,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void deleteClubServiceException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public void deleteClub(Club club) throws ServiceException {
+            public void deleteClub(Club club, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -172,7 +172,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void deleteClubGeneralException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public void deleteClub(Club club) throws Exception {
+            public void deleteClub(Club club, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
@@ -191,7 +191,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void updateClub() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public void updateClub(Club club) throws ServiceException {
+            public void updateClub(Club club, String sessionId) throws ServiceException {
             }
         };
 
@@ -211,7 +211,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void updateClubServiceException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public void updateClub(Club club) throws ServiceException {
+            public void updateClub(Club club, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
@@ -233,7 +233,7 @@ public class ClubRestPointTest extends RestTestBase {
     public void updateClubGeneralException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
-            public void updateClub(Club club) throws Exception {
+            public void updateClub(Club club, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };

@@ -9,13 +9,15 @@ import org.tiatus.dao.UserDaoImpl;
 import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
 
+import javax.jms.JMSException;
+
 /**
  * Created by johnreynolds on 14/09/2016.
  */
 public class UserServiceImplTest {
     @Test
     public void testConstructor() {
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
+        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
     }
 
     @Test
@@ -26,7 +28,7 @@ public class UserServiceImplTest {
                 return true;
             }
         };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
+        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
         Assert.assertTrue(service.hasAdminUser());
     }
 
@@ -41,7 +43,7 @@ public class UserServiceImplTest {
                 return user;
             }
         };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
+        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
         User user = service.getUser("username", "password");
         Assert.assertEquals(user.getUserName(), "username");
         Assert.assertEquals(user.getPassword(), "password");
@@ -65,8 +67,12 @@ public class UserServiceImplTest {
                 return new Role();
             }
         };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
-        service.addAdminUser(new User());
+        new MockUp<MessageSenderServiceImpl>() {
+            @Mock
+            public void sendMessage(final Message obj) throws JMSException {}
+        };
+        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+        service.addAdminUser(new User(), "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -87,8 +93,8 @@ public class UserServiceImplTest {
                 return new Role();
             }
         };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
-        service.addAdminUser(new User());
+        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+        service.addAdminUser(new User(), "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -109,7 +115,7 @@ public class UserServiceImplTest {
                 return new Role();
             }
         };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl());
-        service.addAdminUser(new User());
+        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+        service.addAdminUser(new User(), "id");
     }
 }

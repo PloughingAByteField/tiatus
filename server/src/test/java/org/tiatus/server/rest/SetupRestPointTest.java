@@ -30,6 +30,8 @@ import java.util.Set;
  * Created by johnreynolds on 13/09/2016.
  */
 public class SetupRestPointTest {
+    private HttpSession session;
+    private HttpServletRequest servletRequest;
 
     @Before
     public void setup() {
@@ -37,10 +39,24 @@ public class SetupRestPointTest {
             @Mock
             void $init(Invocation invocation) {
                 SetupRestPoint restPoint = invocation.getInvokedInstance();
-                UserServiceImpl service = new UserServiceImpl(null);
+                UserServiceImpl service = new UserServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
+
             }
         };
+        session = new MockUp<HttpSession>() {
+            @Mock
+            public String getId() {
+                return "id";
+            }
+        }.getMockInstance();
+
+        servletRequest = new MockUp<HttpServletRequest>() {
+            @Mock
+            public HttpSession getSession() {
+                return session;
+            }
+        }.getMockInstance();
     }
 
     @Test
@@ -50,7 +66,7 @@ public class SetupRestPointTest {
 
         new MockUp<UserServiceImpl>() {
             @Mock
-            public User addAdminUser(User user) throws ServiceException {
+            public User addAdminUser(User user, String sessionId) throws ServiceException {
                 user.setId(1L);
                 return user;
             }
@@ -60,7 +76,7 @@ public class SetupRestPointTest {
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
-        Response response = setupRestPoint.addUser(uriInfo, user);
+        Response response = setupRestPoint.addUser(uriInfo, servletRequest, user);
         Assert.assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         Assert.assertEquals(response.getLocation(), new URI("https://127.0.0.1:8080/rest/setup/1"));
     }
@@ -73,7 +89,7 @@ public class SetupRestPointTest {
 
         new MockUp<UserServiceImpl>() {
             @Mock
-            public User addAdminUser(User user) throws ServiceException {
+            public User addAdminUser(User user, String sessionId) throws ServiceException {
                 throw new ServiceException("e");
             }
 
@@ -82,7 +98,7 @@ public class SetupRestPointTest {
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
-        setupRestPoint.addUser(uriInfo, user);
+        setupRestPoint.addUser(uriInfo, servletRequest, user);
     }
 
     @Test (expected = InternalServerErrorException.class)
@@ -97,7 +113,7 @@ public class SetupRestPointTest {
 
         new MockUp<UserServiceImpl>() {
             @Mock
-            public User addAdminUser(User user) throws ServiceException {
+            public User addAdminUser(User user, String sessionId) throws ServiceException {
                 user.setId(1L);
                 return user;
             }
@@ -107,7 +123,7 @@ public class SetupRestPointTest {
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
-        setupRestPoint.addUser(uriInfo, user);
+        setupRestPoint.addUser(uriInfo, servletRequest, user);
     }
 
     @Test

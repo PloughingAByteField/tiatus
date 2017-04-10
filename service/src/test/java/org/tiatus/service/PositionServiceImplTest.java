@@ -7,6 +7,7 @@ import org.tiatus.dao.DaoException;
 import org.tiatus.dao.PositionDaoImpl;
 import org.tiatus.entity.Position;
 
+import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class PositionServiceImplTest {
 
     @Test
     public void testConstructor() {
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
     }
 
     @Test
@@ -28,9 +29,13 @@ public class PositionServiceImplTest {
                 return position;
             }
         };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        new MockUp<MessageSenderServiceImpl>() {
+            @Mock
+            public void sendMessage(final Message obj) throws JMSException {}
+        };
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
         Position position = new Position();
-        service.addPosition(position);
+        service.addPosition(position, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -41,9 +46,9 @@ public class PositionServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
         Position position = new Position();
-        service.addPosition(position);
+        service.addPosition(position, "id");
     }
 
     @Test
@@ -52,9 +57,9 @@ public class PositionServiceImplTest {
             @Mock
             public void removePosition(Position position) throws DaoException {}
         };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
         Position position = new Position();
-        service.removePosition(position);
+        service.removePosition(position, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -65,9 +70,9 @@ public class PositionServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
         Position position = new Position();
-        service.removePosition(position);
+        service.removePosition(position, "id");
     }
 
     @Test
@@ -76,9 +81,9 @@ public class PositionServiceImplTest {
             @Mock
             public void updatePosition(Position position) throws DaoException {}
         };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
         Position position = new Position();
-        service.updatePosition(position);
+        service.updatePosition(position, "id");
     }
 
     @Test (expected = ServiceException.class)
@@ -89,9 +94,9 @@ public class PositionServiceImplTest {
                 throw new DaoException("message");
             }
         };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
         Position position = new Position();
-        service.updatePosition(position);
+        service.updatePosition(position, "id");
     }
 
     @Test
@@ -107,7 +112,7 @@ public class PositionServiceImplTest {
                 return positions;
             }
         };
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl());
+        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
         service.getPositions();
     }
 }
