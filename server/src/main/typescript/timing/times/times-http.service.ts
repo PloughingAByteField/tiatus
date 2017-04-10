@@ -1,7 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Headers, Http, URLSearchParams, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/toPromise';
 
 import { PositionTime, convertJsonToPositionTime } from '../../times/postion-time.model';
 import { Race } from '../../races/race.model';
