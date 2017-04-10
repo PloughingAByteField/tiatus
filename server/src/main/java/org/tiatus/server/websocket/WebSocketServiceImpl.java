@@ -25,16 +25,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class WebSocketServiceImpl implements WebSocketService {
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketServiceImpl.class);
 
-    private static ConcurrentLinkedQueue<Session> clients = new ConcurrentLinkedQueue<>();
-    private static ConcurrentHashMap<Session, HttpSession> httpSessions = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Session, HttpSession> clients = new ConcurrentHashMap<>();
 
     @OnOpen
     public void open(Session session, EndpointConfig config) {
         LOG.debug("Socket open " + session.getId());
-        clients.add(session);
         HttpSession httpSession = (HttpSession)config.getUserProperties().get(HttpSession.class.getName());
         LOG.debug("http session " + httpSession.getId());
-        httpSessions.put(session, httpSession);
+        clients.put(session, httpSession);
         LOG.debug("After add Have " + clients.size() + " clients for " + this);
     }
 
@@ -63,12 +61,11 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     private void removeSession(Session session) {
-        httpSessions.remove(session);
         clients.remove(session);
     }
 
     private User getUserForSession(Session session) {
-        HttpSession httpSession = httpSessions.get(session);
+        HttpSession httpSession = clients.get(session);
         if (httpSession != null) {
             UserPrincipal p = (UserPrincipal)httpSession.getAttribute("principal");
             return p.getUser();
@@ -79,11 +76,13 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Override
     public void sendMessage(Message message) {
         LOG.debug("Send message");
-        for (Session session: clients) {
-            try {
-                session.getBasicRemote().sendText(convertToJson(message));
-            } catch (IOException e) {
-                LOG.warn("Failed to send message to client", e);
+        for (Session session: clients.keySet()) {
+            if (! message.getSessionId().equals(clients.get(session).getId())) {
+                try {
+                    session.getBasicRemote().sendText(convertToJson(message));
+                } catch (IOException e) {
+                    LOG.warn("Failed to send message to client", e);
+                }
             }
         }
     }
