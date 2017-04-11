@@ -29,12 +29,12 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     public RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         LOG.debug("Adding RacePositionTemplate " + template.getName());
         try {
+            tx.begin();
             RacePositionTemplate existing = null;
             if (template.getId() != null) {
                 existing = em.find(RacePositionTemplate.class, template.getId());
             }
             if (existing == null) {
-                tx.begin();
                 RacePositionTemplate merged = em.merge(template);
                 tx.commit();
 
@@ -42,8 +42,11 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
             } else {
                 String message = "Failed to add RacePositionTemplate due to existing RacePositionTemplate with same id " + template.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
+        } catch (DaoException e) {
+            throw e;
         } catch (Exception e) {
             LOG.warn("Failed to persist RacePositionTemplate", e.getMessage());
             try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
@@ -54,12 +57,12 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public void deleteRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         try {
+            tx.begin();
             RacePositionTemplate existing = null;
             if (template.getId() != null) {
                 existing = em.find(RacePositionTemplate.class, template.getId());
             }
             if (existing != null) {
-                tx.begin();
                 // remove the template entries
                 List<RacePositionTemplateEntry> entries = em.createQuery("FROM RacePositionTemplateEntry where template_id = :template").setParameter("template", template.getId()).getResultList();
                 for (int i = entries.size() - 1; i >= 0; i--) {
@@ -70,6 +73,7 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
                 tx.commit();
             } else {
                 LOG.warn("No such RacePositionTemplate of id " + template.getId());
+                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete RacePositionTemplate", e);
@@ -105,10 +109,10 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
+            tx.begin();
             TypedQuery<RacePositionTemplateEntry> query = em.createQuery("FROM RacePositionTemplateEntry where template = :template and position = :position", RacePositionTemplateEntry.class);
             List<RacePositionTemplateEntry> existing = query.setParameter("template", entry.getTemplate()).setParameter("position", entry.getPosition()).getResultList();
             if (existing.isEmpty()) {
-                tx.begin();
                 RacePositionTemplateEntry merged = em.merge(entry);
                 tx.commit();
 
@@ -117,8 +121,11 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
             } else {
                 String message = "Failed to add template entry due to existing template entry with same template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
+        } catch (DaoException e) {
+            throw e;
         } catch (Exception e) {
             LOG.warn("Failed to add template entry", e);
             try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
@@ -129,15 +136,16 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public void deleteTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
+            tx.begin();
             TypedQuery<RacePositionTemplateEntry> query = em.createQuery("FROM RacePositionTemplateEntry where template = :template and position = :position", RacePositionTemplateEntry.class);
             RacePositionTemplateEntry existing = query.setParameter("template", entry.getTemplate()).setParameter("position", entry.getPosition()).getSingleResult();
             if (existing != null) {
-                tx.begin();
                 RacePositionTemplateEntry merged = em.merge(existing);
                 em.remove(merged);
                 tx.commit();
             } else {
                 LOG.warn("No such template entry of template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId());
+                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete template entry", e);

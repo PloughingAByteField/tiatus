@@ -100,7 +100,7 @@ public class ClubIT {
             }
         }.getMockInstance();
         dao.em = em;
-
+        dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
     }
 
@@ -162,7 +162,7 @@ public class ClubIT {
             }
         }.getMockInstance();
         dao.em = em;
-
+        dao.tx = new EntityUserTransaction(em);
         dao.removeClub(club);
     }
 

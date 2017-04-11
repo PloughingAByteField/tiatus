@@ -65,13 +65,13 @@ public class EntryPositionTimeDaoImpl implements EntryPositionTimeDao {
     @Override
     public void createTime(EntryPositionTime entryPositionTime) throws DaoException {
         try {
+            tx.begin();
             if (entryPositionTime.getPosition() != null && entryPositionTime.getEntry() != null) {
                 TypedQuery<EntryPositionTime> query = em.createQuery("FROM EntryPositionTime where position.id = :position_id and entry.id = :entry_id", EntryPositionTime.class);
                 query.setParameter("position_id", entryPositionTime.getPosition().getId())
                         .setParameter("entry_id", entryPositionTime.getEntry().getId());
 
                 if (query.getResultList().isEmpty()) {
-                    tx.begin();
                     entryPositionTime.setSynced(true);
                     em.persist(entryPositionTime);
                     tx.commit();
@@ -79,31 +79,35 @@ public class EntryPositionTimeDaoImpl implements EntryPositionTimeDao {
                 } else {
                     String message = "Failed to create time due to existing entryPositionTime with same position " + entryPositionTime.getPosition().getId() + " and entry " + entryPositionTime.getEntry().getId();
                     LOG.warn(message);
+                    tx.rollback();
                     throw new DaoException(message);
                 }
 
             } else {
                 String message = "Failed to create time due to entryPositionTime missing position or entry ";
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
-
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to create time", e.getMessage());
-            throw new DaoException(e);
+        } catch (DaoException e) {
+            throw e;
+        } catch (Exception e) {
+            LOG.warn("Failed to create time", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 
     @Override
     public void updateTime(EntryPositionTime entryPositionTime) throws DaoException {
         try {
+            tx.begin();
             if (entryPositionTime.getPosition() != null && entryPositionTime.getEntry() != null) {
                 TypedQuery<EntryPositionTime> query = em.createQuery("FROM EntryPositionTime where position.id = :position_id and entry.id = :entry_id", EntryPositionTime.class);
                 query.setParameter("position_id", entryPositionTime.getPosition().getId())
                         .setParameter("entry_id", entryPositionTime.getEntry().getId());
 
                 if (!query.getResultList().isEmpty()) {
-                    tx.begin();
                     entryPositionTime.setSynced(true);
                     em.merge(entryPositionTime);
                     tx.commit();
@@ -111,18 +115,22 @@ public class EntryPositionTimeDaoImpl implements EntryPositionTimeDao {
                 } else {
                     String message = "Failed to update time as one does not exist for the position " + entryPositionTime.getPosition().getId() + " and entry " + entryPositionTime.getEntry().getId();
                     LOG.warn(message);
+                    tx.rollback();
                     throw new DaoException(message);
                 }
 
             } else {
                 String message = "Failed to update time due to entryPositionTime missing position or entry ";
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
-
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to update time", e.getMessage());
-            throw new DaoException(e);
+        } catch (DaoException e) {
+            throw e;
+        } catch (Exception e) {
+            LOG.warn("Failed to update time", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 

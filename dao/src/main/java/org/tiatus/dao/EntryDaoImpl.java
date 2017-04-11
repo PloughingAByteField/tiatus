@@ -61,8 +61,11 @@ public class EntryDaoImpl implements EntryDao {
             } else {
                 String message = "Failed to add entry due to existing entry with same id " + entry.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
+        } catch (DaoException e) {
+            throw e;
         } catch (Exception e) {
             LOG.warn("Failed to persist entry", e);
             try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
@@ -84,6 +87,7 @@ public class EntryDaoImpl implements EntryDao {
                 tx.commit();
             } else {
                 LOG.warn("No such entry of id " + entry.getId());
+                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to remove entry", e);
@@ -128,6 +132,7 @@ public class EntryDaoImpl implements EntryDao {
                 tx.commit();
             } else {
                 LOG.warn("No such entry of id " + entry.getId());
+                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to update entry", e);

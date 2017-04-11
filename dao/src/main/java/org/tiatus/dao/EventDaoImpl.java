@@ -35,6 +35,7 @@ public class EventDaoImpl implements EventDao {
     public Event addEvent(Event event) throws DaoException {
         LOG.debug("Adding event " + event);
         try {
+            tx.begin();
             Event existing = null;
             if (event.getId() != null) {
                 existing = em.find(Event.class, event.getId());
@@ -49,7 +50,7 @@ public class EventDaoImpl implements EventDao {
                         throw new DaoException(message);
                     }
                 }
-                tx.begin();
+
                 em.persist(event);
                 for (EventPosition position: event.getPositions()) {
                     position.setEvent(event);
@@ -62,8 +63,11 @@ public class EventDaoImpl implements EventDao {
             } else {
                 String message = "Failed to add event due to existing event with same id " + event.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
+        } catch (DaoException e) {
+            throw e;
         } catch (Exception e) {
             LOG.warn("Failed to persist event", e);
             try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
@@ -84,6 +88,7 @@ public class EventDaoImpl implements EventDao {
                 tx.commit();
             } else {
                 LOG.warn("No such event of id " + event.getId());
+                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete event", e);

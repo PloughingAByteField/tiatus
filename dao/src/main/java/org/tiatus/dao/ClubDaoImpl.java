@@ -37,12 +37,12 @@ public class ClubDaoImpl implements ClubDao {
     public Club addClub(Club club) throws DaoException {
         LOG.debug("Adding club " + club);
         try {
+            tx.begin();
             Club existing = null;
             if (club.getId() != null) {
                 existing = em.find(Club.class, club.getId());
             }
             if (existing == null) {
-                tx.begin();
                 Club merged = em.merge(club);
                 tx.commit();
 
@@ -50,10 +50,14 @@ public class ClubDaoImpl implements ClubDao {
             } else {
                 String message = "Failed to add club due to existing club with same id " + club.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (DaoException e) {
+            throw e;
+        } catch (Exception e) {
             LOG.warn("Failed to persist club", e.getMessage());
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e);
         }
     }
@@ -61,20 +65,22 @@ public class ClubDaoImpl implements ClubDao {
     @Override
     public void removeClub(Club club) throws DaoException {
         try {
+            tx.begin();
             Club existing = null;
             if (club.getId() != null) {
                 existing = em.find(Club.class, club.getId());
             }
             if (existing != null) {
-                tx.begin();
                 em.remove(em.contains(club) ? club : em.merge(club));
                 tx.commit();
             } else {
                 LOG.warn("No such club of id " + club.getId());
+                tx.rollback();
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to delete club", e);
-            throw new DaoException(e.getMessage());
+        } catch (Exception e) {
+            LOG.warn("Failed to delete club", e.getMessage());
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e);
         }
 
     }
@@ -85,9 +91,10 @@ public class ClubDaoImpl implements ClubDao {
             tx.begin();
             em.merge(club);
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to update club", e);
-            throw new DaoException(e.getMessage());
+        } catch (Exception e) {
+            LOG.warn("Failed to update club", e.getMessage());
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e);
         }
     }
 }

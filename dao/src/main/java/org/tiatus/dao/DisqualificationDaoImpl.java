@@ -32,12 +32,12 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
     public Disqualification addDisqualification(Disqualification disqualification) throws DaoException {
         LOG.debug("Adding disqualification for entry " + disqualification.getEntry().getId());
         try {
+            tx.begin();
             Disqualification existing = null;
             if (disqualification.getId() != null) {
                 existing = em.find(Disqualification.class, disqualification.getId());
             }
             if (existing == null) {
-                tx.begin();
                 Disqualification merged = em.merge(disqualification);
                 tx.commit();
 
@@ -45,10 +45,14 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
             } else {
                 String message = "Failed to add disqualification due to existing disqualification with same id " + disqualification.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (DaoException e) {
+            throw e;
+        } catch (Exception e) {
             LOG.warn("Failed to persist disqualification", e.getMessage());
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e);
         }
     }
@@ -56,20 +60,22 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
     @Override
     public void removeDisqualification(Disqualification disqualification) throws DaoException {
         try {
+            tx.begin();
             Disqualification existing = null;
             if (disqualification.getId() != null) {
                 existing = em.find(Disqualification.class, disqualification.getId());
             }
             if (existing != null) {
-                tx.begin();
                 em.remove(em.contains(disqualification) ? disqualification : em.merge(disqualification));
                 tx.commit();
             } else {
                 LOG.warn("No such disqualification of id " + disqualification.getId());
+                tx.rollback();
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to delete disqualification", e);
-            throw new DaoException(e.getMessage());
+        } catch (Exception e) {
+            LOG.warn("Failed to delete disqualification", e.getMessage());
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e);
         }
     }
 
@@ -79,9 +85,10 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
             tx.begin();
             em.merge(disqualification);
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to update disqualification", e);
-            throw new DaoException(e.getMessage());
+        } catch (Exception e) {
+            LOG.warn("Failed to update disqualification", e.getMessage());
+            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e);
         }
     }
 }

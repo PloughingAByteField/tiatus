@@ -30,6 +30,7 @@ public class RaceEventDaoImpl implements RaceEventDao {
     public RaceEvent addRaceEvent(RaceEvent raceEvent) throws DaoException {
         LOG.debug("Adding raceEvent " + raceEvent);
         try {
+            tx.begin();
             RaceEvent existing = null;
             if (raceEvent.getId() != null) {
                 existing = em.find(RaceEvent.class, raceEvent.getId());
@@ -43,7 +44,7 @@ public class RaceEventDaoImpl implements RaceEventDao {
                         throw new DaoException(message);
                     }
                 }
-                tx.begin();
+
                 em.persist(raceEvent.getEvent());
                 for (EventPosition position: raceEvent.getEvent().getPositions()) {
                     position.setEvent(raceEvent.getEvent());
@@ -57,8 +58,11 @@ public class RaceEventDaoImpl implements RaceEventDao {
             } else {
                 String message = "Failed to add raceEvent due to existing raceEvent with same id " + raceEvent.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
+        } catch (DaoException e) {
+            throw e;
         } catch (Exception e) {
             LOG.warn("Failed to persist race event", e);
             try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
@@ -80,6 +84,7 @@ public class RaceEventDaoImpl implements RaceEventDao {
                 tx.commit();
             } else {
                 LOG.warn("No such event of id " + raceEvent.getId());
+                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete race event", e);

@@ -46,7 +46,6 @@ public class UserDaoImpl implements UserDao {
                 existing = em.find(User.class, user.getId());
             }
             if (existing == null) {
-
                 em.persist(user);
                 tx.commit();
 
@@ -58,7 +57,8 @@ public class UserDaoImpl implements UserDao {
                 tx.rollback();
                 throw new DaoException(message);
             }
-
+        } catch (DaoException e) {
+            throw e;
         } catch (Exception e) {
             LOG.warn("Failed to persist user", e.getMessage());
             try { tx.rollback(); } catch (Exception se) {
@@ -70,16 +70,17 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void deleteUser(User user) throws DaoException {
         try {
+            tx.begin();
             User existing = null;
             if (user.getId() != null) {
                 existing = em.find(User.class, user.getId());
             }
             if (existing != null) {
-                tx.begin();
                 em.remove(em.contains(user) ? user : em.merge(user));
                 tx.commit();
             } else {
                 LOG.warn("No such user of id " + user.getId());
+                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete user", e.getMessage());

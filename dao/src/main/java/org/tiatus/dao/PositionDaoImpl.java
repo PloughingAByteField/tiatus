@@ -39,12 +39,12 @@ public class PositionDaoImpl implements PositionDao {
     public Position addPosition(Position position) throws DaoException {
         LOG.debug("Adding position " + position);
         try {
+            tx.begin();
             Position existing = null;
             if (position.getId() != null) {
                 existing = em.find(Position.class, position.getId());
             }
             if (existing == null) {
-                tx.begin();
                 Position merged = em.merge(position);
                 tx.commit();
 
@@ -52,30 +52,36 @@ public class PositionDaoImpl implements PositionDao {
             } else {
                 String message = "Failed to add position due to existing position with same id " + position.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist position", e.getMessage());
-            throw new DaoException(e);
+        } catch (DaoException e) {
+            throw e;
+        } catch (Exception e) {
+            LOG.warn("Failed to persist position", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 
     @Override
     public void removePosition(Position position) throws DaoException {
         try {
+            tx.begin();
             Position existing = null;
             if (position.getId() != null) {
                 existing = em.find(Position.class, position.getId());
             }
             if (existing != null) {
-                tx.begin();
                 em.remove(em.contains(position) ? position : em.merge(position));
                 tx.commit();
             } else {
                 LOG.warn("No such position of id " + position.getId());
+                tx.rollback();
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to delete position", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -86,8 +92,9 @@ public class PositionDaoImpl implements PositionDao {
             tx.begin();
             em.merge(position);
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to update position", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }

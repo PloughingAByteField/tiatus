@@ -44,12 +44,12 @@ public class RaceDaoImpl implements RaceDao {
     public Race addRace(Race race) throws DaoException {
         LOG.debug("Adding race " + race);
         try {
+            tx.begin();
             Race existing = null;
             if (race.getId() != null) {
                 existing = em.find(Race.class, race.getId());
             }
             if (existing == null) {
-                tx.begin();
                 Race merged = em.merge(race);
                 tx.commit();
 
@@ -57,30 +57,36 @@ public class RaceDaoImpl implements RaceDao {
             } else {
                 String message = "Failed to add race due to existing race with same id " + race.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist race", e.getMessage());
-            throw new DaoException(e);
+        } catch (DaoException e) {
+            throw e;
+        } catch (Exception e) {
+            LOG.warn("Failed to persist race", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 
     @Override
     public void removeRace(Race race) throws DaoException {
         try {
+            tx.begin();
             Race existing = null;
             if (race.getId() != null) {
                 existing = em.find(Race.class, race.getId());
             }
             if (existing != null) {
-                tx.begin();
                 em.remove(em.contains(race) ? race : em.merge(race));
                 tx.commit();
             } else {
                 LOG.warn("No such race of id " + race.getId());
+                tx.rollback();
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to delete race", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
 
@@ -92,8 +98,9 @@ public class RaceDaoImpl implements RaceDao {
             tx.begin();
             em.merge(race);
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to update race", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }

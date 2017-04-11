@@ -31,43 +31,49 @@ public class PenaltyDaolmpl implements PenaltyDao {
     public Penalty addPenalty(Penalty penalty) throws DaoException {
         LOG.debug("Adding penalty for entry " + penalty.getEntry().getId());
         try {
+            tx.begin();
             Penalty existing = null;
             if (penalty.getId() != null) {
                 existing = em.find(Penalty.class, penalty.getId());
             }
             if (existing == null) {
-                tx.begin();
                 Penalty merged = em.merge(penalty);
                 tx.commit();
-
                 return merged;
+
             } else {
                 String message = "Failed to add penalty due to existing penalty with same id " + penalty.getId();
                 LOG.warn(message);
+                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
-            LOG.warn("Failed to persist penalty", e.getMessage());
-            throw new DaoException(e);
+        } catch (DaoException e) {
+            throw e;
+        } catch (Exception e) {
+            LOG.warn("Failed to persist penalty", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
+            throw new DaoException(e.getMessage());
         }
     }
 
     @Override
     public void removePenalty(Penalty penalty) throws DaoException {
         try {
+            tx.begin();
             Penalty existing = null;
             if (penalty.getId() != null) {
                 existing = em.find(Penalty.class, penalty.getId());
             }
             if (existing != null) {
-                tx.begin();
                 em.remove(em.contains(penalty) ? penalty : em.merge(penalty));
                 tx.commit();
             } else {
                 LOG.warn("No such penalty of id " + penalty.getId());
+                tx.rollback();
             }
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to delete penalty", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -78,8 +84,9 @@ public class PenaltyDaolmpl implements PenaltyDao {
             tx.begin();
             em.merge(penalty);
             tx.commit();
-        } catch (NotSupportedException | SystemException | HeuristicMixedException | HeuristicRollbackException | RollbackException e) {
+        } catch (Exception e) {
             LOG.warn("Failed to update penalty", e);
+            try { tx.rollback(); } catch (Exception se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
