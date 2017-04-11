@@ -55,6 +55,9 @@ public class EventRestPoint {
                 eventPosition.setPosition(position);
             }
             Event saved = service.addEvent(event, request.getSession().getId());
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
@@ -69,22 +72,33 @@ public class EventRestPoint {
 
     /**
      * Update event, restricted to Admin users
+     * @param id of event to update
      * @param event to update
      * @return 201 response with location containing uri of newly created event or an error code
      */
     @PUT
+    @Path("{id}")
     @RolesAllowed({Role.ADMIN})
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateEvent(Event event, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
+    public Response updateEvent(@PathParam("id") Long id, Event event, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
         // call service which will place in db and queue
         LOG.debug("Updating event of id " + event.getId());
+        Event existing = service.getEventForId(id);
+        if (existing == null) {
+            LOG.warn("Failed to get event for supplied id");
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
         try {
             for (EventPosition eventPosition: event.getPositions()) {
                 Position position = positionService.getPositionForId(eventPosition.getPositionId());
                 eventPosition.setPosition(position);
             }
             Event saved = service.updateEvent(event, request.getSession().getId());
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {
@@ -109,14 +123,18 @@ public class EventRestPoint {
     public Response removeEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
         // call service which will place in db and queue
         LOG.debug("Got event id " + id);
-        Event event = new Event();
-        event.setId(id);
         try {
-            service.deleteEvent(event, request.getSession().getId());
+            Event event = service.getEventForId(id);
+            if (event != null) {
+                service.deleteEvent(event, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
-            LOG.warn("Failed to delete event: " + event.getName(), e);
+            LOG.warn("Failed to delete event: " + id, e);
             throw new InternalServerErrorException();
         } catch (Exception e) {
             LOG.warn(GENERAL_EXCEPTION, e);
@@ -136,14 +154,19 @@ public class EventRestPoint {
     public Response removeUnassignedEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
         // call service which will place in db and queue
         LOG.debug("Got event id " + id);
-        Event event = new Event();
-        event.setId(id);
         try {
-            service.deleteEvent(event, request.getSession().getId());
+            Event event = service.getEventForId(id);
+            if (event != null) {
+                service.deleteEvent(event, request.getSession().getId());
+                String cacheName = CACHE_NAME + "_" + "Unassigned";
+                if (cache.get(cacheName) != null) {
+                    cache.evict(cacheName);
+                }
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
-            LOG.warn("Failed to delete event: " + event.getName(), e);
+            LOG.warn("Failed to delete event: " + id, e);
             throw new InternalServerErrorException();
         } catch (Exception e) {
             LOG.warn(GENERAL_EXCEPTION, e);
@@ -183,7 +206,7 @@ public class EventRestPoint {
     }
 
     /**
-     * Get events assinged to races
+     * Get events assigned to races
      * @return response containing list of events assigned to races
      */
     @GET
@@ -226,14 +249,19 @@ public class EventRestPoint {
     @Produces("application/json")
     public Response removeAssignedEvent(@PathParam("id") Long id, @Context HttpServletRequest request) {
         LOG.debug("Got raceEvent id " + id);
-        RaceEvent raceEvent = new RaceEvent();
-        raceEvent.setId(id);
         try {
-            service.deleteRaceEvent(raceEvent, request.getSession().getId());
+            RaceEvent raceEvent = service.getRaceEventForId(id);
+            if (raceEvent != null) {
+                service.deleteRaceEvent(raceEvent, request.getSession().getId());
+                String cacheName = CACHE_NAME + "_" + "Assigned";
+                if (cache.get(cacheName) != null) {
+                    cache.evict(cacheName);
+                }
+            }
             return Response.noContent().build();
 
         } catch (ServiceException e) {
-            LOG.warn("Failed to delete raceEvent: " + raceEvent.getId(), e);
+            LOG.warn("Failed to delete raceEvent: " + id, e);
             throw new InternalServerErrorException();
         } catch (Exception e) {
             LOG.warn(GENERAL_EXCEPTION, e);
@@ -255,7 +283,12 @@ public class EventRestPoint {
     public Response addAssignedEvent(RaceEvent raceEvent, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
         try {
             RaceEvent saved = service.addRaceEvent(raceEvent, request.getSession().getId());
+            String cacheName = CACHE_NAME + "_" + "Assigned";
+            if (cache.get(cacheName) != null) {
+                cache.evict(cacheName);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
+
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
             throw new InternalServerErrorException();
@@ -274,11 +307,25 @@ public class EventRestPoint {
     @PUT
     @RolesAllowed({Role.ADMIN})
     @Path("assigned")
+    @Consumes("application/json")
     @Produces("application/json")
     public Response updateAssignedEvents(List<RaceEvent> raceEvents, @Context HttpServletRequest request) {
         LOG.debug("updating assigned events");
         try {
+            for (RaceEvent raceEventToUpdate : raceEvents) {
+                RaceEvent existing = service.getRaceEventForId(raceEventToUpdate.getId());
+                if (existing == null) {
+                    LOG.warn("Failed to get race event for supplied id");
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
+            }
+
             service.updateRaceEvents(raceEvents, request.getSession().getId());
+            String cacheName = CACHE_NAME + "_" + "Assigned";
+            if (cache.get(cacheName) != null) {
+                cache.evict(cacheName);
+            }
+
         } catch (ServiceException e) {
             LOG.warn("Got service exception: ", e.getSuppliedException());
             throw new InternalServerErrorException();

@@ -99,14 +99,15 @@ public class PositionRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removePosition(@PathParam("id") String id, @Context HttpServletRequest request) {
+    public Response removePosition(@PathParam("id") Long id, @Context HttpServletRequest request) {
         LOG.debug("Removing position with id " + id);
         try {
-            Position position = new Position();
-            position.setId(Long.parseLong(id));
-            service.removePosition(position, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            Position position = service.getPositionForId(id);
+            if (position != null) {
+                service.removePosition(position, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -122,15 +123,23 @@ public class PositionRestPoint {
 
     /**
      * Update position, restricted to Admin users
+     * @param id of position to update
      * @param position to update
      * @return response with 204
      */
     @RolesAllowed({Role.ADMIN})
     @PUT
+    @Path("{id}")
     @Produces("application/json")
-    public Response updatePosition(Position position, @Context HttpServletRequest request) {
-        LOG.debug("Updating position with id " + position.getId());
+    public Response updatePosition(@PathParam("id") Long id, Position position, @Context HttpServletRequest request) {
+        LOG.debug("Updating position with id " + id);
         try {
+            Position existing = service.getPositionForId(id);
+            if (existing == null) {
+                LOG.warn("Failed to get position for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             service.updatePosition(position, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);

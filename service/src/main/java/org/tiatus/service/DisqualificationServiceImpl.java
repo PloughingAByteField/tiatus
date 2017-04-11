@@ -82,6 +82,11 @@ public class DisqualificationServiceImpl implements DisqualificationService {
     }
 
     @Override
+    public Disqualification getDisqualificationForId(Long id) {
+        return dao.getDisqualificationForId(id);
+    }
+
+    @Override
     public List<Disqualification> getDisqualifications() {
         return dao.getDisqualifications();
     }

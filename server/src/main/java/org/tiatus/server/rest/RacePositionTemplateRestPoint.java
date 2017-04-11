@@ -102,13 +102,15 @@ public class RacePositionTemplateRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response deleteTemplate(@PathParam("id") String id, @Context HttpServletRequest request) {
+    public Response deleteTemplate(@PathParam("id") Long id, @Context HttpServletRequest request) {
         LOG.debug("Removing template with id " + id);
         try {
-            RacePositionTemplate template = service.getTemplateForId(Long.parseLong(id));
-            service.deleteRacePositionTemplate(template, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            RacePositionTemplate template = service.getTemplateForId(id);
+            if (template != null) {
+                service.deleteRacePositionTemplate(template, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -124,16 +126,23 @@ public class RacePositionTemplateRestPoint {
 
     /**
      * Update template, restricted to  Admin users
+     * @param id of template to update
      * @param template of template to update
      * @return response with 204
      */
     @RolesAllowed({Role.ADMIN})
     @PUT
+    @Path("{id}")
     @Produces("application/json")
-    public Response updateTemplate(RacePositionTemplate template, @Context HttpServletRequest request) {
-        LOG.debug("Updating template with id " + template.getId());
+    public Response updateTemplate(@PathParam("id") Long id, RacePositionTemplate template, @Context HttpServletRequest request) {
+        LOG.debug("Updating template with id " + id);
         try {
-            RacePositionTemplate templateToUpdate = service.getTemplateForId(template.getId());
+            RacePositionTemplate templateToUpdate = service.getTemplateForId(id);
+            if (template == null) {
+                LOG.warn("Failed to get template for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             templateToUpdate.setName(template.getName());
             templateToUpdate.setDefaultTemplate(template.getDefaultTemplate());
             service.updateRacePositionTemplate(templateToUpdate, request.getSession().getId());
@@ -196,17 +205,19 @@ public class RacePositionTemplateRestPoint {
     @DELETE
     @Path("entry/template/{templateId}/position/{positionId}")
     @Produces("application/json")
-    public Response deleteTemplateEntry(@PathParam("templateId") String templateId, @PathParam("positionId") String positionId, @Context HttpServletRequest request) {
+    public Response deleteTemplateEntry(@PathParam("templateId") Long templateId, @PathParam("positionId") Long positionId, @Context HttpServletRequest request) {
         LOG.debug("Removing template with templateId " + templateId + " and positionId " + positionId);
         try {
             RacePositionTemplateEntry entry = new RacePositionTemplateEntry();
-            Position position = positionService.getPositionForId(Long.parseLong(positionId));
+            Position position = positionService.getPositionForId(positionId);
             entry.setPosition(position);
-            RacePositionTemplate template = service.getTemplateForId(Long.parseLong(templateId));
+            RacePositionTemplate template = service.getTemplateForId(templateId);
             entry.setTemplate(template);
-            service.deleteTemplateEntry(entry, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            if (position != null && template != null) {
+                service.deleteTemplateEntry(entry, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 

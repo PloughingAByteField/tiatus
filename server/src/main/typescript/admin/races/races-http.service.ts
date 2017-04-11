@@ -42,7 +42,7 @@ export class AdminRacesHttpService extends RacesHttpService {
 
     public updateRace(race: Race): Promise<Race> {
         return this.http
-            .put(this.endpoint,
+            .put(this.endpoint + '/' + race.id,
             JSON.stringify(race), { headers: this.headers })
             .toPromise()
             .then(() => {

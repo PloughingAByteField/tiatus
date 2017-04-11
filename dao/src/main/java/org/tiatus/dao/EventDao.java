@@ -42,4 +42,6 @@ public interface EventDao {
      * @return list of events assigned not yet to a race
      */
     List<Event> getUnassignedEvents();
+
+    Event getEventForId(Long id);
 }

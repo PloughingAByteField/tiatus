@@ -142,5 +142,10 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public User getUserForId(Long id) {
+        return dao.getUserForId(id);
+    }
+
 
 }

@@ -146,14 +146,15 @@ public class UserRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removeUser(@PathParam("id") String id, @Context HttpServletRequest request) {
+    public Response removeUser(@PathParam("id") Long id, @Context HttpServletRequest request) {
         LOG.debug("Removing user with id " + id);
         try {
-            User user = new User();
-            user.setId(Long.parseLong(id));
-            service.deleteUser(user, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            User user = service.getUserForId(id);
+            if (user != null) {
+                service.deleteUser(user, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -169,15 +170,23 @@ public class UserRestPoint {
 
     /**
      * Update user, restricted to Admin users
+     * @param id of user to update
      * @param user to update
      * @return 204 response or an error code
      */
     @PUT
+    @Path("{id}")
     @RolesAllowed({Role.ADMIN})
     @Produces("application/json")
-    public Response updateUser(User user, @Context HttpServletRequest request) {
+    public Response updateUser(@PathParam("id") Long id, User user, @Context HttpServletRequest request) {
         LOG.debug("updating user");
         try {
+            User existing = service.getUserForId(id);
+            if (existing == null) {
+                LOG.warn("Failed to get user for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             service.updateUser(user, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);

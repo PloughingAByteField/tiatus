@@ -85,6 +85,11 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    public Club getClubForId(Long id) {
+        return dao.getClubForId(id);
+    }
+
+    @Override
     public List<Club> getClubs() {
         return dao.getClubs();
     }

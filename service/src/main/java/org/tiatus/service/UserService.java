@@ -63,5 +63,5 @@ public interface UserService {
      */
     List<Role> getUserRoles() throws ServiceException;
 
-
+    User getUserForId(Long id);
 }

@@ -134,6 +134,13 @@ public class PositionRestPointTest extends RestTestBase {
     public void deletePosition() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
+            public Position getPositionForId(Long id) {
+                Position position = new Position();
+                position.setId(Long.valueOf(1));
+                return position;
+            }
+
+            @Mock
             public void removePosition(Position position, String sessionId) throws ServiceException {
             }
         };
@@ -151,6 +158,13 @@ public class PositionRestPointTest extends RestTestBase {
     @Test
     public void deletePositionServiceException() throws Exception {
         new MockUp<PositionServiceImpl>() {
+            @Mock
+            public Position getPositionForId(Long id) {
+                Position position = new Position();
+                position.setId(Long.valueOf(1));
+                return position;
+            }
+
             @Mock
             public void removePosition(Position position, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
@@ -172,6 +186,13 @@ public class PositionRestPointTest extends RestTestBase {
     public void deletePositionGeneralException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
+            public Position getPositionForId(Long id) {
+                Position position = new Position();
+                position.setId(Long.valueOf(1));
+                return position;
+            }
+
+            @Mock
             public void removePosition(Position position, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
@@ -191,11 +212,18 @@ public class PositionRestPointTest extends RestTestBase {
     public void updatePosition() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
+            public Position getPositionForId(Long id) {
+                Position position = new Position();
+                position.setId(Long.valueOf(1));
+                return position;
+            }
+
+            @Mock
             public void updatePosition(Position position, String sessionId) throws ServiceException {
             }
         };
 
-        MockHttpRequest request = MockHttpRequest.put("positions");
+        MockHttpRequest request = MockHttpRequest.put("positions/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         String payload = "{\"id\":\"1\",\"name\":\"Position 1\"}";
@@ -211,13 +239,20 @@ public class PositionRestPointTest extends RestTestBase {
     public void updatePositionServiceException() throws Exception {
         new MockUp<PositionServiceImpl>() {
             @Mock
+            public Position getPositionForId(Long id) {
+                Position position = new Position();
+                position.setId(Long.valueOf(1));
+                return position;
+            }
+
+            @Mock
             public void updatePosition(Position position, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
 
 
-        MockHttpRequest request = MockHttpRequest.put("positions");
+        MockHttpRequest request = MockHttpRequest.put("positions/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         String payload = "{\"id\":\"1\",\"name\":\"Position 1\"}";
@@ -238,7 +273,7 @@ public class PositionRestPointTest extends RestTestBase {
             }
         };
 
-        MockHttpRequest request = MockHttpRequest.put("positions");
+        MockHttpRequest request = MockHttpRequest.put("positions/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         String payload = "{\"id\":\"1\",\"name\":\"Position 1\"}";
@@ -344,7 +379,7 @@ public class PositionRestPointTest extends RestTestBase {
 
     @Test
     public void checkUpdatePositionAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "positions", "PUT");
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "positions/{id}", "PUT");
         if (endPointDetail == null) {
             System.out.println("Failed to find end point for PUT:position");
             throw new Exception();

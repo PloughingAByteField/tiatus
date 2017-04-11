@@ -85,4 +85,9 @@ public class PenaltyServiceImpl implements PenaltyService {
     public List<Penalty> getPenalties() {
         return dao.getPenalties();
     }
+
+    @Override
+    public Penalty getPenaltyForId(Long id) {
+        return dao.getPenaltyForId(id);
+    }
 }

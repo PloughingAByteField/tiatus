@@ -166,4 +166,9 @@ public class UserDaoImpl implements UserDao {
         TypedQuery<Role> query = em.createQuery("FROM Role", Role.class);
         return query.getResultList();
     }
+
+    @Override
+    public User getUserForId(Long id) {
+        return em.find(User.class, id);
+    }
 }

@@ -97,4 +97,9 @@ public class ClubDaoImpl implements ClubDao {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public Club getClubForId(Long id) {
+        return em.find(Club.class, id);
+    }
 }

@@ -140,11 +140,12 @@ public class EntryRestPoint {
     public Response removeEntry(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing entry with id " + id);
         try {
-            Entry entry = new Entry();
-            entry.setId(Long.parseLong(id));
-            service.deleteEntry(entry, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            Entry entry = service.getEntryForId(Long.parseLong(id));
+            if (entry != null) {
+                service.deleteEntry(entry, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -176,6 +177,7 @@ public class EntryRestPoint {
                 LOG.warn("Failed to get entry for supplied id");
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
+
             service.updateEntry(entry, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
@@ -205,6 +207,14 @@ public class EntryRestPoint {
     public Response updateEntries(@Context HttpServletRequest request, List<Entry> entries) {
         LOG.debug("Updating " + entries.size() + " entries");
         try {
+            for (Entry entry: entries) {
+                Entry existing = service.getEntryForId(entry.getId());
+                if (existing == null) {
+                    LOG.warn("Failed to get entry for supplied id");
+                    return Response.status(Response.Status.NOT_FOUND).build();
+                }
+            }
+
             service.updateEntries(entries, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);
@@ -229,6 +239,11 @@ public class EntryRestPoint {
         try {
             Entry from = service.getEntryForId(Long.parseLong(fromId));
             Entry to = service.getEntryForId(Long.parseLong(toId));
+            if (from == null || to == null) {
+                LOG.warn("Failed to get entry for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             service.swapEntryNumbers(from, to, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);

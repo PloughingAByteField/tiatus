@@ -64,4 +64,6 @@ public interface UserDao {
      * @return list of user roles
      */
     List<Role> getUserRoles() throws DaoException;
+
+    User getUserForId(Long id);
 }

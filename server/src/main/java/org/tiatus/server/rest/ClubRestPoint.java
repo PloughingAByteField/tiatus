@@ -102,11 +102,12 @@ public class ClubRestPoint {
     public Response removeClub(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing club with id " + id);
         try {
-            Club club = new Club();
-            club.setId(Long.parseLong(id));
-            service.deleteClub(club, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            Club club = service.getClubForId(Long.parseLong(id));;
+            if (club != null) {
+                service.deleteClub(club, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -122,15 +123,23 @@ public class ClubRestPoint {
 
     /**
      * Update club, restricted to Admin users
+     * @param id of club to update
      * @param club to update
      * @return 200 response or an error code
      */
     @PUT
+    @Path("{id}")
     @RolesAllowed({Role.ADMIN})
     @Produces("application/json")
-    public Response updateClub(@Context HttpServletRequest request, Club club) {
-        LOG.debug("updating club");
+    public Response updateClub(@PathParam("id") String id, @Context HttpServletRequest request, Club club) {
+        LOG.debug("updating club of id " + id);
         try {
+            Club existing = service.getClubForId(Long.parseLong(id));
+            if (existing == null) {
+                LOG.warn("Failed to get club for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             service.updateClub(club, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);

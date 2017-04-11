@@ -125,6 +125,11 @@ public class RaceEventDaoImpl implements RaceEventDao {
         return query.setParameter("event_id", event.getId()).getSingleResult();
     }
 
+    @Override
+    public RaceEvent getRaceEventForId(Long id) {
+        return em.find(RaceEvent.class, id);
+    }
+
 
     private Position getPositionForId(Long id) {
         return em.find(Position.class, id);

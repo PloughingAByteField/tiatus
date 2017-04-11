@@ -35,4 +35,6 @@ public interface PenaltyService {
      * @return list of penalties
      */
     List<Penalty> getPenalties();
+
+    Penalty getPenaltyForId(Long id);
 }

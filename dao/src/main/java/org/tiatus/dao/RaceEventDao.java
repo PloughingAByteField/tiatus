@@ -56,4 +56,6 @@ public interface RaceEventDao {
      * @return RaceEvent containing event or null
      */
     RaceEvent getRaceEventByEvent(Event event);
+
+    RaceEvent getRaceEventForId(Long id);
 }

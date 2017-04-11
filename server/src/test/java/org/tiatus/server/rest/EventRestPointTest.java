@@ -136,6 +136,13 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteEvent() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
+            public Event getEventForId(Long id) {
+                Event event = new Event();
+                event.setId(Long.valueOf(1));
+                return event;
+            }
+
+            @Mock
             public void deleteEvent(Event event, String sessionId) throws ServiceException {
             }
         };
@@ -153,6 +160,13 @@ public class EventRestPointTest extends RestTestBase {
     @Test
     public void deleteEventServiceException() throws Exception {
         new MockUp<EventServiceImpl>() {
+            @Mock
+            public Event getEventForId(Long id) {
+                Event event = new Event();
+                event.setId(Long.valueOf(1));
+                return event;
+            }
+
             @Mock
             public void deleteEvent(Event event, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
@@ -276,6 +290,13 @@ public class EventRestPointTest extends RestTestBase {
     public void deleteAssignedEventGeneralException() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
+            public RaceEvent getRaceEventForId(Long id) {
+                RaceEvent raceEvent = new RaceEvent();
+                raceEvent.setId(Long.valueOf(1));
+                return raceEvent;
+            }
+
+            @Mock
             public void deleteRaceEvent(RaceEvent raceEvent, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
@@ -373,12 +394,18 @@ public class EventRestPointTest extends RestTestBase {
     public void updateAssignedEvents() throws Exception {
         new MockUp<EventServiceImpl>() {
             @Mock
+            public RaceEvent getRaceEventForId(Long id) {
+                RaceEvent raceEvent = new RaceEvent();
+                raceEvent.setId(Long.valueOf(1));
+                return raceEvent;
+            }
+
+            @Mock
             public void updateRaceEvents(List<RaceEvent> raceEvents, String sessionId) throws ServiceException {
             }
         };
 
-        String payload = "[{\"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}]";
-
+        String payload = "[{\"id\": \"1\", \"raceEventOrder\": \"1\",\"event\": {\"name\":\"Event 1\"}, \"race\": {\"id\": \"1\", \"name\": \"Race 1\"}}]";
         MockHttpRequest request = MockHttpRequest.put("events/assigned");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
@@ -393,6 +420,13 @@ public class EventRestPointTest extends RestTestBase {
     @Test
     public void updateAssignedEventsServiceException() throws Exception {
         new MockUp<EventServiceImpl>() {
+            @Mock
+            public RaceEvent getRaceEventForId(Long id) {
+                RaceEvent raceEvent = new RaceEvent();
+                raceEvent.setId(Long.valueOf(1));
+                return raceEvent;
+            }
+
             @Mock
             public void updateRaceEvents(List<RaceEvent> raceEvents, String sessionId) throws ServiceException {
                 throw new ServiceException("error");
@@ -415,6 +449,13 @@ public class EventRestPointTest extends RestTestBase {
     @Test
     public void updateAssignedEventsGeneralException() throws Exception {
         new MockUp<EventServiceImpl>() {
+            @Mock
+            public RaceEvent getRaceEventForId(Long id) {
+                RaceEvent raceEvent = new RaceEvent();
+                raceEvent.setId(Long.valueOf(1));
+                return raceEvent;
+            }
+
             @Mock
             public void updateRaceEvents(List<RaceEvent> raceEvents, String sessionId) throws Exception {
                 throw new Exception();

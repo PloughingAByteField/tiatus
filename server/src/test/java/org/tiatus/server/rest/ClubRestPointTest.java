@@ -134,6 +134,13 @@ public class ClubRestPointTest extends RestTestBase {
     public void deleteClub() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
+            public Club getClubForId(Long id) {
+                Club club = new Club();
+                club.setId(Long.valueOf(1));
+                return club;
+            }
+
+            @Mock
             public void deleteClub(Club club, String sessionId) throws ServiceException {
             }
         };
@@ -151,6 +158,13 @@ public class ClubRestPointTest extends RestTestBase {
     @Test
     public void deleteClubServiceException() throws Exception {
         new MockUp<ClubServiceImpl>() {
+            @Mock
+            public Club getClubForId(Long id) {
+                Club club = new Club();
+                club.setId(Long.valueOf(1));
+                return club;
+            }
+
             @Mock
             public void deleteClub(Club club, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
@@ -191,11 +205,18 @@ public class ClubRestPointTest extends RestTestBase {
     public void updateClub() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
+            public Club getClubForId(Long id) {
+                Club club = new Club();
+                club.setId(Long.valueOf(1));
+                return club;
+            }
+
+            @Mock
             public void updateClub(Club club, String sessionId) throws ServiceException {
             }
         };
 
-        MockHttpRequest request = MockHttpRequest.put("clubs");
+        MockHttpRequest request = MockHttpRequest.put("clubs/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
@@ -211,13 +232,20 @@ public class ClubRestPointTest extends RestTestBase {
     public void updateClubServiceException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
+            public Club getClubForId(Long id) {
+                Club club = new Club();
+                club.setId(Long.valueOf(1));
+                return club;
+            }
+
+            @Mock
             public void updateClub(Club club, String sessionId) throws ServiceException {
                 throw new ServiceException(new Exception("exception"));
             }
         };
 
 
-        MockHttpRequest request = MockHttpRequest.put("clubs");
+        MockHttpRequest request = MockHttpRequest.put("clubs/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
@@ -233,12 +261,19 @@ public class ClubRestPointTest extends RestTestBase {
     public void updateClubGeneralException() throws Exception {
         new MockUp<ClubServiceImpl>() {
             @Mock
+            public Club getClubForId(Long id) {
+                Club club = new Club();
+                club.setId(Long.valueOf(1));
+                return club;
+            }
+
+            @Mock
             public void updateClub(Club club, String sessionId) throws Exception {
                 throw new Exception("exception");
             }
         };
 
-        MockHttpRequest request = MockHttpRequest.put("clubs");
+        MockHttpRequest request = MockHttpRequest.put("clubs/1");
         request.accept(MediaType.APPLICATION_JSON);
         request.contentType(MediaType.APPLICATION_JSON);
         String payload = "{\"id\":\"1\",\"clubName\":\"Club 1\"}";
@@ -344,7 +379,7 @@ public class ClubRestPointTest extends RestTestBase {
 
     @Test
     public void checkUpdateClubAnnotations() throws Exception {
-        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "clubs", "PUT");
+        EndPointDetail endPointDetail = getEndPointDetail(endPointDetails, "clubs/{id}", "PUT");
         if (endPointDetail == null) {
             System.out.println("Failed to find end point for PUT:club");
             throw new Exception();

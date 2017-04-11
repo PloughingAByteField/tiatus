@@ -90,4 +90,9 @@ public class PenaltyDaolmpl implements PenaltyDao {
             throw new DaoException(e.getMessage());
         }
     }
+
+    @Override
+    public Penalty getPenaltyForId(Long id) {
+        return em.find(Penalty.class, id);
+    }
 }

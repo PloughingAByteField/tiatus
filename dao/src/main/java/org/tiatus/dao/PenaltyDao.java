@@ -36,4 +36,5 @@ public interface PenaltyDao {
      */
     void updatePenalty(Penalty penalty) throws DaoException;
 
+    Penalty getPenaltyForId(Long id);
 }

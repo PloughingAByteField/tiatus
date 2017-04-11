@@ -148,6 +148,13 @@ public class RaceRestPointTest extends RestTestBase {
     public void deleteRace() throws Exception {
         new MockUp<RaceServiceImpl>() {
             @Mock
+            Race getRaceForId(Long id) {
+                Race race = new Race();
+                race.setId(Long.valueOf(1));
+                return race;
+            }
+
+            @Mock
             public void deleteRace(Race race, String sessionId) throws ServiceException {
             }
         };

@@ -30,6 +30,8 @@ public interface DisqualificationService {
      */
     void updateDisqualification(Disqualification disqualification, String sessionId) throws ServiceException;
 
+    Disqualification getDisqualificationForId(Long id);
+
     /**
      * Get disqualifications
      * @return list of disqualifications

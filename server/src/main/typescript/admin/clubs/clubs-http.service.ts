@@ -42,7 +42,7 @@ export class AdminClubsHttpService extends ClubsHttpService {
 
     public updateClub(club: Club): Promise<Club> {
         return this.http
-            .put(this.endPoint,
+            .put(this.endPoint + '/' + club.id,
             JSON.stringify(club), { headers: this.headers })
             .toPromise()
             .then(() => {

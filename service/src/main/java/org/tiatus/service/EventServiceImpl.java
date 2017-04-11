@@ -51,7 +51,7 @@ public class EventServiceImpl implements EventService {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         } catch (JMSException e) {
-            LOG.warn(DAO_EXCEPTION, e);
+            LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
         }
     }
@@ -69,7 +69,7 @@ public class EventServiceImpl implements EventService {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         } catch (JMSException e) {
-            LOG.warn(DAO_EXCEPTION, e);
+            LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
         }
     }
@@ -87,7 +87,7 @@ public class EventServiceImpl implements EventService {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         } catch (JMSException e) {
-            LOG.warn(DAO_EXCEPTION, e);
+            LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
         }
     }
@@ -104,7 +104,7 @@ public class EventServiceImpl implements EventService {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         } catch (JMSException e) {
-            LOG.warn(DAO_EXCEPTION, e);
+            LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
         }
     }
@@ -121,7 +121,7 @@ public class EventServiceImpl implements EventService {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         } catch (JMSException e) {
-            LOG.warn(DAO_EXCEPTION, e);
+            LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
         }
     }
@@ -143,7 +143,7 @@ public class EventServiceImpl implements EventService {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
         } catch (JMSException e) {
-            LOG.warn(DAO_EXCEPTION, e);
+            LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
         }
     }
@@ -161,5 +161,15 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getUnassignedEvents() {
         return dao.getUnassignedEvents();
+    }
+
+    @Override
+    public Event getEventForId(Long id) {
+        return dao.getEventForId(id);
+    }
+
+    @Override
+    public RaceEvent getRaceEventForId(Long id) {
+        return raceEventDao.getRaceEventForId(id);
     }
 }

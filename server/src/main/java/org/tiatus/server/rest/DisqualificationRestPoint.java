@@ -102,11 +102,12 @@ public class DisqualificationRestPoint {
     public Response removeDisqualification(@PathParam("id") String id, @Context HttpServletRequest request) {
         LOG.debug("Removing disqualification with id " + id);
         try {
-            Disqualification disqualification = new Disqualification();
-            disqualification.setId(Long.parseLong(id));
-            service.deleteDisqualification(disqualification, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            Disqualification disqualification = service.getDisqualificationForId(Long.parseLong(id));
+            if (disqualification != null) {
+                service.deleteDisqualification(disqualification, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -122,15 +123,23 @@ public class DisqualificationRestPoint {
 
     /**
      * Update disqualification, restricted to Adjudicator users
+     * @param id of disqualification to update
      * @param disqualification to update
      * @return 200 response or an error code
      */
     @PUT
+    @Path("{id}")
     @RolesAllowed({Role.ADJUDICATOR})
     @Produces("application/json")
-    public Response updateDisqualification(@Context HttpServletRequest request, Disqualification disqualification) {
+    public Response updateDisqualification(@PathParam("id") String id, @Context HttpServletRequest request, Disqualification disqualification) {
         LOG.debug("updating disqualification");
         try {
+            Disqualification existing = service.getDisqualificationForId(Long.parseLong(id));
+            if (existing == null) {
+                LOG.warn("Failed to get disqualification for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             service.updateDisqualification(disqualification, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);

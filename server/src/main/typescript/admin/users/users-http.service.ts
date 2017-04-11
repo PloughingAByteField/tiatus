@@ -50,7 +50,7 @@ export class AdminUsersHttpService {
 
     public updateUser(user: User): Promise<User> {
         return this.http
-            .put(this.endPoint,
+            .put(this.endPoint + '/' + user.id,
             JSON.stringify(user), { headers: this.headers })
             .toPromise()
             .then(() => {

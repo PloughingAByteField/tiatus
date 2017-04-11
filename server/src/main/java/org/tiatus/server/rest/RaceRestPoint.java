@@ -101,14 +101,15 @@ public class RaceRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removeRace(@PathParam("id") String id, @Context HttpServletRequest request) {
+    public Response removeRace(@PathParam("id") Long id, @Context HttpServletRequest request) {
         LOG.debug("Removing race with id " + id);
         try {
-            Race race = new Race();
-            race.setId(Long.parseLong(id));
-            service.deleteRace(race, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            Race race = service.getRaceForId(id);
+            if (race != null) {
+                service.deleteRace(race, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -124,15 +125,23 @@ public class RaceRestPoint {
 
     /**
      * Update race, restricted to Adjudicator and Admin users
+     * @param id of race to update
      * @param race of race to update
      * @return response with 204
      */
     @RolesAllowed({Role.ADMIN, Role.ADJUDICATOR})
     @PUT
+    @Path("{id}")
     @Produces("application/json")
-    public Response updateRace(@Context HttpServletRequest request, Race race) {
-        LOG.debug("Updating race with id " + race.getId());
+    public Response updateRace(@PathParam("id") Long id, @Context HttpServletRequest request, Race race) {
+        LOG.debug("Updating race with id " + id);
         try {
+            Race existing = service.getRaceForId(id);
+            if (existing != null) {
+                LOG.warn("Failed to get race for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             service.updateRace(race, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);

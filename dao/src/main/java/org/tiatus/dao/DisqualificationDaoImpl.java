@@ -91,4 +91,9 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public Disqualification getDisqualificationForId(Long id) {
+        return em.find(Disqualification.class, id);
+    }
 }

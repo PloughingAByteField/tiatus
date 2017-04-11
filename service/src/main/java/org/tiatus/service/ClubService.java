@@ -30,6 +30,8 @@ public interface ClubService {
      */
     void updateClub(Club club, String sessionId) throws ServiceException;
 
+    Club getClubForId(Long id);
+
     /**
      * Get clubs
      * @return list of clubs

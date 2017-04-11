@@ -43,7 +43,7 @@ export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
 
   public updatePenalty(penalty: Penalty): Promise<Penalty> {
     return this.http
-       .put(this.endpoint,
+       .put(this.endpoint + '/' + penalty.id,
         JSON.stringify(penalty), {headers: this.headers})
       .toPromise()
       .then(() => {

@@ -99,14 +99,15 @@ public class PenaltyRestPoint {
     @DELETE
     @Path("{id}")
     @Produces("application/json")
-    public Response removePenalty(@PathParam("id") String id, @Context HttpServletRequest request) {
+    public Response removePenalty(@PathParam("id") Long id, @Context HttpServletRequest request) {
         LOG.debug("Removing penalty with id " + id);
         try {
-            Penalty penalty = new Penalty();
-            penalty.setId(Long.parseLong(id));
-            service.deletePenalty(penalty, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            Penalty penalty = service.getPenaltyForId(id);
+            if (penalty != null) {
+                service.deletePenalty(penalty, request.getSession().getId());
+                if (cache.get(CACHE_NAME) != null) {
+                    cache.evict(CACHE_NAME);
+                }
             }
             return Response.noContent().build();
 
@@ -122,15 +123,23 @@ public class PenaltyRestPoint {
 
     /**
      * Update penalty, restricted to Adjudicator users
+     * @param id of penalty to update
      * @param penalty to update
      * @return 200 response or an error code
      */
     @PUT
+    @Path("{id}")
     @RolesAllowed({Role.ADJUDICATOR})
     @Produces("application/json")
-    public Response updatePenalty(Penalty penalty, @Context HttpServletRequest request) {
+    public Response updatePenalty(@PathParam("id") Long id, Penalty penalty, @Context HttpServletRequest request) {
         LOG.debug("updating penalty");
         try {
+            Penalty existing = service.getPenaltyForId(id);
+            if (existing == null) {
+                LOG.warn("Failed to get penalty for supplied id");
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
             service.updatePenalty(penalty, request.getSession().getId());
             if (cache.get(CACHE_NAME) != null) {
                 cache.evict(CACHE_NAME);

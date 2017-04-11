@@ -173,4 +173,9 @@ public class EventDaoImpl implements EventDao {
         TypedQuery<Event> query = em.createQuery("FROM Event e where e.id not in (select re.event FROM RaceEvent re)", Event.class);
         return query.getResultList();
     }
+
+    @Override
+    public Event getEventForId(Long id) {
+        return em.find(Event.class, id);
+    }
 }

@@ -71,4 +71,7 @@ public interface EventService {
      * @return list of events assigned not yet to a race
      */
     List<Event> getUnassignedEvents();
+
+    Event getEventForId(Long id);
+    RaceEvent getRaceEventForId(Long id);
 }

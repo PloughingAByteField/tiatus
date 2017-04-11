@@ -44,7 +44,7 @@ export class AdjudicatorHttpDisqualificationsService extends DisqualificationHtt
 
   public updateDisqualification(disqualification: Disqualification): Promise<Disqualification> {
     return this.http
-       .put(this.endpoint,
+       .put(this.endpoint + '/' + disqualification.id,
         JSON.stringify(disqualification), {headers: this.headers})
       .toPromise()
       .then(() => {
