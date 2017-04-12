@@ -137,7 +137,7 @@ public class RaceRestPoint {
         LOG.debug("Updating race with id " + id);
         try {
             Race existing = service.getRaceForId(id);
-            if (existing != null) {
+            if (existing == null) {
                 LOG.warn("Failed to get race for supplied id");
                 return Response.status(Response.Status.NOT_FOUND).build();
             }

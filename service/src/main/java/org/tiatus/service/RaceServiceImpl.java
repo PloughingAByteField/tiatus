@@ -73,7 +73,7 @@ public class RaceServiceImpl implements RaceService {
 
     @Override
     public void updateRace(Race race, String sessionId) throws ServiceException {
-        LOG.debug("Delete race " + race.getId());
+        LOG.debug("Update race " + race.getId());
         try {
             dao.updateRace(race);
             Message message = Message.createMessage(race, MessageType.UPDATE, sessionId);
