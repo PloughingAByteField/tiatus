@@ -50,4 +50,14 @@ public class ConfigServiceImpl implements ConfigService {
             throw new ServiceException(e);
         }
     }
+
+    @Override
+    public String getEventTitle() {
+        return dao.getEventTitle();
+    }
+
+    @Override
+    public String getEventLogo() {
+        return dao.getEventLogo();
+    }
 }

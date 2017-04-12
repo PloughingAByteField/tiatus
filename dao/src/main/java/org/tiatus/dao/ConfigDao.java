@@ -9,4 +9,6 @@ public interface ConfigDao {
     void setEventFooter(String footer) throws DaoException;
     void setEventTitle(String title) throws DaoException;
     String setEventLogo(InputStream stream, String fileName) throws DaoException;
+    String getEventTitle();
+    String getEventLogo();
 }
