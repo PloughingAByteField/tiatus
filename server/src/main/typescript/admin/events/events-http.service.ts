@@ -34,7 +34,7 @@ export class AdminEventsHttpService extends EventsHttpService {
 
     public updateEvent(event: Event): Promise<Event> {
         return this.http
-            .put(this.endpoint,
+            .put(this.endpoint + '/' + event.id,
             JSON.stringify(event), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {

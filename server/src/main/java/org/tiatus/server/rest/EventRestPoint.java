@@ -287,6 +287,9 @@ public class EventRestPoint {
             if (cache.get(cacheName) != null) {
                 cache.evict(cacheName);
             }
+            if (cache.get(CACHE_NAME) != null) {
+                cache.evict(CACHE_NAME);
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (ServiceException e) {

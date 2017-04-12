@@ -160,6 +160,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       let raceEvent: RaceEventPojo = new RaceEventPojo();
       raceEvent.race = this.selectedRace.id;
       raceEvent.event = event;
+      raceEvent.raceEventOrder = this.eventsForRace.length + 1;
       this.raceEventsService.createRaceEvent(raceEvent).then((newRaceEvent: RaceEvent) => {
         this.goBack();
       });
