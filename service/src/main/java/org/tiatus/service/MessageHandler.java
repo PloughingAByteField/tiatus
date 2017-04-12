@@ -9,6 +9,8 @@ import org.tiatus.entity.Race;
 
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -23,6 +25,7 @@ import javax.jms.ObjectMessage;
         @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:jboss/exported/jms/queue/message"),
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
         @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Dups-ok-acknowledge") })
+@TransactionManagement(value= TransactionManagementType.BEAN)
 public class MessageHandler implements MessageListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageHandler.class);
