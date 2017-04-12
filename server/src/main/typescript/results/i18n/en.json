@@ -11,5 +11,7 @@
     "EVENT_PLACEHOLDER": "Enter event",
     "DISQUALIFIED": "Disqualifed",
     "PENALTY": "Penalty",
-    "SELECT_RACE": "Please select a race"
+    "SELECT_RACE": "Please select a race",
+    "DOWNLOAD_RESULTS_BY_TIME_FOR_RACE" : "Download results by time for race",
+    "DOWNLOAD_RESULTS_BY_EVENT_FOR_RACE" : "Download results by event for race"
 }

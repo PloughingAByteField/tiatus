@@ -90,7 +90,7 @@ public class ReportServiceImpl implements ReportService {
 
         PDImageXObject pdImage = getLogoImage(logoFile, document);
 
-        PDPageContentStream contentStream = new PDPageContentStream(document, page, true, true);
+        PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.OVERWRITE, true);
         PDFont font = PDType1Font.HELVETICA_BOLD;
         PDFont dateFont = PDType1Font.HELVETICA;
 

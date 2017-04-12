@@ -1,3 +1,7 @@
+<div *ngIf="race && race.closed">
+    <button (click)="downloadResultsByTime(race)" >{{ 'DOWNLOAD_RESULTS_BY_TIME_FOR_RACE' | translate }}</button>
+    <button (click)="downloadResultsByEvent(race)" >{{ 'DOWNLOAD_RESULTS_BY_EVENT_FOR_RACE' | translate }}</button>
+</div>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>

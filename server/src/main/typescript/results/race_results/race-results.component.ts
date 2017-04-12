@@ -32,6 +32,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     public page: number = 1;
     public itemsPerPage: number = 10;
     public positions: Position[];
+    public race: Race;
     public displayablePositions: Position[];
     public reverseNumberSort = false;
     public reverseAdjustedTimeSort = false;
@@ -45,7 +46,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     private clubs: Club[] = new Array<Club>();
     private events: Event[] = new Array<Event>();
     private races: Race[];
-    private race: Race;
+
     private entryTimes: EntryTime[];
     private disqualifiedText: string;
     private penaltyText: string;
@@ -231,6 +232,14 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
             }
         }
         return clubs;
+    }
+
+    public downloadResultsByTime(race: Race): void {
+        window.open('/tiatus/results/' + race.name + '_ByTime.pdf', '_blank');
+    }
+
+    public downloadResultsByEvent(race: Race): void {
+        window.open('/tiatus/results/' + race.name + '_ByEvent.pdf', '_blank');
     }
 
     private getEventForId(eventId: number): Event {
