@@ -32,16 +32,22 @@ public class ReportServiceImpl implements ReportService {
     private static final String JBOSS_HOME_DIR = "jboss.home.dir";
 
     private EntryService entryService;
-    private RaceService raceService;
     private TimesService timesService;
     private ConfigService configService;
 
+    private Locale currentLocale;
+    private ResourceBundle messages;
+
     @Inject
-    public ReportServiceImpl(ConfigService configService, EntryService entryService, RaceService raceService, TimesService timesService) {
+    public ReportServiceImpl(ConfigService configService, EntryService entryService, TimesService timesService) {
         this.configService = configService;
         this.entryService = entryService;
-        this.raceService = raceService;
         this.timesService = timesService;
+        // TODO pull language and country from config service which is to be configured as part of setup
+        String language = "en";
+        String country = "GB";
+        this.currentLocale = new Locale(language, country);
+        this.messages = ResourceBundle.getBundle("org.tiatus.service.ReportService", currentLocale);
     }
 
     @Override
@@ -122,7 +128,7 @@ public class ReportServiceImpl implements ReportService {
         File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by time
-        createPdfReport(resultsFile, title, logoFile, now, entriesByEventPositions);
+        createPdfReport(resultsFile, title, logoFile, "by_time", now, entriesByEventPositions);
     }
 
     private void createByEventPdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions, List<EntryPositionTime> times) throws ServiceException, IOException, URISyntaxException {
@@ -130,7 +136,7 @@ public class ReportServiceImpl implements ReportService {
         File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by event
-        createPdfReport(resultsFile, title, logoFile, now, entriesByEventPositions);
+        createPdfReport(resultsFile, title, logoFile, "by_event", now, entriesByEventPositions);
     }
 
     private PDImageXObject getLogoImage(File logoFile, PDDocument document) throws IOException {
@@ -138,15 +144,34 @@ public class ReportServiceImpl implements ReportService {
         return pdImage;
     }
 
-    private void fillHeader(PDDocument document, PDPage page, PDImageXObject pdImage, String title, float scale, float yStartNewPage) throws IOException {
-        PDFont font = PDType1Font.HELVETICA_BOLD;
+    private void fillHeader(PDDocument document, PDPage page, PDImageXObject pdImage, String title, float scale, float yStartNewPage, String reportType, Date now) throws IOException {
         PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.OVERWRITE, true);
         contentStream.drawImage(pdImage, 20, yStartNewPage - (pdImage.getHeight() * scale), pdImage.getWidth()*scale, pdImage.getHeight()*scale);
 
+        int fontSize = 12;
+        float center = page.getMediaBox().getWidth() / 2;
+        float titleWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(title) / 1000 * fontSize;
         contentStream.beginText();
-        contentStream.setFont(font, 12);
-        contentStream.newLineAtOffset((pdImage.getWidth()*scale) + 60, yStartNewPage - (pdImage.getHeight() * scale)/2 + 20);
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, fontSize);
+        contentStream.newLineAtOffset(center - (titleWidth / 2), yStartNewPage - (pdImage.getHeight() * scale)/2 + 20);
         contentStream.showText(title);
+        contentStream.endText();
+
+        String report = messages.getString(reportType);
+        float reportWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(report) / 1000 * fontSize;
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.HELVETICA_BOLD, fontSize);
+        contentStream.newLineAtOffset(center - (reportWidth / 2), yStartNewPage - (pdImage.getHeight() * scale)/2);
+        contentStream.showText(report);
+        contentStream.endText();
+
+        int correctAsFontSize = 10;
+        String correct = messages.getString("correct_as_of") + " " + now;
+        float correctWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(correct) / 1000 * correctAsFontSize;
+        contentStream.beginText();
+        contentStream.setFont(PDType1Font.HELVETICA, correctAsFontSize);
+        contentStream.newLineAtOffset(center - (correctWidth / 2), yStartNewPage - (pdImage.getHeight() * scale)/2 - 50);
+        contentStream.showText(correct);
         contentStream.endText();
 
         contentStream.close();
@@ -160,7 +185,7 @@ public class ReportServiceImpl implements ReportService {
         PDFont footerFont = PDType1Font.TIMES_ROMAN;
         while (iterator.hasNext()) {
             PDPage pdPage = iterator.next();
-            String text = "Page " + count + " of " + numberOfPages;
+            String text = messages.getString("page") + " " + count + " " + messages.getString("of") + " " + numberOfPages;
             PDPageContentStream footer = new PDPageContentStream(document, pdPage, PDPageContentStream.AppendMode.APPEND, true);
             footer.beginText();
             footer.setFont(footerFont, 10);
@@ -191,7 +216,7 @@ public class ReportServiceImpl implements ReportService {
         return cell;
     }
 
-    private void createPdfReport(File resultsFile, String title, File logoFile, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
+    private void createPdfReport(File resultsFile, String title, File logoFile, String reportType, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
 
         PDDocument document = new PDDocument();
         PDPage page = new PDPage(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
@@ -203,7 +228,7 @@ public class ReportServiceImpl implements ReportService {
         float scale = 0.15f;
         float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
 
-        fillHeader(document, page, pdImage, title, scale, yStartNewPage);
+        fillHeader(document, page, pdImage, title, scale, yStartNewPage, reportType, now);
 
         float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
         boolean drawContent = true;
@@ -221,16 +246,17 @@ public class ReportServiceImpl implements ReportService {
             }
             BaseTable table = new BaseTable(yStart, yStartNewPage, bottomMargin, tableWidth, margin, document, page, true, drawContent);
 
-            Row<PDPage> headerRow = table.createRow(15f);
+            Row<PDPage> positionsRow = table.createRow(15f);
             String positions = null;
             if (e.getPositions().size() > 0) {
-                positions = e.getPositions().get(0).getPosition().getName() + " to " + e.getPositions().get(e.getPositions().size() - 1).getPosition().getName();
+                positions = e.getPositions().get(0).getPosition().getName() + " " + messages.getString("to") + " " + e.getPositions().get(e.getPositions().size() - 1).getPosition().getName();
             }
-            Cell<PDPage> cell = headerRow.createCell(100, positions);
+            Cell<PDPage> cell = positionsRow.createCell(100, positions);
             cell.setFont(PDType1Font.HELVETICA_BOLD);
             cell.setFillColor(Color.BLACK);
             cell.setTextColor(Color.WHITE);
-            table.addHeaderRow(headerRow);
+            table.addHeaderRow(positionsRow);
+
             List<Entry> entries = e.getEntries();
             fillResults(entries, table);
             yStart = table.draw();
@@ -242,9 +268,17 @@ public class ReportServiceImpl implements ReportService {
         document.close();
     }
 
+    private void addHeaderCell(int width, String text, Row<PDPage> headerRow)  {
+        Cell<PDPage> cell = headerRow.createCell(width, text);
+        cell.setFont(PDType1Font.HELVETICA);
+        cell.setFillColor(Color.BLACK);
+        cell.setTextColor(Color.WHITE);
+    }
+
     private void fillResults(List<Entry> entries, BaseTable table) {
         // need to scale based on the number of positions all has to add to 100
-        int numberOfPositions = entries.get(0).getEvent().getPositions().size() - 1;
+        List<EventPosition> positions = entries.get(0).getEvent().getPositions();
+        int numberOfPositions = positions.size() - 1;
         float totalColumnWidths = 80f;
         if (numberOfPositions > 0) {
             totalColumnWidths += numberOfPositions * 10;
@@ -263,6 +297,21 @@ public class ReportServiceImpl implements ReportService {
             left = 100 - (numberWidth + eventWidth + clubWidth + crewWidth + commentWidth);
         }
         commentWidth += left;
+
+        Row<PDPage> headerRow = table.createRow(15f);
+        addHeaderCell(numberWidth, messages.getString("number"), headerRow);
+        addHeaderCell(eventWidth, messages.getString("event"), headerRow);
+        addHeaderCell(clubWidth, messages.getString("club"), headerRow);
+        addHeaderCell(crewWidth, messages.getString("details"), headerRow);
+        if (numberOfPositions > 0) {
+            for (int i = 1; i <= numberOfPositions; i++) {
+                Position position = positions.get(i).getPosition();
+                addHeaderCell(positionWidth, position.getName(), headerRow);
+            }
+        }
+        addHeaderCell(commentWidth, messages.getString("comment"), headerRow);
+        table.addHeaderRow(headerRow);
+
         for (Entry entry: entries) {
             Row<PDPage> row = table.createRow(10f);
             boolean fastestInSection = false;
