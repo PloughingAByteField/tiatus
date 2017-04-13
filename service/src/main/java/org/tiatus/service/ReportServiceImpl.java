@@ -20,6 +20,9 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.List;
 
@@ -69,6 +72,7 @@ public class ReportServiceImpl implements ReportService {
         List<EntryPositionTime> times = timesService.getAllTimesForRace(race);
         // create array of entries by starting and end position
         List<EntriesForEventPositions> entriesByEventPositions = getEntriesSortedForEventPositions(entries);
+
         createByTimePdfReport(title, logoFile, race, now, entriesByEventPositions, times);
         createByEventPdfReport(title, logoFile, race, now, entriesByEventPositions, times);
     }
@@ -128,7 +132,8 @@ public class ReportServiceImpl implements ReportService {
         File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by time
-        createPdfReport(resultsFile, title, logoFile, "by_time", now, entriesByEventPositions);
+
+        createPdfReport(resultsFile, title, logoFile, "by_time", now, entriesByEventPositions, times);
     }
 
     private void createByEventPdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions, List<EntryPositionTime> times) throws ServiceException, IOException, URISyntaxException {
@@ -136,7 +141,7 @@ public class ReportServiceImpl implements ReportService {
         File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by event
-        createPdfReport(resultsFile, title, logoFile, "by_event", now, entriesByEventPositions);
+        createPdfReport(resultsFile, title, logoFile, "by_event", now, entriesByEventPositions, times);
     }
 
     private PDImageXObject getLogoImage(File logoFile, PDDocument document) throws IOException {
@@ -216,7 +221,7 @@ public class ReportServiceImpl implements ReportService {
         return cell;
     }
 
-    private void createPdfReport(File resultsFile, String title, File logoFile, String reportType, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
+    private void createPdfReport(File resultsFile, String title, File logoFile, String reportType, Date now, List<EntriesForEventPositions> entriesByEventPositions, List<EntryPositionTime> times) throws ServiceException, IOException, URISyntaxException {
 
         PDDocument document = new PDDocument();
         PDPage page = new PDPage(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
@@ -258,7 +263,7 @@ public class ReportServiceImpl implements ReportService {
             table.addHeaderRow(positionsRow);
 
             List<Entry> entries = e.getEntries();
-            fillResults(entries, table);
+            fillResults(entries, table, times);
             yStart = table.draw();
         }
 
@@ -275,7 +280,7 @@ public class ReportServiceImpl implements ReportService {
         cell.setTextColor(Color.WHITE);
     }
 
-    private void fillResults(List<Entry> entries, BaseTable table) {
+    private void fillResults(List<Entry> entries, BaseTable table, List<EntryPositionTime> times) {
         // need to scale based on the number of positions all has to add to 100
         List<EventPosition> positions = entries.get(0).getEvent().getPositions();
         int numberOfPositions = positions.size() - 1;
@@ -319,11 +324,89 @@ public class ReportServiceImpl implements ReportService {
             Cell<PDPage> event = createCellForRow(row, eventWidth, entry.getEvent().getName(), fastestInSection);
             Cell<PDPage> club = createCellForRow(row, clubWidth, getClubsForEntry(entry), fastestInSection);
             Cell<PDPage> crew = createCellForRow(row, crewWidth, entry.getCrew(), fastestInSection);
-            for (int i = 1; i < entry.getEvent().getPositions().size(); i++) {
-                Cell<PDPage> position = createCellForRow(row, positionWidth, "", fastestInSection);
+            if (entry.getEvent().getPositions().size() > 0) {
+                List<EntryPositionTime> entryTimes = getPositionTimesForEntryByPosition(entry, times);
+                Position startingPosition = entry.getEvent().getPositions().get(0).getPosition();
+                Timestamp startTimestamp = getTimeForPosition(startingPosition, entryTimes);
+                Instant startingPositionInstant = null;
+                if (startTimestamp != null) {
+                    startingPositionInstant = startTimestamp.toInstant();
+                }
+                for (int i = 1; i < entry.getEvent().getPositions().size(); i++) {
+                    Position position = entry.getEvent().getPositions().get(i).getPosition();
+                    Timestamp positionTimestamp = getTimeForPosition(position, entryTimes);
+                    if (positionTimestamp != null && startTimestamp != null) {
+                        Instant positionInstant = positionTimestamp.toInstant();
+                        Duration timeToPosition = Duration.between(startingPositionInstant, positionInstant);
+                        String time = getTimeForDuration(timeToPosition);
+                        createCellForRow(row, positionWidth, time, fastestInSection);
+                    } else {
+                        createCellForRow(row, positionWidth, "", fastestInSection);
+                    }
+                }
             }
             Cell<PDPage> comment = createCellForRow(row, commentWidth, "", fastestInSection);
         }
+    }
+
+    private String getTimeForDuration(Duration duration) {
+        String time = "";
+        long hours = duration.toHours();
+        if (hours < 10) {
+            time = time + "0";
+        }
+        time = time + hours + ":";
+        long minutes = duration.minusHours(hours).toMinutes();
+        if (minutes < 10) {
+            time = time + "0";
+        }
+        time = time + minutes + ":";
+        long seconds = duration.minusHours(hours).minusMinutes(minutes).toMillis()/1000;
+        if (seconds < 10) {
+            time = time + "0";
+        }
+        time = time + seconds;
+
+        return time;
+    }
+
+    private Timestamp getTimeForPosition(Position position, List<EntryPositionTime> entryTimes) {
+        for (EntryPositionTime entryPositionTime: entryTimes) {
+            if (entryPositionTime.getPosition().getId() == position.getId()) {
+                return entryPositionTime.getTime();
+            }
+        }
+        return null;
+    }
+
+    private List<EntryPositionTime> getPositionTimesForEntryByPosition(Entry entry, List<EntryPositionTime> times) {
+        List<EntryPositionTime> entryPositionTimes = new ArrayList<>();
+        for (EntryPositionTime time: times) {
+            if (time.getEntry().getId() == entry.getId()) {
+                entryPositionTimes.add(time);
+            }
+        }
+        List<EventPosition> eventPositions = entry.getEvent().getPositions();
+
+        entryPositionTimes.sort(new Comparator<EntryPositionTime>() {
+            @Override
+            public int compare(EntryPositionTime t1, EntryPositionTime t2) {
+                Integer t1PositionOrder = 0;
+                Integer t2PositionOrder = 0;
+                for (EventPosition eventPosition : eventPositions) {
+                    if (eventPosition.getPosition().getId() == t1.getPosition().getId()) {
+                        t1PositionOrder = eventPosition.getPositionOrder();
+                    }
+                    if (eventPosition.getPosition().getId() == t2.getPosition().getId()) {
+                        t2PositionOrder = eventPosition.getPositionOrder();
+                    }
+                }
+
+                return t2PositionOrder - t1PositionOrder;
+            }
+        });
+
+        return entryPositionTimes;
     }
 
     private String getClubsForEntry(Entry entry) {
