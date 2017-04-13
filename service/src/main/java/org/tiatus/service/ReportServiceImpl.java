@@ -34,17 +34,24 @@ public class ReportServiceImpl implements ReportService {
     private static final Logger LOG = LoggerFactory.getLogger(ReportServiceImpl.class);
     private static final String JBOSS_HOME_DIR = "jboss.home.dir";
 
-    private EntryService entryService;
-    private TimesService timesService;
     private ConfigService configService;
+    private DisqualificationService disqualificationService;
+    private EntryService entryService;
+    private PenaltyService penaltyService;
+    private TimesService timesService;
+
+    private List<Disqualification> disqualifications;
+    private List<Penalty> penalties;
 
     private Locale currentLocale;
     private ResourceBundle messages;
 
     @Inject
-    public ReportServiceImpl(ConfigService configService, EntryService entryService, TimesService timesService) {
+    public ReportServiceImpl(ConfigService configService, DisqualificationService disqualificationService, EntryService entryService, PenaltyService penaltyService, TimesService timesService) {
         this.configService = configService;
+        this.disqualificationService = disqualificationService;
         this.entryService = entryService;
+        this.penaltyService = penaltyService;
         this.timesService = timesService;
         // TODO pull language and country from config service which is to be configured as part of setup
         String language = "en";
@@ -57,6 +64,8 @@ public class ReportServiceImpl implements ReportService {
     public void createReportForRace(Race race) {
         LOG.debug("Got report creation request for race " + race.getName());
         try {
+            disqualifications = disqualificationService.getDisqualifications();
+            penalties = penaltyService.getPenalties();
             createPdfReports(race);
         } catch (ServiceException | IOException | URISyntaxException e) {
             LOG.warn("Failed to create report ", e);
@@ -320,6 +329,7 @@ public class ReportServiceImpl implements ReportService {
         for (Entry entry: entries) {
             Row<PDPage> row = table.createRow(10f);
             boolean fastestInSection = false;
+            boolean disqualified = isEntryDisqualified(entry);
             Cell<PDPage> number = createCellForRow(row, numberWidth, entry.getNumber().toString(), fastestInSection);
             Cell<PDPage> event = createCellForRow(row, eventWidth, entry.getEvent().getName(), fastestInSection);
             Cell<PDPage> club = createCellForRow(row, clubWidth, getClubsForEntry(entry), fastestInSection);
@@ -335,7 +345,7 @@ public class ReportServiceImpl implements ReportService {
                 for (int i = 1; i < entry.getEvent().getPositions().size(); i++) {
                     Position position = entry.getEvent().getPositions().get(i).getPosition();
                     Timestamp positionTimestamp = getTimeForPosition(position, entryTimes);
-                    if (positionTimestamp != null && startTimestamp != null) {
+                    if (!disqualified && positionTimestamp != null && startTimestamp != null) {
                         Instant positionInstant = positionTimestamp.toInstant();
                         Duration timeToPosition = Duration.between(startingPositionInstant, positionInstant);
                         String time = getTimeForDuration(timeToPosition);
@@ -345,8 +355,32 @@ public class ReportServiceImpl implements ReportService {
                     }
                 }
             }
-            Cell<PDPage> comment = createCellForRow(row, commentWidth, "", fastestInSection);
+            if (disqualified) {
+                createCellForRow(row, commentWidth, messages.getString("disqualified"), false);
+            } else if (hasEntryPenalties(entry)) {
+                createCellForRow(row, commentWidth, messages.getString("penalty"), fastestInSection);
+            } else {
+                createCellForRow(row, commentWidth, "", fastestInSection);
+            }
         }
+    }
+
+    private boolean isEntryDisqualified(Entry entry) {
+        for (Disqualification disqualification: disqualifications) {
+            if (disqualification.getEntry().getId() == entry.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasEntryPenalties(Entry entry) {
+        for (Penalty penalty: penalties) {
+            if (penalty.getEntry().getId() == entry.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getTimeForDuration(Duration duration) {
