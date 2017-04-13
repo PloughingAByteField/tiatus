@@ -1,14 +1,13 @@
 package org.tiatus.entity;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by johnreynolds on 10/10/2016.
@@ -37,7 +36,7 @@ public class Event implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = true)
 	@OrderBy("positionOrder")
-	private Set<EventPosition> positions = new HashSet<>();
+	private List<EventPosition> positions = new ArrayList<>();
 
 	public Event(){}
 
@@ -69,11 +68,11 @@ public class Event implements Serializable {
 		isWeighted = weighted;
 	}
 
-	public Set<EventPosition> getPositions() {
+	public List<EventPosition> getPositions() {
 		return positions;
 	}
 
-	public void setPositions(Set<EventPosition> positions) {
+	public void setPositions(List<EventPosition> positions) {
 		this.positions = positions;
 	}
 
