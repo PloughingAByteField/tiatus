@@ -31,6 +31,8 @@ import { ClubsService } from '../clubs/clubs.service';
 import { ClubsHttpService } from '../clubs/clubs-http.service';
 import { EventsService } from '../events/events.service';
 import { EventsHttpService } from '../events/events-http.service';
+import { RaceEventsService } from '../race-events/race-events.service';
+import { RaceEventsHttpService } from '../race-events/race-events-http.service';
 
 import { ENV_PROVIDERS } from './environment';
 import { resultsRoutes } from './results.routes';
@@ -38,6 +40,7 @@ import { ResultsComponent } from './results.component';
 import { LandingComponent } from './landing';
 
 import { RaceResultsComponent } from './race_results';
+import { RaceResultsTableComponent } from './race_results/results-table/results-table.component';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -57,7 +60,8 @@ export function createTranslateLoader(http: Http) {
   declarations: [
     ResultsComponent,
     LandingComponent,
-    RaceResultsComponent
+    RaceResultsComponent,
+    RaceResultsTableComponent
   ],
   imports: [
     BrowserModule,
@@ -98,6 +102,8 @@ export function createTranslateLoader(http: Http) {
     ClubsHttpService,
     EventsService,
     EventsHttpService,
+    RaceEventsService,
+    RaceEventsHttpService,
     Title
   ]
 })

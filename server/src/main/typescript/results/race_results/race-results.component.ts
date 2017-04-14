@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
+
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -13,6 +15,8 @@ import { Penalty } from '../../penalties/penalty.model';
 import { Disqualification } from '../../disqualification/disqualification.model';
 import { PositionTime, convertFromTimeStamp } from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
+import { EventPosition } from '../../events/event-positions.model';
+import { RaceEvent } from '../../race-events/race-event.model';
 
 import { PositionsService } from '../../positions/positions.service';
 import { RacesService } from '../../races/races.service';
@@ -21,6 +25,9 @@ import { PenaltiesService } from '../../penalties/penalties.service';
 import { DisqualificationService } from '../../disqualification/disqualification.service';
 import { EventsService } from '../../events/events.service';
 import { ClubsService } from '../../clubs/clubs.service';
+import { RaceEventsService } from '../../race-events/race-events.service';
+import { TimesPositions } from './time-positions.model';
+import { EventsAtPositions } from './events-at-positions.model';
 
 @Component({
     selector: 'race-results',
@@ -40,24 +47,39 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     public clubFilter: string = '';
     public eventFilter: string = '';
     public filteredEntryTimes: EntryTime[];
+    public timesForRace: TimesPositions[] = new Array<TimesPositions>();
+    public eventsAtPositions: EventsAtPositions[] = new Array<EventsAtPositions>();
 
-    private pollingPeriod: number = 20000;
+    private pollingPeriod: number = 200000;
     private raceId: number = 0;
     private clubs: Club[] = new Array<Club>();
     private events: Event[] = new Array<Event>();
     private races: Race[];
-
+    private raceEvents: RaceEvent[];
+    private raceEventsForRace: RaceEvent[];
     private entryTimes: EntryTime[];
     private disqualifiedText: string;
     private penaltyText: string;
     private penalties: Penalty[];
     private disqualifications: Disqualification[];
-    private polling: any;
+    private polling: Subscription;
+    private positionsSubscription: Subscription;
+    private racesSubscription: Subscription;
+    private penaltiesSubscription: Subscription;
+    private clubsSubscription: Subscription;
+    private eventsSubscription: Subscription;
+    private raceEventsSubscription: Subscription;
+    private disqualificationsSubscription: Subscription;
+    private translateDisqualifiedSubscription: Subscription;
+    private translatePenaltySubscription: Subscription;
+    private isDefaulting = false;
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private translate: TranslateService,
         private racesService: RacesService,
+        private raceEventsService: RaceEventsService,
         private positionsService: PositionsService,
         private entryTimesService: EntryTimesService,
         private clubsService: ClubsService,
@@ -67,36 +89,45 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     ) {}
 
     public ngOnInit() {
-        this.positionsService.getPositions()
+        this.positionsSubscription = this.positionsService.getPositions()
             .subscribe((positions: Position[]) => {
                 this.positions = positions;
                 this.displayablePositions = positions.slice();
                 this.displayablePositions.shift();
         });
 
-        this.racesService.getRaces().subscribe((races: Race[]) => {
+        this.racesSubscription = this.racesService.getRaces().subscribe((races: Race[]) => {
             this.races = races;
             if (this.raceId) {
                 this.setRaceForRaceId(this.raceId);
             }
         });
 
-        this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
+        this.penaltiesSubscription =
+            this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
             this.penalties = penalties;
         });
 
-        this.clubsService.getClubs().subscribe((clubs: Club[]) => {
+        this.clubsSubscription = this.clubsService.getClubs().subscribe((clubs: Club[]) => {
             this.clubs = clubs;
         });
 
-        this.eventsService.getEvents().subscribe((events: Event[]) => {
+        this.eventsSubscription = this.eventsService.getEvents().subscribe((events: Event[]) => {
             this.events = events;
+            console.log(events);
+            this.populateEventsAtPositionsForRace(this.race);
         });
 
-        this.disqualificationService.getDisqualifications()
+        this.raceEventsSubscription =
+            this.raceEventsService.getEvents().subscribe((events: RaceEvent[]) => {
+            this.raceEvents = events;
+            this.populateEventsAtPositionsForRace(this.race);
+        });
+
+        this.disqualificationsSubscription = this.disqualificationService.getDisqualifications()
             .subscribe((disqualifications: Disqualification[]) => {
                 this.disqualifications = disqualifications;
-            });
+        });
 
         this.route.params.subscribe((params: Params) => {
             this.raceId = +params['raceId'];
@@ -104,12 +135,19 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
             this.numberFilter = '';
             this.clubFilter = '';
             this.eventFilter = '';
+            let url: string = this.router.routerState.snapshot.url;
+            let count = (url.match(/\//g) || []).length;
+            if (count === 2) {
+                this.isDefaulting = true;
+            }
         });
 
-        this.translate.get('DISQUALIFIED').subscribe((res: string) => {
+        this.translateDisqualifiedSubscription =
+            this.translate.get('DISQUALIFIED').subscribe((res: string) => {
             this.disqualifiedText = res;
         });
-        this.translate.get('PENALTY').subscribe((res: string) => {
+        this.translatePenaltySubscription =
+            this.translate.get('PENALTY').subscribe((res: string) => {
             this.penaltyText = res;
         });
 
@@ -126,8 +164,16 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
-        console.log('bye');
         this.polling.unsubscribe();
+        this.positionsSubscription.unsubscribe();
+        this.racesSubscription.unsubscribe();
+        this.clubsSubscription.unsubscribe();
+        this.penaltiesSubscription.unsubscribe();
+        this.eventsSubscription.unsubscribe();
+        this.disqualificationsSubscription.unsubscribe();
+        this.translateDisqualifiedSubscription.unsubscribe();
+        this.translatePenaltySubscription.unsubscribe();
+        this.raceEventsSubscription.unsubscribe();
     }
 
     public onKey(value: string, field: string) {
@@ -145,6 +191,24 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
 
     public sortByNumber(direction: string): void {
         this.reverseNumberSort = !this.reverseNumberSort;
+        this.filteredEntryTimes.sort((e1, e2) => {
+            let order: number;
+            if (e1.entry.number < e2.entry.number) {
+                order = -1;
+
+            } else if (e1.entry.number === e2.entry.number) {
+                order = 0;
+
+            } else if (e1.entry.number > e2.entry.number) {
+                order = 1;
+            }
+
+            if (direction === 'up') {
+                order = order * -1;
+            }
+
+            return order;
+        });
     }
 
     public sortByAdjustedTime(direction: string): void {
@@ -155,6 +219,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         if (this.isDisqualified(entryTime)) {
             return null;
         }
+
         if (entryTime.times.length > 0) {
             let actualStartPoint: PositionTime = entryTime.times
                 .filter((positionTime: PositionTime) => positionTime.startPoint === true)
@@ -242,6 +307,71 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         window.open('/tiatus/results/' + race.name + '_ByEvent.pdf', '_blank');
     }
 
+    private populateEventsAtPositionsForRace(race: Race): void {
+        console.log('get eps');
+        if (this.race) {
+            this.raceEventsForRace = this.raceEventsService.getEventsForRace(this.race);
+            console.log(this.raceEventsForRace);
+            if (this.raceEventsForRace) {
+                this.eventsAtPositions = new Array<EventsAtPositions>();
+                for (let raceEvent of this.raceEventsForRace) {
+                    let event: Event = this.getEventForId(raceEvent.event);
+                    if (event === null) {
+                        continue;
+                    }
+                    let finish: Position;
+                    let start: Position;
+                    if (event.positions.length > 1) {
+                        start = this.positionsService.getPositionForId(event.positions[0].position);
+                        finish = this.positionsService.getPositionForId
+                            (event.positions[event.positions.length - 1].position);
+                    }
+
+                    if (this.eventsAtPositions.length === 0) {
+                        let eventsAtPosition: EventsAtPositions = new EventsAtPositions();
+                        eventsAtPosition.events.push(event);
+                        eventsAtPosition.finish = finish;
+                        eventsAtPosition.start = start;
+                        this.eventsAtPositions.push(eventsAtPosition);
+                    } else {
+                        let found: boolean = false;
+                        for (let ep of this.eventsAtPositions) {
+                            if (ep.finish && finish && ep.finish.id === finish.id
+                                && ep.start && start && ep.start.id === start.id) {
+                                ep.events.push(event);
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            let eventsAtPosition: EventsAtPositions = new EventsAtPositions();
+                            eventsAtPosition.events.push(event);
+                            eventsAtPosition.finish = finish;
+                            eventsAtPosition.start = start;
+                            this.eventsAtPositions.push(eventsAtPosition);
+                        }
+                    }
+                }
+
+                console.log(this.eventsAtPositions);
+                if (this.isDefaulting) {
+                    if (this.eventsAtPositions.length > 0) {
+                        let eventsAtPosition: EventsAtPositions = this.eventsAtPositions[0];
+                        if (eventsAtPosition.start !== null && eventsAtPosition.finish !== null) {
+                            console.log('navigating');
+                            let x = this.router.navigate([
+                                'race',
+                                this.race.id,
+                                eventsAtPosition.start.name,
+                                eventsAtPosition.finish.name
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private getEventForId(eventId: number): Event {
         for (let event of this.events) {
             if (event.id === eventId) {
@@ -315,14 +445,17 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
 
         return 0;
     }
+
     private getTimesForRace(race: Race): void {
         if (race) {
             console.log('Get times for race ' + race.id);
-            this.entryTimesService.getEntriesForRace(this.race)
+            this.populateEventsAtPositionsForRace(race);
+            this.entryTimesService.getEntriesForRace(race)
                 .subscribe((data: EntryTime[]) => {
                     console.log(data);
                     this.entryTimes = data;
                     this.filteredEntryTimes = this.entryTimes;
+                    this.filteredEntryTimes = this.filterEntries();
             });
         }
     }
@@ -336,17 +469,78 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
 
     private filterEntries(): EntryTime[] {
         let filteredEntries: EntryTime[] = this.entryTimes;
-        if (this.numberFilter) {
-            filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
-        }
-        if (this.clubFilter) {
-            filteredEntries = this.filterClubs(filteredEntries, this.clubFilter);
-        }
-        if (this.eventFilter) {
-            filteredEntries = this.filterEvents(filteredEntries, this.eventFilter);
-        }
+        console.log('filter');
+        console.log(filteredEntries.length);
+        if (filteredEntries.length > 0) {
+            this.timesForRace = new Array<TimesPositions>();
+            if (this.numberFilter) {
+                console.log(this.numberFilter);
+                filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
+            }
+            if (this.clubFilter) {
+                filteredEntries = this.filterClubs(filteredEntries, this.clubFilter);
+            }
+            if (this.eventFilter) {
+                filteredEntries = this.filterEvents(filteredEntries, this.eventFilter);
+            }
 
+            for (let entry of filteredEntries) {
+                this.addEntryToTimes(entry);
+            }
+            console.log(this.timesForRace);
+        }
         return filteredEntries;
+    }
+
+    private createTimesForRaceEntry(
+            entryTime: EntryTime,
+            start: Position,
+            finish: Position
+        ): TimesPositions {
+        let timesPositions: TimesPositions = new TimesPositions();
+        timesPositions.finish = finish;
+        timesPositions.start = start;
+        timesPositions.times = new Array<EntryTime>();
+        return timesPositions;
+    }
+
+    private addEntryToTimes(entryTime: EntryTime): void {
+        let event: Event = this.eventsService.getEventForId(entryTime.entry.event);
+        let eventPositions: EventPosition[] = event.positions;
+        let finish: Position = null;
+        let start: Position = null;
+        if (eventPositions.length > 1) {
+            finish =
+                this.positionsService.getPositionForId
+                    (eventPositions[eventPositions.length - 1].position);
+            start =
+                this.positionsService.getPositionForId(eventPositions[0].position);
+        }
+        if (this.timesForRace.length > 0) {
+            let found: boolean = false;
+            for (let et of this.timesForRace) {
+                if (et.finish === null && finish === null && et.start === null && start === null) {
+                    found = true;
+                    et.times.push(entryTime);
+                    break;
+                }
+                if (et.finish !== null && finish !== null && et.start !== null && start !== null
+                    && et.finish.id === finish.id && et.start.id === start.id) {
+                    found = true;
+                    et.times.push(entryTime);
+                    break;
+                }
+            }
+            if (!found) {
+                let timesPositions: TimesPositions =
+                this.createTimesForRaceEntry(entryTime, start, finish);
+                this.timesForRace.push(timesPositions);
+            }
+        } else {
+            let timesPositions: TimesPositions =
+                this.createTimesForRaceEntry(entryTime, start, finish);
+            this.timesForRace.push(timesPositions);
+        }
     }
 
     private filterNumbers(entryTimes: EntryTime[], value: string): EntryTime[] {
