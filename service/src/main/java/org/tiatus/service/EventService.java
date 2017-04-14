@@ -1,6 +1,7 @@
 package org.tiatus.service;
 
 import org.tiatus.entity.Event;
+import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 
 import java.util.List;
@@ -74,4 +75,6 @@ public interface EventService {
 
     Event getEventForId(Long id);
     RaceEvent getRaceEventForId(Long id);
+
+    List<RaceEvent> getRaceEventsForRace(Race race);
 }

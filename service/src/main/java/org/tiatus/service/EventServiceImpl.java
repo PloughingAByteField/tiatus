@@ -6,6 +6,7 @@ import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EventDao;
 import org.tiatus.dao.RaceEventDao;
 import org.tiatus.entity.Event;
+import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 
 import javax.enterprise.inject.Default;
@@ -171,5 +172,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public RaceEvent getRaceEventForId(Long id) {
         return raceEventDao.getRaceEventForId(id);
+    }
+
+    @Override
+    public List<RaceEvent> getRaceEventsForRace(Race race) {
+        return raceEventDao.getRaceEventsForRace(race);
     }
 }

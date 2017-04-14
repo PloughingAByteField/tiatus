@@ -14,6 +14,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.*;
+import org.tiatus.entity.Event;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -36,20 +37,25 @@ public class ReportServiceImpl implements ReportService {
 
     private ConfigService configService;
     private DisqualificationService disqualificationService;
+    private EventService eventService;
     private EntryService entryService;
     private PenaltyService penaltyService;
     private TimesService timesService;
 
     private List<Disqualification> disqualifications;
     private List<Penalty> penalties;
+    private List<RaceEvent> raceEvents;
+    private List<Entry> entries;
+    private List<EntryPositionTime> times;
 
     private Locale currentLocale;
     private ResourceBundle messages;
 
     @Inject
-    public ReportServiceImpl(ConfigService configService, DisqualificationService disqualificationService, EntryService entryService, PenaltyService penaltyService, TimesService timesService) {
+    public ReportServiceImpl(ConfigService configService, DisqualificationService disqualificationService, EntryService entryService, EventService eventService, PenaltyService penaltyService, TimesService timesService) {
         this.configService = configService;
         this.disqualificationService = disqualificationService;
+        this.eventService = eventService;
         this.entryService = entryService;
         this.penaltyService = penaltyService;
         this.timesService = timesService;
@@ -66,24 +72,27 @@ public class ReportServiceImpl implements ReportService {
         try {
             disqualifications = disqualificationService.getDisqualifications();
             penalties = penaltyService.getPenalties();
-            createPdfReports(race);
+            raceEvents = eventService.getRaceEventsForRace(race);
+            entries = entryService.getEntriesForRace(race);
+            times = timesService.getAllTimesForRace(race);
+            Date now = new Date();
+            createPdfReports(race, now);
         } catch (ServiceException | IOException | URISyntaxException e) {
             LOG.warn("Failed to create report ", e);
         }
     }
 
-    private void createPdfReports(Race race) throws ServiceException, IOException, URISyntaxException {
-        Date now = new Date();
+    private void createPdfReports(Race race, Date now) throws ServiceException, IOException, URISyntaxException {
+
         String logoFileName = configService.getEventLogo();
         File logoFile = new File(System.getProperty(JBOSS_HOME_DIR) + logoFileName);
         String title = configService.getEventTitle() + " " + race.getName();
-        List<Entry> entries = entryService.getEntriesForRace(race);
-        List<EntryPositionTime> times = timesService.getAllTimesForRace(race);
+
         // create array of entries by starting and end position
         List<EntriesForEventPositions> entriesByEventPositions = getEntriesSortedForEventPositions(entries);
 
-        createByTimePdfReport(title, logoFile, race, now, entriesByEventPositions, times);
-        createByEventPdfReport(title, logoFile, race, now, entriesByEventPositions, times);
+        createByTimePdfReport(title, logoFile, race, now, entriesByEventPositions);
+        createByEventPdfReport(title, logoFile, race, now, entriesByEventPositions);
     }
 
     private List<EntriesForEventPositions> getEntriesSortedForEventPositions(List<Entry> entries) {
@@ -136,21 +145,116 @@ public class ReportServiceImpl implements ReportService {
         return false;
     }
 
-    private void createByTimePdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions, List<EntryPositionTime> times) throws ServiceException, IOException, URISyntaxException {
+    private void createByTimePdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
         String fileName = "/tiatus/results/" + race.getName() + "_ByTime.pdf";
         File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by time
-
-        createPdfReport(resultsFile, title, logoFile, "by_time", now, entriesByEventPositions, times);
+        for (EntriesForEventPositions e: entriesByEventPositions) {
+            e.getEntries().sort(new Comparator<Entry>() {
+                @Override
+                public int compare(Entry e1, Entry e2) {
+                    return compareEntries(e1, e2);
+                }
+            });
+        }
+        createPdfReport(resultsFile, title, logoFile, "by_time", now, entriesByEventPositions);
     }
 
-    private void createByEventPdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions, List<EntryPositionTime> times) throws ServiceException, IOException, URISyntaxException {
+    private void createByEventPdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
         String fileName = "/tiatus/results/" + race.getName() + "_ByEvent.pdf";
         File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by event
-        createPdfReport(resultsFile, title, logoFile, "by_event", now, entriesByEventPositions, times);
+        for (EntriesForEventPositions e: entriesByEventPositions) {
+            e.getEntries().sort(new Comparator<Entry>() {
+                @Override
+                public int compare(Entry e1, Entry e2) {
+                    if (e1.getEvent().getId() == e2.getEvent().getId()) {
+                        return compareEntries(e1, e2);
+                    } else {
+                        if (getRaceOrderForEvent(e1.getEvent()) < getRaceOrderForEvent(e2.getEvent())) {
+                            return -1;
+                        } else  if (getRaceOrderForEvent(e1.getEvent()) > getRaceOrderForEvent(e2.getEvent())) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                }
+            });
+        }
+        createPdfReport(resultsFile, title, logoFile, "by_event", now, entriesByEventPositions);
+    }
+
+    private int compareEntries(Entry entry1, Entry entry2) {
+        List<EntryPositionTime> entry1Times = getPositionTimesForEntryByPosition(entry1, times);
+        List<EntryPositionTime> entry2Times = getPositionTimesForEntryByPosition(entry2, times);
+        if (entry1Times.size() == 0 && entry2Times.size() > 0) {
+            return 1;
+        }
+        if (entry1Times.size() > 0 && entry2Times.size() == 0) {
+            return -1;
+        }
+
+        boolean isEntry1Disqualified = isEntryDisqualified(entry1);
+        boolean isEntry2Disqualified = isEntryDisqualified(entry2);
+        if (isEntry1Disqualified != isEntry2Disqualified) {
+            if (isEntry1Disqualified) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+
+        List<EventPosition> positions = entry1.getEvent().getPositions();
+        int numberOfPositions = positions.size();
+        if (entry1Times.size() < numberOfPositions && entry2Times.size() == numberOfPositions) {
+            return 1;
+        }
+        if (entry1Times.size() == numberOfPositions && entry2Times.size() < numberOfPositions) {
+            return -1;
+        }
+
+        Duration entry1Time = getDurationForEntry(entry1, entry1Times);
+        Duration entry2Time = getDurationForEntry(entry2, entry2Times);
+        if (entry1Time != null && entry2Time != null) {
+            return entry1Time.compareTo(entry2Time);
+        }
+
+        return 0;
+    }
+
+    private Duration getDurationForEntry(Entry entry, List<EntryPositionTime> timesForEntry) {
+        List<EventPosition> positions = entry.getEvent().getPositions();
+        if (positions.size() == 0) {
+            return null;
+        }
+        Position startingPosition = positions.get(0).getPosition();
+        Position finishingPosition = positions.get(positions.size() - 1).getPosition();
+        Timestamp startTimestamp = getTimeForPosition(startingPosition, timesForEntry);
+        Timestamp finishTimestamp = getTimeForPosition(finishingPosition, timesForEntry);
+        if (startTimestamp != null && finishTimestamp != null) {
+            Instant startTimestampInstant = startTimestamp.toInstant();
+            Instant finishTimestampInstant = finishTimestamp.toInstant();
+            List<Penalty> entryPenalties = getPenaltiesForEntry(entry);
+            if (entryPenalties.size() > 0) {
+                for (Penalty penalty: entryPenalties) {
+                    finishTimestampInstant = finishTimestampInstant.plusMillis(penalty.getTime().getTime());
+                }
+            }
+            return Duration.between(startTimestampInstant, finishTimestampInstant);
+        }
+
+        return null;
+    }
+
+    private Integer getRaceOrderForEvent(Event event) {
+        for (RaceEvent raceEvent: raceEvents) {
+            if (event.getId() == raceEvent.getEvent().getId()) {
+                return raceEvent.getRaceEventOrder();
+            }
+        }
+        return 0;
     }
 
     private PDImageXObject getLogoImage(File logoFile, PDDocument document) throws IOException {
@@ -230,7 +334,7 @@ public class ReportServiceImpl implements ReportService {
         return cell;
     }
 
-    private void createPdfReport(File resultsFile, String title, File logoFile, String reportType, Date now, List<EntriesForEventPositions> entriesByEventPositions, List<EntryPositionTime> times) throws ServiceException, IOException, URISyntaxException {
+    private void createPdfReport(File resultsFile, String title, File logoFile, String reportType, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
 
         PDDocument document = new PDDocument();
         PDPage page = new PDPage(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
@@ -347,6 +451,14 @@ public class ReportServiceImpl implements ReportService {
                     Timestamp positionTimestamp = getTimeForPosition(position, entryTimes);
                     if (!disqualified && positionTimestamp != null && startTimestamp != null) {
                         Instant positionInstant = positionTimestamp.toInstant();
+                        if (i == entry.getEvent().getPositions().size() - 1) {
+                            List<Penalty> entryPenalties = getPenaltiesForEntry(entry);
+                            if (entryPenalties.size() > 0) {
+                                for (Penalty penalty: entryPenalties) {
+                                    positionInstant = positionInstant.plusMillis(penalty.getTime().getTime());
+                                }
+                            }
+                        }
                         Duration timeToPosition = Duration.between(startingPositionInstant, positionInstant);
                         String time = getTimeForDuration(timeToPosition);
                         createCellForRow(row, positionWidth, time, fastestInSection);
@@ -381,6 +493,16 @@ public class ReportServiceImpl implements ReportService {
             }
         }
         return false;
+    }
+
+    private List<Penalty> getPenaltiesForEntry(Entry entry) {
+        List<Penalty> penaltiesForEntry = new ArrayList<>();
+        for (Penalty penalty: penalties) {
+            if (penalty.getEntry().getId() == entry.getId()) {
+                penaltiesForEntry.add(penalty);
+            }
+        }
+        return penaltiesForEntry;
     }
 
     private String getTimeForDuration(Duration duration) {
