@@ -236,12 +236,7 @@ public class ReportServiceImpl implements ReportService {
         if (startTimestamp != null && finishTimestamp != null) {
             Instant startTimestampInstant = startTimestamp.toInstant();
             Instant finishTimestampInstant = finishTimestamp.toInstant();
-            List<Penalty> entryPenalties = getPenaltiesForEntry(entry);
-            if (entryPenalties.size() > 0) {
-                for (Penalty penalty: entryPenalties) {
-                    finishTimestampInstant = finishTimestampInstant.plusMillis(penalty.getTime().getTime());
-                }
-            }
+            finishTimestampInstant = addPenaltiesToTimeForEntry(finishTimestampInstant, entry);
             return Duration.between(startTimestampInstant, finishTimestampInstant);
         }
 
@@ -430,9 +425,19 @@ public class ReportServiceImpl implements ReportService {
         addHeaderCell(commentWidth, messages.getString("comment"), headerRow);
         table.addHeaderRow(headerRow);
 
-        for (Entry entry: entries) {
+        for (int x = 0; x < entries.size(); x++) {
+            Entry entry = entries.get(x);
             Row<PDPage> row = table.createRow(10f);
             boolean fastestInSection = false;
+            if (x == 0) {
+                fastestInSection = true;
+            } else if (x >= 1) {
+                Entry prevEntry = entries.get(x - 1);
+                if (prevEntry.getEvent().getId() != entry.getEvent().getId()) {
+                    fastestInSection = true;
+                }
+            }
+
             boolean disqualified = isEntryDisqualified(entry);
             Cell<PDPage> number = createCellForRow(row, numberWidth, entry.getNumber().toString(), fastestInSection);
             Cell<PDPage> event = createCellForRow(row, eventWidth, entry.getEvent().getName(), fastestInSection);
@@ -452,12 +457,7 @@ public class ReportServiceImpl implements ReportService {
                     if (!disqualified && positionTimestamp != null && startTimestamp != null) {
                         Instant positionInstant = positionTimestamp.toInstant();
                         if (i == entry.getEvent().getPositions().size() - 1) {
-                            List<Penalty> entryPenalties = getPenaltiesForEntry(entry);
-                            if (entryPenalties.size() > 0) {
-                                for (Penalty penalty: entryPenalties) {
-                                    positionInstant = positionInstant.plusMillis(penalty.getTime().getTime());
-                                }
-                            }
+                            positionInstant = addPenaltiesToTimeForEntry(positionInstant, entry);
                         }
                         Duration timeToPosition = Duration.between(startingPositionInstant, positionInstant);
                         String time = getTimeForDuration(timeToPosition);
@@ -475,6 +475,16 @@ public class ReportServiceImpl implements ReportService {
                 createCellForRow(row, commentWidth, "", fastestInSection);
             }
         }
+    }
+
+    private Instant addPenaltiesToTimeForEntry(Instant time, Entry entry) {
+        List<Penalty> entryPenalties = getPenaltiesForEntry(entry);
+        if (entryPenalties.size() > 0) {
+            for (Penalty penalty: entryPenalties) {
+                time = time.plusMillis(penalty.getTime().getTime());
+            }
+        }
+        return time;
     }
 
     private boolean isEntryDisqualified(Entry entry) {
