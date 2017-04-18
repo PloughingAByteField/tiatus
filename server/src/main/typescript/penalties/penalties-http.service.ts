@@ -12,11 +12,11 @@ export class PenaltiesHttpService {
 
   public getPenalties(): Observable<Penalty[]> {
     return this.http.get(this.endpoint)
-      .map(convertJsonToPenalties).share();
+      .map(convertResponseToPenalties).share();
    }
 }
 
-export function convertJsonToPenalties(response: Response): Penalty[] {
+export function convertResponseToPenalties(response: Response): Penalty[] {
     let jsonPenalties: Penalty[] = response.json();
     let penalties: Penalty[] = new Array<Penalty>();
     jsonPenalties.map((json: Penalty) => {

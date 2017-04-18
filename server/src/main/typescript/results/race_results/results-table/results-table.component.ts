@@ -19,7 +19,7 @@ import { PositionTime, convertFromTimeStamp , convertToTimeStamp }
 import { EventPosition } from '../../../events/event-positions.model';
 
 import { PositionsService } from '../../../positions/positions.service';
-import { RacesService } from '../../../races/races.service';
+import { ResultsRacesService } from '../../races/races.service';
 import { EntryTimesService } from '../../../times/entry-times.service';
 import { ResultsPenaltiesService } from '../../penalties/penalties.service';
 import { DisqualificationService } from '../../../disqualification/disqualification.service';
@@ -80,7 +80,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
      constructor(
         private route: ActivatedRoute,
         private translate: TranslateService,
-        private racesService: RacesService,
+        private racesService: ResultsRacesService,
         private entryTimesService: EntryTimesService,
         private clubsService: ClubsService,
         private eventsService: EventsService,

@@ -13,7 +13,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { Ng2PaginationModule } from 'ng2-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { RacesService } from '../races/races.service';
+import { ResultsRacesService } from './races/races.service';
+import { ResultsHttpRacesService } from './races/races-http.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { EntriesService } from '../entries/entries.service';
 import { EntriesHttpService } from '../entries/entries-http.service';
@@ -85,7 +86,8 @@ export function createTranslateLoader(http: Http) {
   ],
   providers: [
     ENV_PROVIDERS,
-    RacesService,
+    ResultsRacesService,
+    ResultsHttpRacesService,
     RacesHttpService,
     EntriesService,
     EntriesHttpService,

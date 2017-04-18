@@ -1,19 +1,12 @@
-/*
- * Angular 2 decorators and services
- */
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Title }     from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 
-import { RacesService } from '../races/races.service';
+import { ResultsRacesService } from './races/races.service';
 
 import { Race } from '../races/race.model';
 
-/*
- * App Component
- * Top Level Component
- */
 @Component({
   selector: 'results',
   styleUrls: [
@@ -21,7 +14,7 @@ import { Race } from '../races/race.model';
   ],
   templateUrl: './results.component.html'
 })
-export class ResultsComponent {
+export class ResultsComponent implements OnInit {
   public logo = '/assets/img/stopwatch.svg';
   public tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
   public param = { value: 'world' };
@@ -30,14 +23,13 @@ export class ResultsComponent {
   constructor(
     private translate: TranslateService,
     private titleService: Title,
-    private racesService: RacesService
-  ) {
-      translate.setDefaultLang('en');
+    private racesService: ResultsRacesService
+  ) {}
 
-      // the lang to use, if the lang isn't available, it will use the current loader to get them
-      translate.use('en');
-
-      this.races = this.racesService.getRaces();
+  public ngOnInit() {
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
+    this.races = this.racesService.getRaces();
   }
 
   public setTitle( newTitle: string) {

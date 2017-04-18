@@ -13,18 +13,22 @@ import { RacesHttpService } from './races-http.service';
 @Injectable()
 export class RacesService {
     protected races: Race[] = new Array<Race>();
+    protected requested: boolean = false;
+
     protected racesSubject: BehaviorSubject<Race[]>
         = new BehaviorSubject<Race[]>(this.races);
 
-    constructor(protected service: RacesHttpService) {
-       this.refresh();
-    }
+    constructor(protected service: RacesHttpService) {}
 
     public getRaceForId(id: number): Race {
       return this.races.filter((race: Race) => race.id === id).shift();
     }
 
     public getRaces(): BehaviorSubject<Race[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.racesSubject;
     }
 

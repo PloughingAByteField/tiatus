@@ -7,8 +7,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
-import { RacesService } from '../races/races.service';
-import { RacesHttpService } from '../races/races-http.service';
+import { ResultsRacesService } from './races/races.service';
+import { ResultsHttpRacesService } from './races/races-http.service';
 import { ResultsComponent } from './results.component';
 
 describe('Results', () => {
@@ -22,8 +22,8 @@ describe('Results', () => {
             imports: [ HttpModule, TranslateModule.forRoot() ],
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
-                RacesService,
-                RacesHttpService,
+                ResultsRacesService,
+                ResultsHttpRacesService,
                 Title,
                 ResultsComponent
             ]

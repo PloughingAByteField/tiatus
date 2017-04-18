@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Penalty, convertObjectToPenalty } from '../../penalties/penalty.model';
+import { Race, convertObjectToRace } from '../../races/race.model';
 import { Data } from '../model/data.model';
 
-import { PenaltiesHttpService, convertResponseToPenalties }
-    from '../../penalties/penalties-http.service';
+import { RacesHttpService, convertResponseToRaces }
+    from '../../races/races-http.service';
 
 @Injectable()
-export class ResultsHttpPenaltiesService extends PenaltiesHttpService {
+export class ResultsHttpRacesService extends RacesHttpService {
 
     private previousEtag: string;
 
@@ -17,13 +17,13 @@ export class ResultsHttpPenaltiesService extends PenaltiesHttpService {
         super(http);
     }
 
-  public getPenaltiesData(): Observable<Data> {
+  public getRacesData(): Observable<Data> {
     return this.http.get(this.endpoint)
       .map((response: Response) => {
         if (response.status === 200) {
-            let penalties: Penalty[] = convertResponseToPenalties(response);
+            let races: Race[] = convertResponseToRaces(response);
             let data: Data = new Data();
-            data.data = penalties;
+            data.data = races;
             data.cached = false;
             let currentEtag: string = response.headers.get('etag');
             if (this.previousEtag) {
