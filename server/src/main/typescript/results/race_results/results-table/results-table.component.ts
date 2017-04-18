@@ -46,6 +46,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
     public reverseNumberSort = false;
     public reverseAdjustedTimeSort = false;
 
+    private pollingPeriod: number = 30000;
     private disqualifications: Disqualification[];
     private penalties: Penalty[];
     private positions: Position[];
@@ -74,6 +75,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
     private disqualificationsSubscription: Subscription;
     private translateDisqualifiedSubscription: Subscription;
     private translatePenaltySubscription: Subscription;
+    private polling: Subscription;
 
      constructor(
         private route: ActivatedRoute,
@@ -127,6 +129,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
                         this.finish = this.positionsService.getPositionForName(this.to);
                     }
                 }
+                this.getTimesForRace(this.race);
         });
 
         this.racesSubscription = this.racesService.getRaces().subscribe((races: Race[]) => {
@@ -139,19 +142,23 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         this.penaltiesSubscription =
             this.penaltiesService.getPenalties().subscribe((penalties: Penalty[]) => {
             this.penalties = penalties;
+            this.getTimesForRace(this.race);
         });
 
         this.clubsSubscription = this.clubsService.getClubs().subscribe((clubs: Club[]) => {
             this.clubs = clubs;
+            this.getTimesForRace(this.race);
         });
 
         this.eventsSubscription = this.eventsService.getEvents().subscribe((events: Event[]) => {
             this.events = events;
+            this.getTimesForRace(this.race);
         });
 
         this.disqualificationsSubscription = this.disqualificationService.getDisqualifications()
             .subscribe((disqualifications: Disqualification[]) => {
                 this.disqualifications = disqualifications;
+                this.getTimesForRace(this.race);
         });
 
         this.translateDisqualifiedSubscription =
@@ -163,6 +170,16 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
             this.translate.get('PENALTY').subscribe((res: string) => {
             this.penaltyText = res;
         });
+
+        this.polling = Observable.interval(this.pollingPeriod).map(() => {
+            this.racesService.refresh();
+            this.positionsService.refresh();
+            this.penaltiesService.refresh();
+            this.disqualificationService.refresh();
+            if (this.race) {
+                this.entryTimesService.refreshForRace(this.race);
+            }
+        }).subscribe();
     }
 
     public ngOnDestroy() {
@@ -179,6 +196,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         this.disqualificationsSubscription.unsubscribe();
         this.translateDisqualifiedSubscription.unsubscribe();
         this.translatePenaltySubscription.unsubscribe();
+        this.polling.unsubscribe();
     }
 
     public getPositions(): Position[] {
@@ -396,7 +414,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
                     });
 
                     this.sortTimesByEntryPositionOrder(this.entryTimesForPositions);
-                    this.filteredEntryTimes = this.entryTimesForPositions;
+                    this.filteredEntryTimes = this.filterEntries();
             });
         }
     }

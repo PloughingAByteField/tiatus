@@ -34,14 +34,12 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
 
     public eventsAtPositions: EventsAtPositions[] = new Array<EventsAtPositions>();
 
-    private pollingPeriod: number = 200000;
     private raceId: number = 0;
     private events: Event[] = new Array<Event>();
     private races: Race[];
     private entries: Entry[];
     private entriesForRace: Entry[];
     private entryTimes: EntryTime[];
-    private polling: Subscription;
     private positionsSubscription: Subscription;
     private racesSubscription: Subscription;
     private penaltiesSubscription: Subscription;
@@ -97,21 +95,9 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                 this.isDefaulting = true;
             }
         });
-
-        // this.polling = Observable.interval(this.pollingPeriod).map(() => {
-        //     console.log('polling');
-        //     this.racesService.refresh();
-        //     this.positionsService.refresh();
-        //     this.penaltiesService.refresh();
-        //     this.disqualificationService.refresh();
-        //     if (this.race) {
-        //         this.entryTimesService.refreshForRace(this.race);
-        //     }
-        // }).subscribe();
     }
 
     public ngOnDestroy() {
-        // this.polling.unsubscribe();
         this.positionsSubscription.unsubscribe();
         this.racesSubscription.unsubscribe();
         this.eventsSubscription.unsubscribe();
