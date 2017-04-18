@@ -1,5 +1,5 @@
 <div *ngIf="race && start && finish">
-    Results for {{ race.name }} from {{ start.name }} to {{ finish.name }}
+    {{ 'RESULTS_FOR' | translate }} {{ race.name }} {{ 'FROM' | translate }} {{ start.name }} {{ 'TO' | translate }} {{ finish.name }}
 </div>
 <table class="table table-bordered table-striped">
     <thead>

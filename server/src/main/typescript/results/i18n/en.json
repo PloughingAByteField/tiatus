@@ -12,6 +12,9 @@
     "DISQUALIFIED": "Disqualifed",
     "PENALTY": "Penalty",
     "SELECT_RACE": "Please select a race",
+    "RESULTS_FOR": "Results for",
+    "FROM": "from",
+    "TO": "to",
     "DOWNLOAD_RESULTS_BY_TIME_FOR_RACE" : "Download results by time for race",
     "DOWNLOAD_RESULTS_BY_EVENT_FOR_RACE" : "Download results by event for race"
 }
