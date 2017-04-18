@@ -64,4 +64,13 @@ export class PositionsService {
         }
         return null;
     }
+
+    public getPositionForName(name: string): Position {
+        for (let position of this.positions) {
+            if (position.name === name) {
+                return position;
+            }
+        }
+        return null;
+    }
 }

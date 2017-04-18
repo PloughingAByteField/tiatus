@@ -5,6 +5,20 @@ export class Event {
     public weighted: boolean;
     public positions: EventPosition[];
     public id: number;
+
+    public sortPositionsByOrder(): void {
+        if (this.positions) {
+            this.positions.sort((ep1: EventPosition, ep2: EventPosition) => {
+                if (ep1.positionOrder < ep2.positionOrder) {
+                    return -1;
+                }
+                if (ep1.positionOrder > ep2.positionOrder) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
+    }
 }
 
 export function convertObjectToEvent(obj: any): Event {
@@ -16,5 +30,6 @@ export function convertObjectToEvent(obj: any): Event {
     obj.positions.map((eventPosition: EventPosition) => {
       event.positions.push(convertObjectToEventPosition(eventPosition));
     });
+    event.sortPositionsByOrder();
     return event;
 }

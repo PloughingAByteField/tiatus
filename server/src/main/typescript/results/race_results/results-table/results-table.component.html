@@ -1,7 +1,6 @@
-    hello
-    <!--<div *ngIf="racePositions.start && racePositions.finish">
-        race from {{ racePositions.start.name }} to {{ racePositions.finish.name }}
-    </div>
+<div *ngIf="race && start && finish">
+    Results for {{ race.name }} from {{ start.name }} to {{ finish.name }}
+</div>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -10,7 +9,7 @@
             <th>{{ 'CLUB' | translate }}</th>
             <th>{{ 'EVENT' | translate }}</th>
             <th>{{ 'CREW' | translate }}</th>
-            <th *ngFor="let position of displayablePositions">{{ position.name }}</th>
+            <th *ngFor="let position of getPositions() | slice:1:-1">{{ position.name }}</th>
             <th *ngIf="reverseAdjustedTimeSort">{{ 'ADJUSTED_TIME' | translate }} <span (click)="sortByAdjustedTime('up')" class="fa fa-caret-up"></span></th>
             <th *ngIf="!reverseAdjustedTimeSort">{{ 'ADJUSTED_TIME' | translate }} <span (click)="sortByAdjustedTime('down')" class="fa fa-caret-down"></span></th>
             <th>{{ 'COMMENTS' | translate }}</th>
@@ -32,11 +31,11 @@
             <td>{{ getClubNamesForEntry(e.entry) }}</td>
             <td>{{ getEventNameForEntry(e.entry) }}</td>
             <td>{{e.entry.crew}}</td>
-            <td *ngFor="let position of displayablePositions">{{ getTimeForEntry(e, position) }}</td>
+            <td *ngFor="let position of getPositions() | slice:1:-1; let i = index">{{ getTimeForEntry(e, position) }}</td>
             <td>{{ getAdjustedTimeForEntry(e) }}</td>
             <td>{{ getCommentsForEntry(e) }}</td>
         </tr>
     </tbody>
 </table>
 
-<ngb-pagination [collectionSize]="filteredEntryTimes?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>-->
+<ngb-pagination [collectionSize]="filteredEntryTimes?.length" [pageSize]="itemsPerPage" [(page)]="page" [boundaryLinks]="true" [directionLinks]="true" [ellipses]="true" [maxSize]="5"></ngb-pagination>
