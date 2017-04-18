@@ -11,6 +11,7 @@ import { Disqualification } from '../../disqualification/disqualification.model'
 import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
     from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
+import { EventPosition } from '../../events/event-positions.model';
 
 import { PositionsService } from '../../positions/positions.service';
 import { AdjudicatorRacesService } from '../races/races.service';
@@ -229,19 +230,18 @@ export class EntriesComponent implements OnInit {
 
     private getTime(entryTime: EntryTime): number {
         if (entryTime.times.length > 0) {
-            let actualStartPoint: PositionTime = entryTime.times
-                .filter((positionTime: PositionTime) => positionTime.startPoint === true)
-                .shift();
-            let eventStartPoint: PositionTime = entryTime.times
-                .filter((positionTime: PositionTime) => positionTime.position
-                    === entryTime.entry.event)
-                .shift();
-            let eventFinishPoint: PositionTime = entryTime.times
-                .filter((positionTime: PositionTime) => positionTime.position
-                        === entryTime.entry.event)
-                .shift();
-            if (eventFinishPoint && actualStartPoint) {
-                return eventFinishPoint.time - actualStartPoint.time;
+            let actualStartPoint: PositionTime = entryTime.times[0];
+            let event: Event = this.eventsService.getEventForId(entryTime.entry.event);
+            if (event.positions.length > 0) {
+                let eventPositions: EventPosition[] = event.positions;
+                let eventFinishPoint: PositionTime = undefined;
+                if (entryTime.times[entryTime.times.length - 1].position
+                    === eventPositions[eventPositions.length - 1].position) {
+                    eventFinishPoint = entryTime.times[entryTime.times.length - 1];
+                }
+                if (eventFinishPoint && actualStartPoint) {
+                    return eventFinishPoint.time - actualStartPoint.time;
+                }
             }
         }
 
