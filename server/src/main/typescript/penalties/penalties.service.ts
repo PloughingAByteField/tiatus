@@ -13,11 +13,15 @@ export class PenaltiesService {
     protected penaltiesSubject: BehaviorSubject<Penalty[]>
         = new BehaviorSubject<Penalty[]>(this.penalties);
 
-    constructor(protected service: PenaltiesHttpService) {
-        this.refresh();
-    }
+    protected requested: boolean = false;
+
+    constructor(protected service: PenaltiesHttpService) {}
 
     public getPenalties(): BehaviorSubject<Penalty[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.penaltiesSubject;
     }
 

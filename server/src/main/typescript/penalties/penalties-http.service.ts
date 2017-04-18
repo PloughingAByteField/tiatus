@@ -16,7 +16,7 @@ export class PenaltiesHttpService {
    }
 }
 
-function convertJsonToPenalties(response: Response): Penalty[] {
+export function convertJsonToPenalties(response: Response): Penalty[] {
     let jsonPenalties: Penalty[] = response.json();
     let penalties: Penalty[] = new Array<Penalty>();
     jsonPenalties.map((json: Penalty) => {

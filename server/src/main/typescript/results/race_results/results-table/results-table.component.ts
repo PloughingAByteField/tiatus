@@ -21,7 +21,7 @@ import { EventPosition } from '../../../events/event-positions.model';
 import { PositionsService } from '../../../positions/positions.service';
 import { RacesService } from '../../../races/races.service';
 import { EntryTimesService } from '../../../times/entry-times.service';
-import { PenaltiesService } from '../../../penalties/penalties.service';
+import { ResultsPenaltiesService } from '../../penalties/penalties.service';
 import { DisqualificationService } from '../../../disqualification/disqualification.service';
 import { EventsService } from '../../../events/events.service';
 import { ClubsService } from '../../../clubs/clubs.service';
@@ -84,7 +84,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         private entryTimesService: EntryTimesService,
         private clubsService: ClubsService,
         private eventsService: EventsService,
-        private penaltiesService: PenaltiesService,
+        private penaltiesService: ResultsPenaltiesService,
         private disqualificationService: DisqualificationService,
         private positionsService: PositionsService) {}
 

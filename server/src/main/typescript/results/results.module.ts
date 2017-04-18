@@ -23,7 +23,8 @@ import { ConfigService } from '../config/config.service';
 import { ConfigHttpService } from '../config/config-http.service';
 import { PositionsService } from '../positions/positions.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
-import { PenaltiesService } from '../penalties/penalties.service';
+import { ResultsPenaltiesService } from './penalties/penalties.service';
+import { ResultsHttpPenaltiesService } from './penalties/penalties-http.service';
 import { PenaltiesHttpService } from '../penalties/penalties-http.service';
 import { DisqualificationService } from '../disqualification/disqualification.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
@@ -94,7 +95,8 @@ export function createTranslateLoader(http: Http) {
     TimesHttpService,
     ConfigService,
     ConfigHttpService,
-    PenaltiesService,
+    ResultsPenaltiesService,
+    ResultsHttpPenaltiesService,
     PenaltiesHttpService,
     DisqualificationService,
     DisqualificationHttpService,
