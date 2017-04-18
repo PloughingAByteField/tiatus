@@ -12,11 +12,11 @@ export class PositionsHttpService {
 
   public getPositions(): Observable<Position[]> {
     return this.http.get(this.endpoint)
-      .map(convertJsonToPositions).share();
+      .map(convertResponseToPositions).share();
   }
 }
 
-function convertJsonToPositions(response: Response): Position[] {
+export function convertResponseToPositions(response: Response): Position[] {
     let jsonPositions: Position[] = response.json();
     let positions: Position[] = new Array<Position>();
     jsonPositions.map((json: Position) => {

@@ -18,11 +18,11 @@ import { PositionTime, convertFromTimeStamp , convertToTimeStamp }
     from '../../../times/postion-time.model';
 import { EventPosition } from '../../../events/event-positions.model';
 
-import { PositionsService } from '../../../positions/positions.service';
+import { ResultsPositionsService } from '../../positions/positions.service';
 import { ResultsRacesService } from '../../races/races.service';
 import { EntryTimesService } from '../../../times/entry-times.service';
 import { ResultsPenaltiesService } from '../../penalties/penalties.service';
-import { DisqualificationService } from '../../../disqualification/disqualification.service';
+import { ResultsDisqualificationService } from '../../disqualification/disqualification.service';
 import { EventsService } from '../../../events/events.service';
 import { ClubsService } from '../../../clubs/clubs.service';
 
@@ -85,8 +85,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         private clubsService: ClubsService,
         private eventsService: EventsService,
         private penaltiesService: ResultsPenaltiesService,
-        private disqualificationService: DisqualificationService,
-        private positionsService: PositionsService) {}
+        private disqualificationService: ResultsDisqualificationService,
+        private positionsService: ResultsPositionsService) {}
 
     public ngOnInit() {
         this.parentRoutesSubscription = this.route.parent.params.subscribe((params: Params) => {

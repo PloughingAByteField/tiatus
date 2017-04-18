@@ -22,12 +22,15 @@ import { TimesService } from '../times/times.service';
 import { TimesHttpService } from '../times/times-http.service';
 import { ConfigService } from '../config/config.service';
 import { ConfigHttpService } from '../config/config-http.service';
-import { PositionsService } from '../positions/positions.service';
+import { ResultsPositionsService } from './positions/positions.service';
+import { ResultsHttpPositionsService } from './positions/positions-http.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
 import { ResultsPenaltiesService } from './penalties/penalties.service';
 import { ResultsHttpPenaltiesService } from './penalties/penalties-http.service';
 import { PenaltiesHttpService } from '../penalties/penalties-http.service';
-import { DisqualificationService } from '../disqualification/disqualification.service';
+import { ResultsDisqualificationService } from './disqualification/disqualification.service';
+import { ResultsHttpDisqualificationsService }
+  from './disqualification/disqualification-http.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
 import { ClubsService } from '../clubs/clubs.service';
 import { ClubsHttpService } from '../clubs/clubs-http.service';
@@ -91,7 +94,8 @@ export function createTranslateLoader(http: Http) {
     RacesHttpService,
     EntriesService,
     EntriesHttpService,
-    PositionsService,
+    ResultsPositionsService,
+    ResultsHttpPositionsService,
     PositionsHttpService,
     TimesService,
     TimesHttpService,
@@ -100,7 +104,8 @@ export function createTranslateLoader(http: Http) {
     ResultsPenaltiesService,
     ResultsHttpPenaltiesService,
     PenaltiesHttpService,
-    DisqualificationService,
+    ResultsDisqualificationService,
+    ResultsHttpDisqualificationsService,
     DisqualificationHttpService,
     ClubsService,
     ClubsHttpService,

@@ -12,7 +12,7 @@ import { PositionTime, convertFromTimeStamp } from '../../times/postion-time.mod
 import { EntryTime } from '../../times/entry-time.model';
 import { EventPosition } from '../../events/event-positions.model';
 
-import { PositionsService } from '../../positions/positions.service';
+import { ResultsPositionsService } from '../positions/positions.service';
 import { ResultsRacesService } from '../races/races.service';
 import { EntriesService } from '../../entries/entries.service';
 import { EntryTimesService } from '../../times/entry-times.service';
@@ -56,7 +56,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private racesService: ResultsRacesService,
-        private positionsService: PositionsService,
+        private positionsService: ResultsPositionsService,
         private entryTimesService: EntryTimesService,
         private entriesService: EntriesService,
         private eventsService: EventsService

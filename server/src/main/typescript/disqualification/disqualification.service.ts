@@ -10,21 +10,25 @@ import { DisqualificationHttpService } from './disqualification-http.service';
 @Injectable()
 export class DisqualificationService {
     protected disqualifications: Disqualification[] = new Array<Disqualification>();
-    protected penaltiesSubject: BehaviorSubject<Disqualification[]>
+    protected disqualificationsSubject: BehaviorSubject<Disqualification[]>
         = new BehaviorSubject<Disqualification[]>(this.disqualifications);
 
-    constructor(protected service: DisqualificationHttpService) {
-        this.refresh();
-    }
+    protected requested: boolean = false;
+
+    constructor(protected service: DisqualificationHttpService) {}
 
     public getDisqualifications(): BehaviorSubject<Disqualification[]> {
-        return this.penaltiesSubject;
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
+        return this.disqualificationsSubject;
     }
 
     public refresh(): void {
         this.service.getDisqualifications().subscribe((disqualifications: Disqualification[]) => {
             this.disqualifications = disqualifications;
-            this.penaltiesSubject.next(this.disqualifications);
+            this.disqualificationsSubject.next(this.disqualifications);
         });
     }
 }

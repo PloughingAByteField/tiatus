@@ -20,7 +20,7 @@ export class AdjudicatorDisqualificationService extends DisqualificationService 
     public disqualify(disqualification: Disqualification): void {
         this.service.disqualify(disqualification).then(() => {
             this.disqualifications.push(disqualification);
-            this.penaltiesSubject.next(this.disqualifications);
+            this.disqualificationsSubject.next(this.disqualifications);
         });
     }
 
@@ -28,7 +28,7 @@ export class AdjudicatorDisqualificationService extends DisqualificationService 
         this.service.removeDisqualification(disqualification).then(() => {
             let index = this.disqualifications.indexOf(disqualification);
             let sliced = this.disqualifications.splice(index, 1);
-            this.penaltiesSubject.next(this.disqualifications);
+            this.disqualificationsSubject.next(this.disqualifications);
         });
     }
 
@@ -59,7 +59,7 @@ export class AdjudicatorDisqualificationService extends DisqualificationService 
             }
         }
 
-        this.penaltiesSubject.next(this.disqualifications);
+        this.disqualificationsSubject.next(this.disqualifications);
     }
 
     public getDisqualificationForId(disqualificationId: number): Disqualification {

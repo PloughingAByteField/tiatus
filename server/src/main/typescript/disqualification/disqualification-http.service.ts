@@ -13,12 +13,12 @@ export class DisqualificationHttpService {
   public getDisqualifications(): Observable<Disqualification[]> {
     return this.http.get(this.endpoint)
       .map((response) => {
-        return convertJsonToDisqualifications(response);
+        return convertResponseToDisqualifications(response);
       }).share();
    }
 }
 
-function convertJsonToDisqualifications(response: Response): Disqualification[] {
+export function convertResponseToDisqualifications(response: Response): Disqualification[] {
     let jsonDisqualifications: Disqualification[] = response.json();
     let disqualifications: Disqualification[] = new Array<Disqualification>();
     jsonDisqualifications.map((json: Disqualification) => {

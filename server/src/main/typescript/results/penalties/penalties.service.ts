@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { Penalty, convertObjectToPenalty } from '../../penalties/penalty.model';
-import { Entry } from '../../entries/entry.model';
-
 import { Data } from '../model/data.model';
 
 import { PenaltiesService } from '../../penalties/penalties.service';
 import { ResultsHttpPenaltiesService } from './penalties-http.service';
-
-import { Message } from '../../websocket/message.model';
-import { MessageType } from '../../websocket/message-type.model';
 
 @Injectable()
 export class ResultsPenaltiesService extends PenaltiesService {

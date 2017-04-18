@@ -16,11 +16,15 @@ export class PositionsService {
     protected subject: BehaviorSubject<Position[]>
         = new BehaviorSubject<Position[]>(this.positions);
 
-    constructor(protected service: PositionsHttpService) {
-        this.refresh();
-    }
+    protected requested: boolean = false;
+
+    constructor(protected service: PositionsHttpService) {}
 
     public getPositions(): BehaviorSubject<Position[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.subject;
     }
 
