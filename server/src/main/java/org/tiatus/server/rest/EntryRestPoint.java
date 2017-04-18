@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by johnreynolds on 19/06/2016.
@@ -113,9 +115,7 @@ public class EntryRestPoint {
         LOG.debug("Adding entry " + entry);
         try {
             Entry saved = service.addEntry(entry, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
+            wipeCaches(entry.getRace());
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (ServiceException e) {
@@ -143,9 +143,7 @@ public class EntryRestPoint {
             Entry entry = service.getEntryForId(Long.parseLong(id));
             if (entry != null) {
                 service.deleteEntry(entry, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
+                wipeCaches(entry.getRace());
             }
             return Response.noContent().build();
 
@@ -179,9 +177,7 @@ public class EntryRestPoint {
             }
 
             service.updateEntry(entry, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
+            wipeCaches(entry.getRace());
             return Response.noContent().build();
 
         } catch (ServiceException e) {
@@ -207,17 +203,23 @@ public class EntryRestPoint {
     public Response updateEntries(@Context HttpServletRequest request, List<Entry> entries) {
         LOG.debug("Updating " + entries.size() + " entries");
         try {
+            if (entries.size() == 0) {
+                LOG.warn("Got empty entries updates");
+                return Response.noContent().build();
+            }
+            Set<Race> races = new HashSet<>();
             for (Entry entry: entries) {
                 Entry existing = service.getEntryForId(entry.getId());
                 if (existing == null) {
                     LOG.warn("Failed to get entry for supplied id");
                     return Response.status(Response.Status.NOT_FOUND).build();
                 }
+                races.add(entry.getRace());
             }
 
             service.updateEntries(entries, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
+            for (Race race: races) {
+                wipeCaches(race);
             }
             return Response.noContent().build();
 
@@ -245,9 +247,7 @@ public class EntryRestPoint {
             }
 
             service.swapEntryNumbers(from, to, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
+            wipeCaches(from.getRace());
             return Response.ok().build();
 
         } catch (ServiceException e) {
@@ -274,5 +274,18 @@ public class EntryRestPoint {
     @Inject
     public void setCache(Cache cache) {
         this.cache = cache;
+    }
+
+    private void wipeCaches(Race race) {
+        if (cache.get(CACHE_NAME) != null) {
+            cache.evict(CACHE_NAME);
+        }
+
+        if (race != null) {
+            String cacheName = CACHE_NAME + "_" + race.getId();
+            if (cache.get(cacheName) != null) {
+                cache.evict(cacheName);
+            }
+        }
     }
 }
