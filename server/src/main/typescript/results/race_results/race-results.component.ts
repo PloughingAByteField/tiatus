@@ -115,37 +115,10 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         this.positionsSubscription.unsubscribe();
         this.racesSubscription.unsubscribe();
         this.eventsSubscription.unsubscribe();
-        // this.raceEventsSubscription.unsubscribe();
         if (this.raceEntriesSubscription) {
             this.raceEntriesSubscription.unsubscribe();
         }
     }
-
-    // public sortByNumber(direction: string): void {
-    //     this.reverseNumberSort = !this.reverseNumberSort;
-    //     this.filteredEntryTimes.sort((e1, e2) => {
-    //         let order: number;
-    //         if (e1.entry.number < e2.entry.number) {
-    //             order = -1;
-
-    //         } else if (e1.entry.number === e2.entry.number) {
-    //             order = 0;
-
-    //         } else if (e1.entry.number > e2.entry.number) {
-    //             order = 1;
-    //         }
-
-    //         if (direction === 'up') {
-    //             order = order * -1;
-    //         }
-
-    //         return order;
-    //     });
-    // }
-
-    // public sortByAdjustedTime(direction: string): void {
-    //     this.reverseNumberSort = !this.reverseNumberSort;
-    // }
 
     public downloadResultsByTime(race: Race): void {
         window.open('/tiatus/results/' + race.name + '_ByTime.pdf', '_blank');
@@ -159,7 +132,6 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         if (this.race) {
             this.raceEntriesSubscription = this.entriesService.getEntriesForRace(this.race)
                 .subscribe((raceEntries: Entry[]) => {
-                    console.log(raceEntries);
                     this.entriesForRace = raceEntries;
                     this.eventsAtPositions = new Array<EventsAtPositions>();
                     for (let entry of raceEntries) {
@@ -177,7 +149,6 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                         }
 
                         if (this.eventsAtPositions.length === 0) {
-                            console.log('length 0');
                             let eventsAtPosition: EventsAtPositions = new EventsAtPositions();
                             eventsAtPosition.events.push(event);
                             eventsAtPosition.finish = finish;
@@ -186,7 +157,6 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                         } else {
                             let found: boolean = false;
                             for (let ep of this.eventsAtPositions) {
-                                console.log(ep);
                                 let matchingPosition: boolean = false;
                                 if (ep.finish && finish && ep.finish.id === finish.id
                                     && ep.start && start && ep.start.id === start.id) {
@@ -197,7 +167,6 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                                     matchingPosition = true;
                                 }
                                 if (matchingPosition) {
-                                    console.log('Matching positions');
                                     let newEvent: boolean = true;
                                     for (let epEvent of ep.events) {
                                         if (epEvent.id === event.id) {
@@ -206,7 +175,6 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                                         }
                                     }
                                     if (newEvent) {
-                                        console.log(event);
                                         ep.events.push(event);
                                     }
                                     found = true;
@@ -214,7 +182,6 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                                 }
                             }
                             if (!found) {
-                                console.log('not found');
                                 let eventsAtPosition: EventsAtPositions = new EventsAtPositions();
                                 eventsAtPosition.events.push(event);
                                 eventsAtPosition.finish = finish;
@@ -224,7 +191,6 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                         }
                     }
 
-                    console.log(this.eventsAtPositions);
                     if (this.isDefaulting) {
                         if (this.eventsAtPositions.length > 0) {
                             let eventsAtPosition: EventsAtPositions = this.eventsAtPositions[0];
@@ -243,71 +209,11 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         }
     }
 
-    // private getTime(entryTime: EntryTime): number {
-    //     if (entryTime.times.length > 0) {
-    //         let actualStartPoint: PositionTime = entryTime.times
-    //             .filter((positionTime: PositionTime) => positionTime.startPoint === true)
-    //             .shift();
-    //         let eventStartPoint: PositionTime = entryTime.times
-    //             .filter((positionTime: PositionTime) => positionTime.position
-    //                 === entryTime.entry.event)
-    //             .shift();
-    //         let eventFinishPoint: PositionTime = entryTime.times
-    //             .filter((positionTime: PositionTime) => positionTime.position
-    //                     === entryTime.entry.event)
-    //             .shift();
-    //         if (eventFinishPoint && actualStartPoint) {
-    //             return eventFinishPoint.time - actualStartPoint.time;
-    //         }
-    //     }
-
-    //     return 0;
-    // }
-
-    // private getTimesForRace(race: Race): void {
-    //     if (race) {
-    //         console.log('Get times for race ' + race.id);
-    //         this.populateEventsAtPositionsForRace(race);
-    //         this.entryTimesService.getEntriesForRace(race)
-    //             .subscribe((data: EntryTime[]) => {
-    //                 console.log(data);
-    //                 this.entryTimes = data;
-    //                 this.filteredEntryTimes = this.entryTimes;
-    //                 // this.filteredEntryTimes = this.filterEntries();
-    //         });
-    //     }
-    // }
-
     private setRaceForRaceId(raceId: number): void {
         if (this.races) {
             this.race = this.racesService.getRaceForId(this.raceId);
             this.populateEventsAtPositionsForRace(this.race);
         }
     }
-
-    // private filterEntries(): EntryTime[] {
-    //     let filteredEntries: EntryTime[] = this.entryTimes;
-    //     console.log('filter');
-    //     console.log(filteredEntries.length);
-    //     if (filteredEntries.length > 0) {
-    //         this.timesForRace = new Array<TimesPositions>();
-    //         if (this.numberFilter) {
-    //             console.log(this.numberFilter);
-    //             filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
-    //         }
-    //         if (this.clubFilter) {
-    //             filteredEntries = this.filterClubs(filteredEntries, this.clubFilter);
-    //         }
-    //         if (this.eventFilter) {
-    //             filteredEntries = this.filterEvents(filteredEntries, this.eventFilter);
-    //         }
-
-    //         for (let entry of filteredEntries) {
-    //             this.addEntryToTimes(entry);
-    //         }
-    //         console.log(this.timesForRace);
-    //     }
-    //     return filteredEntries;
-    // }
 
 }

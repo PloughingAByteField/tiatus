@@ -19,8 +19,7 @@
             <th><input placeholder="{{ 'CLUB_PLACEHOLDER' | translate }}" type="text" #club [(ngModel)]="clubFilter" (keyup)="onKey(club.value, 'club')"></th>
             <th><input placeholder="{{ 'EVENT_PLACEHOLDER' | translate }}" type="text" #event [(ngModel)]="eventFilter" (keyup)="onKey(event.value, 'event')"></th>
             <th></th>
-            <th></th>
-            <th></th>
+            <th *ngFor="let position of getPositions() | slice:1:-1"></th>
             <th></th>
             <th></th>
         </tr>

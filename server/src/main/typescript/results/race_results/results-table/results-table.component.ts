@@ -14,7 +14,8 @@ import { Event } from '../../../events/event.model';
 import { Penalty } from '../../../penalties/penalty.model';
 import { Disqualification } from '../../../disqualification/disqualification.model';
 import { EntryTime } from '../../../times/entry-time.model';
-import { PositionTime, convertFromTimeStamp } from '../../../times/postion-time.model';
+import { PositionTime, convertFromTimeStamp , convertToTimeStamp }
+    from '../../../times/postion-time.model';
 import { EventPosition } from '../../../events/event-positions.model';
 
 import { PositionsService } from '../../../positions/positions.service';
@@ -87,7 +88,6 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.parentRoutesSubscription = this.route.parent.params.subscribe((params: Params) => {
-            console.log(+params['raceId']);
             let raceId: number = +params['raceId'];
             if (raceId) {
                 this.raceId = +params['raceId'];
@@ -99,7 +99,6 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
         this.routesSubscription = this.route.params.subscribe((params: Params) => {
             let from: string = params['from'];
-            console.log(from);
             if (from) {
                 this.from = from;
                 if (this.positions && this.positions.length > 0) {
@@ -107,7 +106,6 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
                 }
             }
             let to: string = params['to'];
-            console.log(to);
             if (to) {
                 this.to = to;
                 if (this.positions && this.positions.length > 0) {
@@ -201,11 +199,48 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
     }
 
     public sortByAdjustedTime(direction: string): void {
-        console.log('sort by time');
+        this.reverseAdjustedTimeSort = !this.reverseAdjustedTimeSort;
+        this.filteredEntryTimes.sort((a, b) => {
+            let adjustedA: string = this.getAdjustedTimeForEntry(a);
+            let adjustedB: string = this.getAdjustedTimeForEntry(b);
+            if (adjustedA === null) {
+                return 1;
+            } else if (adjustedB === null) {
+                return -1;
+            } else if (adjustedA === adjustedB) {
+                return 0;
+            } else if (direction === 'up') {
+                let aTime: number = convertToTimeStamp(adjustedA);
+                let bTime: number = convertToTimeStamp(adjustedB);
+                return aTime < bTime ? -1 : 1;
+            } else if (direction !== 'up') {
+                let aTime: number = convertToTimeStamp(adjustedA);
+                let bTime: number = convertToTimeStamp(adjustedB);
+                return aTime < bTime ? 1 : -1;
+            }
+         });
     }
 
     public sortByNumber(direction: string): void {
-        console.log('sort by number');
+        this.reverseNumberSort = !this.reverseNumberSort;
+        this.filteredEntryTimes.sort((e1, e2) => {
+            let order: number;
+            if (e1.entry.number < e2.entry.number) {
+                order = -1;
+
+            } else if (e1.entry.number === e2.entry.number) {
+                order = 0;
+
+            } else if (e1.entry.number > e2.entry.number) {
+                order = 1;
+            }
+
+            if (direction === 'up') {
+                order = order * -1;
+            }
+
+            return order;
+        });
     }
 
     public getTimeForEntry(entryTime: EntryTime, position: Position): string {
@@ -241,27 +276,29 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         if (field === 'event') {
             this.eventFilter = value;
         }
-        // this.filteredEntryTimes = this.filterEntries();
+        this.filteredEntryTimes = this.filterEntries();
     }
 
     public getAdjustedTimeForEntry(entryTime: EntryTime): string {
         if (this.isDisqualified(entryTime)) {
             return null;
         }
-        if (entryTime.times.length > 0) {
+        if (entryTime.times && entryTime.times.length > 0) {
             let actualStartPoint: PositionTime = entryTime.times[0];
             let event: Event = this.eventsService.getEventForId(entryTime.entry.event);
-            let eventPositions: EventPosition[] = event.positions;
-            let eventFinishPoint: PositionTime = undefined;
-            if (entryTime.times[entryTime.times.length - 1].position
-                === eventPositions[eventPositions.length - 1].position) {
-                eventFinishPoint = entryTime.times[entryTime.times.length - 1];
-            }
-            if (eventFinishPoint && actualStartPoint) {
-                // apply penalties
-                let penalties: number = this.getPenaltiesForEntry(entryTime);
-                return convertFromTimeStamp(
-                    eventFinishPoint.time - actualStartPoint.time + penalties);
+            if (event.positions.length > 0) {
+                let eventPositions: EventPosition[] = event.positions;
+                let eventFinishPoint: PositionTime = undefined;
+                if (entryTime.times[entryTime.times.length - 1].position
+                    === eventPositions[eventPositions.length - 1].position) {
+                    eventFinishPoint = entryTime.times[entryTime.times.length - 1];
+                }
+                if (eventFinishPoint && actualStartPoint) {
+                    // apply penalties
+                    let penalties: number = this.getPenaltiesForEntry(entryTime);
+                    return convertFromTimeStamp(
+                        eventFinishPoint.time - actualStartPoint.time + penalties);
+                }
             }
         }
         return null;
@@ -340,10 +377,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     private getTimesForRace(race: Race): void {
         if (race) {
-            console.log('Get times for race ' + race.id);
             this.raceTimesSubscription = this.entryTimesService.getEntriesForRace(race)
                 .subscribe((data: EntryTime[]) => {
-                    console.log(data);
                     this.positionsForTable = undefined;
                     this.entryTimes = data;
                     this.entryTimesForPositions = data.filter((entrytime: EntryTime) => {
@@ -362,7 +397,6 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
                     this.sortTimesByEntryPositionOrder(this.entryTimesForPositions);
                     this.filteredEntryTimes = this.entryTimesForPositions;
-                    console.log(this.filteredEntryTimes);
             });
         }
     }
@@ -402,30 +436,21 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         return 0;
     }
 
-    // private filterEntries(): EntryTime[] {
-    //     let filteredEntries: EntryTime[] = this.entryTimes;
-    //     console.log('filter');
-    //     console.log(filteredEntries.length);
-    //     if (filteredEntries.length > 0) {
-    //         this.timesForRace = new Array<TimesPositions>();
-    //         if (this.numberFilter) {
-    //             console.log(this.numberFilter);
-    //             filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
-    //         }
-    //         if (this.clubFilter) {
-    //             filteredEntries = this.filterClubs(filteredEntries, this.clubFilter);
-    //         }
-    //         if (this.eventFilter) {
-    //             filteredEntries = this.filterEvents(filteredEntries, this.eventFilter);
-    //         }
-
-    //         for (let entry of filteredEntries) {
-    //             this.addEntryToTimes(entry);
-    //         }
-    //         console.log(this.timesForRace);
-    //     }
-    //     return filteredEntries;
-    // }
+    private filterEntries(): EntryTime[] {
+        let filteredEntries: EntryTime[] = this.entryTimesForPositions;
+        if (filteredEntries.length > 0) {
+            if (this.numberFilter) {
+                filteredEntries = this.filterNumbers(filteredEntries, this.numberFilter);
+            }
+            if (this.clubFilter) {
+                filteredEntries = this.filterClubs(filteredEntries, this.clubFilter);
+            }
+            if (this.eventFilter) {
+                filteredEntries = this.filterEvents(filteredEntries, this.eventFilter);
+            }
+        }
+        return filteredEntries;
+    }
 
     private filterNumbers(entryTimes: EntryTime[], value: string): EntryTime[] {
         return entryTimes.filter((entryTime: EntryTime) =>
