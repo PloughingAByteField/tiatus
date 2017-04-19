@@ -17,7 +17,7 @@ export class EventsHttpService {
    }
 }
 
-function convertResponseToEvents(response: Response): Event[] {
+export function convertResponseToEvents(response: Response): Event[] {
     let jsonEvents: Event[] = response.json();
     let events: Event[] = new Array<Event>();
     jsonEvents.map((event: Event) => {

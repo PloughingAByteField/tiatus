@@ -16,7 +16,7 @@ import { ResultsPositionsService } from '../positions/positions.service';
 import { ResultsRacesService } from '../races/races.service';
 import { EntriesService } from '../../entries/entries.service';
 import { EntryTimesService } from '../../times/entry-times.service';
-import { EventsService } from '../../events/events.service';
+import { ResultsEventsService } from '../events/events.service';
 import { TimesPositions } from './time-positions.model';
 import { EventsAtPositions } from './events-at-positions.model';
 
@@ -59,7 +59,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         private positionsService: ResultsPositionsService,
         private entryTimesService: EntryTimesService,
         private entriesService: EntriesService,
-        private eventsService: EventsService
+        private eventsService: ResultsEventsService
     ) {}
 
     public ngOnInit() {

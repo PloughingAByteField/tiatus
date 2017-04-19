@@ -32,9 +32,11 @@ import { ResultsDisqualificationService } from './disqualification/disqualificat
 import { ResultsHttpDisqualificationsService }
   from './disqualification/disqualification-http.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
-import { ClubsService } from '../clubs/clubs.service';
+import { ResultsClubsService } from './clubs/clubs.service';
+import { ResultsHttpClubsService } from './clubs/clubs-http.service';
 import { ClubsHttpService } from '../clubs/clubs-http.service';
-import { EventsService } from '../events/events.service';
+import { ResultsEventsService } from './events/events.service';
+import { ResultsHttpEventsService } from './events/events-http.service';
 import { EventsHttpService } from '../events/events-http.service';
 import { RaceEventsService } from '../race-events/race-events.service';
 import { RaceEventsHttpService } from '../race-events/race-events-http.service';
@@ -107,9 +109,11 @@ export function createTranslateLoader(http: Http) {
     ResultsDisqualificationService,
     ResultsHttpDisqualificationsService,
     DisqualificationHttpService,
-    ClubsService,
+    ResultsClubsService,
+    ResultsHttpClubsService,
     ClubsHttpService,
-    EventsService,
+    ResultsEventsService,
+    ResultsHttpEventsService,
     EventsHttpService,
     RaceEventsService,
     RaceEventsHttpService,

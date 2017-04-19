@@ -23,8 +23,8 @@ import { ResultsRacesService } from '../../races/races.service';
 import { EntryTimesService } from '../../../times/entry-times.service';
 import { ResultsPenaltiesService } from '../../penalties/penalties.service';
 import { ResultsDisqualificationService } from '../../disqualification/disqualification.service';
-import { EventsService } from '../../../events/events.service';
-import { ClubsService } from '../../../clubs/clubs.service';
+import { ResultsEventsService } from '../../events/events.service';
+import { ResultsClubsService } from '../../clubs/clubs.service';
 
 @Component({
     selector: 'race-results-table',
@@ -82,8 +82,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         private translate: TranslateService,
         private racesService: ResultsRacesService,
         private entryTimesService: EntryTimesService,
-        private clubsService: ClubsService,
-        private eventsService: EventsService,
+        private clubsService: ResultsClubsService,
+        private eventsService: ResultsEventsService,
         private penaltiesService: ResultsPenaltiesService,
         private disqualificationService: ResultsDisqualificationService,
         private positionsService: ResultsPositionsService) {}
@@ -174,6 +174,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         this.polling = Observable.interval(this.pollingPeriod).map(() => {
             this.racesService.refresh();
             this.positionsService.refresh();
+            this.clubsService.refresh();
+            this.eventsService.refresh();
             this.penaltiesService.refresh();
             this.disqualificationService.refresh();
             if (this.race) {

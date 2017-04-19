@@ -17,7 +17,7 @@ export class ClubsHttpService {
   }
 }
 
-function convertResponseToClubs(response: Response): Club[] {
+export function convertResponseToClubs(response: Response): Club[] {
     let jsonClubs: Club[] = response.json();
     let clubs: Club[] = new Array<Club>();
     jsonClubs.map((json: Club) => {

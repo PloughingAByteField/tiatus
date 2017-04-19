@@ -16,11 +16,15 @@ export class ClubsService {
     protected subject: BehaviorSubject<Club[]>
         = new BehaviorSubject<Club[]>(this.clubs);
 
-    constructor(protected service: ClubsHttpService) {
-        this.refresh();
-    }
+    protected requested: boolean = false;
+
+    constructor(protected service: ClubsHttpService) {}
 
     public getClubs(): BehaviorSubject<Club[]> {
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.subject;
     }
 
