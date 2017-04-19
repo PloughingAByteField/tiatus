@@ -35,7 +35,7 @@ public class LoggedInFilter implements Filter {
     private List<String> skipUrls = new ArrayList<>();
 
     public static final String LOGIN_URL = "/login.html";
-    public static final String SETUP_URL = "/setup/setup.html";
+    public static final String SETUP_URL = "/setup";
     public static final String SETUP_REST_URL = "/rest/setup/user";
 
     private UserService userService = null;
@@ -149,13 +149,18 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean checkUrl(String url) {
-        if (url.matches("\\/login/*.*")) {
-            return true;
-        }
-
         if (isSetup() && url.equals(SETUP_REST_URL)) {
             LOG.warn("tried to access setup rest url after setup");
             return false;
+        }
+
+        if (isSetup() && url.equals(SETUP_URL)) {
+            LOG.warn("tried to access setup url after setup");
+            return false;
+        }
+
+        if (url.matches("\\/login/*.*")) {
+            return true;
         }
 
         if (skipUrls.contains(url)) {
@@ -173,7 +178,7 @@ public class LoggedInFilter implements Filter {
                 return true;
             }
 
-            if ("/setup".equals(root) && !isSetup()) {
+            if (SETUP_URL.equals(root) && !isSetup()) {
                 return true;
             }
         }
