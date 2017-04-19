@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -25,8 +24,7 @@ export class SetupComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private fb: FormBuilder,
-    private service: SetupService,
-    private router: Router
+    private service: SetupService
   ) {
     translate.setDefaultLang('en');
 
@@ -54,7 +52,7 @@ export class SetupComponent implements OnInit {
     let user: User = new User();
     user.userName = value.name;
     user.password = value.password;
-    this.service.createUser(user).then((createdUser: User) => this.router.navigateByUrl('/'));
+    this.service.createUser(user).then((createdUser: User) => window.location.href = '/');
   }
 
 }

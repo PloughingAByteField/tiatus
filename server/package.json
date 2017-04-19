@@ -7,13 +7,18 @@
     "build:aot:prod": "npm run clean && npm run ngc -p tsconfig.webpack.json -- --webpack webpack/webpack.prod.js && webpack --config webpack/webpack.prod.js  --progress --profile --bail",
     "build:aot": "npm run build:aot:prod",
     "clean": "rimraf target/ts_compiled ${TARGET}/common ${TARGET}/vendor ${TARGET}/common ${TARGET}/polyfills ${TARGET}/adjudicator ${TARGET}/admin ${TARGET}/results ${TARGET}/timing ${TARGET}/assets",
-    "build": "npm run test && npm run build:aot",
+    "build": "npm run build:aot",
     "ngc": "./node_modules/.bin/ngc -w -p tsconfig.webpack.json",
     "rimraf": "rimraf",
+    "integration-test": "protractor webpack/protractor.conf.js",
+    "postinstall": "npm run webdriver:update",
     "test": "karma start webpack/karma.conf.js",
+    "tsc": "tsc",
     "lint": "npm run tslint ",
     "tslint": "tslint --type-check --project tsconfig.webpack.json --exclude node_modules",
-    "start": "webpack-dev-server --config webpack/webpack.dev.js --progress --port 8082"
+    "start": "webpack-dev-server --config webpack/webpack.dev.js --progress --port 8082",
+    "specs-build": "webpack --config webpack/webpack.test.js",
+    "webdriver:update": "webdriver-manager update"
   },
   "dependencies": {
     "@angular/common": "~4.0.0",
@@ -64,7 +69,7 @@
   "devDependencies": {
     "@angular/compiler-cli": "~4.0.0",
     "@types/hammerjs": "^2.0.34",
-    "@types/jasmine": "^2.5.46",
+    "@types/jasmine": "2.5.45",
     "@types/jquery": "^2.0.41",
     "@types/node": "^7.0.10",
     "@types/selenium-webdriver": "3.0.0",
