@@ -23,6 +23,7 @@
         <sonar.ts.tslintconfigpath>tslint.json</sonar.ts.tslintconfigpath>
         <sonar.ts.lcov.reportpath>target/ts-coverage/lcov.info</sonar.ts.lcov.reportpath>
         <sonar.genericcoverage.unitTestReportPaths>target/js/protractor.xml,target/js/TESTS.xml</sonar.genericcoverage.unitTestReportPaths>
+        <docker.not-stop-instances>false</docker.not-stop-instances>
     </properties>
 
     <dependencies>
@@ -371,6 +372,9 @@
                         <goals>
                             <goal>stop</goal>
                         </goals>
+                        <configuration>
+                            <skip>${docker.not-stop-instances}</skip>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
