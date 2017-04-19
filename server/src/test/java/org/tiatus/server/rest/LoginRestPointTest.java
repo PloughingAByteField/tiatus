@@ -37,7 +37,7 @@ public class LoginRestPointTest {
         LoginRestPoint logoutRestPoint = new LoginRestPoint();
 
         Response response = logoutRestPoint.login(uriInfo, httpServletRequest, securityContext);
-        Assert.assertEquals(Response.Status.SEE_OTHER.getStatusCode(), response.getStatus());
+        Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
         Assert.assertEquals(response.getLocation(), new URI("https://127.0.0.1:8080/timing/index.html"));
     }
 
@@ -51,7 +51,7 @@ public class LoginRestPointTest {
         LoginRestPoint logoutRestPoint = new LoginRestPoint();
 
         Response response = logoutRestPoint.login(uriInfo, httpServletRequest, securityContext);
-        Assert.assertEquals(Response.Status.SEE_OTHER.getStatusCode(), response.getStatus());
+        Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
         Assert.assertEquals(response.getLocation(), new URI("https://127.0.0.1:8080/admin/index.html"));
     }
 
@@ -65,7 +65,7 @@ public class LoginRestPointTest {
         LoginRestPoint logoutRestPoint = new LoginRestPoint();
 
         Response response = logoutRestPoint.login(uriInfo, httpServletRequest, securityContext);
-        Assert.assertEquals(Response.Status.SEE_OTHER.getStatusCode(), response.getStatus());
+        Assert.assertEquals(Response.Status.ACCEPTED.getStatusCode(), response.getStatus());
         Assert.assertEquals(response.getLocation(), new URI("https://127.0.0.1:8080/adjudicator/index.html"));
     }
 
@@ -78,7 +78,7 @@ public class LoginRestPointTest {
         LoginRestPoint logoutRestPoint = new LoginRestPoint();
 
         Response response = logoutRestPoint.login(uriInfo, httpServletRequest, securityContext);
-        Assert.assertEquals(Response.Status.SEE_OTHER.getStatusCode(), response.getStatus());
+        Assert.assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
     }
 
     @Test (expected = InternalServerErrorException.class)

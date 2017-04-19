@@ -61,6 +61,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 MultivaluedMap<String, String> parameters = form.asMap();
 
                 // do we have the auth details - in post
+                if (parameters.get("user") == null || parameters.get("pwd") == null) {
+                    LOG.warn("Do not have user or pwd set in the form");
+                    return;
+                }
                 user = getUser(parameters.get("user").get(0), parameters.get("pwd").get(0));
             } else {
                 user = (UserPrincipal)session.getAttribute("principal");

@@ -44,7 +44,7 @@ public class LoginRestPoint {
             if (securityContext.getUserPrincipal() == null) {
                 LOG.warn("not logged in");
                 URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), LoggedInFilter.LOGIN_URL, null, null);
-                return Response.seeOther(redirect).build();
+                return Response.status(Response.Status.UNAUTHORIZED).build();
             }
             UserPrincipal principal = (UserPrincipal)securityContext.getUserPrincipal();
             session.setAttribute("userId", principal.getName());
@@ -60,7 +60,7 @@ public class LoginRestPoint {
 
             URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), p + page, null, null);
             LOG.debug("Redirecting to " + redirect);
-            return Response.seeOther(redirect).build();
+            return Response.accepted().location(redirect).build();
 
         } catch (Exception e) {
             LOG.warn("Got general exception ", e);

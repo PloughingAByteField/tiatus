@@ -64,7 +64,8 @@ module.exports = function (options) {
       'timing':  isProd ? './src/main/typescript/timing/main.aot.ts' : './src/main/typescript/timing/main.ts',
       'adjudicator': isProd ? './src/main/typescript/adjudicator/main.aot.ts' : './src/main/typescript/adjudicator/main.ts',
       'admin': isProd ? './src/main/typescript/admin/main.aot.ts' : './src/main/typescript/admin/main.ts',
-      'setup': isProd ? './src/main/typescript/setup/main.aot.ts' : './src/main/typescript/setup/main.ts'
+      'setup': isProd ? './src/main/typescript/setup/main.aot.ts' : './src/main/typescript/setup/main.ts',
+      'login': isProd ? './src/main/typescript/login/main.aot.ts' : './src/main/typescript/login/main.ts'
     },
 
     /*
@@ -146,7 +147,8 @@ module.exports = function (options) {
             helpers.root('src/main/typescript/timing/index.html'),
             helpers.root('src/main/typescript/adjudicator/index.html'),
             helpers.root('src/main/typescript/admin/index.html'),
-            helpers.root('src/main/typescript/setup/index.html')
+            helpers.root('src/main/typescript/setup/index.html'),
+            helpers.root('src/main/typescript/login/index.html')
           ]
         },
 
@@ -204,7 +206,7 @@ module.exports = function (options) {
       // This enables tree shaking of the vendor modules
       new CommonsChunkPlugin({
         name: 'vendor',
-        chunks: ['results', 'timing', 'adjudicator', 'admin', 'setup'],
+        chunks: ['results', 'timing', 'adjudicator', 'admin', 'setup', 'login'],
         filename: 'vendor/vendor.bundle.js',
         minChunks: (module) => /node_modules\//.test(module.resource)
       }),
@@ -252,7 +254,8 @@ module.exports = function (options) {
         { from: 'src/main/typescript/timing/i18n', to: 'timing/i18n' },
         { from: 'src/main/typescript/adjudicator/i18n', to: 'adjudicator/i18n' },
         { from: 'src/main/typescript/admin/i18n', to: 'admin/i18n' },
-        { from: 'src/main/typescript/setup/i18n', to: 'setup/i18n' }
+        { from: 'src/main/typescript/setup/i18n', to: 'setup/i18n' },
+        { from: 'src/main/typescript/login/i18n', to: 'login/i18n' }
       ]),
 
 
@@ -312,6 +315,16 @@ module.exports = function (options) {
           inject: 'head',
           chunks: ['setup', 'polyfills', 'vendor', 'common'],
           filename: 'setup/index.html'
+      }),
+
+      new HtmlWebpackPlugin({
+          template: 'src/main/typescript/login/index.html',
+          title: METADATA.title,
+          chunksSortMode: 'dependency',
+          metadata: METADATA,
+          inject: 'head',
+          chunks: ['login', 'polyfills', 'vendor', 'common'],
+          filename: 'login/index.html'
       }),
 
       /*
