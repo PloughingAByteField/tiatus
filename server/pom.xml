@@ -168,50 +168,6 @@
                     </execution>
 
                     <execution>
-                        <id>bower install</id>
-                        <goals>
-                            <goal>bower</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>grunt build</id>
-                        <goals>
-                            <goal>grunt</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>--no-color</arguments>
-                        </configuration>
-                    </execution>
-
-                    <!--<execution>-->
-                        <!--<id>grunt protractor</id>-->
-                        <!--<phase>integration-test</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>grunt</goal>-->
-                        <!--</goals>-->
-
-                        <!--<configuration>-->
-                            <!--<skip>${docker.skip}</skip>-->
-                            <!--<arguments>&#45;&#45;no-color protractor &#45;&#45;baseUrl=http://${local.ip}:7080</arguments>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-
-                    <execution>
-                        <id>javascript tests</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>karma</goal>
-                        </goals>
-                        <configuration>
-                            <karmaConfPath>src/test/javascript/karma.conf.ci.js</karmaConfPath>
-                        </configuration>
-                    </execution>
-
-                    <execution>
                         <id>npm run build</id>
                         <goals>
                             <goal>npm</goal>
