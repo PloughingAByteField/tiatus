@@ -52,7 +52,7 @@ export class SetupComponent implements OnInit {
     let user: User = new User();
     user.userName = value.name;
     user.password = value.password;
-    this.service.createUser(user).then((createdUser: User) => window.location.href = '/');
+    this.service.createUser(user).then((createdUser: User) => window.location.href = '/login');
   }
 
 }

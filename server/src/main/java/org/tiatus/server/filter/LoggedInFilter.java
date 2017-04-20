@@ -35,6 +35,7 @@ public class LoggedInFilter implements Filter {
     private List<String> skipUrls = new ArrayList<>();
 
     public static final String LOGIN_URL = "/login";
+    public static final String RESULTS_URL = "/results";
     public static final String SETUP_URL = "/setup";
     public static final String SETUP_REST_URL = "/rest/setup/user";
 
@@ -90,7 +91,11 @@ public class LoggedInFilter implements Filter {
             } else {
                 if (isSetup()) {
                     LOG.debug("not logged in when fetching " + requestedUrl);
-                    response.sendRedirect(LOGIN_URL);
+                    if (requestedUrl.equals("/")) {
+                        response.sendRedirect(RESULTS_URL);
+                    } else {
+                        response.sendRedirect(LOGIN_URL);
+                    }
                 } else {
                     LOG.debug("not setup when fetching " + requestedUrl);
                     response.sendRedirect(SETUP_URL);
@@ -154,7 +159,7 @@ public class LoggedInFilter implements Filter {
             return false;
         }
 
-        if (isSetup() && url.equals(SETUP_URL)) {
+        if (isSetup() && url.contains(SETUP_URL)) {
             LOG.warn("tried to access setup url after setup");
             return false;
         }
