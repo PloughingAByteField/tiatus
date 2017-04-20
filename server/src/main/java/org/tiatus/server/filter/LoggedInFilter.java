@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
         filterName="LoginServlet",
         urlPatterns={"/*"},
         initParams = {
-            @WebInitParam(name = "pass-through", value = "/rest,/assets,/public,/favicon.ico,/results,/polyfills,/vendor,/common,/ws")
+            @WebInitParam(name = "pass-through", value = "/rest,/assets,/results,/polyfills,/vendor,/common,/ws")
         }
 )
 public class LoggedInFilter implements Filter {
@@ -102,7 +102,7 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean isValidAccess(String root, UserPrincipal p) {
-        if ("rest".equals(root) || "common".equals(root) || "results".equals(root) || "test".equals(root) || "polyfills".equals(root) || "vendor".equals(root)) {
+        if ("rest".equals(root) || "common".equals(root) || "results".equals(root) || "polyfills".equals(root) || "vendor".equals(root)) {
             return true;
         }
 
