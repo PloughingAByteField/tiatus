@@ -26,7 +26,7 @@
             <td>{{ getClubNamesForEntry(e.entry) }}</td>
             <td>{{ getEventNameForEntry(e.entry) }}</td>
             <td>{{e.entry.crew}}</td>
-            <td><input #time type="text" [value]="convertFromTimeStamp(e)" (blur)="enterTime(time.value, e)"></td>
+            <td><time-entry [time]="getTimeForEntryTime(e)" [displayMillSeconds]="false" (updatedTime)="enterTime($event, e)"></time-entry></td>
             <td>{{ getSyncedForPosition(e) }}</td>
         </tr>
     </tbody>

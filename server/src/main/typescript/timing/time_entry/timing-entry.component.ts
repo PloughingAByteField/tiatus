@@ -92,12 +92,16 @@ export class TimingEntryComponent implements OnInit {
 
     }
 
-    public enterTime(value: string, entryTime: EntryTime) {
-        if (value) {
-            let timeStamp: number = convertToTimeStamp(value);
-            let positonTime: PositionTime = this.getPositionTimeForPosition(entryTime);
+    public enterTime(timeStamp: number, entryTime: EntryTime) {
+        if (timeStamp) {
+            let positionTime: PositionTime = this.getPositionTimeForPosition(entryTime);
+            if (positionTime === undefined) {
+                positionTime = new PositionTime();
+                positionTime.position = this.position.id;
+                entryTime.times.push(positionTime);
+            }
             this.entryTimesService
-                .addTimeForPosition(this.position, timeStamp, positonTime, entryTime.entry);
+                .addTimeForPosition(this.position, timeStamp, positionTime, entryTime.entry);
         }
     }
 
@@ -213,6 +217,13 @@ export class TimingEntryComponent implements OnInit {
             }
         }
         return clubs;
+    }
+
+    public getTimeForEntryTime(entryTime: EntryTime): number {
+        if (entryTime && entryTime.times && entryTime.times.length > 0) {
+            return entryTime.times[0].time;
+        }
+        return 0;
     }
 
     private getEventForId(eventId: number): Event {

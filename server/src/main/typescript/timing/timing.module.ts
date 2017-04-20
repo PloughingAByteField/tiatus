@@ -42,6 +42,7 @@ import { Ng2PaginationModule } from 'ng2-pagination';
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
+import { TimeEntryModule } from '../components/time-entry/time-entry.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
 export function HttpLoaderFactory(http: Http) {
@@ -67,6 +68,7 @@ export function createTranslateLoader(http: Http) {
     FooterModule,
     SidebarModule,
     TitlebarModule,
+    TimeEntryModule,
     NoContentModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot({
