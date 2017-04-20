@@ -111,7 +111,7 @@ public class LoggedInFilter implements Filter {
     }
 
     private boolean checkAccess(String userRole, String root) {
-        if (userRole.equals(Role.ADMIN) && ("admin".equals(root) || "management".equals(root))) {
+        if (userRole.equals(Role.ADMIN) && "admin".equals(root)) {
             return true;
         }
 

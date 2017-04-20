@@ -51,7 +51,7 @@ module.exports = function (options) {
       /**
        * Make sure root is src
        */
-      modules: [path.resolve(__dirname, 'src/main/typescript/results'), 'node_modules']
+      modules: [path.resolve(__dirname, 'src/main/typescript'), 'node_modules']
 
     },
 
