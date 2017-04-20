@@ -87,6 +87,11 @@ export class TimeEntryComponent implements OnInit {
       this.minutes = ('0' + date.getUTCMinutes()).slice(-2);
       this.seconds = ('0' + date.getUTCSeconds()).slice(-2);
       this.milliSeconds = ('000' + date.getUTCMilliseconds()).slice(-3);
+    } else {
+      this.hours = null;
+      this.minutes = null;
+      this.seconds = null;
+      this.milliSeconds = null;
     }
   }
 
