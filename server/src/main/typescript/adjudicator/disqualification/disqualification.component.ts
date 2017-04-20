@@ -4,11 +4,17 @@ import { Location }                 from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
+import { Race } from '../../races/race.model';
+import { Club } from '../../clubs/club.model';
+import { Event } from '../../events/event.model';
 import { Disqualification } from '../../disqualification/disqualification.model';
 import { Entry } from '../../entries/entry.model';
 import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
 
 import { EntriesService } from '../../entries/entries.service';
+import { EventsService } from '../../events/events.service';
+import { ClubsService } from '../../clubs/clubs.service';
+import { AdjudicatorRacesService } from '../races/races.service';
 import { AdjudicatorHttpDisqualificationsService } from './disqualifications.service';
 import { AdjudicatorDisqualificationService } from './disqualification.service';
 
@@ -26,10 +32,16 @@ export class DisqualificationComponent implements OnInit {
     private disqualifications: Disqualification[];
     private entries: Entry[];
     private entryId: number;
+    private races: Race[];
+    private events: Event[] = new Array<Event>();
+    private clubs: Club[] = new Array<Club>();
 
     constructor(
         private route: ActivatedRoute,
         private entriesService: EntriesService,
+        private racesService: AdjudicatorRacesService,
+        private clubsService: ClubsService,
+        private eventsService: EventsService,
         private disqualificationService: AdjudicatorDisqualificationService,
         private location: Location
 
@@ -59,6 +71,18 @@ export class DisqualificationComponent implements OnInit {
                 this.model = this.getDisqualificationForEntry(this.entry);
             }
         });
+
+        this.clubsService.getClubs().subscribe((clubs: Club[]) => {
+            this.clubs = clubs;
+        });
+
+        this.racesService.getRaces().subscribe((races: Race[]) => {
+            this.races = races;
+        });
+
+        this.eventsService.getEvents().subscribe((events: Event[]) => {
+            this.events = events;
+        });
     }
 
     public isDisqualified(): boolean {
@@ -66,6 +90,38 @@ export class DisqualificationComponent implements OnInit {
             return true;
         }
         return false;
+    }
+
+    public getClubNamesForEntry(entry: Entry): string {
+        let clubs: string;
+        for (let clubId of entry.clubs) {
+            let club: Club = this.clubsService.getClubForId(clubId);
+            if (club) {
+                if (!clubs) {
+                    clubs = club.clubName;
+                } else {
+                    clubs = clubs.concat(' / ');
+                    clubs = clubs.concat(club.clubName);
+                }
+            }
+        }
+        return clubs;
+    }
+
+    public getRaceNameForEntry(entry: Entry): string {
+        let race: Race = this.racesService.getRaceForId(entry.race);
+        if (race) {
+            return race.name;
+        }
+        return null;
+    }
+
+    public getEventNameForEntry(entry: Entry): string {
+        let event: Event = this.eventsService.getEventForId(entry.event);
+        if (event) {
+            return event.name;
+        }
+        return null;
     }
 
     public addDisqualificationForEntry() {

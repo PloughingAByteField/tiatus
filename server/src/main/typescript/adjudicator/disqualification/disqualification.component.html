@@ -1,9 +1,9 @@
 <div *ngIf="entry">
-    <p>{{ 'FOR_DISQUALIFICATION_IN' | translate }} {{entry.race.name}} {{ 'FOR_ENTRY' | translate }} </p>
+    <p>{{ 'FOR_DISQUALIFICATION_IN' | translate }} {{ getRaceNameForEntry(entry) }} {{ 'FOR_ENTRY' | translate }} </p>
     <ul >
         <li>{{ 'NUMBER' | translate }}: {{entry.number}}</li>
-        <li>{{ 'CLUB' | translate }}: {{entry.getClubNames()}}</li> 
-        <li>{{ 'EVENT' | translate }}: {{entry.event.name}}</li>
+        <li>{{ 'CLUB' | translate }}: {{ getClubNamesForEntry(entry) }}</li> 
+        <li>{{ 'EVENT' | translate }}: {{ getEventNameForEntry(entry) }}</li>
     </ul>
 </div>
 
@@ -39,5 +39,5 @@
 </div>
 
 <div *ngIf="entry">
-    <button class="btn primary" (click)="goBack()">{{ 'BACK_TO_ENTRIES' | translate }} {{entry.race.name}}</button>
+    <button class="btn primary" (click)="goBack()">{{ 'BACK_TO_ENTRIES' | translate }} {{ getRaceNameForEntry(entry) }}</button>
 </div>
