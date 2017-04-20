@@ -25,8 +25,8 @@
             <td>{{e.entry.number}}</td>
             <td>{{ getClubNamesForEntry(e.entry) }}</td>
             <td>{{ getEventNameForEntry(e.entry) }}</td>
-            <td>{{e.entry.crew}}</td>
-            <td><time-entry [time]="getTimeForEntryTime(e)" [displayMillSeconds]="false" (updatedTime)="enterTime($event, e)"></time-entry></td>
+            <td>{{ e.entry.crew }}</td>
+            <td><time-entry id="{{ e.entry.id }}" [time]="getTimeForEntryTime(e)" [displayMillSeconds]="false" (updatedTime)="enterTime($event, e)"></time-entry></td>
             <td>{{ getSyncedForPosition(e) }}</td>
         </tr>
     </tbody>

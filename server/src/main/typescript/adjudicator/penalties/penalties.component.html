@@ -23,7 +23,7 @@
         </div>  
         <div class="form-group">
             <label>{{ 'ENTER_TIME' | translate }}:</label>
-            <time-entry [time]="model.time" [displayMillSeconds]="false" (updatedTime)="enterTimeToModel($event)"></time-entry>
+            <time-entry id="add" [time]="model.time" [displayMillSeconds]="false" (updatedTime)="enterTimeToModel($event)"></time-entry>
         </div>
         <div class="form-group">
             <button (click)="addPenaltyForEntry()">{{ 'ADD_PENALTY_ENTRY' | translate }}</button>
@@ -44,7 +44,7 @@
         <tr *ngFor="let penalty of penaltiesForEntry">
             <td><input #comment type="text" [value]="penalty.comment"></td>
             <td><input #note type="text" [value]="penalty.note"></td>
-            <td><time-entry [time]="penalty.time" [displayMillSeconds]="false" (updatedTime)="enterTime($event, penalty)"></time-entry></td>
+            <td><time-entry id="penalty.id" [time]="penalty.time" [displayMillSeconds]="false" (updatedTime)="enterTime($event, penalty)"></time-entry></td>
             <td><button class="btn primary" (click)="updatePenalty(penalty)">{{ 'UPDATE_PENALTY' | translate }}</button></td>
             <td><button class="btn primary" (click)="removePenalty(penalty)">{{ 'REMOVE_PENALTY' | translate }}</button></td>
         </tr>

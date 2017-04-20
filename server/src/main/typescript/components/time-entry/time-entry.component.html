@@ -1,6 +1,6 @@
-<input #h type="text" maxlength="2" size="2" [(ngModel)]="hours" (change)="onChangeHour(h.value)">:
-<input #m type="text" maxlength="2" size="2" [(ngModel)]="minutes" (change)="onChangeMinute(m.value)">:
-<input #s type="text" maxlength="2" size="2" [(ngModel)]="seconds" (change)="onChangeSecond(s.value)">
+<input #h type="text" maxlength="2" size="2" [(ngModel)]="hours" (blur)="onBlur($event)">:
+<input #m type="text" maxlength="2" size="2" [(ngModel)]="minutes" (blur)="onBlur($event)">:
+<input #s type="text" maxlength="2" size="2" [(ngModel)]="seconds" (blur)="onBlur($event)">
 <span *ngIf="displayMillSeconds">
-    .<input #ms type="text" maxlength="3" size="3" [(ngModel)]="milliSeconds" (change)="onChangeMilliSecond(ms.value)">
+    .<input #ms type="text" maxlength="3" size="3" [(ngModel)]="milliSeconds" (blur)="onBlur($event)">
 </span>

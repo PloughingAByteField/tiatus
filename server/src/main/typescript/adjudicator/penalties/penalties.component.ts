@@ -138,11 +138,8 @@ export class PenaltiesComponent implements OnInit {
         return null;
     }
 
-    public enterTime(value: string, penalty: Penalty) {
-        if (value) {
-            let timeStamp: number = convertToTimeStamp(value);
-            penalty.time = timeStamp;
-        }
+    public enterTime(timeStamp: number, penalty: Penalty) {
+        penalty.time = timeStamp;
     }
 
     public goBack(): void {

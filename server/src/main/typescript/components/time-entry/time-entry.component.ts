@@ -24,56 +24,57 @@ export class TimeEntryComponent implements OnInit {
     }
   }
 
-  public onChangeHour(value: number): void {
-    if (!isNaN(value)) {
-      this.updateTime(value, 'hours');
-    } else {
-      this.fillFieldsForTime(this.time);
+  public onBlur(event: any): void {
+    let lostFocus: boolean = true;
+    if (event.relatedTarget) {
+      let currentId: number = event.path[1].id;
+      if (event.relatedTarget.parentNode) {
+        let targetId: number = event.relatedTarget.parentNode.id;
+        if (currentId === targetId) {
+          lostFocus = false;
+        }
+      }
+    }
+    if (lostFocus) {
+      let resetFields: boolean = false;
+      if (isNaN(+this.hours)) {
+        resetFields = true;
+      }
+      if (isNaN(+this.minutes)) {
+        resetFields = true;
+      }
+      if (isNaN(+this.seconds)) {
+        resetFields = true;
+      }
+      if (isNaN(+this.milliSeconds)) {
+        resetFields = true;
+      }
+      if (resetFields) {
+        this.fillFieldsForTime(this.time);
+      } else {
+        this.updateTime();
+      }
     }
   }
 
-  public onChangeMinute(value: number): void {
-    if (!isNaN(value)) {
-      this.updateTime(value, 'minutes');
-    } else {
-      this.fillFieldsForTime(this.time);
-    }
-  }
-
-  public onChangeSecond(value: number): void {
-    if (!isNaN(value)) {
-      this.updateTime(value, 'seconds');
-    } else {
-      this.fillFieldsForTime(this.time);
-    }
-  }
-
-  public onChangeMilliSecond(value: number): void {
-    if (!isNaN(value)) {
-      this.updateTime(value, 'milliseconds');
-    } else {
-      this.fillFieldsForTime(this.time);
-    }
-  }
-
-  private updateTime(value: number, type: string): void {
+  private updateTime(): void {
     let date: Date;
     if (this.time === 0) {
       date = new Date(0);
     } else {
       date = new Date(this.time);
     }
-    if (type === 'hours') {
-      date.setUTCHours(value);
+    if (this.hours) {
+      date.setUTCHours(+this.hours);
     }
-    if (type === 'minutes') {
-      date.setUTCMinutes(value);
+    if (this.minutes) {
+      date.setUTCMinutes(+this.minutes);
     }
-    if (type === 'seconds') {
-      date.setUTCSeconds(value);
+    if (this.seconds) {
+      date.setUTCSeconds(+this.seconds);
     }
-    if (type === 'milliseconds') {
-      date.setUTCMilliseconds(value);
+    if (this.milliSeconds) {
+      date.setUTCMilliseconds(+this.milliSeconds);
     }
     this.time = date.getTime();
     this.fillFieldsForTime(this.time);
