@@ -11,6 +11,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 import { PenaltiesService } from '../penalties/penalties.service';
 import { DisqualificationService } from '../disqualification/disqualification.service';
 
@@ -53,9 +56,6 @@ import { SwapEntriesComponent } from './swap-entries';
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
 import { WebSocketService } from '../websocket/websocket-service';
 
-import { Ng2PaginationModule } from 'ng2-pagination';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TimeEntryModule } from '../components/time-entry/time-entry.module';
@@ -91,7 +91,7 @@ export function createTranslateLoader(http: Http) {
     MessagingModule,
     TitlebarModule,
     NoContentModule,
-    Ng2PaginationModule,
+    NgxPaginationModule,
     NgbModule.forRoot(),
     NgIdleKeepaliveModule.forRoot(),
     TranslateModule.forRoot({

@@ -16,7 +16,7 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { Ng2PaginationModule } from 'ng2-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { adminRoutes } from './admin.routes';
 import { AdminComponent } from './admin.component';
@@ -129,7 +129,7 @@ export function createTranslateLoader(http: Http) {
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    Ng2PaginationModule,
+    NgxPaginationModule,
     FooterModule,
     SidebarModule,
     TitlebarModule,

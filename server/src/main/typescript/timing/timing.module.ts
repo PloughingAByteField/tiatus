@@ -39,7 +39,7 @@ import { TimingEntryComponent } from './time_entry';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { Ng2PaginationModule } from 'ng2-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -67,7 +67,7 @@ export function createTranslateLoader(http: Http) {
     BrowserModule,
     FormsModule,
     HttpModule,
-    Ng2PaginationModule,
+    NgxPaginationModule,
     FooterModule,
     SidebarModule,
     TitlebarModule,

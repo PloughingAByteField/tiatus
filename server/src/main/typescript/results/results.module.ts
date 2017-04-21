@@ -10,7 +10,7 @@ import 'rxjs/add/observable/interval';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { Ng2PaginationModule } from 'ng2-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { ResultsRacesService } from './races/races.service';
@@ -78,7 +78,7 @@ export function createTranslateLoader(http: Http) {
     SidebarModule,
     TitlebarModule,
     NoContentModule,
-    Ng2PaginationModule,
+    NgxPaginationModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot({
         loader: {
