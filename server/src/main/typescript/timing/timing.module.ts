@@ -43,6 +43,7 @@ import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { TimeEntryModule } from '../components/time-entry/time-entry.module';
+import { MessagingModule } from '../components/messaging/messaging.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
 export function HttpLoaderFactory(http: Http) {
@@ -69,6 +70,7 @@ export function createTranslateLoader(http: Http) {
     SidebarModule,
     TitlebarModule,
     TimeEntryModule,
+    MessagingModule,
     NoContentModule,
     NgbModule.forRoot(),
     TranslateModule.forRoot({

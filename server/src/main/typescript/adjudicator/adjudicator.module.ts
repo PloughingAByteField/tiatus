@@ -57,6 +57,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TimeEntryModule } from '../components/time-entry/time-entry.module';
+import { MessagingModule } from '../components/messaging/messaging.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
@@ -85,6 +86,7 @@ export function createTranslateLoader(http: Http) {
     FooterModule,
     SidebarModule,
     TimeEntryModule,
+    MessagingModule,
     TitlebarModule,
     NoContentModule,
     Ng2PaginationModule,
