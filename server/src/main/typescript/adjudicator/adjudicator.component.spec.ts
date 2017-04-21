@@ -7,6 +7,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
 
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+
 import { WebSocketService } from '../websocket/websocket-service';
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
 
@@ -31,7 +33,7 @@ describe('Adjudicator', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpModule, TranslateModule.forRoot()],
+            imports: [HttpModule, TranslateModule.forRoot(), NgIdleKeepaliveModule.forRoot()],
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
                 RacesService,

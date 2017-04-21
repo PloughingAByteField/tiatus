@@ -9,6 +9,8 @@ import 'rxjs/add/operator/toPromise';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+
 import { RacesService } from '../races/races.service';
 import { RacesHttpService } from '../races/races-http.service';
 import { TimesService } from '../times/times.service';
@@ -73,6 +75,7 @@ export function createTranslateLoader(http: Http) {
     MessagingModule,
     NoContentModule,
     NgbModule.forRoot(),
+    NgIdleKeepaliveModule.forRoot(),
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,

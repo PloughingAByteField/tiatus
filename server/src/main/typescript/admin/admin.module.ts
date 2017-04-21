@@ -12,6 +12,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ENV_PROVIDERS } from './environment';
 
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { Ng2PaginationModule } from 'ng2-pagination';
@@ -133,6 +135,7 @@ export function createTranslateLoader(http: Http) {
     TitlebarModule,
     NoContentModule,
     NgbModule.forRoot(),
+    NgIdleKeepaliveModule.forRoot(),
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,

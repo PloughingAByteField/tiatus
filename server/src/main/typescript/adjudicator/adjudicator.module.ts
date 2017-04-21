@@ -9,6 +9,8 @@ import 'rxjs/add/operator/toPromise';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
+
 import { PenaltiesService } from '../penalties/penalties.service';
 import { DisqualificationService } from '../disqualification/disqualification.service';
 
@@ -91,6 +93,7 @@ export function createTranslateLoader(http: Http) {
     NoContentModule,
     Ng2PaginationModule,
     NgbModule.forRoot(),
+    NgIdleKeepaliveModule.forRoot(),
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,

@@ -1,15 +1,12 @@
-/*
- * Angular 2 decorators and services
- */
 import { Component, ViewEncapsulation } from '@angular/core';
+
 import { TranslateService } from '@ngx-translate/core';
+
+import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
+import { Keepalive } from '@ng-idle/keepalive';
 
 import { AdminWebSocketService } from './websocket/websocket-service';
 
-/*
- * App Component
- * Top Level Component
- */
 @Component({
   selector: 'admin',
   styleUrls: [
@@ -18,18 +15,26 @@ import { AdminWebSocketService } from './websocket/websocket-service';
   templateUrl: './admin.component.html'
 })
 export class AdminComponent {
-  public logo = '/assets/img/stopwatch.svg';
-  public tiatusUrl = 'https://github.com/PloughingAByteField/tiatus';
-  public param = {value: 'world'};
 
   constructor(
     private translate: TranslateService,
+    private idle: Idle,
+    private keepalive: Keepalive,
     private ws: AdminWebSocketService
-  ) {
-    translate.setDefaultLang('en');
+  ) {}
 
-    // the lang to use, if the lang isn't available, it will use the current loader to get them
-    translate.use('en');
+  public ngOnInit() {
+    this.idle.setIdle(600);
+    this.idle.setTimeout(300);
+    this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
+    this.keepalive.interval(360);
+    this.keepalive.request('/rest/keepalive');
+    this.idle.watch();
+    this.idle.onTimeout.subscribe(() => {
+      window.location.href = '/rest/logout';
+    });
+
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
   }
-
 }
