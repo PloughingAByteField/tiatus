@@ -45,7 +45,7 @@ public class WebSocketServiceImpl implements WebSocketService {
             LOG.debug("After add Have " + clients.size() + " clients for " + this);
 
             // send connected out
-            sendMessage(Message.createMessage("userName: " + userPrincipal.getName(), MessageType.CONNECTED, httpSession.getId()));
+            sendMessage(Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal), MessageType.CONNECTED, httpSession.getId()));
 
         } else {
             LOG.warn("Got non logged in websocket attempt");
@@ -77,12 +77,25 @@ public class WebSocketServiceImpl implements WebSocketService {
             Message message = (Message)jsonObject;
             if (message.getType().equals(MessageType.CONNECTED) && message.getData() instanceof Position) {
                 Position position = (Position) message.getData();
-                sendMessage(Message.createMessage("userName: " + userPrincipal.getName() + ", Position: " + position.getName(), MessageType.CONNECTED, httpSession.getId()));
+                sendMessage(Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal) + ", Position: " + position.getName(), MessageType.CONNECTED, httpSession.getId()));
 
 //                } else if (message.getAction().equals(MessageType.INFO) || message.getAction().equals(MessageType.ALERT)) {
 //                    sendChatMessage(message);
             }
         }
+    }
+
+    private String getUserRole(UserPrincipal userPrincipal) {
+        if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADMIN)) {
+            return Role.ADMIN;
+
+        } else if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADJUDICATOR)) {
+            return Role.ADJUDICATOR;
+
+        } else if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.TIMING)) {
+            return Role.TIMING;
+        }
+        return null;
     }
 
     private void removeSession(Session session) {
