@@ -9,11 +9,16 @@ import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-transla
 
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
-import { WebSocketService } from '../websocket/websocket-service';
+import { AdjudicatorWebSocketService } from './websocket/websocket-service';
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
 
-import { RacesService } from '../races/races.service';
-import { RacesHttpService } from '../races/races-http.service';
+import { AdjudicatorDisqualificationService } from './disqualification/disqualification.service';
+import { AdjudicatorHttpDisqualificationsService }
+    from './disqualification/disqualification-http.service';
+import { AdjudicatorPenaltiesService} from './penalties/penalties.service';
+import { AdjudicatorHttpPenaltiesService } from './penalties/penalties-http.service';
+import { AdjudicatorRacesService } from './races/races.service';
+import { AdjudicatorRacesHttpService } from './races/races-http.service';
 import { AdjudicatorComponent } from './adjudicator.component';
 
 import { ClubsService } from '../clubs/clubs.service';
@@ -36,8 +41,12 @@ describe('Adjudicator', () => {
             imports: [HttpModule, TranslateModule.forRoot(), NgIdleKeepaliveModule.forRoot()],
             providers: [
                 {provide: XHRBackend, useClass: MockBackend},
-                RacesService,
-                RacesHttpService,
+                AdjudicatorRacesService,
+                AdjudicatorRacesHttpService,
+                AdjudicatorDisqualificationService,
+                AdjudicatorHttpDisqualificationsService,
+                AdjudicatorPenaltiesService,
+                AdjudicatorHttpPenaltiesService,
                 ClubsService,
                 ClubsHttpService,
                 EntriesService,
@@ -46,7 +55,7 @@ describe('Adjudicator', () => {
                 EventsHttpService,
                 PositionsService,
                 PositionsHttpService,
-                WebSocketService,
+                AdjudicatorWebSocketService,
                 WebSocketWSService,
                 Title,
                 AdjudicatorComponent

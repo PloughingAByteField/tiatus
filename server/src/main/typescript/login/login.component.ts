@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
-    console.log(value);
     let user: User = new User();
     user.userName = value.name;
     user.password = value.password;

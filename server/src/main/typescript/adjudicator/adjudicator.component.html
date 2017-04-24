@@ -5,10 +5,9 @@
         <sidebar [races]="races" [showLogout]="true"></sidebar>
         <main>
             <router-outlet></router-outlet>
+            <messaging [messages]="messages" [connected]="connected" (newMessage)="onNewMessage($event)"></messaging>
         </main>
-        <messaging></messaging>
     </div>
-
 </div>
 
 <footer class="footer"></footer>

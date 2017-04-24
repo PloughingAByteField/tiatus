@@ -54,7 +54,7 @@ import { EntriesComponent } from './entries';
 import { PenaltiesComponent } from './penalties';
 import { SwapEntriesComponent } from './swap-entries';
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
-import { WebSocketService } from '../websocket/websocket-service';
+import { AdjudicatorWebSocketService } from './websocket/websocket-service';
 
 import { FooterModule } from '../components/footer/footer.module';
 import { SidebarModule } from '../components/sidebar/sidebar.module';
@@ -135,7 +135,7 @@ export function createTranslateLoader(http: Http) {
     EventsService,
     EventsHttpService,
     WebSocketWSService,
-    WebSocketService,
+    AdjudicatorWebSocketService,
     Title
   ]
 })

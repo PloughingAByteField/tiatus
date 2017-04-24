@@ -1,7 +1,9 @@
 export enum MessageType {
     ADD = 1,
     DELETE,
-    UPDATE
+    UPDATE,
+    CONNECTED,
+    DISCONNECTED
 }
 
 export function convertStringToMessageType(obj: string): MessageType {

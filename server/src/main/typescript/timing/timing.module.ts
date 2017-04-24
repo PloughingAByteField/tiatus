@@ -25,10 +25,14 @@ import { PositionsService } from '../positions/positions.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
 import { ConfigService } from '../config/config.service';
 import { ConfigHttpService } from '../config/config-http.service';
+import { DisqualificationService } from '../disqualification/disqualification.service';
+import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
+import { PenaltiesService } from '../penalties/penalties.service';
+import { PenaltiesHttpService } from '../penalties/penalties-http.service';
 import { EventsService } from '../events/events.service';
 import { EventsHttpService } from '../events/events-http.service';
 import { WebSocketWSService } from '../websocket/websocket-ws-service';
-import { WebSocketService } from '../websocket/websocket-service';
+import { TimingWebSocketService } from './websocket/websocket-service';
 
 import { ENV_PROVIDERS } from './environment';
 import { timingRouting } from './timing.routes';
@@ -103,8 +107,12 @@ export function createTranslateLoader(http: Http) {
     ConfigHttpService,
     EventsService,
     EventsHttpService,
+    DisqualificationService,
+    DisqualificationHttpService,
+    PenaltiesService,
+    PenaltiesHttpService,
     WebSocketWSService,
-    WebSocketService,
+    TimingWebSocketService,
     Title
   ]
 })

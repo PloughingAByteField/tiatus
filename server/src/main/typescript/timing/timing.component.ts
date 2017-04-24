@@ -1,7 +1,8 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title }     from '@angular/platform-browser';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -11,7 +12,12 @@ import { Keepalive } from '@ng-idle/keepalive';
 import { Race } from '../races/race.model';
 import { Position } from '../positions/position.model';
 import { RacesService } from '../races/races.service';
-import { WebSocketService } from '../websocket/websocket-service';
+
+import { ConverstationMessage } from '../messages/converstation-message.model';
+import { Connected } from '../messages/connected.model';
+import { Message } from '../websocket/message.model';
+import { MessageType } from '../websocket/message-type.model';
+import { TimingWebSocketService } from './websocket/websocket-service';
 
 import { TimingPositionService } from './times/timing-position.service';
 
@@ -23,10 +29,14 @@ import { TimingPositionService } from './times/timing-position.service';
   templateUrl: './timing.component.html',
   providers: [ TimingPositionService ]
 })
-export class TimingComponent implements OnInit {
+export class TimingComponent implements OnInit, OnDestroy {
   public link = 'race';
   public races: Observable<Race[]>;
   public selectedPosition: Position;
+  public messages: ConverstationMessage[];
+  public connected: Connected[];
+
+  private wsSubscription: Subscription;
 
   constructor(
     private translate: TranslateService,
@@ -35,7 +45,7 @@ export class TimingComponent implements OnInit {
     private keepalive: Keepalive,
     private racesService: RacesService,
     private timingPositionService: TimingPositionService,
-    private ws: WebSocketService
+    private ws: TimingWebSocketService
   ) {}
 
   public ngOnInit() {
@@ -56,8 +66,28 @@ export class TimingComponent implements OnInit {
         if (position) {
           this.selectedPosition = position;
           this.races = this.racesService.getRaces();
+          // send selected position to server
+          let connected: Message = new Message();
+          connected.data = JSON.stringify(position);
+          connected.objectType = 'Position';
+          connected.type = MessageType.CONNECTED;
+          this.ws.sendMessage(connected);
         }
+    });
+
+    this.wsSubscription = this.ws.getMessages().subscribe((messages: ConverstationMessage[]) => {
+      this.messages = messages;
     });
   }
 
+  public ngOnDestroy() {
+    if (this.wsSubscription) {
+      this.wsSubscription.unsubscribe();
+    }
+  }
+
+  public onNewMessage(data: ConverstationMessage): void {
+    console.log('got new message');
+    console.log(data);
+  }
 }

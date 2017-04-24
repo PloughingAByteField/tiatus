@@ -1,25 +1,21 @@
-/*
- * Angular 2 decorators and services
- */
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Title }     from '@angular/platform-browser';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 import { TranslateService } from '@ngx-translate/core';
 
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
 import { Keepalive } from '@ng-idle/keepalive';
 
-import { RacesService } from '../races/races.service';
+import { AdjudicatorRacesService } from './races/races.service';
 import { Race } from '../races/race.model';
+import { ConverstationMessage } from '../messages/converstation-message.model';
+import { Connected } from '../messages/connected.model';
 
-import { WebSocketService } from '../websocket/websocket-service';
+import { AdjudicatorWebSocketService } from './websocket/websocket-service';
 
-/*
- * App Component
- * Top Level Component
- */
 @Component({
   selector: 'adjudicator',
   styleUrls: [
@@ -29,14 +25,18 @@ import { WebSocketService } from '../websocket/websocket-service';
 })
 export class AdjudicatorComponent implements OnInit {
   public races: Observable<Race[]>;
+  public messages: ConverstationMessage[];
+  public connected: Connected[];
+
+  private wsSubscription: Subscription;
 
   constructor(
     private translate: TranslateService,
     private idle: Idle,
     private keepalive: Keepalive,
     private titleService: Title,
-    private racesService: RacesService,
-    private ws: WebSocketService
+    private racesService: AdjudicatorRacesService,
+    private ws: AdjudicatorWebSocketService
   ) {}
 
   public ngOnInit() {
@@ -54,5 +54,19 @@ export class AdjudicatorComponent implements OnInit {
     });
 
     this.races = this.racesService.getRaces();
+    this.wsSubscription = this.ws.getMessages().subscribe((messages: ConverstationMessage[]) => {
+      this.messages = messages;
+    });
+  }
+
+  public ngOnDestroy() {
+    if (this.wsSubscription) {
+      this.wsSubscription.unsubscribe();
+    }
+  }
+
+  public onNewMessage(data: ConverstationMessage): void {
+    console.log('got new message');
+    console.log(data);
   }
 }

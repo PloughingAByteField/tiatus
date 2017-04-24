@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class WebSocketWSService {
     private ws: WebSocket;
+    private queued: string[] = new Array<string>();
 
     public createWebSocket(url: string): Observable<string> {
         this.ws = new WebSocket(url);
@@ -18,7 +19,27 @@ export class WebSocketWSService {
 
     public sendMessage(message: any): void {
         if (this.ws) {
-            this.ws.send(message);
+            if (this.ws && this.ws.readyState === this.ws.OPEN) {
+                this.ws.send(JSON.stringify(message));
+            } else if (this.ws.readyState === this.ws.CONNECTING) {
+                this.queued.push(JSON.stringify(message));
+                setTimeout(() => {
+                    this.waitForConnected();
+                }, 500);
+            }
+        }
+    }
+
+    private waitForConnected(): void {
+        if (this.ws && this.ws.readyState === this.ws.OPEN) {
+            while (this.queued.length > 0) {
+                let message: string = this.queued.shift();
+                this.ws.send(message);
+            }
+        } else if (this.ws.readyState === this.ws.CONNECTING) {
+            setTimeout(() => {
+                this.waitForConnected();
+            }, 500);
         }
     }
 }

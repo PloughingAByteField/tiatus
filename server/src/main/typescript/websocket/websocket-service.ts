@@ -14,7 +14,7 @@ import { RacesService } from '../races/races.service';
 import { WebSocketWSService } from './websocket-ws-service';
 
 @Injectable()
-export class WebSocketService implements OnInit {
+export class WebSocketService {
 
     constructor(
         protected clubsService: ClubsService,
@@ -30,23 +30,31 @@ export class WebSocketService implements OnInit {
             console.log('not production');
             url = window.location.hostname + ':8080';
         }
-        this.subscribeToUrl(url);
+        let secure: boolean = false;
+        let protocol: string = window.location.protocol;
+        if (protocol === 'https:') {
+            secure = true;
+        }
+        this.subscribeToUrl(url, secure);
     }
 
-    public ngOnInit() {
-        console.log('ws init');
-        this.subscribeToUrl(window.location.hostname);
-    }
-
-    public subscribeToUrl(url: string): void {
-        console.log(url);
-        this.ws.createWebSocket('ws://' + url + '/ws').subscribe(
+    public subscribeToUrl(url: string, secure: boolean): void {
+        let wsUrl: string;
+        if (secure) {
+            wsUrl = 'wss://' + url + '/ws';
+        } else {
+            wsUrl = 'ws://' + url + '/ws';
+        }
+        console.log(wsUrl);
+        this.ws.createWebSocket(wsUrl).subscribe(
             (data: string) => this.onMessage(data),
             (err) => console.log(err),
             () => console.log('websocket is closed'));
     }
 
     public sendMessage(message: any): void {
+        console.log('sending message');
+        console.log(message);
         if (this.ws) {
             this.ws.sendMessage(message);
         }

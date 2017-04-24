@@ -1,3 +1,7 @@
-<textarea readonly rows="4" cols="80"></textarea>
-<input type="text" >
-<button >{{ 'RESPOND' | translate }}</button>
+<div *ngIf="messages">
+<div class="messages">
+    <textarea readonly rows="4" cols="80"></textarea>
+    <input type="text" >
+    <button (click)="onClick()">{{ 'RESPOND' | translate }}</button>
+</div>
+</div>
