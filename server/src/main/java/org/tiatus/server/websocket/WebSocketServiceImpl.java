@@ -29,6 +29,7 @@ public class WebSocketServiceImpl implements WebSocketService {
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketServiceImpl.class);
 
     private static ConcurrentHashMap<Session, HttpSession> clients = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Session, Position> connectedPositions = new ConcurrentHashMap<>();
 
     @OnOpen
     public void open(Session session, EndpointConfig config) {
@@ -46,7 +47,8 @@ public class WebSocketServiceImpl implements WebSocketService {
 
             // send connected out
             sendMessage(Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal), MessageType.CONNECTED, httpSession.getId()));
-
+            // send who else is connected and position
+            sendConnectedClients(session);
         } else {
             LOG.warn("Got non logged in websocket attempt");
             close(session);
@@ -77,6 +79,9 @@ public class WebSocketServiceImpl implements WebSocketService {
             Message message = (Message)jsonObject;
             if (message.getType().equals(MessageType.CONNECTED) && message.getData() instanceof Position) {
                 Position position = (Position) message.getData();
+                if (position != null) {
+                    connectedPositions.put(session, position);
+                }
                 sendMessage(Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal) + ", Position: " + position.getName(), MessageType.CONNECTED, httpSession.getId()));
 
 //                } else if (message.getAction().equals(MessageType.INFO) || message.getAction().equals(MessageType.ALERT)) {
@@ -109,6 +114,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         }
 
         clients.remove(session);
+        connectedPositions.remove(session);
         try {
             session.close();
         } catch (IOException e) {
@@ -126,6 +132,29 @@ public class WebSocketServiceImpl implements WebSocketService {
                     if (shouldSendMessageToClient(message, session)) {
                         session.getBasicRemote().sendText(convertToJson(message));
                     }
+                } catch (IOException e) {
+                    LOG.warn("Failed to send message to client", e);
+                }
+            }
+        }
+    }
+
+    private void sendConnectedClients(Session session) {
+        for (Session client: clients.keySet()) {
+            if (! session.getId().equals(client.getId())) {
+                HttpSession httpSession = clients.get(client);
+                try {
+                    UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
+                    Message message;
+                    Position position = connectedPositions.get(client);
+                    if (position != null) {
+                        message = Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal) + ", Position: " + position.getName(), MessageType.CONNECTED, null);
+                    } else {
+                        message = Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal), MessageType.CONNECTED, null);
+                    }
+                    session.getBasicRemote().sendText(convertToJson(message));
+                } catch (IllegalStateException e) {
+                    LOG.debug("skipping sending disconnect to invalid session");
                 } catch (IOException e) {
                     LOG.warn("Failed to send message to client", e);
                 }

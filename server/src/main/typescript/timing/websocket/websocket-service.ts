@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Message, convertObjectToMessage } from '../../websocket/message.model';
+import { MessageType } from '../../websocket/message-type.model';
 import { ConverstationMessage } from '../../messages/converstation-message.model';
 import { Connected } from '../../messages/connected.model';
 
@@ -46,8 +47,9 @@ export class TimingWebSocketService extends WebSocketService {
         console.log(data);
         let message: Message = convertObjectToMessage(JSON.parse(data));
         console.log(message);
-        if (message.objectType === 'Penalty') {
-          console.log('penalty');
+        if (message.type === MessageType.CONNECTED) {
+            console.log('have connected');
+
         } else {
             super.onMessage(data);
         }

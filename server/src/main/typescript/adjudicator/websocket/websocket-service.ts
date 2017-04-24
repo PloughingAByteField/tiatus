@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Message, convertObjectToMessage } from '../../websocket/message.model';
+import { MessageType } from '../../websocket/message-type.model';
 import { ConverstationMessage } from '../../messages/converstation-message.model';
 
 import { WebSocketService } from '../../websocket/websocket-service';
@@ -44,7 +45,10 @@ export class AdjudicatorWebSocketService extends WebSocketService {
         console.log(data);
         let message: Message = convertObjectToMessage(JSON.parse(data));
         console.log(message);
-        if (message.objectType === 'Penalty') {
+        if (message.type === MessageType.CONNECTED) {
+            console.log('have connected');
+
+        } else if (message.objectType === 'Penalty') {
             this.penaltiesService.processPenaltyMessage(message);
 
         } else if (message.objectType === 'Disqualification') {
