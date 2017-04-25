@@ -1,13 +1,27 @@
-<div *ngIf="messages">
-<div class="messages">
-    <textarea readonly rows="4" cols="80"></textarea>
-    <input type="text" >
-    <button (click)="onClick()">{{ 'RESPOND' | translate }}</button>
-</div>
+
+
+<div *ngIf="connected && connected.length > 0">
+    <div>{{ 'SEND_MESSAGE' | translate }}</div>
+    <div>
+        <select #to>
+            <option *ngIf="connected.length > 1" selected>ALL</option>
+            <option *ngFor="let c of connected">
+                {{ c.userName }}/{{ c.role }}/{{ c.position }}
+            </option>
+        </select>
+    </div>
+    <div>
+        <input type="text" #message>
+        <button (click)="sendMessage(to.value, message.value)">{{ 'SEND' | translate }}</button>
+    </div>
 </div>
 
-<div *ngIf="connected">
-    <div *ngFor="let c of connected">
-        {{ c.userName }} {{ c.role }} {{ c.position }}
+<div *ngIf="messages.length > 0">
+    <div *ngFor="let mp of messages" class="messages">
+        <div>
+            <textarea readonly rows="4" cols="80" [value]="getMessages(mp)"></textarea>
+        </div>
+        <input type="text" >
+        <button (click)="respond()">{{ 'RESPOND' | translate }}</button>
     </div>
 </div>

@@ -87,9 +87,10 @@ public class WebSocketServiceImpl implements WebSocketService {
                     details.setPosition(position.getName());
                 }
                 sendMessage(Message.createMessage(buildContent(details), MessageType.CONNECTED, httpSession.getId()));
-
-//                } else if (message.getAction().equals(MessageType.INFO) || message.getAction().equals(MessageType.ALERT)) {
-//                    sendChatMessage(message);
+            } else if (message.getType().equals(MessageType.CHAT)) {
+                // get details
+                // who to
+                sendMessage(Message.createMessage(message.getData(), MessageType.CHAT, httpSession.getId()));
             }
         }
     }
@@ -108,16 +109,11 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     private void removeSession(Session session) {
-        // send disconnected out
         HttpSession httpSession = clients.get(session);
-        try {
-            ClientDetails details = connectedDetails.get(session);
-
+        ClientDetails details = connectedDetails.get(session);
+        if (details != null) {
             sendMessage(Message.createMessage(buildContent(details), MessageType.DISCONNECTED, httpSession.getId()));
-        } catch (IllegalStateException e) {
-            LOG.debug("skipping sending disconnect to invalid session");
         }
-
         clients.remove(session);
         connectedDetails.remove(session);
         try {
@@ -171,6 +167,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     private boolean shouldSendMessageToClient(Message message, Session session) {
         if (message.getData() instanceof String
+                || message.getData() instanceof ConverstationMessage
                 || message.getData() instanceof Race
                 || message.getData() instanceof Position
                 || message.getData() instanceof Club
@@ -224,12 +221,15 @@ public class WebSocketServiceImpl implements WebSocketService {
                     if (rootNode.get("objectType").asText().equals("Position")) {
                         data = mapper.readValue(rootNode.get("data").asText(), Position.class);
                     }
+                    if (rootNode.get("objectType").asText().equals("ConverstationMessage")) {
+                        data = mapper.readValue(rootNode.get("data").asText(), ConverstationMessage.class);
+                    }
                 }
-                Object action = mapper.treeToValue(rootNode.get("type"), MessageType.class);
-                if (data != null && action != null) {
+                Object type = mapper.treeToValue(rootNode.get("type"), MessageType.class);
+                if (data != null && type != null) {
                     Message message = new Message();
                     message.setData(data);
-                    message.setType((MessageType) action);
+                    message.setType((MessageType) type);
                     return message;
                 }
             }

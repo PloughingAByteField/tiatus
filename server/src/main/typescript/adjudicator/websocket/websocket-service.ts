@@ -22,9 +22,9 @@ import { PositionsService } from '../../positions/positions.service';
 @Injectable()
 export class AdjudicatorWebSocketService extends WebSocketService {
 
-    private messages: ConverstationMessage[];
-    private subject: BehaviorSubject<ConverstationMessage[]>
-        = new BehaviorSubject<ConverstationMessage[]>(this.messages);
+    private message: ConverstationMessage;
+    private subject: BehaviorSubject<ConverstationMessage>
+        = new BehaviorSubject<ConverstationMessage>(this.message);
     private connected: Connected[] = new Array<Connected>();
     private connectedSubject: BehaviorSubject<Connected[]>
         = new BehaviorSubject<Connected[]>(this.connected);
@@ -41,7 +41,7 @@ export class AdjudicatorWebSocketService extends WebSocketService {
             super(clubsService, entriesService, eventsService, positionsService, racesService, ws);
     }
 
-    public getMessages(): BehaviorSubject<ConverstationMessage[]> {
+    public subscribeForMessages(): BehaviorSubject<ConverstationMessage> {
         return this.subject;
     }
 

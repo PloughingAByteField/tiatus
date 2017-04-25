@@ -33,7 +33,7 @@ export class TimingComponent implements OnInit, OnDestroy {
   public link = 'race';
   public races: Observable<Race[]>;
   public selectedPosition: Position;
-  public messages: ConverstationMessage[];
+  public message: ConverstationMessage;
   public connected: Connected[];
 
   private connectedSubscription: Subscription;
@@ -76,8 +76,9 @@ export class TimingComponent implements OnInit, OnDestroy {
         }
     });
 
-    this.wsSubscription = this.ws.getMessages().subscribe((messages: ConverstationMessage[]) => {
-      this.messages = messages;
+    this.wsSubscription = this.ws.subscribeForMessages()
+    .subscribe((message: ConverstationMessage) => {
+      this.message = message;
     });
 
     this.connectedSubscription = this.ws.getConnectedPositions()
@@ -94,5 +95,10 @@ export class TimingComponent implements OnInit, OnDestroy {
   public onNewMessage(data: ConverstationMessage): void {
     console.log('got new message');
     console.log(data);
+    let message: Message = new Message();
+    message.data = JSON.stringify(data);
+    message.objectType = 'ConverstationMessage';
+    message.type = MessageType.CHAT;
+    this.ws.sendMessage(message);
   }
 }

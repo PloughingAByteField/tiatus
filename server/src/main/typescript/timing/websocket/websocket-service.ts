@@ -5,7 +5,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Message, convertObjectToMessage } from '../../websocket/message.model';
 import { MessageType } from '../../websocket/message-type.model';
-import { ConverstationMessage } from '../../messages/converstation-message.model';
+import { ConverstationMessage, convertObjectToConverstationMessage }
+from '../../messages/converstation-message.model';
 import { Connected, convertObjectToConnected } from '../../messages/connected.model';
 
 import { WebSocketService } from '../../websocket/websocket-service';
@@ -22,9 +23,9 @@ import { PositionsService } from '../../positions/positions.service';
 @Injectable()
 export class TimingWebSocketService extends WebSocketService {
 
-    private messages: ConverstationMessage[];
-    private subject: BehaviorSubject<ConverstationMessage[]>
-        = new BehaviorSubject<ConverstationMessage[]>(this.messages);
+    private message: ConverstationMessage;
+    private subject: BehaviorSubject<ConverstationMessage>
+        = new BehaviorSubject<ConverstationMessage>(this.message);
     private connected: Connected[] = new Array<Connected>();
     private connectedSubject: BehaviorSubject<Connected[]>
         = new BehaviorSubject<Connected[]>(this.connected);
@@ -41,7 +42,7 @@ export class TimingWebSocketService extends WebSocketService {
             super(clubsService, entriesService, eventsService, positionsService, racesService, ws);
     }
 
-    public getMessages(): BehaviorSubject<ConverstationMessage[]> {
+    public subscribeForMessages(): BehaviorSubject<ConverstationMessage> {
         return this.subject;
     }
 
@@ -50,7 +51,10 @@ export class TimingWebSocketService extends WebSocketService {
     }
 
     protected onMessage(data: string): void {
+        console.log('got message');
+        console.log(data);
         let message: Message = convertObjectToMessage(JSON.parse(data));
+        console.log(message);
         if (message.type === MessageType.CONNECTED) {
             let connected: Connected = convertObjectToConnected(JSON.parse(message.data));
             let update: boolean = false;
@@ -82,6 +86,12 @@ export class TimingWebSocketService extends WebSocketService {
                 this.connected.splice(index, 1);
                 this.connectedSubject.next(this.connected);
             }
+        } else if (message.type === MessageType.CHAT) {
+            console.log('chat');
+            console.log('chat');
+            this.message = convertObjectToConverstationMessage(message.data);
+            this.subject.next(this.message);
+
         } else {
             super.onMessage(data);
         }

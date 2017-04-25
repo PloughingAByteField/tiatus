@@ -25,7 +25,7 @@ import { AdjudicatorWebSocketService } from './websocket/websocket-service';
 })
 export class AdjudicatorComponent implements OnInit {
   public races: Observable<Race[]>;
-  public messages: ConverstationMessage[];
+  public message: ConverstationMessage;
   public connected: Connected[];
 
   private connectedSubscription: Subscription;
@@ -56,8 +56,9 @@ export class AdjudicatorComponent implements OnInit {
 
     this.races = this.racesService.getRaces();
 
-    this.wsSubscription = this.ws.getMessages().subscribe((messages: ConverstationMessage[]) => {
-      this.messages = messages;
+    this.wsSubscription = this.ws.subscribeForMessages()
+      .subscribe((message: ConverstationMessage) => {
+      this.message = message;
     });
     this.connectedSubscription = this.ws.getConnectedPositions()
       .subscribe((connected: Connected[]) => {
