@@ -28,6 +28,7 @@ export class AdjudicatorComponent implements OnInit {
   public messages: ConverstationMessage[];
   public connected: Connected[];
 
+  private connectedSubscription: Subscription;
   private wsSubscription: Subscription;
 
   constructor(
@@ -54,15 +55,19 @@ export class AdjudicatorComponent implements OnInit {
     });
 
     this.races = this.racesService.getRaces();
+
     this.wsSubscription = this.ws.getMessages().subscribe((messages: ConverstationMessage[]) => {
       this.messages = messages;
+    });
+    this.connectedSubscription = this.ws.getConnectedPositions()
+      .subscribe((connected: Connected[]) => {
+      this.connected = connected;
     });
   }
 
   public ngOnDestroy() {
-    if (this.wsSubscription) {
-      this.wsSubscription.unsubscribe();
-    }
+    this.connectedSubscription.unsubscribe();
+    this.wsSubscription.unsubscribe();
   }
 
   public onNewMessage(data: ConverstationMessage): void {

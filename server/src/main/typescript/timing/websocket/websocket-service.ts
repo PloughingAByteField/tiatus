@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Message, convertObjectToMessage } from '../../websocket/message.model';
 import { MessageType } from '../../websocket/message-type.model';
 import { ConverstationMessage } from '../../messages/converstation-message.model';
-import { Connected } from '../../messages/connected.model';
+import { Connected, convertObjectToConnected } from '../../messages/connected.model';
 
 import { WebSocketService } from '../../websocket/websocket-service';
 import { WebSocketWSService } from '../../websocket/websocket-ws-service';
@@ -25,7 +25,9 @@ export class TimingWebSocketService extends WebSocketService {
     private messages: ConverstationMessage[];
     private subject: BehaviorSubject<ConverstationMessage[]>
         = new BehaviorSubject<ConverstationMessage[]>(this.messages);
-    private connected: Connected[];
+    private connected: Connected[] = new Array<Connected>();
+    private connectedSubject: BehaviorSubject<Connected[]>
+        = new BehaviorSubject<Connected[]>(this.connected);
 
     constructor(
         protected clubsService: ClubsService,
@@ -43,13 +45,43 @@ export class TimingWebSocketService extends WebSocketService {
         return this.subject;
     }
 
-    protected onMessage(data: string): void {
-        console.log(data);
-        let message: Message = convertObjectToMessage(JSON.parse(data));
-        console.log(message);
-        if (message.type === MessageType.CONNECTED) {
-            console.log('have connected');
+    public getConnectedPositions(): BehaviorSubject<Connected[]> {
+        return this.connectedSubject;
+    }
 
+    protected onMessage(data: string): void {
+        let message: Message = convertObjectToMessage(JSON.parse(data));
+        if (message.type === MessageType.CONNECTED) {
+            let connected: Connected = convertObjectToConnected(JSON.parse(message.data));
+            let update: boolean = false;
+            for (let currentlyConnected of this.connected) {
+                if (currentlyConnected.userName === connected.userName
+                && currentlyConnected.role === connected.role) {
+                    update = true;
+                    currentlyConnected.position = connected.position;
+                }
+            }
+            if (!update) {
+                this.connected.push(connected);
+            }
+            this.connectedSubject.next(this.connected);
+
+        } else if (message.type === MessageType.DISCONNECTED) {
+            let disconnected: Connected = convertObjectToConnected(JSON.parse(message.data));
+            let toRemove: Connected;
+            for (let currentlyConnected of this.connected) {
+                if (currentlyConnected.userName === disconnected.userName
+                && currentlyConnected.role === disconnected.role
+                && currentlyConnected.position === disconnected.position) {
+                    toRemove = disconnected;
+                    break;
+                }
+            }
+            if (toRemove) {
+                let index: number = this.connected.indexOf(toRemove);
+                this.connected.splice(index, 1);
+                this.connectedSubject.next(this.connected);
+            }
         } else {
             super.onMessage(data);
         }

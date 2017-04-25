@@ -36,6 +36,7 @@ export class TimingComponent implements OnInit, OnDestroy {
   public messages: ConverstationMessage[];
   public connected: Connected[];
 
+  private connectedSubscription: Subscription;
   private wsSubscription: Subscription;
 
   constructor(
@@ -78,12 +79,16 @@ export class TimingComponent implements OnInit, OnDestroy {
     this.wsSubscription = this.ws.getMessages().subscribe((messages: ConverstationMessage[]) => {
       this.messages = messages;
     });
+
+    this.connectedSubscription = this.ws.getConnectedPositions()
+      .subscribe((connected: Connected[]) => {
+      this.connected = connected;
+    });
   }
 
   public ngOnDestroy() {
-    if (this.wsSubscription) {
-      this.wsSubscription.unsubscribe();
-    }
+    this.connectedSubscription.unsubscribe();
+    this.wsSubscription.unsubscribe();
   }
 
   public onNewMessage(data: ConverstationMessage): void {

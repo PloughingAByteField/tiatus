@@ -5,3 +5,9 @@
     <button (click)="onClick()">{{ 'RESPOND' | translate }}</button>
 </div>
 </div>
+
+<div *ngIf="connected">
+    <div *ngFor="let c of connected">
+        {{ c.userName }} {{ c.role }} {{ c.position }}
+    </div>
+</div>

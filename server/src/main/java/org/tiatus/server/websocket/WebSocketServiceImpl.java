@@ -29,7 +29,7 @@ public class WebSocketServiceImpl implements WebSocketService {
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketServiceImpl.class);
 
     private static ConcurrentHashMap<Session, HttpSession> clients = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<Session, Position> connectedPositions = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Session, ClientDetails> connectedDetails = new ConcurrentHashMap<>();
 
     @OnOpen
     public void open(Session session, EndpointConfig config) {
@@ -43,11 +43,15 @@ public class WebSocketServiceImpl implements WebSocketService {
             || TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADJUDICATOR)
             || TiatusSecurityContext.isUserInRole(userPrincipal, Role.TIMING)) {
             clients.put(session, httpSession);
+            ClientDetails details = new ClientDetails();
+            details.setUserName(userPrincipal.getName());
+            details.setRole(getUserRole(userPrincipal));
+            connectedDetails.put(session, details);
             LOG.debug("After add Have " + clients.size() + " clients for " + this);
 
             // send connected out
-            sendMessage(Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal), MessageType.CONNECTED, httpSession.getId()));
-            // send who else is connected and position
+            sendMessage(Message.createMessage(buildContent(details), MessageType.CONNECTED, httpSession.getId()));
+            // send who else is connected and position to the connecting client
             sendConnectedClients(session);
         } else {
             LOG.warn("Got non logged in websocket attempt");
@@ -73,16 +77,16 @@ public class WebSocketServiceImpl implements WebSocketService {
     public void handleMessage(String data, Session session) {
         LOG.debug("Socket message " + data);
         HttpSession httpSession = clients.get(session);
-        UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
         Object jsonObject = getJsonObject(data);
         if (jsonObject instanceof Message) {
             Message message = (Message)jsonObject;
             if (message.getType().equals(MessageType.CONNECTED) && message.getData() instanceof Position) {
                 Position position = (Position) message.getData();
+                ClientDetails details = connectedDetails.get(session);
                 if (position != null) {
-                    connectedPositions.put(session, position);
+                    details.setPosition(position.getName());
                 }
-                sendMessage(Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal) + ", Position: " + position.getName(), MessageType.CONNECTED, httpSession.getId()));
+                sendMessage(Message.createMessage(buildContent(details), MessageType.CONNECTED, httpSession.getId()));
 
 //                } else if (message.getAction().equals(MessageType.INFO) || message.getAction().equals(MessageType.ALERT)) {
 //                    sendChatMessage(message);
@@ -107,14 +111,15 @@ public class WebSocketServiceImpl implements WebSocketService {
         // send disconnected out
         HttpSession httpSession = clients.get(session);
         try {
-            UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
-            sendMessage(Message.createMessage(userPrincipal.getName(), MessageType.DISCONNECTED, httpSession.getId()));
+            ClientDetails details = connectedDetails.get(session);
+
+            sendMessage(Message.createMessage(buildContent(details), MessageType.DISCONNECTED, httpSession.getId()));
         } catch (IllegalStateException e) {
             LOG.debug("skipping sending disconnect to invalid session");
         }
 
         clients.remove(session);
-        connectedPositions.remove(session);
+        connectedDetails.remove(session);
         try {
             session.close();
         } catch (IOException e) {
@@ -139,22 +144,24 @@ public class WebSocketServiceImpl implements WebSocketService {
         }
     }
 
+    private String buildContent(ClientDetails details) {
+        StringBuffer content = new StringBuffer("{ \"userName\": \"" + details.getUserName() + "\", \"role\": \"" + details.getRole() + "\"");
+        if (details.getPosition() != null) {
+            content.append(", \"position\": \"" + details.getPosition() + "\"");
+        }
+        content.append("}");
+        return content.toString();
+    }
+
     private void sendConnectedClients(Session session) {
         for (Session client: clients.keySet()) {
             if (! session.getId().equals(client.getId())) {
                 HttpSession httpSession = clients.get(client);
                 try {
-                    UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
-                    Message message;
-                    Position position = connectedPositions.get(client);
-                    if (position != null) {
-                        message = Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal) + ", Position: " + position.getName(), MessageType.CONNECTED, null);
-                    } else {
-                        message = Message.createMessage("userName: " + userPrincipal.getName() + ", role:" + getUserRole(userPrincipal), MessageType.CONNECTED, null);
-                    }
+                    ClientDetails details = connectedDetails.get(client);
+                    Message message = Message.createMessage(buildContent(details), MessageType.CONNECTED, null);
+
                     session.getBasicRemote().sendText(convertToJson(message));
-                } catch (IllegalStateException e) {
-                    LOG.debug("skipping sending disconnect to invalid session");
                 } catch (IOException e) {
                     LOG.warn("Failed to send message to client", e);
                 }
