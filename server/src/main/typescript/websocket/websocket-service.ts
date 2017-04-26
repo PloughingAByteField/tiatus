@@ -24,12 +24,6 @@ export class WebSocketService {
         protected racesService: RacesService,
         protected ws: WebSocketWSService) {
         let url: string = window.location.host;
-        if ('production' !== ENV) {
-            // hard code port as webpack dev server cannot proxy websockets
-            // https://github.com/chimurai/http-proxy-middleware/issues/112
-            console.log('not production');
-            url = window.location.hostname + ':8080';
-        }
         let secure: boolean = false;
         let protocol: string = window.location.protocol;
         if (protocol === 'https:') {
@@ -53,17 +47,13 @@ export class WebSocketService {
     }
 
     public sendMessage(message: any): void {
-        console.log('sending message');
-        console.log(message);
         if (this.ws) {
             this.ws.sendMessage(message);
         }
     }
 
     protected onMessage(data: string): void {
-        console.log(data);
         let message: Message = convertObjectToMessage(JSON.parse(data));
-        console.log(message);
         if (message.objectType === 'Race') {
             this.racesService.processMessage(message);
         } else if (message.objectType === 'Position') {
