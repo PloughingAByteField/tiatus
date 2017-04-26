@@ -80,17 +80,33 @@ public class WebSocketServiceImpl implements WebSocketService {
         Object jsonObject = getJsonObject(data);
         if (jsonObject instanceof Message) {
             Message message = (Message)jsonObject;
+            ClientDetails details = connectedDetails.get(session);
             if (message.getType().equals(MessageType.CONNECTED) && message.getData() instanceof Position) {
                 Position position = (Position) message.getData();
-                ClientDetails details = connectedDetails.get(session);
                 if (position != null) {
                     details.setPosition(position.getName());
                 }
                 sendMessage(Message.createMessage(buildContent(details), MessageType.CONNECTED, httpSession.getId()));
             } else if (message.getType().equals(MessageType.CHAT)) {
-                // get details
-                // who to
-                sendMessage(Message.createMessage(message.getData(), MessageType.CHAT, httpSession.getId()));
+                ConverstationMessage mess = (ConverstationMessage) message.getData();
+                String from = details.getUserName() + "/" + details.getRole();
+                if (details.getPosition() != null) {
+                    from = from + "/" + details.getPosition();
+                }
+                mess.setFrom(from);
+
+                if (mess.getTo().equals("ALL")) {
+                    sendMessage(Message.createMessage(message.getData(), MessageType.CHAT, httpSession.getId()));
+                } else {
+                    Session to = getSessionForMessageTo(mess.getTo());
+                    if (to != null) {
+                        try {
+                            to.getBasicRemote().sendText(convertToJson(message));
+                        } catch (IOException e) {
+                            LOG.warn("Failed to send message to client", e);
+                        }
+                    }
+                }
             }
         }
     }
@@ -138,6 +154,29 @@ public class WebSocketServiceImpl implements WebSocketService {
                 }
             }
         }
+    }
+
+    private Session getSessionForMessageTo(String to){
+        for (Session session: connectedDetails.keySet()) {
+            ClientDetails details = connectedDetails.get(session);
+            String client[] = to.split("/");
+            if (details.getPosition() != null && client.length != 3) {
+                continue;
+            }
+            if (client[0].equals(details.getUserName()) && client[1].equals(details.getRole())) {
+                if (details.getPosition() != null) {
+                    if (client[2].equals(details.getPosition())) {
+                        return session;
+                    } else {
+                        continue;
+                    }
+                } else {
+                    return session;
+                }
+            }
+        }
+
+        return null;
     }
 
     private String buildContent(ClientDetails details) {

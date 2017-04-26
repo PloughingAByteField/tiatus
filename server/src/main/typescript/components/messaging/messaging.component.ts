@@ -31,18 +31,26 @@ export class MessagingComponent implements OnChanges {
     newMessage.to = to;
     newMessage.message = data;
     this.newMessage.next(newMessage);
+    newMessage.from = 'me:';
+    this.populateMessagesForPositions(newMessage);
   }
 
-  public respond(): void {
+  public respond(mp: MessagePosition, data: string): void {
     let newMessage: ConverstationMessage = new ConverstationMessage();
-    newMessage.to = 'me';
-    newMessage.message = 'hello';
+    newMessage.to = mp.position;
+    newMessage.message = data;
     this.newMessage.next(newMessage);
+    newMessage.from = 'me:';
+    this.populateMessagesForPositions(newMessage);
   }
 
   public getMessages(mp: MessagePosition): string {
     if (mp && mp.messages.length > 0) {
-      return mp.messages[0].message;
+      let data: string = '';
+      mp.messages.map((message: ConverstationMessage) => {
+        data = data.concat(message.from + ': ' + message.message + '\n');
+      });
+      return data;
     }
     return null;
   }
@@ -50,9 +58,33 @@ export class MessagingComponent implements OnChanges {
   private populateMessagesForPositions(message: ConverstationMessage): void {
     console.log(message);
     if (message !== undefined) {
-      let mp: MessagePosition = new MessagePosition();
-      mp.messages.push(message);
-      this.messages.push(mp);
+      let mp: MessagePosition;
+      if (message.to === 'ALL' || message.from === 'me:') {
+        mp = this.getMessagePosition(message.to);
+      } else {
+        mp = this.getMessagePosition(message.from);
+      }
+      if (mp === null) {
+        mp = new MessagePosition();
+        if (message.to === 'ALL' || message.from === 'me:') {
+          mp.position = message.to;
+        } else {
+          mp.position = message.from;
+        }
+        mp.messages.push(message);
+        this.messages.push(mp);
+      } else {
+        mp.messages.push(message);
+      }
     }
+  }
+
+  private getMessagePosition(position: string): MessagePosition {
+    for (let mp of this.messages) {
+      if (mp.position !== null && position !== null && position === mp.position) {
+        return mp;
+      }
+    }
+    return null;
   }
 }

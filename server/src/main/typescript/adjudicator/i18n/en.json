@@ -1,6 +1,10 @@
 {
     "RACE": "{{value}}",
     "NUMBER": "Number",
+    "CONVERSTATION_WITH": "Conversation with",
+    "SEND_MESSAGE": "Send message to",
+    "SEND": "Send",
+    "RESPOND": "Respond",
     "CLUB": "Club",
     "EVENT": "Event",
     "CREW": "Crew",

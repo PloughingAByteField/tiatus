@@ -13,6 +13,8 @@ import { AdjudicatorRacesService } from './races/races.service';
 import { Race } from '../races/race.model';
 import { ConverstationMessage } from '../messages/converstation-message.model';
 import { Connected } from '../messages/connected.model';
+import { Message } from '../websocket/message.model';
+import { MessageType } from '../websocket/message-type.model';
 
 import { AdjudicatorWebSocketService } from './websocket/websocket-service';
 
@@ -72,7 +74,10 @@ export class AdjudicatorComponent implements OnInit {
   }
 
   public onNewMessage(data: ConverstationMessage): void {
-    console.log('got new message');
-    console.log(data);
+    let message: Message = new Message();
+    message.data = JSON.stringify(data);
+    message.objectType = 'ConverstationMessage';
+    message.type = MessageType.CHAT;
+    this.ws.sendMessage(message);
   }
 }

@@ -93,8 +93,6 @@ export class TimingComponent implements OnInit, OnDestroy {
   }
 
   public onNewMessage(data: ConverstationMessage): void {
-    console.log('got new message');
-    console.log(data);
     let message: Message = new Message();
     message.data = JSON.stringify(data);
     message.objectType = 'ConverstationMessage';

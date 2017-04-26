@@ -5,7 +5,8 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Message, convertObjectToMessage } from '../../websocket/message.model';
 import { MessageType } from '../../websocket/message-type.model';
-import { ConverstationMessage } from '../../messages/converstation-message.model';
+import { ConverstationMessage, convertObjectToConverstationMessage }
+from '../../messages/converstation-message.model';
 import { Connected, convertObjectToConnected } from '../../messages/connected.model';
 
 import { WebSocketService } from '../../websocket/websocket-service';
@@ -50,12 +51,8 @@ export class AdjudicatorWebSocketService extends WebSocketService {
     }
 
     protected onMessage(data: string): void {
-        console.log(data);
         let message: Message = convertObjectToMessage(JSON.parse(data));
-        console.log(message);
         if (message.type === MessageType.CONNECTED) {
-            console.log('have connected');
-            console.log(JSON.parse(message.data));
             let connected: Connected = convertObjectToConnected(JSON.parse(message.data));
             console.log(connected);
             let update: boolean = false;
@@ -72,9 +69,7 @@ export class AdjudicatorWebSocketService extends WebSocketService {
             this.connectedSubject.next(this.connected);
 
         } else if (message.type === MessageType.DISCONNECTED) {
-            console.log('have disconnected');
             let disconnected: Connected = convertObjectToConnected(JSON.parse(message.data));
-            console.log(disconnected);
             let toRemove: Connected;
             for (let currentlyConnected of this.connected) {
                 if (currentlyConnected.userName === disconnected.userName
@@ -86,11 +81,13 @@ export class AdjudicatorWebSocketService extends WebSocketService {
             }
             if (toRemove) {
                 let index: number = this.connected.indexOf(toRemove);
-                console.log(index);
                 this.connected.splice(index, 1);
-                console.log(this.connected);
                 this.connectedSubject.next(this.connected);
             }
+
+        } else if (message.type === MessageType.CHAT) {
+            this.message = convertObjectToConverstationMessage(message.data);
+            this.subject.next(this.message);
 
         } else if (message.objectType === 'Penalty') {
             this.penaltiesService.processPenaltyMessage(message);

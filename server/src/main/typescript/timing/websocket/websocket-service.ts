@@ -51,10 +51,7 @@ export class TimingWebSocketService extends WebSocketService {
     }
 
     protected onMessage(data: string): void {
-        console.log('got message');
-        console.log(data);
         let message: Message = convertObjectToMessage(JSON.parse(data));
-        console.log(message);
         if (message.type === MessageType.CONNECTED) {
             let connected: Connected = convertObjectToConnected(JSON.parse(message.data));
             let update: boolean = false;
@@ -86,9 +83,8 @@ export class TimingWebSocketService extends WebSocketService {
                 this.connected.splice(index, 1);
                 this.connectedSubject.next(this.connected);
             }
+
         } else if (message.type === MessageType.CHAT) {
-            console.log('chat');
-            console.log('chat');
             this.message = convertObjectToConverstationMessage(message.data);
             this.subject.next(this.message);
 
