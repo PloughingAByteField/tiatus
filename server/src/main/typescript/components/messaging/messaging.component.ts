@@ -27,7 +27,7 @@ export class MessagingComponent implements OnChanges {
   }
 
   public sendMessage(to: string, data: string): void {
-    let newMessage: ConverstationMessage = new ConverstationMessage();
+    const newMessage: ConverstationMessage = new ConverstationMessage();
     newMessage.to = to;
     newMessage.message = data;
     this.newMessage.next(newMessage);
@@ -36,7 +36,7 @@ export class MessagingComponent implements OnChanges {
   }
 
   public respond(mp: MessagePosition, data: string): void {
-    let newMessage: ConverstationMessage = new ConverstationMessage();
+    const newMessage: ConverstationMessage = new ConverstationMessage();
     newMessage.to = mp.position;
     newMessage.message = data;
     this.newMessage.next(newMessage);
@@ -80,7 +80,7 @@ export class MessagingComponent implements OnChanges {
   }
 
   private getMessagePosition(position: string): MessagePosition {
-    for (let mp of this.messages) {
+    for (const mp of this.messages) {
       if (mp.position !== null && position !== null && position === mp.position) {
         return mp;
       }

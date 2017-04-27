@@ -29,8 +29,7 @@ import { ResultsPenaltiesService } from './penalties/penalties.service';
 import { ResultsHttpPenaltiesService } from './penalties/penalties-http.service';
 import { PenaltiesHttpService } from '../penalties/penalties-http.service';
 import { ResultsDisqualificationService } from './disqualification/disqualification.service';
-import { ResultsHttpDisqualificationsService }
-  from './disqualification/disqualification-http.service';
+import { ResultsHttpDisqualificationsService } from './disqualification/disqualification-http.service';
 import { DisqualificationHttpService } from '../disqualification/disqualification-http.service';
 import { ResultsClubsService } from './clubs/clubs.service';
 import { ResultsHttpClubsService } from './clubs/clubs-http.service';

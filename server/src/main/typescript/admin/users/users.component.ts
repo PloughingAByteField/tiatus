@@ -73,7 +73,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   public canUpdateUser(userControlGroup: FormGroup): boolean {
-    let userToRemove: User = userControlGroup.get('user').value;
+    const userToRemove: User = userControlGroup.get('user').value;
     console.log(userToRemove.userName);
     console.log(userControlGroup.valid);
     if (!userControlGroup.dirty) {
@@ -82,13 +82,13 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     if (userControlGroup.get('user') && userControlGroup.get('type')) {
       if (userControlGroup.get('type').dirty) {
-        let userFromControl: User = userControlGroup.get('user').value;
-        let roleIdFromControl: number = userControlGroup.get('type').value;
+        const userFromControl: User = userControlGroup.get('user').value;
+        const roleIdFromControl: number = userControlGroup.get('type').value;
         if (userFromControl.getRole().id !== +roleIdFromControl) {
           console.log('role has changed');
-          let adminRole: Role = this.getAdminRole();
+          const adminRole: Role = this.getAdminRole();
           if (adminRole !== null && userFromControl.getRole().id === adminRole.id) {
-            let adminUsers: User[] = this.users.filter((user: User) =>
+            const adminUsers: User[] = this.users.filter((user: User) =>
                 user.getRole().id === adminRole.id);
             if (adminUsers.length <= 1) {
                 console.log('cannot change type of sole admin user');
@@ -111,8 +111,8 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     if (userControlGroup.get('user') && userControlGroup.get('name')) {
       if (userControlGroup.get('name').dirty) {
-        let userFromControl: User = userControlGroup.get('user').value;
-        let nameFromControl: string = userControlGroup.get('name').value;
+        const userFromControl: User = userControlGroup.get('user').value;
+        const nameFromControl: string = userControlGroup.get('name').value;
         if (nameFromControl !== userFromControl.userName) {
           console.log('user name has changed');
           return true;
@@ -124,12 +124,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   public canRemoveUser(userControlGroup: FormGroup): boolean {
-    let userToRemove: User = userControlGroup.get('user').value;
-    let adminRole: Role = this.getAdminRole();
+    const userToRemove: User = userControlGroup.get('user').value;
+    const adminRole: Role = this.getAdminRole();
     if (adminRole !== null) {
       if (userToRemove.getRole().id === adminRole.id) {
         console.log(userToRemove.userName);
-        let adminUsers: User[] = this.users.filter((user: User) =>
+        const adminUsers: User[] = this.users.filter((user: User) =>
           user.getRole().id === adminRole.id);
         if (adminUsers.length <= 1) {
           console.log('cannot remove sole admin user');
@@ -141,21 +141,21 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   public removeUser(userControlGroup: FormGroup): void {
-    let userToRemove: User = userControlGroup.get('user').value;
+    const userToRemove: User = userControlGroup.get('user').value;
     this.usersService.removeUser(userToRemove);
   }
 
   public updateUser(userControlGroup: FormGroup): void {
-    let updatedName: string = userControlGroup.get('name').value;
-    let updatedPassword: string = userControlGroup.get('password').value;
-    let userToUpdate: User = userControlGroup.get('user').value;
-    let updatedRole: Role = this.rolesService.getRoleForId(+userControlGroup.get('type').value);
-    let updatedUser: User = new User();
+    const updatedName: string = userControlGroup.get('name').value;
+    const updatedPassword: string = userControlGroup.get('password').value;
+    const userToUpdate: User = userControlGroup.get('user').value;
+    const updatedRole: Role = this.rolesService.getRoleForId(+userControlGroup.get('type').value);
+    const updatedUser: User = new User();
     updatedUser.userName = updatedName;
     updatedUser.password = updatedPassword;
     updatedUser.id = userToUpdate.id;
     updatedUser.roles = new Array<UserRole>();
-    let userRole: UserRole = new UserRole();
+    const userRole: UserRole = new UserRole();
     userRole.role = updatedRole;
     updatedUser.roles.push(userRole);
     this.usersService.updateUser(updatedUser);
@@ -163,11 +163,11 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log(value);
-    let newUser: User = new User();
+    const newUser: User = new User();
     newUser.userName = value.name;
     newUser.password = value.password;
     newUser.roles = new Array<UserRole>();
-    let userRole: UserRole = new UserRole();
+    const userRole: UserRole = new UserRole();
     userRole.role = value.type;
     newUser.roles.push(userRole);
     console.log(newUser);
@@ -186,24 +186,24 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   private populateUsersForm(users: User[]): void {
     if (users.length > 0) {
-      let newUsersArray: FormArray = this.fb.array([]);
+      const newUsersArray: FormArray = this.fb.array([]);
       users.map((user: User) => {
-        let userControl: FormControl = this.fb.control(user);
+        const userControl: FormControl = this.fb.control(user);
 
-        let nameControl: FormControl = this.fb.control(user.userName, [
+        const nameControl: FormControl = this.fb.control(user.userName, [
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(250)
         ]);
 
-        let passwordControl: FormControl = this.fb.control('', [
+        const passwordControl: FormControl = this.fb.control('', [
           Validators.minLength(8),
           Validators.maxLength(250)
         ]);
 
-        let typeControl: FormControl = this.fb.control(user.getRole().id);
+        const typeControl: FormControl = this.fb.control(user.getRole().id);
 
-        let group: FormGroup = this.fb.group({
+        const group: FormGroup = this.fb.group({
           name: nameControl,
           user: userControl,
           password: passwordControl,
@@ -222,7 +222,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   private getAdminRole(): Role {
-    for (let role of this.roles) {
+    for (const role of this.roles) {
       if (role.roleName === 'ADMIN') {
         return role;
       }
@@ -233,11 +233,11 @@ export class UsersComponent implements OnInit, OnDestroy {
   private existingUserName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       if (control.get('user') && control.get('name')) {
-        let userFromControl: User = control.get('user').value;
-        let nameFromControl: string = control.get('name').value;
+        const userFromControl: User = control.get('user').value;
+        const nameFromControl: string = control.get('name').value;
         console.log(userFromControl);
         if (this.users) {
-          for (let user of this.users) {
+          for (const user of this.users) {
             if (userFromControl.userName !== user.userName && user.userName === nameFromControl) {
               console.log('match for ' + nameFromControl);
               return { existingUserName: true };

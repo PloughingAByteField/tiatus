@@ -9,7 +9,7 @@ export class Race {
 }
 
 export function convertObjectToRace(json: any): Race {
-    let race: Race = new Race();
+    const race: Race = new Race();
     race.name = json.name;
     race.active = json.active;
     race.closed = json.closed;

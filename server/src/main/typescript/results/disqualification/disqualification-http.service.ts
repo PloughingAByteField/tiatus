@@ -5,8 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Disqualification } from '../../disqualification/disqualification.model';
 import { Data } from '../model/data.model';
 
-import { DisqualificationHttpService, convertResponseToDisqualifications }
-    from '../../disqualification/disqualification-http.service';
+import { DisqualificationHttpService, convertResponseToDisqualifications } from '../../disqualification/disqualification-http.service';
 
 @Injectable()
 export class ResultsHttpDisqualificationsService extends DisqualificationHttpService {
@@ -21,12 +20,12 @@ export class ResultsHttpDisqualificationsService extends DisqualificationHttpSer
     return this.http.get(this.endpoint)
       .map((response: Response) => {
         if (response.status === 200) {
-            let disqualifications: Disqualification[]
+            const disqualifications: Disqualification[]
                 = convertResponseToDisqualifications(response);
-            let data: Data = new Data();
+            const data: Data = new Data();
             data.data = disqualifications;
             data.cached = false;
-            let currentEtag: string = response.headers.get('etag');
+            const currentEtag: string = response.headers.get('etag');
             if (this.previousEtag) {
                 if (this.previousEtag === currentEtag) {
                     data.cached = true;

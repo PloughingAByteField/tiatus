@@ -15,7 +15,7 @@ export class TimesFullHttpService extends TimesHttpService {
   }
 
   public getTimesForRace(race: Race): Observable<EntryTime[]> {
-    let url: string = this.timeEndPoint + race.id + '/full';
+    const url: string = this.timeEndPoint + race.id + '/full';
     return this.getTimesForRaceWithUrl(race, url);
   }
 }

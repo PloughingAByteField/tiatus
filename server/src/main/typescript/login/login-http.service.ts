@@ -14,7 +14,7 @@ export class LoginHttpService {
     constructor(protected http: Http) { }
 
     public loginUser(user: User): Promise<string> {
-        let formData: string = 'user=' + user.userName + '&pwd=' + user.password;
+        const formData: string = 'user=' + user.userName + '&pwd=' + user.password;
         return this.http
             .post(this.endPoint, formData, { headers: this.headers })
             .toPromise()

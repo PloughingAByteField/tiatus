@@ -13,10 +13,10 @@ export class ConfigService {
     protected title: BehaviorSubject<string> = new BehaviorSubject<string>(null);
     protected footer: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-    private config: Object;
+    private config: object;
 
     constructor(protected service: ConfigHttpService) {
-        this.service.getConfig().subscribe((data: Object) => {
+        this.service.getConfig().subscribe((data: object) => {
             this.config = data;
             this.logo.next(data['logo']);
             this.title.next(data['title']);

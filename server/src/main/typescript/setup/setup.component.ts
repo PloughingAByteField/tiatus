@@ -49,7 +49,7 @@ export class SetupComponent implements OnInit {
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log(value);
-    let user: User = new User();
+    const user: User = new User();
     user.userName = value.name;
     user.password = value.password;
     this.service.createUser(user).then((createdUser: User) => window.location.href = '/login');

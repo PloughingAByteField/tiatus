@@ -22,7 +22,7 @@ export class Event {
 }
 
 export function convertObjectToEvent(obj: any): Event {
-    let event: Event = new Event();
+    const event: Event = new Event();
     event.name = obj.name;
     event.weighted = obj.weighted;
     event.id = obj.id;

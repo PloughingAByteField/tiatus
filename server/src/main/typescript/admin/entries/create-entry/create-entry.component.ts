@@ -129,11 +129,11 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log('on submit');
     console.log(value);
-    let entry: Entry = new Entry();
+    const entry: Entry = new Entry();
     entry.event = value.event.id;
     entry.race = value.race.id;
     entry.clubs = new Array<number>();
-    for (let club of value.clubs) {
+    for (const club of value.clubs) {
       entry.clubs.push(club.id);
     }
     if (value.crew.length > 0) {
@@ -144,7 +144,7 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
       entry.number = value.fixedNumber;
     } else {
       if (this.entriesForRace.length > 0) {
-        let lastEntry: Entry = this.entriesForRace[this.entriesForRace.length - 1];
+        const lastEntry: Entry = this.entriesForRace[this.entriesForRace.length - 1];
         entry.number = lastEntry.number + 1;
         entry.raceOrder = lastEntry.raceOrder + 1;
       } else {
@@ -204,7 +204,7 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
     if (this.addEntryForm.get('eventsType').value === 'unassigned') {
       return 'unassigned';
     }
-    for (let raceEvent of this.raceEvents) {
+    for (const raceEvent of this.raceEvents) {
       if (raceEvent.event === event.id) {
         return this.racesService.getRaceForId(raceEvent.race).name;
       }
@@ -243,11 +243,11 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
   }
 
   private getEventsForRace(race: Race): Event[] {
-    let raceEventsForRace: RaceEvent[] = this.raceEvents
+    const raceEventsForRace: RaceEvent[] = this.raceEvents
       .filter((raceEvent: RaceEvent) => raceEvent.race === race.id);
-    let eventsForRace: Event[] = new Array<Event>();
+    const eventsForRace: Event[] = new Array<Event>();
     raceEventsForRace.map((raceEvent: RaceEvent) => {
-      for (let event of this.events) {
+      for (const event of this.events) {
         if (event.id === raceEvent.event) {
           eventsForRace.push(event);
           break;
@@ -258,11 +258,11 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
   }
 
   private getEventsNotInRace(race: Race): Event[] {
-    let raceEventsForRace: RaceEvent[] = this.raceEvents
+    const raceEventsForRace: RaceEvent[] = this.raceEvents
       .filter((raceEvent: RaceEvent) => raceEvent.race !== race.id);
-    let eventsForRace: Event[] = new Array<Event>();
+    const eventsForRace: Event[] = new Array<Event>();
     raceEventsForRace.map((raceEvent: RaceEvent) => {
-      for (let event of this.events) {
+      for (const event of this.events) {
         if (event.id === raceEvent.event) {
           eventsForRace.push(event);
           break;
@@ -289,7 +289,7 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
           return { tooLarge: true };
         }
 
-        for (let entry of this.entriesForRace) {
+        for (const entry of this.entriesForRace) {
           if (entry.number === control.value) {
             console.log(entry);
             return { existingNumber: true };

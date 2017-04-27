@@ -5,7 +5,7 @@ export class Role {
 
 export function convertObjectToRole(obj: Role): Role {
     if (obj) {
-        let role: Role = new Role();
+        const role: Role = new Role();
         role.roleName = obj.roleName;
         role.id = obj.id;
         return role;

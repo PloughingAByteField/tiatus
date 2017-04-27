@@ -5,8 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Penalty, convertObjectToPenalty } from '../../penalties/penalty.model';
 import { Data } from '../model/data.model';
 
-import { PenaltiesHttpService, convertResponseToPenalties }
-    from '../../penalties/penalties-http.service';
+import { PenaltiesHttpService, convertResponseToPenalties } from '../../penalties/penalties-http.service';
 
 @Injectable()
 export class ResultsHttpPenaltiesService extends PenaltiesHttpService {
@@ -21,11 +20,11 @@ export class ResultsHttpPenaltiesService extends PenaltiesHttpService {
     return this.http.get(this.endpoint)
       .map((response: Response) => {
         if (response.status === 200) {
-            let penalties: Penalty[] = convertResponseToPenalties(response);
-            let data: Data = new Data();
+            const penalties: Penalty[] = convertResponseToPenalties(response);
+            const data: Data = new Data();
             data.data = penalties;
             data.cached = false;
-            let currentEtag: string = response.headers.get('etag');
+            const currentEtag: string = response.headers.get('etag');
             if (this.previousEtag) {
                 if (this.previousEtag === currentEtag) {
                     data.cached = true;

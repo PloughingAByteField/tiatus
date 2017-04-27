@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -74,7 +74,7 @@ export class AdjudicatorComponent implements OnInit, OnDestroy {
   }
 
   public onNewMessage(data: ConverstationMessage): void {
-    let message: Message = new Message();
+    const message: Message = new Message();
     message.data = JSON.stringify(data);
     message.objectType = 'ConverstationMessage';
     message.type = MessageType.CHAT;

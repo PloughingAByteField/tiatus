@@ -6,7 +6,7 @@ export class ConverstationMessage {
 
 export function convertObjectToConverstationMessage(obj: any):
     ConverstationMessage {
-    let message: ConverstationMessage = new ConverstationMessage();
+    const message: ConverstationMessage = new ConverstationMessage();
     message.to = obj.to;
     message.from = obj.from;
     message.message = obj.message;

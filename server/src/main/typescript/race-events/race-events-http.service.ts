@@ -19,8 +19,8 @@ export class RaceEventsHttpService {
 }
 
 function convertJsonToRaceEvents(response: Response): RaceEvent[] {
-    let jsonEvents: RaceEvent[] = response.json();
-    let events: RaceEvent[] = new Array<RaceEvent>();
+    const jsonEvents: RaceEvent[] = response.json();
+    const events: RaceEvent[] = new Array<RaceEvent>();
     jsonEvents.map((json: RaceEvent) => {
       events.push(convertJsonToRaceEvent(json));
     });

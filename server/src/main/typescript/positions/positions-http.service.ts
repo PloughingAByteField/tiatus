@@ -17,8 +17,8 @@ export class PositionsHttpService {
 }
 
 export function convertResponseToPositions(response: Response): Position[] {
-    let jsonPositions: Position[] = response.json();
-    let positions: Position[] = new Array<Position>();
+    const jsonPositions: Position[] = response.json();
+    const positions: Position[] = new Array<Position>();
     jsonPositions.map((json: Position) => {
       positions.push(convertObjectoPosition(json));
     });

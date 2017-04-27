@@ -20,8 +20,8 @@ export class AdminPositionsService extends PositionsService {
 
     public removePosition(position: Position): void {
         this.service.removePosition(position).then((p: Position) => {
-            let index = this.positions.indexOf(p);
-            let sliced = this.positions.splice(index, 1);
+            const index = this.positions.indexOf(p);
+            const sliced = this.positions.splice(index, 1);
             this.subject.next(this.positions);
         });
     }

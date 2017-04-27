@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs/Observable';
 
 import { ResultsRacesService } from './races/races.service';

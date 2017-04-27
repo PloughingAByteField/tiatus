@@ -19,7 +19,7 @@ export class AdminUnassignedEventsService extends UnassignedEventsService {
 
     public removeEvent(event: Event): void {
         this.service.removeEvent(event).then((e: Event) => {
-            let index = this.events.indexOf(event);
+            const index = this.events.indexOf(event);
             this.events.splice(index, 1);
             this.subject.next(this.events);
         });

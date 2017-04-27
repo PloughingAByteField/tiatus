@@ -38,20 +38,20 @@ export class PositionsService {
     public processMessage(message: Message): void {
         console.log('process message');
         console.log(message);
-        let position: Position = convertObjectoPosition(message.data);
+        const position: Position = convertObjectoPosition(message.data);
         console.log(position);
         if (message.type === MessageType.ADD) {
             this.positions.push(position);
 
         } else if (message.type === MessageType.DELETE) {
-            let deletedPosition: Position = this.getPositionForId(position.id);
+            const deletedPosition: Position = this.getPositionForId(position.id);
             if (deletedPosition !== null) {
-                let index = this.positions.indexOf(deletedPosition);
-                let sliced = this.positions.splice(index, 1);
+                const index = this.positions.indexOf(deletedPosition);
+                const sliced = this.positions.splice(index, 1);
             }
 
         } else if (message.type === MessageType.UPDATE) {
-            let updatedPosition: Position = this.getPositionForId(position.id);
+            const updatedPosition: Position = this.getPositionForId(position.id);
             if (updatedPosition !== null) {
                 updatedPosition.name = position.name;
             }
@@ -61,7 +61,7 @@ export class PositionsService {
     }
 
     public getPositionForId(positionId: number): Position {
-        for (let position of this.positions) {
+        for (const position of this.positions) {
             if (position.id === positionId) {
                 return position;
             }
@@ -70,7 +70,7 @@ export class PositionsService {
     }
 
     public getPositionForName(name: string): Position {
-        for (let position of this.positions) {
+        for (const position of this.positions) {
             if (position.name === name) {
                 return position;
             }

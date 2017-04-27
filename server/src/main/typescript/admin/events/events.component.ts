@@ -60,7 +60,7 @@ export class EventsComponent implements OnInit, OnDestroy {
           } else {
             this.selectedRace = this.getRaceFromRaces(this.selectedRace);
           }
-          let unassigned: Race = new Race();
+          const unassigned: Race = new Race();
           unassigned.name = 'Unassigned';
           unassigned.id = 0;
           this.races.push(unassigned);
@@ -111,7 +111,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   public getEventName(raceEvent: RaceEvent): string {
-    let e = this.getEventForEventId(raceEvent.event);
+    const e = this.getEventForEventId(raceEvent.event);
     if (e !== null) {
       return e.name;
     }
@@ -158,7 +158,7 @@ export class EventsComponent implements OnInit, OnDestroy {
     if (race === null) {
       return;
     }
-    let localRace: Race = this.getRaceFromRaces(race);
+    const localRace: Race = this.getRaceFromRaces(race);
     if (localRace !== undefined) {
       this.selectedRaceService.setSelectedRace = race;
       this.selectedRace = localRace;
@@ -172,7 +172,7 @@ export class EventsComponent implements OnInit, OnDestroy {
 
   private getEventsForRace(raceId: number): void {
     if (raceId !== 0) {
-      let race: Race = this.racesService.getRaceForId(raceId);
+      const race: Race = this.racesService.getRaceForId(raceId);
       console.log(raceId);
       console.log(race);
       this.raceEvents = this.raceEventsService.getEventsForRace(race);
@@ -186,7 +186,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   private getEventForEventId(id: number): Event {
-    for (let event of this.events) {
+    for (const event of this.events) {
       if (event.id === id) {
         return event;
       }

@@ -5,8 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Position } from '../../positions/position.model';
 import { Data } from '../model/data.model';
 
-import { PositionsHttpService, convertResponseToPositions }
-    from '../../positions/positions-http.service';
+import { PositionsHttpService, convertResponseToPositions } from '../../positions/positions-http.service';
 
 @Injectable()
 export class ResultsHttpPositionsService extends PositionsHttpService {
@@ -21,11 +20,11 @@ export class ResultsHttpPositionsService extends PositionsHttpService {
     return this.http.get(this.endpoint)
       .map((response: Response) => {
         if (response.status === 200) {
-            let positions: Position[] = convertResponseToPositions(response);
-            let data: Data = new Data();
+            const positions: Position[] = convertResponseToPositions(response);
+            const data: Data = new Data();
             data.data = positions;
             data.cached = false;
-            let currentEtag: string = response.headers.get('etag');
+            const currentEtag: string = response.headers.get('etag');
             if (this.previousEtag) {
                 if (this.previousEtag === currentEtag) {
                     data.cached = true;

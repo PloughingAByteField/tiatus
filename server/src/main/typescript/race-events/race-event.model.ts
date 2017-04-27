@@ -6,7 +6,7 @@ export class RaceEvent {
 }
 
 export function convertJsonToRaceEvent(json: RaceEvent): RaceEvent {
-    let raceEvent: RaceEvent = new RaceEvent();
+    const raceEvent: RaceEvent = new RaceEvent();
     raceEvent.event = json.event;
     raceEvent.id = json.id;
     raceEvent.race = json.race;

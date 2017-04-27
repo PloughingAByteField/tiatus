@@ -21,9 +21,9 @@ export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
       .toPromise()
       .then((res: Response) => {
         if (res.status === 201) {
-          let location: string = res.headers.get('location');
-          let locationParts = location.split('/');
-          let id: number = +locationParts[locationParts.length - 1];
+          const location: string = res.headers.get('location');
+          const locationParts = location.split('/');
+          const id: number = +locationParts[locationParts.length - 1];
           penalty.id = id;
         }
         return penalty;

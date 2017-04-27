@@ -8,8 +8,7 @@ import { Entry } from '../../entries/entry.model';
 import { Event } from '../../events/event.model';
 import { Penalty } from '../../penalties/penalty.model';
 import { Disqualification } from '../../disqualification/disqualification.model';
-import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
-    from '../../times/postion-time.model';
+import { PositionTime, convertFromTimeStamp, convertToTimeStamp } from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
 import { EventPosition } from '../../events/event-positions.model';
 
@@ -117,7 +116,7 @@ export class EntriesComponent implements OnInit {
 
     public getEventNameForEntry(entry: Entry): string {
         let eventName: string;
-        let event: Event = this.getEventForId(entry.event);
+        const event: Event = this.getEventForId(entry.event);
         if (event) {
             eventName = event.name;
         }
@@ -126,8 +125,8 @@ export class EntriesComponent implements OnInit {
 
     public getClubNamesForEntry(entry: Entry): string {
         let clubs: string;
-        for (let clubId of entry.clubs) {
-            let club: Club = this.getClubForId(clubId);
+        for (const clubId of entry.clubs) {
+            const club: Club = this.getClubForId(clubId);
             if (club) {
                 if (!clubs) {
                     clubs = club.clubName;
@@ -152,9 +151,9 @@ export class EntriesComponent implements OnInit {
         if (this.isDisqualified(entryTime)) {
             return null;
         }
-        let time: number = this.getTime(entryTime);
+        const time: number = this.getTime(entryTime);
         if (time !== 0) {
-            let penalites: number = this.getTimeForPenaltes(entryTime);
+            const penalites: number = this.getTimeForPenaltes(entryTime);
             return convertFromTimeStamp(time + penalites);
         }
         return null;
@@ -164,7 +163,7 @@ export class EntriesComponent implements OnInit {
         if (this.isDisqualified(entryTime)) {
             return null;
         }
-        let time: number = this.getTime(entryTime);
+        const time: number = this.getTime(entryTime);
         if (time !== 0) {
             return convertFromTimeStamp(time);
         }
@@ -176,7 +175,7 @@ export class EntriesComponent implements OnInit {
             return null;
         }
 
-        let penalites: number = this.getTimeForPenaltes(entryTime);
+        const penalites: number = this.getTimeForPenaltes(entryTime);
         if (penalites !== 0) {
             return convertFromTimeStamp(penalites);
         }
@@ -186,7 +185,7 @@ export class EntriesComponent implements OnInit {
 
     public isDisqualified(entry: EntryTime): boolean {
         if (this.disqualifications) {
-            let disqualifed: Disqualification = this.disqualifications
+            const disqualifed: Disqualification = this.disqualifications
                 .filter((disqualification: Disqualification) =>
                     disqualification.entry === entry.entry.id).shift();
             if (disqualifed) {
@@ -218,7 +217,7 @@ export class EntriesComponent implements OnInit {
     }
 
     private getTimeForPenaltes(entryTime: EntryTime): number {
-        let penalites: Penalty[] = this.penaltiesService.getPenaltiesForEntry(entryTime.entry);
+        const penalites: Penalty[] = this.penaltiesService.getPenaltiesForEntry(entryTime.entry);
         if (penalites.length > 0) {
             let total: number = 0;
             penalites.map((penalty: Penalty) => total += penalty.time);
@@ -230,11 +229,11 @@ export class EntriesComponent implements OnInit {
 
     private getTime(entryTime: EntryTime): number {
         if (entryTime.times.length > 0) {
-            let actualStartPoint: PositionTime = entryTime.times[0];
-            let event: Event = this.eventsService.getEventForId(entryTime.entry.event);
+            const actualStartPoint: PositionTime = entryTime.times[0];
+            const event: Event = this.eventsService.getEventForId(entryTime.entry.event);
             if (event.positions.length > 0) {
-                let eventPositions: EventPosition[] = event.positions;
-                let eventFinishPoint: PositionTime = undefined;
+                const eventPositions: EventPosition[] = event.positions;
+                let eventFinishPoint: PositionTime;
                 if (entryTime.times[entryTime.times.length - 1].position
                     === eventPositions[eventPositions.length - 1].position) {
                     eventFinishPoint = entryTime.times[entryTime.times.length - 1];
@@ -287,8 +286,8 @@ export class EntriesComponent implements OnInit {
 
     private filterClubs(entryTimes: EntryTime[], value: string): EntryTime[] {
         return entryTimes.filter((entryTime: EntryTime) => {
-            for (let clubId of entryTime.entry.clubs) {
-                let club: Club = this.getClubForId(clubId);
+            for (const clubId of entryTime.entry.clubs) {
+                const club: Club = this.getClubForId(clubId);
                 if (club) {
                     if (club.clubName.includes(value)) {
                         return entryTime;
@@ -300,7 +299,7 @@ export class EntriesComponent implements OnInit {
 
     private filterEvents(entryTimes: EntryTime[], value: string): EntryTime[] {
         return entryTimes.filter((entryTime: EntryTime) => {
-            let event: Event = this.getEventForId(entryTime.entry.event);
+            const event: Event = this.getEventForId(entryTime.entry.event);
             if (event) {
                 if (event.name.includes(value)) {
                     return entryTime;
@@ -310,7 +309,7 @@ export class EntriesComponent implements OnInit {
     }
 
     private getEventForId(eventId: number): Event {
-        for (let event of this.events) {
+        for (const event of this.events) {
             if (event.id === eventId) {
                 return event;
             }
@@ -319,7 +318,7 @@ export class EntriesComponent implements OnInit {
     }
 
     private getClubForId(clubId: number): Club {
-        for (let club of this.clubs) {
+        for (const club of this.clubs) {
             if (club.id === clubId) {
                 return club;
             }

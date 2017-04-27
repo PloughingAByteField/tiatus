@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Location }                 from '@angular/common';
+import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -89,8 +89,8 @@ export class PenaltiesComponent implements OnInit {
 
     public getClubNamesForEntry(entry: Entry): string {
         let clubs: string;
-        for (let clubId of entry.clubs) {
-            let club: Club = this.clubsService.getClubForId(clubId);
+        for (const clubId of entry.clubs) {
+            const club: Club = this.clubsService.getClubForId(clubId);
             if (club) {
                 if (!clubs) {
                     clubs = club.clubName;
@@ -123,7 +123,7 @@ export class PenaltiesComponent implements OnInit {
     }
 
     public getRaceNameForEntry(entry: Entry): string {
-        let race: Race = this.racesService.getRaceForId(entry.race);
+        const race: Race = this.racesService.getRaceForId(entry.race);
         if (race) {
             return race.name;
         }
@@ -131,7 +131,7 @@ export class PenaltiesComponent implements OnInit {
     }
 
     public getEventNameForEntry(entry: Entry): string {
-        let event: Event = this.eventsService.getEventForId(entry.event);
+        const event: Event = this.eventsService.getEventForId(entry.event);
         if (event) {
             return event.name;
         }

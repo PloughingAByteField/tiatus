@@ -24,8 +24,8 @@ export class AdminRolesHttpService {
 }
 
 function convertResponseToRoles(response: Response): Role[] {
-    let objectArray: Role[] = response.json();
-    let roles: Role[] = new Array<Role>();
+    const objectArray: Role[] = response.json();
+    const roles: Role[] = new Array<Role>();
     objectArray.map((object: Role) => {
         roles.push(convertObjectToRole(object));
     });

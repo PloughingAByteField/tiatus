@@ -50,36 +50,36 @@ export class ClubsComponent implements OnInit, OnDestroy {
   }
 
   public removeClub(clubControlGroup: FormGroup): void {
-    let clubToRemove: Club = clubControlGroup.get('club').value;
+    const clubToRemove: Club = clubControlGroup.get('club').value;
     this.clubsService.removeClub(clubToRemove);
   }
 
   public updateClub(clubControlGroup: FormGroup): void {
-    let newName: string = clubControlGroup.get('name').value;
-    let clubToUpdate: Club = clubControlGroup.get('club').value;
-    let updatedClub: Club = new Club();
+    const newName: string = clubControlGroup.get('name').value;
+    const clubToUpdate: Club = clubControlGroup.get('club').value;
+    const updatedClub: Club = new Club();
     updatedClub.clubName = newName;
     updatedClub.id = clubToUpdate.id;
     this.clubsService.updateClub(updatedClub);
   }
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
-    let newClub: Club = new Club();
+    const newClub: Club = new Club();
     newClub.clubName = value.name;
     this.clubsService.createClub(newClub).then((club: Club) => this.addClubForm.reset());
   }
 
   private populateClubsForm(clubs): void {
-    let newClubsArray: FormArray = this.fb.array([]);
+    const newClubsArray: FormArray = this.fb.array([]);
     this.clubs.map((club: Club) => {
-      let clubControl: FormControl = this.fb.control(club);
-      let nameControl: FormControl = this.fb.control(club.clubName, [
+      const clubControl: FormControl = this.fb.control(club);
+      const nameControl: FormControl = this.fb.control(club.clubName, [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(250),
         this.existingClubName()
       ]);
-      let group: FormGroup = this.fb.group({
+      const group: FormGroup = this.fb.group({
         name: nameControl,
         club: clubControl
       });
@@ -91,7 +91,7 @@ export class ClubsComponent implements OnInit, OnDestroy {
   private existingClubName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       if (this.clubs) {
-        for (let club of this.clubs) {
+        for (const club of this.clubs) {
           if (club.clubName === control.value) {
             return { existingClubName: true };
           }

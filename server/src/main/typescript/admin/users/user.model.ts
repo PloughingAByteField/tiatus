@@ -17,7 +17,7 @@ export class User {
 
 export function convertObjectToUser(obj: any): User {
     if (obj) {
-        let user: User = new User();
+        const user: User = new User();
         user.userName = obj.userName;
         user.roles = new Array<UserRole>();
         obj.roles.map((userRole: UserRole) =>

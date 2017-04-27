@@ -51,7 +51,7 @@ public setTimeForEntryAtPosition(
   }
 
   public getTimesForPositionInRace(position: Position, race: Race): Observable<EntryTime[]> {
-    let url: string = this.timePositionEndPoint + position.id + this.raceEndPoint + race.id;
+    const url: string = this.timePositionEndPoint + position.id + this.raceEndPoint + race.id;
     return this.getTimesForRaceWithUrl(race, url);
   }
 }

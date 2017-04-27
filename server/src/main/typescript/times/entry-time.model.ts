@@ -7,10 +7,10 @@ export class EntryTime {
 }
 
 export function mergeEntriesIntoEntryTimes(entries: Entry[], entryTimes: EntryTime[]): EntryTime[] {
-    let merged: EntryTime[] = new Array<EntryTime>();
+    const merged: EntryTime[] = new Array<EntryTime>();
     entries.forEach((entry: Entry) => {
-        let entryTime: EntryTime = new EntryTime();
-        let entryTimeForEntry: EntryTime = entryTimes
+        const entryTime: EntryTime = new EntryTime();
+        const entryTimeForEntry: EntryTime = entryTimes
             .filter((et: EntryTime) => et.entry.id === entry.id).shift();
         if (entryTimeForEntry) {
             entryTime.times = entryTimeForEntry.times;

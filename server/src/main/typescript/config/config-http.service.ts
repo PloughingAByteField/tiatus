@@ -9,7 +9,7 @@ export class ConfigHttpService {
 
     constructor(protected http: Http) {}
 
-    public getConfig(): Observable<Object> {
+    public getConfig(): Observable<object> {
         return this.http.get(this.endpoint)
             .map((res: Response) =>  res.json()).share();
     }

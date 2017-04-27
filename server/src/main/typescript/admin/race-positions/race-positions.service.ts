@@ -4,8 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { RacePositionsHttpService } from './race-positions-http.service';
-import { RacePositionTemplate, convertObjectToRacePositionTemplate } from
-    './race-position-template.model';
+import { RacePositionTemplate, convertObjectToRacePositionTemplate } from './race-position-template.model';
 
 import { Race } from '../../races/race.model';
 import { Message } from '../../websocket/message.model';
@@ -45,8 +44,8 @@ export class RacePositionsService implements OnDestroy {
 
     public removeTemplate(template: RacePositionTemplate): void {
         this.service.removeTemplate(template).then((r: RacePositionTemplate) => {
-            let index = this.templates.indexOf(r);
-            let sliced = this.templates.splice(index, 1);
+            const index = this.templates.indexOf(r);
+            const sliced = this.templates.splice(index, 1);
             this.subject.next(this.templates);
         });
     }
@@ -69,18 +68,18 @@ export class RacePositionsService implements OnDestroy {
 
     public processTemplateMessage(message: Message): void {
         console.log('process message');
-        let template: RacePositionTemplate = convertObjectToRacePositionTemplate(message.data);
+        const template: RacePositionTemplate = convertObjectToRacePositionTemplate(message.data);
         console.log(template);
         if (message.type === MessageType.ADD) {
             this.templates.push(template);
         } else if (message.type === MessageType.DELETE) {
-            let deletedTemplate: RacePositionTemplate = this.getTemplateForId(template.id);
+            const deletedTemplate: RacePositionTemplate = this.getTemplateForId(template.id);
             if (deletedTemplate !== null) {
-                let index = this.templates.indexOf(deletedTemplate);
-                let sliced = this.templates.splice(index, 1);
+                const index = this.templates.indexOf(deletedTemplate);
+                const sliced = this.templates.splice(index, 1);
             }
         } else if (message.type === MessageType.UPDATE) {
-            let updatedTemplate: RacePositionTemplate = this.getTemplateForId(template.id);
+            const updatedTemplate: RacePositionTemplate = this.getTemplateForId(template.id);
             if (updatedTemplate !== null) {
                 updatedTemplate.name = template.name;
                 updatedTemplate.race = template.race;
@@ -93,7 +92,7 @@ export class RacePositionsService implements OnDestroy {
     }
 
     public getTemplateForId(templateId: number): RacePositionTemplate {
-        for (let template of this.templates) {
+        for (const template of this.templates) {
             if (template.id === templateId) {
                 return template;
             }

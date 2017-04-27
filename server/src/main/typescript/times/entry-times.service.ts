@@ -26,7 +26,7 @@ export class EntryTimesService {
 
     public getEntriesForRace(race: Race): Subject<EntryTime[]> {
         if (race) {
-            for (let entry of this.raceEntries) {
+            for (const entry of this.raceEntries) {
                 if (entry.race.id === race.id) {
                     return entry.entryTimesSubject;
                 }
@@ -34,7 +34,7 @@ export class EntryTimesService {
         }
 
         if (race) {
-            let raceEntryTimes: RaceEntryTimes
+            const raceEntryTimes: RaceEntryTimes
                 = new RaceEntryTimes(race, this.entriesService, this.timesService);
             this.raceEntries.push(raceEntryTimes);
             return raceEntryTimes.entryTimesSubject;

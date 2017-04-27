@@ -16,11 +16,9 @@ import { AdminEventsService } from '../events.service';
 import { RacePositionTemplate } from '../../race-positions/race-position-template.model';
 
 import { Position } from '../../../positions/position.model';
-import { RacePositionTemplateEntry } from
-  '../../race-position-templates/race-position-template-entry.model';
+import { RacePositionTemplateEntry } from '../../race-position-templates/race-position-template-entry.model';
 
-import { RacePositionTemplatesService } from
-  '../../race-position-templates/race-position-templates.service';
+import { RacePositionTemplatesService } from '../../race-position-templates/race-position-templates.service';
 import { RacePositionsService } from '../../race-positions/race-positions.service';
 
 import { AdminPositionsService } from '../../positions/positions.service';
@@ -73,7 +71,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    let positionsFormArray: FormArray = this.fb.array([]);
+    const positionsFormArray: FormArray = this.fb.array([]);
     this.addEntryForm = this.fb.group({
       name: this.fb.control('', [
         Validators.required,
@@ -140,11 +138,11 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log('on submit');
     // create event
-    let event: Event = new Event();
+    const event: Event = new Event();
     event.name = value.name;
     event.positions = new Array<EventPosition>();
-    for (let position of value.positions) {
-      let eventPosition: EventPosition = new EventPosition();
+    for (const position of value.positions) {
+      const eventPosition: EventPosition = new EventPosition();
       eventPosition.position = position.position;
       eventPosition.positionOrder = position.positionOrder;
       event.positions.push(eventPosition);
@@ -157,7 +155,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       });
 
     } else {
-      let raceEvent: RaceEventPojo = new RaceEventPojo();
+      const raceEvent: RaceEventPojo = new RaceEventPojo();
       raceEvent.race = this.selectedRace.id;
       raceEvent.event = event;
       raceEvent.raceEventOrder = this.eventsForRace.length + 1;
@@ -180,14 +178,14 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   }
 
   public removePosition(index: number): void {
-    let array: FormArray = this.addEntryForm.get('positions') as FormArray;
+    const array: FormArray = this.addEntryForm.get('positions') as FormArray;
     for (let i = index + 1; i < array.controls.length; i++) {
-      let group: FormGroup = array.controls[i] as FormGroup;
-      let orderValue: number = group.get('positionOrder').value;
-      let orderControl: AbstractControl = group.get('positionOrder');
+      const group: FormGroup = array.controls[i] as FormGroup;
+      const orderValue: number = group.get('positionOrder').value;
+      const orderControl: AbstractControl = group.get('positionOrder');
       orderControl.setValue(orderValue - 1);
     }
-    let group: FormGroup = array.controls[index] as FormGroup;
+    const group: FormGroup = array.controls[index] as FormGroup;
     array.removeAt(index);
     group.removeControl('position');
     group.removeControl('positionOrder');
@@ -196,13 +194,14 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   }
 
   public addPosition(): void {
-    let newPosition = this.addEntryForm.get('newPosition').value;
-    let array: FormArray = this.addEntryForm.get('positions') as FormArray;
-    let entry: RacePositionTemplateEntry = new RacePositionTemplateEntry();
+    const newPosition = this.addEntryForm.get('newPosition').value;
+    const array: FormArray = this.addEntryForm.get('positions') as FormArray;
+    const entry: RacePositionTemplateEntry = new RacePositionTemplateEntry();
     entry.position = newPosition.id;
     entry.positionOrder = 1;
     if (array.controls.length > 0) {
-      let lastPositionOrder = array.controls[array.controls.length - 1].get('positionOrder').value;
+      const lastPositionOrder = array.controls[array.controls.length - 1]
+      .get('positionOrder').value;
       entry.positionOrder = lastPositionOrder + 1;
     }
     this.addTemplateEntryToFormArray(entry, array);
@@ -228,7 +227,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     this.raceEventsForRace = this.raceEventsService.getEventsForRace(this.selectedRace);
     if (this.events) {
       this.events.map((event: Event) => {
-        for (let raceEvent of this.raceEventsForRace) {
+        for (const raceEvent of this.raceEventsForRace) {
           if (raceEvent.event === event.id) {
             this.eventsForRace.push(event);
           }
@@ -259,7 +258,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   private processTemplates(templates: RacePositionTemplate[]): void {
     if (templates.length > 0) {
       let found: boolean = false;
-      for (let template of templates) {
+      for (const template of templates) {
         if (template.defaultTemplate) {
           this.changedTemplate(template);
           found = true;
@@ -285,9 +284,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   }
 
   private positionInForm(position: Position): boolean {
-    let array: FormArray = this.addEntryForm.get('positions') as FormArray;
-    for (let control of array.controls) {
-      let entry: RacePositionTemplateEntry = control.get('entry').value;
+    const array: FormArray = this.addEntryForm.get('positions') as FormArray;
+    for (const control of array.controls) {
+      const entry: RacePositionTemplateEntry = control.get('entry').value;
       if (position.id === +entry.position) {
         return true;
       }
@@ -297,7 +296,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
   private populateFormPositions(template: RacePositionTemplate): void {
       this.addEntryForm.removeControl('positions');
-      let positionsFormArray = this.fb.array([]);
+      const positionsFormArray = this.fb.array([]);
       this.addEntryForm.setControl('positions', positionsFormArray);
       if (template) {
         template.templates.map((entry: RacePositionTemplateEntry) =>
@@ -307,11 +306,11 @@ export class CreateEventComponent implements OnInit, OnDestroy {
 
   private addTemplateEntryToFormArray(
       entry: RacePositionTemplateEntry, array: FormArray): void {
-    let positionControl: FormControl =
+    const positionControl: FormControl =
       this.fb.control(entry.position);
-    let positionOrderControl: FormControl = this.fb.control(entry.positionOrder);
-    let entryControl: FormControl = this.fb.control(entry);
-    let positionGroup = this.fb.group({
+    const positionOrderControl: FormControl = this.fb.control(entry.positionOrder);
+    const entryControl: FormControl = this.fb.control(entry);
+    const positionGroup = this.fb.group({
       position: positionControl,
       positionOrder: positionOrderControl,
       entry: entryControl
@@ -341,10 +340,10 @@ export class CreateEventComponent implements OnInit, OnDestroy {
           return { samePosition: true };
         }
       }
-      let array: FormArray =  this.addEntryForm.get('positions') as FormArray;
-      for (let group of array.controls) {
+      const array: FormArray =  this.addEntryForm.get('positions') as FormArray;
+      for (const group of array.controls) {
         if (control !== group) {
-          let groupPositon: number = +group.get('position').value as number;
+          const groupPositon: number = +group.get('position').value as number;
           if (position === groupPositon) {
             return { existingPosition: true };
           }
@@ -353,7 +352,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       // now check to see if matching against the backing
       // templates when 2 positions have been swapped
       if (this.selectedTemplate && entry) {
-        for (let template of this.selectedTemplate.templates) {
+        for (const template of this.selectedTemplate.templates) {
           if (entry.position !== template.position) {
             if (+template.position === +position) {
               return { existingPosition: true };
@@ -369,15 +368,15 @@ export class CreateEventComponent implements OnInit, OnDestroy {
     return (control: AbstractControl): { [key: string]: any } => {
       // check to see if check box is ticked if so check unassigned else check assigned for race
       if (this.addEntryForm && this.addEntryForm.get('isNonRaceAssigned')) {
-        let isNonRaceAssigned: boolean = this.addEntryForm.get('isNonRaceAssigned').value;
+        const isNonRaceAssigned: boolean = this.addEntryForm.get('isNonRaceAssigned').value;
         if (isNonRaceAssigned) {
-          for (let unassigned of this.unassignedEvents) {
+          for (const unassigned of this.unassignedEvents) {
             if (unassigned.name === control.value) {
               return { existingName: true };
             }
           }
         } else {
-          for (let event of this.eventsForRace) {
+          for (const event of this.eventsForRace) {
             if (event.name === control.value) {
               return { existingName: true };
             }

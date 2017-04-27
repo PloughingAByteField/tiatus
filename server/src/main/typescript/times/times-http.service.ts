@@ -15,7 +15,7 @@ export class TimesHttpService {
   constructor(protected http: Http) {}
 
   public getTimesForRace(race: Race): Observable<EntryTime[]> {
-    let url: string = this.timeEndPoint + race.id;
+    const url: string = this.timeEndPoint + race.id;
     return this.getTimesForRaceWithUrl(race, url);
   }
 
@@ -23,10 +23,10 @@ export class TimesHttpService {
       if (race) {
         return this.http.get(url)
           .map((response) => {
-            let data = response.json();
-            let entries = new Array<EntryTime>();
+            const data = response.json();
+            const entries = new Array<EntryTime>();
             data.filter((positionTime: PositionTime) => {
-              let entryTimesForEntry: EntryTime[] = entries
+              const entryTimesForEntry: EntryTime[] = entries
                 .filter((entryTime: EntryTime) => entryTime.entry.id === positionTime.entry);
               let entryTimeForEntry: EntryTime;
               if (entryTimesForEntry.length === 0) {

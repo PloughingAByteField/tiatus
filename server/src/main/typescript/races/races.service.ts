@@ -42,20 +42,20 @@ export class RacesService {
     public processMessage(message: Message): void {
         console.log('process message');
         console.log(message);
-        let race: Race = convertObjectToRace(message.data);
+        const race: Race = convertObjectToRace(message.data);
         console.log(race);
         if (message.type === MessageType.ADD) {
             this.races.push(race);
 
         } else if (message.type === MessageType.DELETE) {
-            let deletedRace: Race = this.getRaceForId(race.id);
+            const deletedRace: Race = this.getRaceForId(race.id);
             if (deletedRace !== null) {
-                let index = this.races.indexOf(deletedRace);
-                let sliced = this.races.splice(index, 1);
+                const index = this.races.indexOf(deletedRace);
+                const sliced = this.races.splice(index, 1);
             }
 
         } else if (message.type === MessageType.UPDATE) {
-            let updatedRace: Race = this.getRaceForId(race.id);
+            const updatedRace: Race = this.getRaceForId(race.id);
             if (updatedRace !== null) {
                 updatedRace.active = race.active;
                 updatedRace.name = race.name;

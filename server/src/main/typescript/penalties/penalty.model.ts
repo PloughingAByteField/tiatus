@@ -12,7 +12,7 @@ export class Penalty {
 }
 
 export function convertObjectToPenalty(obj: any): Penalty {
-    let penalty: Penalty = new Penalty();
+    const penalty: Penalty = new Penalty();
     penalty.comment = obj.comment;
     penalty.note = obj.note;
     penalty.time = obj.time;

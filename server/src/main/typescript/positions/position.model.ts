@@ -4,7 +4,7 @@ export class Position {
 }
 
 export function convertObjectoPosition(obj: any): Position {
-    let position: Position = new Position();
+    const position: Position = new Position();
     position.name = obj.name;
     position.id = obj.id;
     return position;

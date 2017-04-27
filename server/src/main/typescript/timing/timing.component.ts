@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Title }     from '@angular/platform-browser';
+import { Title } from '@angular/platform-browser';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -68,7 +68,7 @@ export class TimingComponent implements OnInit, OnDestroy {
           this.selectedPosition = position;
           this.races = this.racesService.getRaces();
           // send selected position to server
-          let connected: Message = new Message();
+          const connected: Message = new Message();
           connected.data = JSON.stringify(position);
           connected.objectType = 'Position';
           connected.type = MessageType.CONNECTED;
@@ -93,7 +93,7 @@ export class TimingComponent implements OnInit, OnDestroy {
   }
 
   public onNewMessage(data: ConverstationMessage): void {
-    let message: Message = new Message();
+    const message: Message = new Message();
     message.data = JSON.stringify(data);
     message.objectType = 'ConverstationMessage';
     message.type = MessageType.CHAT;

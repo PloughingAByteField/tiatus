@@ -5,8 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Message, convertObjectToMessage } from '../../websocket/message.model';
 import { MessageType } from '../../websocket/message-type.model';
-import { ConverstationMessage, convertObjectToConverstationMessage }
-from '../../messages/converstation-message.model';
+import { ConverstationMessage, convertObjectToConverstationMessage } from '../../messages/converstation-message.model';
 import { Connected, convertObjectToConnected } from '../../messages/connected.model';
 
 import { WebSocketService } from '../../websocket/websocket-service';
@@ -51,11 +50,11 @@ export class TimingWebSocketService extends WebSocketService {
     }
 
     protected onMessage(data: string): void {
-        let message: Message = convertObjectToMessage(JSON.parse(data));
+        const message: Message = convertObjectToMessage(JSON.parse(data));
         if (message.type === MessageType.CONNECTED) {
-            let connected: Connected = convertObjectToConnected(JSON.parse(message.data));
+            const connected: Connected = convertObjectToConnected(JSON.parse(message.data));
             let update: boolean = false;
-            for (let currentlyConnected of this.connected) {
+            for (const currentlyConnected of this.connected) {
                 if (currentlyConnected.userName === connected.userName
                 && currentlyConnected.role === connected.role) {
                     update = true;
@@ -68,9 +67,9 @@ export class TimingWebSocketService extends WebSocketService {
             this.connectedSubject.next(this.connected);
 
         } else if (message.type === MessageType.DISCONNECTED) {
-            let disconnected: Connected = convertObjectToConnected(JSON.parse(message.data));
+            const disconnected: Connected = convertObjectToConnected(JSON.parse(message.data));
             let toRemove: Connected;
-            for (let currentlyConnected of this.connected) {
+            for (const currentlyConnected of this.connected) {
                 if (currentlyConnected.userName === disconnected.userName
                 && currentlyConnected.role === disconnected.role
                 && currentlyConnected.position === disconnected.position) {
@@ -79,7 +78,7 @@ export class TimingWebSocketService extends WebSocketService {
                 }
             }
             if (toRemove) {
-                let index: number = this.connected.indexOf(toRemove);
+                const index: number = this.connected.indexOf(toRemove);
                 this.connected.splice(index, 1);
                 this.connectedSubject.next(this.connected);
             }

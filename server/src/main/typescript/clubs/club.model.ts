@@ -4,7 +4,7 @@ export class Club {
 }
 
 export function convertObjectToClub(obj: any): Club {
-    let club: Club = new Club();
+    const club: Club = new Club();
     club.clubName = obj.clubName;
     club.id = obj.id;
     return club;

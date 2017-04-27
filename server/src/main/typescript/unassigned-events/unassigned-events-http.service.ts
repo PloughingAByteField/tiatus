@@ -18,8 +18,8 @@ export class UnassignedEventsHttpService {
 }
 
 function convertJsonToUnassignedEvents(response: Response): Event[] {
-    let jsonEvents: Event[] = response.json();
-    let events: Event[] = new Array<Event>();
+    const jsonEvents: Event[] = response.json();
+    const events: Event[] = new Array<Event>();
     jsonEvents.map((json: Event) => {
       events.push(convertObjectToEvent(json));
     });

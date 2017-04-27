@@ -100,12 +100,12 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   public removeEntry(entry: Entry): void {
     console.log('Remove ' + entry.id);
-    let indexOfEntry: number = this.entriesForRace.indexOf(entry);
-    let updatedEntries: Entry[] = new Array<Entry>();
+    const indexOfEntry: number = this.entriesForRace.indexOf(entry);
+    const updatedEntries: Entry[] = new Array<Entry>();
     let lastNumber: number = 1;
     if (indexOfEntry > 1) {
       for (let i = indexOfEntry; i >= 0; i--) {
-        let prevEntry: Entry = this.entriesForRace[i];
+        const prevEntry: Entry = this.entriesForRace[i];
         if (!prevEntry.fixedNumber) {
           lastNumber = prevEntry.number;
           break;
@@ -113,7 +113,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
       }
     }
     for (let i = indexOfEntry + 1; i < this.entriesForRace.length; i++) {
-      let nextEntry: Entry = this.entriesForRace[i];
+      const nextEntry: Entry = this.entriesForRace[i];
       nextEntry.raceOrder = nextEntry.raceOrder - 1;
       if (!nextEntry.fixedNumber) {
         nextEntry.number = lastNumber;
@@ -136,7 +136,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   public getEventNameForEntry(entry: Entry): string {
       let eventName: string;
-      let event: Event = this.getEventForId(entry.event);
+      const event: Event = this.getEventForId(entry.event);
       if (event) {
           eventName = event.name;
       }
@@ -145,8 +145,8 @@ export class EntriesComponent implements OnInit, OnDestroy {
 
   public getClubNamesForEntry(entry: Entry): string {
       let clubs: string;
-      for (let clubId of entry.clubs) {
-          let club: Club = this.getClubForId(clubId);
+      for (const clubId of entry.clubs) {
+          const club: Club = this.getClubForId(clubId);
           if (club) {
               if (!clubs) {
                   clubs = club.clubName;
@@ -160,7 +160,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
   private getEntriesForRace(race: Race): Entry[] {
-    let entries: Entry[] = this.entries
+    const entries: Entry[] = this.entries
       .filter((entry: Entry) => entry.race === race.id);
     entries.sort((a: Entry, b: Entry) => {
         if (a.number < b.number) {
@@ -175,7 +175,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
   private getEventForId(eventId: number): Event {
-      for (let event of this.events) {
+      for (const event of this.events) {
           if (event.id === eventId) {
               return event;
           }
@@ -184,7 +184,7 @@ export class EntriesComponent implements OnInit, OnDestroy {
   }
 
   private getClubForId(clubId: number): Club {
-      for (let club of this.clubs) {
+      for (const club of this.clubs) {
           if (club.id === clubId) {
               return club;
           }

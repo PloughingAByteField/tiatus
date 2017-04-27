@@ -86,7 +86,7 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
 
   public onSubmit({ value, valid }: { value: RacePositionTemplate, valid: boolean }) {
     console.log(value);
-    let template: RacePositionTemplate = new RacePositionTemplate();
+    const template: RacePositionTemplate = new RacePositionTemplate();
     template.name = value.name;
     template.race = this.selectedRace.id;
     if (this.templatesForRace.length === 0) {
@@ -121,7 +121,7 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
   private validateNotExistingDefault(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       if (this.selectedRace && this.templatesForRace) {
-        for (let template of this.templatesForRace) {
+        for (const template of this.templatesForRace) {
           if (template.defaultTemplate === control.value) {
             console.log('existing default');
             console.log(this.templatesForRace);
@@ -137,7 +137,7 @@ export class RacePositionsComponent implements OnInit, OnDestroy {
   private validateRacePositionName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       if (this.selectedRace && this.templatesForRace) {
-        for (let template of this.templatesForRace) {
+        for (const template of this.templatesForRace) {
           if (template.name === control.value) {
             console.log('selected race ' + this.selectedRace.id);
             console.log('template ' + template.id);

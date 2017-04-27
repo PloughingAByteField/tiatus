@@ -38,20 +38,20 @@ export class ClubsService {
     public processMessage(message: Message): void {
         console.log('process message');
         console.log(message);
-        let club: Club = convertObjectToClub(message.data);
+        const club: Club = convertObjectToClub(message.data);
         console.log(club);
         if (message.type === MessageType.ADD) {
             this.clubs.push(club);
 
         } else if (message.type === MessageType.DELETE) {
-            let deletedClub: Club = this.getClubForId(club.id);
+            const deletedClub: Club = this.getClubForId(club.id);
             if (deletedClub !== null) {
-                let index = this.clubs.indexOf(deletedClub);
-                let sliced = this.clubs.splice(index, 1);
+                const index = this.clubs.indexOf(deletedClub);
+                const sliced = this.clubs.splice(index, 1);
             }
 
         } else if (message.type === MessageType.UPDATE) {
-            let updatedClub: Club = this.getClubForId(club.id);
+            const updatedClub: Club = this.getClubForId(club.id);
             if (updatedClub !== null) {
                 updatedClub.clubName = club.clubName;
             }
@@ -61,7 +61,7 @@ export class ClubsService {
     }
 
     public getClubForId(clubId: number): Club {
-        for (let club of this.clubs) {
+        for (const club of this.clubs) {
             if (club.id === clubId) {
                 return club;
             }

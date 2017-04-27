@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Disqualification, convertObjectToDisqualification }
-    from '../../disqualification/disqualification.model';
+import { Disqualification, convertObjectToDisqualification } from '../../disqualification/disqualification.model';
 
 import { DisqualificationService } from '../../disqualification/disqualification.service';
 
@@ -26,8 +25,8 @@ export class AdjudicatorDisqualificationService extends DisqualificationService 
 
     public removeDisqualification(disqualification: Disqualification): void {
         this.service.removeDisqualification(disqualification).then(() => {
-            let index = this.disqualifications.indexOf(disqualification);
-            let sliced = this.disqualifications.splice(index, 1);
+            const index = this.disqualifications.indexOf(disqualification);
+            const sliced = this.disqualifications.splice(index, 1);
             this.disqualificationsSubject.next(this.disqualifications);
         });
     }
@@ -38,19 +37,19 @@ export class AdjudicatorDisqualificationService extends DisqualificationService 
 
     public processDisqualificationMessage(message: Message): void {
         console.log('process message');
-        let disqualification: Disqualification = convertObjectToDisqualification(message.data);
+        const disqualification: Disqualification = convertObjectToDisqualification(message.data);
         console.log(disqualification);
         if (message.type === MessageType.ADD) {
             this.disqualifications.push(disqualification);
         } else if (message.type === MessageType.DELETE) {
-            let deletedPenalty: Disqualification =
+            const deletedPenalty: Disqualification =
                 this.getDisqualificationForId(disqualification.id);
             if (deletedPenalty !== null) {
-                let index = this.disqualifications.indexOf(deletedPenalty);
-                let sliced = this.disqualifications.splice(index, 1);
+                const index = this.disqualifications.indexOf(deletedPenalty);
+                const sliced = this.disqualifications.splice(index, 1);
             }
         } else if (message.type === MessageType.UPDATE) {
-            let updatedPenalty: Disqualification =
+            const updatedPenalty: Disqualification =
                 this.getDisqualificationForId(disqualification.id);
             if (updatedPenalty !== null) {
                 updatedPenalty.comment = disqualification.comment;
@@ -63,7 +62,7 @@ export class AdjudicatorDisqualificationService extends DisqualificationService 
     }
 
     public getDisqualificationForId(disqualificationId: number): Disqualification {
-        for (let disqualification of this.disqualifications) {
+        for (const disqualification of this.disqualifications) {
             if (disqualification.id === disqualificationId) {
                 return disqualification;
             }

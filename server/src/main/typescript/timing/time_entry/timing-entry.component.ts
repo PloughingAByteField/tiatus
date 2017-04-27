@@ -10,8 +10,7 @@ import { Entry } from '../../entries/entry.model';
 import { Event } from '../../events/event.model';
 import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
-import { PositionTime, convertFromTimeStamp, convertToTimeStamp }
-    from '../../times/postion-time.model';
+import { PositionTime, convertFromTimeStamp, convertToTimeStamp } from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
 
 import { TimingPositionService } from '../times/timing-position.service';
@@ -143,8 +142,8 @@ export class TimingEntryComponent implements OnInit {
     public sortByTime(direction: string): void {
         this.reverseTimeSort = !this.reverseTimeSort;
         this.filteredEntryTimes.sort((a, b) => {
-            let apt: PositionTime = this.getPositionTimeForPosition(a);
-            let bpt: PositionTime = this.getPositionTimeForPosition(b);
+            const apt: PositionTime = this.getPositionTimeForPosition(a);
+            const bpt: PositionTime = this.getPositionTimeForPosition(b);
             if (apt.time === undefined) {
                 return 1;
             } else if (bpt.time === undefined) {
@@ -162,8 +161,8 @@ export class TimingEntryComponent implements OnInit {
     public sortBySynced(direction: string): void {
         this.reverseSyncedSort = !this.reverseSyncedSort;
         this.filteredEntryTimes.sort((a, b) => {
-            let apt: PositionTime = this.getPositionTimeForPosition(a);
-            let bpt: PositionTime = this.getPositionTimeForPosition(b);
+            const apt: PositionTime = this.getPositionTimeForPosition(a);
+            const bpt: PositionTime = this.getPositionTimeForPosition(b);
             if (apt.synced === undefined) {
                 return 1;
             } else if (bpt.synced === undefined) {
@@ -179,24 +178,24 @@ export class TimingEntryComponent implements OnInit {
     }
 
     public convertFromTimeStamp(entryTime: EntryTime): string {
-        let timeForPosition: PositionTime = this.getPositionTimeForPosition(entryTime);
+        const timeForPosition: PositionTime = this.getPositionTimeForPosition(entryTime);
         if (timeForPosition) {
             return convertFromTimeStamp(+timeForPosition.time);
         }
         return null;
-    };
+    }
 
     public getSyncedForPosition(entryTime: EntryTime): boolean {
-        let timeForPosition: PositionTime = this.getPositionTimeForPosition(entryTime);
+        const timeForPosition: PositionTime = this.getPositionTimeForPosition(entryTime);
         if (timeForPosition) {
             return timeForPosition.synced;
         }
         return false;
-    };
+    }
 
     public getEventNameForEntry(entry: Entry): string {
         let eventName: string;
-        let event: Event = this.getEventForId(entry.event);
+        const event: Event = this.getEventForId(entry.event);
         if (event) {
             eventName = event.name;
         }
@@ -205,8 +204,8 @@ export class TimingEntryComponent implements OnInit {
 
     public getClubNamesForEntry(entry: Entry): string {
         let clubs: string;
-        for (let clubId of entry.clubs) {
-            let club: Club = this.getClubForId(clubId);
+        for (const clubId of entry.clubs) {
+            const club: Club = this.getClubForId(clubId);
             if (club) {
                 if (!clubs) {
                     clubs = club.clubName;
@@ -227,7 +226,7 @@ export class TimingEntryComponent implements OnInit {
     }
 
     private getEventForId(eventId: number): Event {
-        for (let event of this.events) {
+        for (const event of this.events) {
             if (event.id === eventId) {
                 return event;
             }
@@ -236,7 +235,7 @@ export class TimingEntryComponent implements OnInit {
     }
 
     private getClubForId(clubId: number): Club {
-        for (let club of this.clubs) {
+        for (const club of this.clubs) {
             if (club.id === clubId) {
                 return club;
             }
@@ -285,8 +284,8 @@ export class TimingEntryComponent implements OnInit {
 
     private filterClubs(entryTimes: EntryTime[], value: string): EntryTime[] {
         return entryTimes.filter((entryTime: EntryTime) => {
-            for (let clubId of entryTime.entry.clubs) {
-                let club: Club = this.getClubForId(clubId);
+            for (const clubId of entryTime.entry.clubs) {
+                const club: Club = this.getClubForId(clubId);
                 if (club) {
                     if (club.clubName.includes(value)) {
                         return entryTime;
@@ -299,7 +298,7 @@ export class TimingEntryComponent implements OnInit {
 
     private filterEvents(entryTimes: EntryTime[], value: string): EntryTime[] {
         return entryTimes.filter((entryTime: EntryTime) => {
-            let event: Event = this.getEventForId(entryTime.entry.event);
+            const event: Event = this.getEventForId(entryTime.entry.event);
             if (event) {
                 if (event.name.includes(value)) {
                     return entryTime;

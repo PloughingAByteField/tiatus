@@ -19,8 +19,8 @@ export class DisqualificationHttpService {
 }
 
 export function convertResponseToDisqualifications(response: Response): Disqualification[] {
-    let jsonDisqualifications: Disqualification[] = response.json();
-    let disqualifications: Disqualification[] = new Array<Disqualification>();
+    const jsonDisqualifications: Disqualification[] = response.json();
+    const disqualifications: Disqualification[] = new Array<Disqualification>();
     jsonDisqualifications.map((json: Disqualification) => {
       disqualifications.push(convertObjectToDisqualification(json));
     });

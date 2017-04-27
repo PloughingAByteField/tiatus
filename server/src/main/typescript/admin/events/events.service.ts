@@ -25,7 +25,7 @@ export class AdminEventsService extends EventsService {
 
     public updateEvent(event: Event): Promise<Event> {
         return new Promise((resolve) => this.service.updateEvent(event).then((e: Event) => {
-            let eventBeingUpdated = this.getEventForId(e.id);
+            const eventBeingUpdated = this.getEventForId(e.id);
             if (eventBeingUpdated !== null) {
                 eventBeingUpdated.name = e.name;
                 eventBeingUpdated.positions = e.positions;
@@ -36,7 +36,7 @@ export class AdminEventsService extends EventsService {
     }
 
     public getEventForId(eventId: number): Event {
-        for (let event of this.events) {
+        for (const event of this.events) {
             if (event.id === eventId) {
                 return event;
             }

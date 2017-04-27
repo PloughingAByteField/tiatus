@@ -20,11 +20,11 @@ export class AdminEventsHttpService extends EventsHttpService {
             JSON.stringify(event), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
-                let newEvent: Event = convertObjectToEvent(res.json());
+                const newEvent: Event = convertObjectToEvent(res.json());
                 if (res.status === 201) {
-                    let location: string = res.headers.get('location');
-                    let locationParts = location.split('/');
-                    let id: number = +locationParts[locationParts.length - 1];
+                    const location: string = res.headers.get('location');
+                    const locationParts = location.split('/');
+                    const id: number = +locationParts[locationParts.length - 1];
                     newEvent.id = id;
                 }
                 return newEvent;
@@ -38,7 +38,7 @@ export class AdminEventsHttpService extends EventsHttpService {
             JSON.stringify(event), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
-                let updatedEvent: Event = convertObjectToEvent(res.json());
+                const updatedEvent: Event = convertObjectToEvent(res.json());
                 return updatedEvent;
             })
             .catch((err) => Promise.reject(err));

@@ -8,7 +8,7 @@ export class PositionTime {
 }
 
 export function convertJsonToPositionTime(json: PositionTime): PositionTime {
-    let positionTime: PositionTime = new PositionTime();
+    const positionTime: PositionTime = new PositionTime();
     positionTime.synced = json.synced;
     positionTime.startPoint = json.startPoint;
     positionTime.time = json.time;
@@ -22,32 +22,32 @@ export function convertFromTimeStamp(timeStamp: number): string {
         return null;
     }
 
-    let date = new Date(timeStamp);
-    let hours = date.getUTCHours();
+    const date = new Date(timeStamp);
+    const hours = date.getUTCHours();
     // Minutes part from the timestamp
-    let minutes = '0' + date.getUTCMinutes();
+    const minutes = '0' + date.getUTCMinutes();
     // Seconds part from the timestamp
-    let seconds = '0' + date.getUTCSeconds();
-    let milliSeconds = '000' + date.getUTCMilliseconds();
+    const seconds = '0' + date.getUTCSeconds();
+    const milliSeconds = '000' + date.getUTCMilliseconds();
     let time = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
     time = time + '.' + milliSeconds.substr(-3);
     return time;
-};
+}
 
 export function convertToTimeStamp(timeString: string): number {
     if ( !timeString) {
         return null;
     }
 
-    let date = new Date(0);
+    const date = new Date(0);
     date.setUTCMilliseconds(0);
-    let millisecondFields = timeString.split('.');
+    const millisecondFields = timeString.split('.');
     if (millisecondFields.length === 2) {
         date.setUTCMilliseconds(+millisecondFields[1]);
     }
-    let timeFields = timeString.split(':');
+    const timeFields = timeString.split(':');
     date.setUTCHours(+timeFields[0]);
     date.setUTCMinutes(+timeFields[1]);
     date.setUTCSeconds(+timeFields[2]);
     return date.getTime();
-};
+}

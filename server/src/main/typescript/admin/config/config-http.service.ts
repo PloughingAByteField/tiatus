@@ -36,7 +36,7 @@ export class AdminConfigHttpService extends ConfigHttpService {
     }
 
     public uploadLogo(file: File): Promise<string> {
-        let formData: FormData = new FormData();
+        const formData: FormData = new FormData();
         formData.append('file', file, file.name);
         return this.http
             .post(this.restEndPoint + '/logo', formData)

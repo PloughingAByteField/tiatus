@@ -19,8 +19,8 @@ export class RacesHttpService {
 }
 
 export function convertResponseToRaces(response: Response): Race[] {
-    let jsonRaces: Race[] = response.json();
-    let races: Race[] = new Array<Race>();
+    const jsonRaces: Race[] = response.json();
+    const races: Race[] = new Array<Race>();
     jsonRaces.map((json: Race) => {
       races.push(convertObjectToRace(json));
     });

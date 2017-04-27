@@ -47,7 +47,7 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    let positionsFormArray: FormArray = this.fb.array([]);
+    const positionsFormArray: FormArray = this.fb.array([]);
     this.positionsForm = this.fb.group({
       positions: positionsFormArray
     });
@@ -112,8 +112,8 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
-    let position: Position = value.position;
-    let template: RacePositionTemplateEntry = new RacePositionTemplateEntry();
+    const position: Position = value.position;
+    const template: RacePositionTemplateEntry = new RacePositionTemplateEntry();
     template.position = position.id;
     template.positionOrder = 1;
     template.template = this.template.id;
@@ -127,7 +127,7 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
     this.templateEntriesService.addTemplate(template);
 
     // remove position from unassignedPositions
-    let index = this.unassignedPositions.indexOf(position);
+    const index = this.unassignedPositions.indexOf(position);
     this.unassignedPositions.splice(index, 1);
     this.addEntryForm.removeControl('position');
     this.populateAddEntryPosition();
@@ -148,7 +148,7 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
           .subscribe((templateEntries: RacePositionTemplateEntry[]) => {
             this.template.templates = templateEntries;
             this.positionsForm.removeControl('positions');
-            let positionsFormArray = this.fb.array([]);
+            const positionsFormArray = this.fb.array([]);
             this.positionsForm = this.fb.group({
               positions: positionsFormArray
             });
@@ -161,14 +161,14 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
   }
   private populateAddEntryPosition(): void {
     if (this.unassignedPositions.length > 0) {
-        let control: AbstractControl =
+        const control: AbstractControl =
           this.fb.control(this.unassignedPositions[0], Validators.required);
         this.addEntryForm.addControl('position', control);
     }
   }
 
   private findUnassignedPositions(): Position[] {
-    let unassigned: Position[] = new Array<Position>();
+    const unassigned: Position[] = new Array<Position>();
     if (this.template && this.template.templates && this.racePositions) {
       this.racePositions.forEach((position: Position) => {
         let found: boolean = false;
@@ -187,11 +187,11 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
 
   private addTemplateEntryToFormArray(
       entry: RacePositionTemplateEntry, array: FormArray): void {
-    let positionControl: FormControl =
+    const positionControl: FormControl =
       this.fb.control(entry.position);
-    let positionOrderControl: FormControl = this.fb.control(entry.positionOrder);
-    let entryControl: FormControl = this.fb.control(entry);
-    let positionGroup = this.fb.group({
+    const positionOrderControl: FormControl = this.fb.control(entry.positionOrder);
+    const entryControl: FormControl = this.fb.control(entry);
+    const positionGroup = this.fb.group({
       position: positionControl,
       positionOrder: positionOrderControl,
       entry: entryControl
@@ -202,7 +202,7 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
   }
 
   private getRaceForId(id: number): Race {
-    for (let race of this.races) {
+    for (const race of this.races) {
       if (race.id === id) {
         return race;
       }
@@ -210,7 +210,7 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
     return null;
   }
   private getTemplateForId(id: number): RacePositionTemplate {
-    for (let template of this.templates) {
+    for (const template of this.templates) {
       if (template.id === id) {
         return template;
       }
@@ -220,15 +220,15 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
 
   private checkExistingPosition(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      let position: number = +control.get('position').value as number;
-      let entry: RacePositionTemplateEntry = control.get('entry').value;
+      const position: number = +control.get('position').value as number;
+      const entry: RacePositionTemplateEntry = control.get('entry').value;
       if (+entry.position === +position) {
         return { samePosition: true };
       }
-      let array: FormArray =  this.positionsForm.get('positions') as FormArray;
-      for (let group of array.controls) {
+      const array: FormArray =  this.positionsForm.get('positions') as FormArray;
+      for (const group of array.controls) {
         if (control !== group) {
-          let groupPositon: number = +group.get('position').value as number;
+          const groupPositon: number = +group.get('position').value as number;
           if (position === groupPositon) {
             return { existingPosition: true };
           }
@@ -237,7 +237,7 @@ export class RacePositionTemplatesComponent implements OnInit, OnDestroy {
       // now check to see if matching against the backing
       // templates when 2 positions have been swapped
       if (this.template) {
-        for (let template of this.template.templates) {
+        for (const template of this.template.templates) {
           if (entry.position !== template.position) {
             if (+template.position === +position) {
               return { existingPosition: true };

@@ -22,7 +22,7 @@ export class AdminRolesService {
     }
 
     public getRoleForId(roleId): Role {
-        for (let role of this.roles) {
+        for (const role of this.roles) {
             if (role.id === roleId) {
                 return role;
             }

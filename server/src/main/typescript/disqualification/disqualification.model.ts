@@ -11,7 +11,7 @@ export class Disqualification {
 }
 
 export function convertObjectToDisqualification(obj: any): Disqualification {
-    let disqualification: Disqualification = new Disqualification();
+    const disqualification: Disqualification = new Disqualification();
     disqualification.comment = obj.comment;
     disqualification.note = obj.note;
     disqualification.entry = obj.entry;

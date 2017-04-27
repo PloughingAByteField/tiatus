@@ -39,7 +39,7 @@ export class AdminUsersService {
 
     public removeUser(user: User): void {
         this.service.removeUser(user).then((c: User) => {
-            let index = this.users.indexOf(c);
+            const index = this.users.indexOf(c);
             this.users.splice(index, 1);
             this.subject.next(this.users);
         });
@@ -47,7 +47,7 @@ export class AdminUsersService {
 
     public updateUser(user: User): void {
         this.service.updateUser(user).then((c: User) => {
-            let updatedUser = this.getUserForId(c.id);
+            const updatedUser = this.getUserForId(c.id);
             if (updatedUser !== null) {
                 updatedUser.userName = c.userName;
                 updatedUser.roles = c.roles;
@@ -57,7 +57,7 @@ export class AdminUsersService {
     }
 
     public getUserForId(userId: number): User {
-        for (let user of this.users) {
+        for (const user of this.users) {
             if (user.id === userId) {
                 return user;
             }
@@ -74,18 +74,18 @@ export class AdminUsersService {
 
     public processUserMessage(message: Message): void {
         console.log('process message');
-        let user: User = convertObjectToUser(message.data);
+        const user: User = convertObjectToUser(message.data);
         console.log(user);
         if (message.type === MessageType.ADD) {
             this.users.push(user);
         } else if (message.type === MessageType.DELETE) {
-            let deletedUser: User = this.getUserForId(user.id);
+            const deletedUser: User = this.getUserForId(user.id);
             if (deletedUser !== null) {
-                let index = this.users.indexOf(deletedUser);
-                let sliced = this.users.splice(index, 1);
+                const index = this.users.indexOf(deletedUser);
+                const sliced = this.users.splice(index, 1);
             }
         } else if (message.type === MessageType.UPDATE) {
-            let updatedUser: User = this.getUserForId(user.id);
+            const updatedUser: User = this.getUserForId(user.id);
             if (updatedUser !== null) {
                 updatedUser.userName = user.userName;
                 updatedUser.roles = user.roles;

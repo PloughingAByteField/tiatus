@@ -11,8 +11,7 @@ import { AdminEventsService } from '../events/events.service';
 import { AdminUsersService } from '../users/users.service';
 import { AdminPositionsService } from '../positions/positions.service';
 import { RacePositionsService } from '../race-positions/race-positions.service';
-import { RacePositionTemplatesService } from
-    '../race-position-templates/race-position-templates.service';
+import { RacePositionTemplatesService } from '../race-position-templates/race-position-templates.service';
 
 @Injectable()
 export class AdminWebSocketService extends WebSocketService {
@@ -32,7 +31,7 @@ export class AdminWebSocketService extends WebSocketService {
 
     protected onMessage(data: string): void {
         console.log(data);
-        let message: Message = convertObjectToMessage(JSON.parse(data));
+        const message: Message = convertObjectToMessage(JSON.parse(data));
         console.log(message);
         if (message.objectType === 'User') {
             this.usersService.processUserMessage(message);

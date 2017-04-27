@@ -18,8 +18,8 @@ export class EventsHttpService {
 }
 
 export function convertResponseToEvents(response: Response): Event[] {
-    let jsonEvents: Event[] = response.json();
-    let events: Event[] = new Array<Event>();
+    const jsonEvents: Event[] = response.json();
+    const events: Event[] = new Array<Event>();
     jsonEvents.map((event: Event) => {
       events.push(convertObjectToEvent(event));
     });

@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { RacePositionTemplateEntry }
-    from './race-position-template-entry.model';
+import { RacePositionTemplateEntry } from './race-position-template-entry.model';
 
 @Injectable()
 export class RacePositionTemplatesHttpService {
@@ -23,9 +22,9 @@ export class RacePositionTemplatesHttpService {
             .toPromise()
             .then((res: Response) => {
                 if (res.status === 201) {
-                    let location: string = res.headers.get('location');
-                    let locationParts = location.split('/');
-                    let id: number = +locationParts[locationParts.length - 1];
+                    const location: string = res.headers.get('location');
+                    const locationParts = location.split('/');
+                    const id: number = +locationParts[locationParts.length - 1];
                     entry.id = id;
                 }
                 return entry;

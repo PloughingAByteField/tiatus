@@ -27,9 +27,9 @@ export class TimeEntryComponent implements OnInit {
   public onBlur(event: any): void {
     let lostFocus: boolean = true;
     if (event.relatedTarget) {
-      let currentId: number = event.path[1].id;
+      const currentId: number = event.path[1].id;
       if (event.relatedTarget.parentNode) {
-        let targetId: number = event.relatedTarget.parentNode.id;
+        const targetId: number = event.relatedTarget.parentNode.id;
         if (currentId === targetId) {
           lostFocus = false;
         }
@@ -83,7 +83,7 @@ export class TimeEntryComponent implements OnInit {
 
   private fillFieldsForTime(time: number): void {
     if (time !== 0) {
-      let date = new Date(this.time);
+      const date = new Date(this.time);
       this.hours = ('0' + date.getUTCHours()).slice(-2);
       this.minutes = ('0' + date.getUTCMinutes()).slice(-2);
       this.seconds = ('0' + date.getUTCSeconds()).slice(-2);

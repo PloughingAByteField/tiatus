@@ -49,8 +49,8 @@ export class RacesComponent implements OnInit {
   }
 
   public addRaceToArray(race: Race) {
-    let orderControl: FormControl = new FormControl(race.raceOrder);
-    let nameControl: FormControl = new FormControl(race.name, [
+    const orderControl: FormControl = new FormControl(race.raceOrder);
+    const nameControl: FormControl = new FormControl(race.name, [
               Validators.required,
               Validators.minLength(3),
               Validators.maxLength(10),
@@ -60,26 +60,26 @@ export class RacesComponent implements OnInit {
     //       .subscribe((data) => {
     //         this.onValueChanged(race, data);
     //       });
-    let raceGroup = new FormGroup({
+    const raceGroup = new FormGroup({
       name: nameControl,
       order: orderControl
     });
 
-    let array = <FormArray> this.racesForm.get('races');
+    const array: FormArray = this.racesForm.get('races') as FormArray;
     array.push(raceGroup);
   }
 
   get getRacesArray(): FormArray { return this.racesForm.get('races') as FormArray; }
 
   public removeRace(data: any): void {
-    let race: Race = this.getRaceForOrder(data.value.order);
+    const race: Race = this.getRaceForOrder(data.value.order);
     if (race) {
       this.racesService.removeRace(race);
     }
   }
 
   public updateRace(data: any): void {
-    let race: Race = this.getRaceForOrder(data.value.order);
+    const race: Race = this.getRaceForOrder(data.value.order);
     if (race) {
       race.name = data.value.name;
       this.racesService.updateRace(race);
@@ -93,7 +93,7 @@ export class RacesComponent implements OnInit {
   }
 
   public onSubmit({ value, valid }: { value: Race, valid: boolean }) {
-    let race: Race = new Race();
+    const race: Race = new Race();
     race.name = value.name;
     race.raceOrder = value.raceOrder;
     this.racesService.addRace(race);
@@ -104,7 +104,7 @@ export class RacesComponent implements OnInit {
   }
 
   private getRaceForOrder(order: number): Race {
-    for (let race of this.races) {
+    for (const race of this.races) {
         if (race.raceOrder === order) {
           return race;
         }
@@ -117,7 +117,7 @@ export class RacesComponent implements OnInit {
 
   private validateRaceName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      for (let race of this.races) {
+      for (const race of this.races) {
         if (race.name === control.value) {
           return { existingName: true };
         }
@@ -141,7 +141,7 @@ export class RacesComponent implements OnInit {
         return { tooLarge: true };
       }
 
-      for (let race of this.races) {
+      for (const race of this.races) {
         if (race.raceOrder === control.value) {
           return { existingNumber: true };
         }

@@ -21,11 +21,11 @@ export class AdminRaceEventsHttpService extends RaceEventsHttpService {
             JSON.stringify(pojo), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
-                let event: RaceEvent = convertJsonToRaceEvent(res.json());
+                const event: RaceEvent = convertJsonToRaceEvent(res.json());
                 if (res.status === 201) {
-                    let location: string = res.headers.get('location');
-                    let locationParts = location.split('/');
-                    let id: number = +locationParts[locationParts.length - 1];
+                    const location: string = res.headers.get('location');
+                    const locationParts = location.split('/');
+                    const id: number = +locationParts[locationParts.length - 1];
                     event.id = id;
                 }
                 return event;

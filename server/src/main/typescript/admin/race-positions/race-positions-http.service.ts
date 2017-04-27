@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { RacePositionTemplate, convertObjectToRacePositionTemplate }
-    from './race-position-template.model';
+import { RacePositionTemplate, convertObjectToRacePositionTemplate } from './race-position-template.model';
 
 @Injectable()
 export class RacePositionsHttpService {
@@ -22,9 +21,9 @@ export class RacePositionsHttpService {
             .toPromise()
             .then((res: Response) => {
                 if (res.status === 201) {
-                    let location: string = res.headers.get('location');
-                    let locationParts = location.split('/');
-                    let id: number = +locationParts[locationParts.length - 1];
+                    const location: string = res.headers.get('location');
+                    const locationParts = location.split('/');
+                    const id: number = +locationParts[locationParts.length - 1];
                     template.id = id;
                 }
                 return template;
@@ -60,8 +59,8 @@ export class RacePositionsHttpService {
 }
 
 function convertJsonToRacePositionTemplates(response: Response): RacePositionTemplate[] {
-    let jsonTemplates: RacePositionTemplate[] = response.json();
-    let templates: RacePositionTemplate[] = new Array<RacePositionTemplate>();
+    const jsonTemplates: RacePositionTemplate[] = response.json();
+    const templates: RacePositionTemplate[] = new Array<RacePositionTemplate>();
     jsonTemplates.map((json: RacePositionTemplate) => {
       templates.push(convertObjectToRacePositionTemplate(json));
     });

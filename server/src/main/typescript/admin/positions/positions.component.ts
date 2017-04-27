@@ -34,13 +34,13 @@ export class PositionsComponent implements OnInit {
   }
 
   public addPositionToFormArray(position: Position): void {
-    let nameControl: FormControl = this.getNameControlWithValidators(position.name);
-    let positionControl: FormControl = new FormControl(position);
-    let positionGroup = new FormGroup({
+    const nameControl: FormControl = this.getNameControlWithValidators(position.name);
+    const positionControl: FormControl = new FormControl(position);
+    const positionGroup = new FormGroup({
       name: nameControl,
       position: positionControl
     });
-    let array: FormArray = this.getPositionFormArray();
+    const array: FormArray = this.getPositionFormArray();
     array.push(positionGroup);
   }
 
@@ -62,7 +62,7 @@ export class PositionsComponent implements OnInit {
   }
 
   public onSubmit({ value, valid }: { value: Position, valid: boolean }) {
-    let position: Position = new Position();
+    const position: Position = new Position();
     position.name = value.name;
     this.positionsService.addPosition(position);
     this.addPositionForm.reset({
@@ -87,7 +87,7 @@ export class PositionsComponent implements OnInit {
 
   private validatePositionName(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
-      for (let position of this.positions) {
+      for (const position of this.positions) {
         if (position.name === control.value) {
           return { existingName: true };
         }

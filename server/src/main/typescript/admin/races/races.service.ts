@@ -20,10 +20,10 @@ export class AdminRacesService extends RacesService {
 
     public removeRace(race: Race): void {
         this.service.removeRace(race).then((r: Race) => {
-            let index = this.races.indexOf(r);
-            let sliced = this.races.splice(index, 1);
+            const index = this.races.indexOf(r);
+            const sliced = this.races.splice(index, 1);
             // reorganise race order
-            let updatedRaces = this.races.filter((raceToUpdate: Race) => {
+            const updatedRaces = this.races.filter((raceToUpdate: Race) => {
                 if (raceToUpdate.raceOrder > r.raceOrder) {
                     raceToUpdate.raceOrder = raceToUpdate.raceOrder - 1;
                     return raceToUpdate;
@@ -49,7 +49,7 @@ export class AdminRacesService extends RacesService {
     }
 
     public getRaceForId(id: number): Race {
-        for (let race of this.races) {
+        for (const race of this.races) {
             if (race.id === id) {
                 return race;
             }

@@ -14,8 +14,7 @@ import { Event } from '../../../events/event.model';
 import { Penalty } from '../../../penalties/penalty.model';
 import { Disqualification } from '../../../disqualification/disqualification.model';
 import { EntryTime } from '../../../times/entry-time.model';
-import { PositionTime, convertFromTimeStamp , convertToTimeStamp }
-    from '../../../times/postion-time.model';
+import { PositionTime, convertFromTimeStamp , convertToTimeStamp } from '../../../times/postion-time.model';
 import { EventPosition } from '../../../events/event-positions.model';
 
 import { ResultsPositionsService } from '../../positions/positions.service';
@@ -90,7 +89,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.parentRoutesSubscription = this.route.parent.params.subscribe((params: Params) => {
-            let raceId: number = +params['raceId'];
+            const raceId: number = +params['raceId'];
             if (raceId) {
                 this.raceId = +params['raceId'];
                 if (this.races && this.races.length > 0) {
@@ -100,14 +99,14 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         });
 
         this.routesSubscription = this.route.params.subscribe((params: Params) => {
-            let from: string = params['from'];
+            const from: string = params['from'];
             if (from) {
                 this.from = from;
                 if (this.positions && this.positions.length > 0) {
                     this.start = this.positionsService.getPositionForName(this.from);
                 }
             }
-            let to: string = params['to'];
+            const to: string = params['to'];
             if (to) {
                 this.to = to;
                 if (this.positions && this.positions.length > 0) {
@@ -206,9 +205,9 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
             return this.positionsForTable;
         }
         if (this.entryTimesForPositions && this.entryTimesForPositions.length > 0) {
-            let event: Event =
+            const event: Event =
                 this.eventsService.getEventForId(this.entryTimesForPositions[0].entry.event);
-            let eventPositions: EventPosition[] = event.positions;
+            const eventPositions: EventPosition[] = event.positions;
             this.positionsForTable = new Array<Position>();
             eventPositions.map((ev: EventPosition) => {
                 this.positionsForTable.push(this.positionsService.getPositionForId(ev.position));
@@ -221,8 +220,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
     public sortByAdjustedTime(direction: string): void {
         this.reverseAdjustedTimeSort = !this.reverseAdjustedTimeSort;
         this.filteredEntryTimes.sort((a, b) => {
-            let adjustedA: string = this.getAdjustedTimeForEntry(a);
-            let adjustedB: string = this.getAdjustedTimeForEntry(b);
+            const adjustedA: string = this.getAdjustedTimeForEntry(a);
+            const adjustedB: string = this.getAdjustedTimeForEntry(b);
             if (adjustedA === null) {
                 return 1;
             } else if (adjustedB === null) {
@@ -230,12 +229,12 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
             } else if (adjustedA === adjustedB) {
                 return 0;
             } else if (direction === 'up') {
-                let aTime: number = convertToTimeStamp(adjustedA);
-                let bTime: number = convertToTimeStamp(adjustedB);
+                const aTime: number = convertToTimeStamp(adjustedA);
+                const bTime: number = convertToTimeStamp(adjustedB);
                 return aTime < bTime ? -1 : 1;
             } else if (direction !== 'up') {
-                let aTime: number = convertToTimeStamp(adjustedA);
-                let bTime: number = convertToTimeStamp(adjustedB);
+                const aTime: number = convertToTimeStamp(adjustedA);
+                const bTime: number = convertToTimeStamp(adjustedB);
                 return aTime < bTime ? 1 : -1;
             }
          });
@@ -269,11 +268,11 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         }
 
         if (this.positionsForTable && entryTime.times.length > 0) {
-            let actualStartPoint: PositionTime = entryTime.times[0];
-            let event: Event = this.eventsService.getEventForId(entryTime.entry.event);
-            let eventPositions: EventPosition[] = event.positions;
-            let time: PositionTime = undefined;
-            for (let positionTime of entryTime.times) {
+            const actualStartPoint: PositionTime = entryTime.times[0];
+            const event: Event = this.eventsService.getEventForId(entryTime.entry.event);
+            const eventPositions: EventPosition[] = event.positions;
+            let time: PositionTime;
+            for (const positionTime of entryTime.times) {
                 if (positionTime.position === position.id) {
                     time = positionTime;
                     break;
@@ -304,18 +303,18 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
             return null;
         }
         if (entryTime.times && entryTime.times.length > 0) {
-            let actualStartPoint: PositionTime = entryTime.times[0];
-            let event: Event = this.eventsService.getEventForId(entryTime.entry.event);
+            const actualStartPoint: PositionTime = entryTime.times[0];
+            const event: Event = this.eventsService.getEventForId(entryTime.entry.event);
             if (event.positions.length > 0) {
-                let eventPositions: EventPosition[] = event.positions;
-                let eventFinishPoint: PositionTime = undefined;
+                const eventPositions: EventPosition[] = event.positions;
+                let eventFinishPoint: PositionTime;
                 if (entryTime.times[entryTime.times.length - 1].position
                     === eventPositions[eventPositions.length - 1].position) {
                     eventFinishPoint = entryTime.times[entryTime.times.length - 1];
                 }
                 if (eventFinishPoint && actualStartPoint) {
                     // apply penalties
-                    let penalties: number = this.getPenaltiesForEntry(entryTime);
+                    const penalties: number = this.getPenaltiesForEntry(entryTime);
                     return convertFromTimeStamp(
                         eventFinishPoint.time - actualStartPoint.time + penalties);
                 }
@@ -336,7 +335,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     public getEventNameForEntry(entry: Entry): string {
         let eventName: string;
-        let event: Event = this.eventsService.getEventForId(entry.event);
+        const event: Event = this.eventsService.getEventForId(entry.event);
         if (event) {
             eventName = event.name;
         }
@@ -345,8 +344,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     public getClubNamesForEntry(entry: Entry): string {
         let clubs: string;
-        for (let clubId of entry.clubs) {
-            let club: Club = this.clubsService.getClubForId(clubId);
+        for (const clubId of entry.clubs) {
+            const club: Club = this.clubsService.getClubForId(clubId);
             if (club) {
                 if (!clubs) {
                     clubs = club.clubName;
@@ -365,9 +364,9 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
     }
 
     private getPositionOrder(entry: Entry, positonId: number): number {
-        let event: Event = this.eventsService.getEventForId(entry.event);
-        let eventPositions: EventPosition[] = event.positions;
-        for (let ep of eventPositions) {
+        const event: Event = this.eventsService.getEventForId(entry.event);
+        const eventPositions: EventPosition[] = event.positions;
+        for (const ep of eventPositions) {
             if (ep.position === positonId) {
                 return ep.positionOrder;
             }
@@ -377,11 +376,11 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     private sortTimesByEntryPositionOrder(times: EntryTime[]): void {
         if (times && this.positionsForTable) {
-            for (let entryTime of times) {
+            for (const entryTime of times) {
                 entryTime.times.sort((t1: PositionTime, t2: PositionTime) => {
-                    let t1PositionOrder: number =
+                    const t1PositionOrder: number =
                         this.getPositionOrder(entryTime.entry, t1.position);
-                    let t2PositionOrder: number =
+                    const t2PositionOrder: number =
                         this.getPositionOrder(entryTime.entry, t2.position);
                     if (t1PositionOrder < t2PositionOrder) {
                         return -1;
@@ -402,8 +401,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
                     this.positionsForTable = undefined;
                     this.entryTimes = data;
                     this.entryTimesForPositions = data.filter((entrytime: EntryTime) => {
-                        let event: Event = this.eventsService.getEventForId(entrytime.entry.event);
-                        let eventPositions: EventPosition[] = event.positions;
+                        const event: Event = this.eventsService.getEventForId(entrytime.entry.event);
+                        const eventPositions: EventPosition[] = event.positions;
                         if (eventPositions.length === 0) {
                             return false;
                         }
@@ -423,7 +422,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     private isDisqualified(entry: EntryTime): boolean {
         if (this.disqualifications) {
-            let disqualifed: Disqualification = this.disqualifications
+            const disqualifed: Disqualification = this.disqualifications
                 .filter((disqualification: Disqualification) =>
                     disqualification.entry === entry.entry.id).shift();
             if (disqualifed) {
@@ -479,8 +478,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     private filterClubs(entryTimes: EntryTime[], value: string): EntryTime[] {
         return entryTimes.filter((entryTime: EntryTime) => {
-            for (let clubId of entryTime.entry.clubs) {
-                let club: Club = this.clubsService.getClubForId(clubId);
+            for (const clubId of entryTime.entry.clubs) {
+                const club: Club = this.clubsService.getClubForId(clubId);
                 if (club) {
                     if (club.clubName.includes(value)) {
                         return entryTime;
@@ -492,7 +491,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
 
     private filterEvents(entryTimes: EntryTime[], value: string): EntryTime[] {
         return entryTimes.filter((entryTime: EntryTime) => {
-            let event: Event = this.eventsService.getEventForId(entryTime.entry.event);
+            const event: Event = this.eventsService.getEventForId(entryTime.entry.event);
             if (event) {
                 if (event.name.includes(value)) {
                     return entryTime;

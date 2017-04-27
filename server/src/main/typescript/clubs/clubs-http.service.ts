@@ -18,8 +18,8 @@ export class ClubsHttpService {
 }
 
 export function convertResponseToClubs(response: Response): Club[] {
-    let jsonClubs: Club[] = response.json();
-    let clubs: Club[] = new Array<Club>();
+    const jsonClubs: Club[] = response.json();
+    const clubs: Club[] = new Array<Club>();
     jsonClubs.map((json: Club) => {
       clubs.push(convertObjectToClub(json));
     });

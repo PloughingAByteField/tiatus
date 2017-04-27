@@ -47,20 +47,20 @@ export class EventsService implements OnDestroy {
     public processMessage(message: Message): void {
         console.log('process message');
         console.log(message);
-        let event: Event = convertObjectToEvent(message.data);
+        const event: Event = convertObjectToEvent(message.data);
         console.log(event);
         if (message.type === MessageType.ADD) {
             this.events.push(event);
 
         } else if (message.type === MessageType.DELETE) {
-            let deletedEvent: Event = this.getEventForId(event.id);
+            const deletedEvent: Event = this.getEventForId(event.id);
             if (deletedEvent !== null) {
-                let index = this.events.indexOf(deletedEvent);
-                let sliced = this.events.splice(index, 1);
+                const index = this.events.indexOf(deletedEvent);
+                const sliced = this.events.splice(index, 1);
             }
 
         } else if (message.type === MessageType.UPDATE) {
-            let updatedEvent: Event = this.getEventForId(event.id);
+            const updatedEvent: Event = this.getEventForId(event.id);
             if (updatedEvent !== null) {
                 updatedEvent.name = event.name;
                 updatedEvent.positions = event.positions;
@@ -72,7 +72,7 @@ export class EventsService implements OnDestroy {
     }
 
     public getEventForId(eventId: number): Event {
-        for (let event of this.events) {
+        for (const event of this.events) {
             if (event.id === eventId) {
                 return event;
             }

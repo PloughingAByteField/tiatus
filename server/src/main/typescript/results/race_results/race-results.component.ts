@@ -89,8 +89,8 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         this.route.params.subscribe((params: Params) => {
             this.raceId = +params['raceId'];
             this.setRaceForRaceId(this.raceId);
-            let url: string = this.router.routerState.snapshot.url;
-            let count = (url.match(/\//g) || []).length;
+            const url: string = this.router.routerState.snapshot.url;
+            const count = (url.match(/\//g) || []).length;
             if (count === 2) {
                 this.isDefaulting = true;
             }
@@ -120,8 +120,8 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                 .subscribe((raceEntries: Entry[]) => {
                     this.entriesForRace = raceEntries;
                     this.eventsAtPositions = new Array<EventsAtPositions>();
-                    for (let entry of raceEntries) {
-                        let event: Event = this.eventsService.getEventForId(entry.event);
+                    for (const entry of raceEntries) {
+                        const event: Event = this.eventsService.getEventForId(entry.event);
                         if (event === null) {
                             continue;
                         }
@@ -135,14 +135,14 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                         }
 
                         if (this.eventsAtPositions.length === 0) {
-                            let eventsAtPosition: EventsAtPositions = new EventsAtPositions();
+                            const eventsAtPosition: EventsAtPositions = new EventsAtPositions();
                             eventsAtPosition.events.push(event);
                             eventsAtPosition.finish = finish;
                             eventsAtPosition.start = start;
                             this.eventsAtPositions.push(eventsAtPosition);
                         } else {
                             let found: boolean = false;
-                            for (let ep of this.eventsAtPositions) {
+                            for (const ep of this.eventsAtPositions) {
                                 let matchingPosition: boolean = false;
                                 if (ep.finish && finish && ep.finish.id === finish.id
                                     && ep.start && start && ep.start.id === start.id) {
@@ -154,7 +154,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                                 }
                                 if (matchingPosition) {
                                     let newEvent: boolean = true;
-                                    for (let epEvent of ep.events) {
+                                    for (const epEvent of ep.events) {
                                         if (epEvent.id === event.id) {
                                             newEvent = false;
                                             break;
@@ -168,7 +168,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                                 }
                             }
                             if (!found) {
-                                let eventsAtPosition: EventsAtPositions = new EventsAtPositions();
+                                const eventsAtPosition: EventsAtPositions = new EventsAtPositions();
                                 eventsAtPosition.events.push(event);
                                 eventsAtPosition.finish = finish;
                                 eventsAtPosition.start = start;
@@ -179,7 +179,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
 
                     if (this.isDefaulting) {
                         if (this.eventsAtPositions.length > 0) {
-                            let eventsAtPosition: EventsAtPositions = this.eventsAtPositions[0];
+                            const eventsAtPosition: EventsAtPositions = this.eventsAtPositions[0];
                             if (eventsAtPosition.start !== null
                                 && eventsAtPosition.finish !== null) {
                                 this.router.navigate([

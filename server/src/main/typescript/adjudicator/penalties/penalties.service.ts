@@ -25,8 +25,8 @@ export class AdjudicatorPenaltiesService extends PenaltiesService {
 
     public removePenalty(penalty: Penalty): void {
         this.service.removePenalty(penalty).then(() => {
-            let index = this.penalties.indexOf(penalty);
-            let sliced = this.penalties.splice(index, 1);
+            const index = this.penalties.indexOf(penalty);
+            const sliced = this.penalties.splice(index, 1);
             this.penaltiesSubject.next(this.penalties);
         });
     }
@@ -46,18 +46,18 @@ export class AdjudicatorPenaltiesService extends PenaltiesService {
 
     public processPenaltyMessage(message: Message): void {
         console.log('process message');
-        let penalty: Penalty = convertObjectToPenalty(message.data);
+        const penalty: Penalty = convertObjectToPenalty(message.data);
         console.log(penalty);
         if (message.type === MessageType.ADD) {
             this.penalties.push(penalty);
         } else if (message.type === MessageType.DELETE) {
-            let deletedPenalty: Penalty = this.getPenaltyForId(penalty.id);
+            const deletedPenalty: Penalty = this.getPenaltyForId(penalty.id);
             if (deletedPenalty !== null) {
-                let index = this.penalties.indexOf(deletedPenalty);
-                let sliced = this.penalties.splice(index, 1);
+                const index = this.penalties.indexOf(deletedPenalty);
+                const sliced = this.penalties.splice(index, 1);
             }
         } else if (message.type === MessageType.UPDATE) {
-            let updatedPenalty: Penalty = this.getPenaltyForId(penalty.id);
+            const updatedPenalty: Penalty = this.getPenaltyForId(penalty.id);
             if (updatedPenalty !== null) {
                 updatedPenalty.comment = penalty.comment;
                 updatedPenalty.entry = penalty.entry;
@@ -70,7 +70,7 @@ export class AdjudicatorPenaltiesService extends PenaltiesService {
     }
 
     public getPenaltyForId(penaltyId: number): Penalty {
-        for (let penalty of this.penalties) {
+        for (const penalty of this.penalties) {
             if (penalty.id === penaltyId) {
                 return penalty;
             }

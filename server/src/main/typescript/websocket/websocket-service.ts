@@ -23,9 +23,9 @@ export class WebSocketService {
         protected positionsService: PositionsService,
         protected racesService: RacesService,
         protected ws: WebSocketWSService) {
-        let url: string = window.location.host;
+        const url: string = window.location.host;
         let secure: boolean = false;
-        let protocol: string = window.location.protocol;
+        const protocol: string = window.location.protocol;
         if (protocol === 'https:') {
             secure = true;
         }
@@ -53,7 +53,7 @@ export class WebSocketService {
     }
 
     protected onMessage(data: string): void {
-        let message: Message = convertObjectToMessage(JSON.parse(data));
+        const message: Message = convertObjectToMessage(JSON.parse(data));
         if (message.objectType === 'Race') {
             this.racesService.processMessage(message);
         } else if (message.objectType === 'Position') {

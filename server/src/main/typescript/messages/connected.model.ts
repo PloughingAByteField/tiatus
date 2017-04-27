@@ -5,8 +5,7 @@ export class Connected {
 }
 
 export function convertObjectToConnected(data: Connected): Connected {
-    console.log(data);
-    let connected: Connected = new Connected();
+    const connected: Connected = new Connected();
     connected.userName = data.userName;
     connected.role = data.role;
     connected.position = data.position;

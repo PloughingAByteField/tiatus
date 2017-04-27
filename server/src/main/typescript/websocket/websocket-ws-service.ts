@@ -33,7 +33,7 @@ export class WebSocketWSService {
     private waitForConnected(): void {
         if (this.ws && this.ws.readyState === this.ws.OPEN) {
             while (this.queued.length > 0) {
-                let message: string = this.queued.shift();
+                const message: string = this.queued.shift();
                 this.ws.send(message);
             }
         } else if (this.ws.readyState === this.ws.CONNECTING) {

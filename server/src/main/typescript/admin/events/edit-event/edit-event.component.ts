@@ -126,14 +126,14 @@ export class EditEventComponent implements OnInit, OnDestroy {
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log('on submit');
     console.log(this.selectedEvent);
-    let updatedEvent: Event = new Event();
+    const updatedEvent: Event = new Event();
     updatedEvent.id = this.selectedEvent.id;
     updatedEvent.name = this.editEventForm.get('name').value;
     updatedEvent.positions = new Array<EventPosition>();
-    let array: FormArray = this.editEventForm.get('positions') as FormArray;
-    for (let group of array.controls) {
+    const array: FormArray = this.editEventForm.get('positions') as FormArray;
+    for (const group of array.controls) {
       console.log(group);
-      let eventPosition: EventPosition = new EventPosition();
+      const eventPosition: EventPosition = new EventPosition();
       eventPosition.event = this.selectedEvent.id;
       eventPosition.position = +group.get('position').value;
       eventPosition.positionOrder = +group.get('positionOrder').value;
@@ -144,14 +144,14 @@ export class EditEventComponent implements OnInit, OnDestroy {
   }
 
   public removePosition(index: number): void {
-    let array: FormArray = this.editEventForm.get('positions') as FormArray;
+    const array: FormArray = this.editEventForm.get('positions') as FormArray;
     for (let i = index + 1; i < array.controls.length; i++) {
-      let group: FormGroup = array.controls[i] as FormGroup;
-      let orderValue: number = group.get('positionOrder').value;
-      let orderControl: AbstractControl = group.get('positionOrder');
+      const group: FormGroup = array.controls[i] as FormGroup;
+      const orderValue: number = group.get('positionOrder').value;
+      const orderControl: AbstractControl = group.get('positionOrder');
       orderControl.setValue(orderValue - 1);
     }
-    let group: FormGroup = array.controls[index] as FormGroup;
+    const group: FormGroup = array.controls[index] as FormGroup;
     array.removeAt(index);
     group.removeControl('position');
     group.removeControl('positionOrder');
@@ -161,9 +161,9 @@ export class EditEventComponent implements OnInit, OnDestroy {
   }
 
   public addPosition(): void {
-    let newPosition: Position = this.editEventForm.get('newPosition').value;
-    let array: FormArray = this.editEventForm.get('positions') as FormArray;
-    let newEventPosition: EventPosition = new EventPosition();
+    const newPosition: Position = this.editEventForm.get('newPosition').value;
+    const array: FormArray = this.editEventForm.get('positions') as FormArray;
+    const newEventPosition: EventPosition = new EventPosition();
     newEventPosition.event = this.selectedEvent.id;
     newEventPosition.position = newPosition.id;
     newEventPosition.positionOrder = 1;
@@ -183,7 +183,7 @@ export class EditEventComponent implements OnInit, OnDestroy {
   }
 
   public getPositionNameForPositionId(positionId: number) {
-    for (let position of this.positions) {
+    for (const position of this.positions) {
       if (position.id === positionId) {
         return position.name;
       }
@@ -206,7 +206,7 @@ export class EditEventComponent implements OnInit, OnDestroy {
       }
 
       console.log(this.editEventForm.get('positions').dirty);
-      let array: FormArray = this.editEventForm.get('positions') as FormArray;
+      const array: FormArray = this.editEventForm.get('positions') as FormArray;
       if (this.editEventForm.get('positions').dirty) {
         if (array.controls.length !== this.selectedEvent.positions.length) {
           console.log('have position addition/removal');
@@ -216,17 +216,17 @@ export class EditEventComponent implements OnInit, OnDestroy {
             return false;
           }
         }
-        for (let group of array.controls) {
+        for (const group of array.controls) {
           if (group.dirty) {
-            let eventPosition: EventPosition = group.get('eventPosition').value;
+            const eventPosition: EventPosition = group.get('eventPosition').value;
             console.log(eventPosition);
-            let position: number = group.get('position').value;
+            const position: number = group.get('position').value;
             console.log(position);
             if (eventPosition.position !== +position) {
               console.log('changed position');
               return true;
             }
-            let index: number = array.controls.indexOf(group);
+            const index: number = array.controls.indexOf(group);
             console.log('index is ' + index);
             if (this.selectedEvent.positions[index].position !== +position) {
               console.log('mismatched positions');
@@ -247,7 +247,7 @@ export class EditEventComponent implements OnInit, OnDestroy {
   }
 
   private getRaceForId(raceId: number): Race {
-    for (let race of this.races) {
+    for (const race of this.races) {
       if (race.id === raceId) {
         return race;
       }
@@ -256,7 +256,7 @@ export class EditEventComponent implements OnInit, OnDestroy {
   }
 
   private getRaceContainingEvent(event: Event): Race {
-    for (let raceEvent of this.raceEvents) {
+    for (const raceEvent of this.raceEvents) {
       if (raceEvent.event === event.id) {
         return this.getRaceForId(raceEvent.race);
       }
@@ -268,7 +268,7 @@ export class EditEventComponent implements OnInit, OnDestroy {
     if (event !== null) {
       this.eventInRace = this.getRaceContainingEvent(event);
       if (this.eventInRace !== null) {
-        let raceEvents: RaceEvent[] = this.raceEvents
+        const raceEvents: RaceEvent[] = this.raceEvents
           .filter((raceEvent: RaceEvent) => raceEvent.race === this.eventInRace.id);
         this.eventsInRace = new Array<Event>();
         raceEvents.map((raceEvent: RaceEvent) =>
@@ -279,10 +279,10 @@ export class EditEventComponent implements OnInit, OnDestroy {
 
   private addPositionToForm(
     eventPosition: EventPosition, positionsFormArray: FormArray, markDirty: boolean): void {
-    let eventPositionControl: FormControl = this.fb.control(eventPosition);
-    let positionControl: FormControl = this.fb.control(eventPosition.position);
-    let positionOrderControl: FormControl = this.fb.control(eventPosition.positionOrder);
-    let group: FormGroup = this.fb.group({
+    const eventPositionControl: FormControl = this.fb.control(eventPosition);
+    const positionControl: FormControl = this.fb.control(eventPosition.position);
+    const positionOrderControl: FormControl = this.fb.control(eventPosition.positionOrder);
+    const group: FormGroup = this.fb.group({
       eventPosition: eventPositionControl,
       position: positionControl,
       positionOrder: positionOrderControl
@@ -302,8 +302,8 @@ export class EditEventComponent implements OnInit, OnDestroy {
     if (this.selectedEvent !== null) {
       this.populateEventsForRace(this.selectedEvent);
       this.editEventForm.get('name').setValue(event.name);
-      let positionsFormArray: FormArray = this.fb.array([]);
-      for (let eventPosition of this.selectedEvent.positions) {
+      const positionsFormArray: FormArray = this.fb.array([]);
+      for (const eventPosition of this.selectedEvent.positions) {
         this.addPositionToForm(eventPosition, positionsFormArray, false);
       }
       this.editEventForm.setControl('positions', positionsFormArray);
@@ -313,7 +313,7 @@ export class EditEventComponent implements OnInit, OnDestroy {
 
   private getEventForId(eventId: number): Event {
     if (this.events) {
-      for (let event of this.events) {
+      for (const event of this.events) {
         if (event.id === eventId) {
           return event;
         }
@@ -331,9 +331,9 @@ export class EditEventComponent implements OnInit, OnDestroy {
   }
 
   private positionInForm(position: Position): boolean {
-    let array: FormArray = this.editEventForm.get('positions') as FormArray;
-    for (let control of array.controls) {
-      let p: EventPosition = control.get('eventPosition').value;
+    const array: FormArray = this.editEventForm.get('positions') as FormArray;
+    for (const control of array.controls) {
+      const p: EventPosition = control.get('eventPosition').value;
       if (position.id === p.position) {
         return true;
       }
@@ -346,11 +346,11 @@ export class EditEventComponent implements OnInit, OnDestroy {
       if (control.dirty) {
         console.log(control.value);
         if (control.get('position')) {
-          let position: number = +control.get('position').value as number;
-          let array: FormArray =  this.editEventForm.get('positions') as FormArray;
-          for (let group of array.controls) {
+          const position: number = +control.get('position').value as number;
+          const array: FormArray =  this.editEventForm.get('positions') as FormArray;
+          for (const group of array.controls) {
             if (control !== group) {
-              let groupPositon: number = +group.get('position').value as number;
+              const groupPositon: number = +group.get('position').value as number;
               if (position === groupPositon) {
                 console.log('have same position');
                 return { existingPosition: true };
@@ -367,14 +367,14 @@ export class EditEventComponent implements OnInit, OnDestroy {
     return (control: AbstractControl): { [key: string]: any } => {
       if (this.selectedEvent) {
         if (this.eventInRace) {
-          for (let event of this.eventsInRace) {
+          for (const event of this.eventsInRace) {
             if (event.name === control.value && event.name !== this.selectedEvent.name) {
               console.log('match for ' + event.name);
               return { existingName: true };
             }
           }
         } else {
-          for (let event of this.unassignedEvents) {
+          for (const event of this.unassignedEvents) {
             if (event.name === control.value && event.name !== this.selectedEvent.name) {
               console.log('match for ' + event.name);
               return { existingName: true };

@@ -21,8 +21,8 @@ export class EntriesHttpService {
  }
 
 function convertResponseToEntries(response: Response): Entry[] {
-    let jsonEntries: Entry[] = response.json();
-    let entries: Entry[] = new Array<Entry>();
+    const jsonEntries: Entry[] = response.json();
+    const entries: Entry[] = new Array<Entry>();
     jsonEntries.map((entry: Entry) => {
       entries.push(convertObjectToEntry(entry));
     });

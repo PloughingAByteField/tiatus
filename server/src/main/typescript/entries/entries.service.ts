@@ -37,7 +37,7 @@ export class EntriesService {
     }
 
     public refreshForRace(race: Race): void {
-        let subject: RaceEntriesSubject
+        const subject: RaceEntriesSubject
                 = this.raceEntries.filter((s: RaceEntriesSubject) => s.race.id === race.id).shift();
 
         if (subject) {
@@ -49,7 +49,7 @@ export class EntriesService {
     }
 
     public getEntriesForRace(race: Race): BehaviorSubject<Entry[]> {
-        let subject: RaceEntriesSubject
+        const subject: RaceEntriesSubject
             = this.raceEntries.filter((s: RaceEntriesSubject) => {
                 if (s.race.id === race.id) {
                     return;
@@ -60,7 +60,7 @@ export class EntriesService {
             return subject.subject;
         } else {
             // create new RaceEntriesSubject
-            let raceEntriesSubject: RaceEntriesSubject = new RaceEntriesSubject();
+            const raceEntriesSubject: RaceEntriesSubject = new RaceEntriesSubject();
             raceEntriesSubject.race = race;
             this.raceEntries.push(raceEntriesSubject);
             this.service.getEntriesForRace(race).subscribe((entries: Entry[]) => {
@@ -74,20 +74,20 @@ export class EntriesService {
     public processMessage(message: Message): void {
         console.log('process message');
         console.log(message);
-        let entry: Entry = convertObjectToEntry(message.data);
+        const entry: Entry = convertObjectToEntry(message.data);
         console.log(entry);
         if (message.type === MessageType.ADD) {
             this.entries.push(entry);
 
         } else if (message.type === MessageType.DELETE) {
-            let deletedEntry: Entry = this.getEntryForId(entry.id);
+            const deletedEntry: Entry = this.getEntryForId(entry.id);
             if (deletedEntry !== null) {
-                let index = this.entries.indexOf(deletedEntry);
-                let sliced = this.entries.splice(index, 1);
+                const index = this.entries.indexOf(deletedEntry);
+                const sliced = this.entries.splice(index, 1);
             }
 
         } else if (message.type === MessageType.UPDATE) {
-            let updatedEntry: Entry = this.getEntryForId(entry.id);
+            const updatedEntry: Entry = this.getEntryForId(entry.id);
             if (updatedEntry !== null) {
                 updatedEntry.clubs = entry.clubs;
                 updatedEntry.crew = entry.crew;
@@ -104,7 +104,7 @@ export class EntriesService {
     }
 
     public getEntryForId(entryId: number): Entry {
-        for (let entry of this.entries) {
+        for (const entry of this.entries) {
             if (entry.id === entryId) {
                 return entry;
             }

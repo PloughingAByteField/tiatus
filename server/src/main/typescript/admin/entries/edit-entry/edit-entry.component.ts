@@ -175,10 +175,10 @@ export class EditEntryComponent implements OnInit, OnDestroy {
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log('on submit');
     console.log(value);
-    let entry: Entry = new Entry();
+    const entry: Entry = new Entry();
     entry.id = this.entry.id;
     entry.clubs = new Array<number>();
-    for (let club of value.clubs) {
+    for (const club of value.clubs) {
       entry.clubs.push(club.id);
     }
     entry.event = value.event.id;
@@ -208,7 +208,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
     if (this.editEntryForm.get('eventsType').value === 'unassigned') {
       return 'unassigned';
     }
-    for (let raceEvent of this.raceEvents) {
+    for (const raceEvent of this.raceEvents) {
       if (raceEvent.event === event.id) {
         return this.racesService.getRaceForId(raceEvent.race).name;
       }
@@ -217,7 +217,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
   }
 
   private isEventInUnassigned(): boolean {
-    for (let e of this.unassignedEvents) {
+    for (const e of this.unassignedEvents) {
       if (e.id === this.selectedEvent.id) {
         return true;
       }
@@ -226,8 +226,8 @@ export class EditEntryComponent implements OnInit, OnDestroy {
   }
 
   private isEventIsInRace(): boolean {
-    let raceForEntry: Race = this.racesService.getRaceForId(this.entry.race);
-    for (let raceEvent of this.raceEvents) {
+    const raceForEntry: Race = this.racesService.getRaceForId(this.entry.race);
+    for (const raceEvent of this.raceEvents) {
       if (raceEvent.event === this.selectedEvent.id) {
         console.log(raceEvent);
         if (raceForEntry.id === raceEvent.race) {
@@ -253,7 +253,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
 
   private setEventsToOtherRaces(): void {
     this.eventsForRace = this.getEventsNotInRace(this.selectedRace);
-    let selectedEventInRace: boolean = false;
+    const selectedEventInRace: boolean = false;
     if (this.eventsForRace.length > 0) {
      if (!this.isEventIsInRace()) {
         this.editEntryForm.get('event').setValue(this.selectedEvent);
@@ -265,7 +265,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
 
   private setEventsToUnassigned(): void {
     this.eventsForRace = this.unassignedEvents;
-    let selectedEventInUassigned: boolean = false;
+    const selectedEventInUassigned: boolean = false;
     if (this.eventsForRace.length > 0) {
       if (this.isEventInUnassigned()) {
         this.editEntryForm.get('event').setValue(this.selectedEvent);
@@ -276,11 +276,11 @@ export class EditEntryComponent implements OnInit, OnDestroy {
   }
 
   private getEventsForRace(race: Race): Event[] {
-    let raceEventsForRace: RaceEvent[] = this.raceEvents
+    const raceEventsForRace: RaceEvent[] = this.raceEvents
       .filter((raceEvent: RaceEvent) => raceEvent.race === race.id);
-    let eventsForRace: Event[] = new Array<Event>();
+    const eventsForRace: Event[] = new Array<Event>();
     raceEventsForRace.map((raceEvent: RaceEvent) => {
-      for (let event of this.events) {
+      for (const event of this.events) {
         if (event.id === raceEvent.event) {
           eventsForRace.push(event);
           break;
@@ -291,11 +291,11 @@ export class EditEntryComponent implements OnInit, OnDestroy {
   }
 
   private getEventsNotInRace(race: Race): Event[] {
-    let raceEventsForRace: RaceEvent[] = this.raceEvents
+    const raceEventsForRace: RaceEvent[] = this.raceEvents
       .filter((raceEvent: RaceEvent) => raceEvent.race !== race.id);
-    let eventsForRace: Event[] = new Array<Event>();
+    const eventsForRace: Event[] = new Array<Event>();
     raceEventsForRace.map((raceEvent: RaceEvent) => {
-      for (let event of this.events) {
+      for (const event of this.events) {
         if (event.id === raceEvent.event) {
           eventsForRace.push(event);
           break;
@@ -312,7 +312,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
   private setEntry(entryId: number): void {
     if (this.entries.length > 0 && this.events.length > 0
       && this.races.length > 0 && this.raceEvents.length > 0) {
-      for (let entry of this.entries) {
+      for (const entry of this.entries) {
         if (entry.id ===  entryId) {
           this.entry = entry;
           this.selectedEvent = this.eventsService.getEventForId(this.entry.event);
@@ -325,15 +325,15 @@ export class EditEntryComponent implements OnInit, OnDestroy {
 
   private setEntryDetailsInForm(entry: Entry): void {
     if (this.editEntryForm) {
-      let race: Race = this.racesService.getRaceForId(entry.race);
+      const race: Race = this.racesService.getRaceForId(entry.race);
       this.selectedRace = race;
-      let event: Event = this.eventsService.getEventForId(entry.event);
+      const event: Event = this.eventsService.getEventForId(entry.event);
       this.editEntryForm.get('race').setValue(race);
       this.editEntryForm.get('event').setValue(event);
       this.editEntryForm.get('crew').setValue(entry.crew);
-      let clubs: Club[] = new Array<Club>();
-      for (let clubId of entry.clubs) {
-        let club = this.clubsService.getClubForId(clubId);
+      const clubs: Club[] = new Array<Club>();
+      for (const clubId of entry.clubs) {
+        const club = this.clubsService.getClubForId(clubId);
         if (club) {
           clubs.push(club);
         }

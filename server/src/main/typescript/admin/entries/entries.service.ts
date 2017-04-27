@@ -22,7 +22,7 @@ export class AdminEntriesService extends EntriesService {
 
     public removeEntry(entry: Entry): Promise<Entry> {
         return new Promise((resolve) => this.service.removeEntry(entry).then((e: Entry) => {
-            let index = this.entries.indexOf(entry);
+            const index = this.entries.indexOf(entry);
             this.entries.splice(index, 1);
             this.subject.next(this.entries);
             resolve(e);

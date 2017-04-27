@@ -35,8 +35,7 @@ import { DisqualificationHttpService } from '../disqualification/disqualificatio
 import { PositionsService } from '../positions/positions.service';
 import { PositionsHttpService } from '../positions/positions-http.service';
 
-import { AdjudicatorHttpDisqualificationsService }
-    from './disqualification/disqualification-http.service';
+import { AdjudicatorHttpDisqualificationsService } from './disqualification/disqualification-http.service';
 import { AdjudicatorDisqualificationService } from './disqualification/disqualification.service';
 import { AdjudicatorHttpPenaltiesService } from './penalties/penalties-http.service';
 import { AdjudicatorPenaltiesService } from './penalties/penalties.service';

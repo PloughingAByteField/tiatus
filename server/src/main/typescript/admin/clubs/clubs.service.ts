@@ -21,7 +21,7 @@ export class AdminClubsService extends ClubsService {
 
     public removeClub(club: Club): void {
         this.service.removeClub(club).then((c: Club) => {
-            let index = this.clubs.indexOf(c);
+            const index = this.clubs.indexOf(c);
             this.clubs.splice(index, 1);
             this.subject.next(this.clubs);
         });
@@ -29,7 +29,7 @@ export class AdminClubsService extends ClubsService {
 
     public updateClub(club: Club): void {
         this.service.updateClub(club).then((c: Club) => {
-            let updatedClub = this.getClubForId(c.id);
+            const updatedClub = this.getClubForId(c.id);
             if (updatedClub !== null) {
                 updatedClub.clubName = c.clubName;
             }
@@ -38,7 +38,7 @@ export class AdminClubsService extends ClubsService {
     }
 
     public getClubForId(clubId: number): Club {
-        for (let club of this.clubs) {
+        for (const club of this.clubs) {
             if (club.id === clubId) {
                 return club;
             }

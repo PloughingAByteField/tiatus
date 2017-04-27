@@ -12,7 +12,7 @@ export class Entry {
 }
 
 export function convertObjectToEntry(obj: any): Entry {
-    let entry: Entry = new Entry();
+    const entry: Entry = new Entry();
     entry.clubs = new Array<number>();
     obj.clubs.forEach((club: number) => entry.clubs.push(club));
     entry.number = obj.number;

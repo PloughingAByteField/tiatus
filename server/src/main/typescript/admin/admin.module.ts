@@ -45,10 +45,8 @@ import { RacesHttpService } from '../races/races-http.service';
 import { RacePositionsService } from './race-positions/race-positions.service';
 import { RacePositionsHttpService } from './race-positions/race-positions-http.service';
 
-import { RacePositionTemplatesService } from
-  './race-position-templates/race-position-templates.service';
-import { RacePositionTemplatesHttpService } from
-  './race-position-templates/race-position-templates-http.service';
+import { RacePositionTemplatesService } from './race-position-templates/race-position-templates.service';
+import { RacePositionTemplatesHttpService } from './race-position-templates/race-position-templates-http.service';
 
 import { AdminConfigService } from './config/config.service';
 import { AdminConfigHttpService } from './config/config-http.service';

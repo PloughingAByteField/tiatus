@@ -7,7 +7,7 @@ export class Message {
 }
 
 export function convertObjectToMessage(obj: any): Message {
-    let mesage: Message = new Message();
+    const mesage: Message = new Message();
     mesage.type = convertStringToMessageType(obj.type);
     mesage.data = obj.data;
     mesage.objectType = obj.objectType;

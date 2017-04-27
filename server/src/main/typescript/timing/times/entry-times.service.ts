@@ -49,7 +49,7 @@ export class TimingEntryTimesService extends EntryTimesService {
     public getTimesForPositionInRace(position: Position, race: Race): Subject<EntryTime[]> {
         let entries: Entry[];
         let times: EntryTime[] = new Array<EntryTime>();
-        let subject: Subject<EntryTime[]> = new BehaviorSubject<EntryTime[]>(times);
+        const subject: Subject<EntryTime[]> = new BehaviorSubject<EntryTime[]>(times);
         this.entriesService.getEntriesForRace(race).subscribe((entriesData: Entry[]) => {
             entries = entriesData;
             this.timesService.getTimesForPositionInRace(position, race)

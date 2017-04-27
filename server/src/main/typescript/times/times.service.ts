@@ -16,7 +16,7 @@ export class TimesService {
     constructor(protected service: TimesHttpService) {}
 
     public getTimesForRace(race: Race): BehaviorSubject<EntryTime[]> {
-        let subject: RaceTimesSubject
+        const subject: RaceTimesSubject
             = this.raceEntries.filter((s: RaceTimesSubject) => {
                 if (s.race.id === race.id) {
                     return;
@@ -26,7 +26,7 @@ export class TimesService {
         if (subject) {
             return subject.subject;
         } else {
-            let raceTimesSubject: RaceTimesSubject = new RaceTimesSubject();
+            const raceTimesSubject: RaceTimesSubject = new RaceTimesSubject();
             raceTimesSubject.race = race;
             this.raceEntries.push(raceTimesSubject);
             this.service.getTimesForRace(race).subscribe((times: EntryTime[]) => {
@@ -38,7 +38,7 @@ export class TimesService {
     }
 
     public refreshForRace(race: Race): void {
-        let subject: RaceTimesSubject
+        const subject: RaceTimesSubject
                 = this.raceEntries.filter((s: RaceTimesSubject) => s.race.id === race.id).shift();
         if (subject) {
             this.service.getTimesForRace(race).subscribe((times: EntryTime[]) => {
