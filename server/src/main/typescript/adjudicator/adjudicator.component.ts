@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title }     from '@angular/platform-browser';
 
 import { Observable } from 'rxjs/Observable';
@@ -25,7 +25,7 @@ import { AdjudicatorWebSocketService } from './websocket/websocket-service';
   ],
   templateUrl: './adjudicator.component.html'
 })
-export class AdjudicatorComponent implements OnInit {
+export class AdjudicatorComponent implements OnInit, OnDestroy {
   public races: Observable<Race[]>;
   public message: ConverstationMessage;
   public connected: Connected[];

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -14,7 +14,7 @@ import { AdminWebSocketService } from './websocket/websocket-service';
   ],
   templateUrl: './admin.component.html'
 })
-export class AdminComponent {
+export class AdminComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
