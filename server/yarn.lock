@@ -968,7 +968,7 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-codelyzer@^3.0.0-beta.4:
+codelyzer@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/codelyzer/-/codelyzer-3.0.0.tgz#b33eb4886271b5d8209a0dfa4a20fc27eefa4029"
   dependencies:
@@ -6107,16 +6107,9 @@ write-file-atomic@^1.1.2:
     imurmurhash "^0.1.4"
     slide "^1.1.5"
 
-ws@1.1.2:
+ws@1.1.2, ws@^1.0.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.2.tgz#8a244fa052401e08c9886cf44a85189e1fd4067f"
-  dependencies:
-    options ">=0.0.5"
-    ultron "1.0.x"
-
-ws@^1.0.1:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.4.tgz#57f40d036832e5f5055662a397c4de76ed66bf61"
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
