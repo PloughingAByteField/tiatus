@@ -17,7 +17,7 @@
                 <label>{{ 'PASSWORD' | translate }}:</label>
                 <input type="password" id="password" formControlName="password" placeholder="{{ 'ENTER_PASSWORD' | translate }}">
                 <div *ngIf="loginForm.get('password').errors && loginForm.get('password').touched" class="alert alert-danger">
-                    <div id="pwdRequired" [hidden]="!loginForm.get('password').hasError('required')">{{ 'PASSWORD_REQUIRED' | translate }}</div>
+                    <div id="pwdRequired" [hidden]="!loginForm.get('password').hasError('required')">{{ 'PASSWORD_IS_REQUIRED' | translate }}</div>
                     <div id="pwdMinLength" [hidden]="!loginForm.get('password').hasError('minlength')">{{ 'PASSWORD_TOO_SHORT' | translate }}</div>
                     <div id="pwdMaxLength" [hidden]="!loginForm.get('password').hasError('maxlength')">{{ 'PASSWORD_TOO_LONG' | translate }}</div>
                 </div>

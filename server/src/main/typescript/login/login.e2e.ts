@@ -45,7 +45,7 @@ describe('Login', () => {
     expect(element(by.id('pwdMaxLength')).isPresent()).toBeFalsy();
   });
 
-  it('should have warning on not enough chars in user name being required and submit button disabled', () => {
+  it('should have warning on user name being required and submit button disabled', () => {
     expect(element(by.id('submit')).isEnabled()).toBe(false);
     const subject = element(by.id('userRequired'));
     expect(subject.isPresent()).toBeFalsy();
@@ -78,6 +78,42 @@ describe('Login', () => {
     expect(subject.isPresent()).toBeTruthy();
     const text = subject.getText();
     expect(text).toEqual('User name is required to have less than 250 chars');
+    expect(element(by.id('submit')).isEnabled()).toBe(false);
+  });
+
+  it('should have warning on password being required and submit button disabled', () => {
+    expect(element(by.id('submit')).isEnabled()).toBe(false);
+    const subject = element(by.id('pwdRequired'));
+    expect(subject.isPresent()).toBeFalsy();
+    element(by.id('password')).click();
+    element(by.id('name')).click();
+    expect(subject.isPresent()).toBeTruthy();
+    const text = subject.getText();
+    expect(text).toEqual('Password is required');
+    expect(element(by.id('submit')).isEnabled()).toBe(false);
+  });
+
+  it('should have warning on not enough chars in password and submit button disabled', () => {
+    expect(element(by.id('submit')).isEnabled()).toBe(false);
+    const subject = element(by.id('pwdMinLength'));
+    expect(subject.isPresent()).toBeFalsy();
+    element(by.id('password')).sendKeys('1');
+    element(by.id('name')).click();
+    expect(subject.isPresent()).toBeTruthy();
+    const text = subject.getText();
+    expect(text).toEqual('Password is required to have 8 or more chars');
+    expect(element(by.id('submit')).isEnabled()).toBe(false);
+  });
+
+  it('should have warning on too many chars in password and submit button disabled', () => {
+    expect(element(by.id('submit')).isEnabled()).toBe(false);
+    const subject = element(by.id('pwdMaxLength'));
+    expect(subject.isPresent()).toBeFalsy();
+    element(by.id('password')).sendKeys('01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891');
+    element(by.id('name')).click();
+    expect(subject.isPresent()).toBeTruthy();
+    const text = subject.getText();
+    expect(text).toEqual('Password is required to have less than 250 chars');
     expect(element(by.id('submit')).isEnabled()).toBe(false);
   });
 
