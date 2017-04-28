@@ -7,10 +7,9 @@
                 <label>{{ 'USER_NAME' | translate }}:</label>
                 <input type="text" id="name" formControlName="name" placeholder="{{ 'ENTER_USERNAME' | translate }}">
                 <div *ngIf="loginForm.get('name').errors && loginForm.get('name').touched" class="alert alert-danger">
-                    <div [hidden]="!loginForm.get('name').hasError('required')">{{ 'USER_NAME_REQUIRED' | translate }}</div>
-                    <div [hidden]="!loginForm.get('name').hasError('minlength')">{{ 'USER_NAME_TOO_SHORT' | translate }}</div>
-                    <div [hidden]="!loginForm.get('name').hasError('maxlength')">{{ 'USER_NAME_TOO_LONG' | translate }}</div>
-                    <div [hidden]="!loginForm.get('name').hasError('existingUserName')">{{ 'USER_NAME_ALREADY_EXISTS' | translate }}</div>
+                    <div id="userRequired" [hidden]="!loginForm.get('name').hasError('required')">{{ 'USER_NAME_REQUIRED' | translate }}</div>
+                    <div id="userMinLength" [hidden]="!loginForm.get('name').hasError('minlength')">{{ 'USER_NAME_TOO_SHORT' | translate }}</div>
+                    <div id="userMaxLength" [hidden]="!loginForm.get('name').hasError('maxlength')">{{ 'USER_NAME_TOO_LONG' | translate }}</div>
                 </div>
             </div>
 
@@ -18,9 +17,9 @@
                 <label>{{ 'PASSWORD' | translate }}:</label>
                 <input type="password" id="password" formControlName="password" placeholder="{{ 'ENTER_PASSWORD' | translate }}">
                 <div *ngIf="loginForm.get('password').errors && loginForm.get('password').touched" class="alert alert-danger">
-                    <div [hidden]="!loginForm.get('password').hasError('required')">{{ 'PASSWORD_REQUIRED' | translate }}</div>
-                    <div [hidden]="!loginForm.get('password').hasError('minlength')">{{ 'PASSWORD_TOO_SHORT' | translate }}</div>
-                    <div [hidden]="!loginForm.get('password').hasError('maxlength')">{{ 'PASSWORD_TOO_LONG' | translate }}</div>
+                    <div id="pwdRequired" [hidden]="!loginForm.get('password').hasError('required')">{{ 'PASSWORD_REQUIRED' | translate }}</div>
+                    <div id="pwdMinLength" [hidden]="!loginForm.get('password').hasError('minlength')">{{ 'PASSWORD_TOO_SHORT' | translate }}</div>
+                    <div id="pwdMaxLength" [hidden]="!loginForm.get('password').hasError('maxlength')">{{ 'PASSWORD_TOO_LONG' | translate }}</div>
                 </div>
             </div>
 
