@@ -7,7 +7,8 @@ exports.config = {
 
   noGlobals: true,
   specs: [
-    helpers.root('./src/main/typescript/setup/setup.e2e.ts')
+    helpers.root('./src/main/typescript/setup/setup.e2e.ts'),
+    helpers.root('./src/main/typescript/login/login.e2e.ts')
 //    helpers.root('./src/main/typescript/**/**.e2e.ts'),
 //    helpers.root('./src/main/typescript/**/*.e2e.ts')
   ],

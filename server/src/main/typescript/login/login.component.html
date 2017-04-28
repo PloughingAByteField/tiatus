@@ -7,7 +7,7 @@
                 <label>{{ 'USER_NAME' | translate }}:</label>
                 <input type="text" id="name" formControlName="name" placeholder="{{ 'ENTER_USERNAME' | translate }}">
                 <div *ngIf="loginForm.get('name').errors && loginForm.get('name').touched" class="alert alert-danger">
-                    <div id="userRequired" [hidden]="!loginForm.get('name').hasError('required')">{{ 'USER_NAME_REQUIRED' | translate }}</div>
+                    <div id="userRequired" [hidden]="!loginForm.get('name').hasError('required')">{{ 'USER_NAME_IS_REQUIRED' | translate }}</div>
                     <div id="userMinLength" [hidden]="!loginForm.get('name').hasError('minlength')">{{ 'USER_NAME_TOO_SHORT' | translate }}</div>
                     <div id="userMaxLength" [hidden]="!loginForm.get('name').hasError('maxlength')">{{ 'USER_NAME_TOO_LONG' | translate }}</div>
                 </div>

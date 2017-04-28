@@ -6,7 +6,7 @@
   "ENTER_USERNAME" : "Enter user name here",
   "ENTER_PASSWORD" : "Enter user password here",
   "USER_NAME_TOO_SHORT" : "User name is required to have 5 or more chars",
-  "USER_NAME_TOO_LONG" : "User name is required to have less than 256 chars",
+  "USER_NAME_TOO_LONG" : "User name is required to have less than 250 chars",
   "USER_NAME_IS_REQUIRED" : "User name is required",
   "PASSWORD_TOO_SHORT" : "Password is required to have 8 or more chars",
   "PASSWORD_TOO_LONG" : "Password is required to have less than 20 chars",
