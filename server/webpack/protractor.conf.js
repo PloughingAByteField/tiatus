@@ -8,7 +8,11 @@ exports.config = {
   noGlobals: true,
   suites: {
     setup: helpers.root('./src/main/typescript/setup/setup.e2e.ts'),
-    login: helpers.root('./src/main/typescript/login/login.e2e.ts')
+    login: helpers.root('./src/main/typescript/login/login.e2e.ts'),
+    admin: [
+      helpers.root('./src/main/typescript/admin/login.e2e.ts'),
+      helpers.root('./src/main/typescript/admin/race.e2e.ts')
+    ]
   },
   exclude: [],
 

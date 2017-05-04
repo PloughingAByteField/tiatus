@@ -3,25 +3,25 @@
 <form [formGroup]="addRaceForm" class="form-group" (ngSubmit)="onSubmit(addRaceForm)" novalidate>
   <div class="form-group">
     <label>{{ 'RACE_NAME' | translate }}:</label>
-      <input type="text"  formControlName="name" placeholder="{{ 'ENTER_RACE_NAME' | translate }}">
+      <input type="text" id="name" formControlName="name" placeholder="{{ 'ENTER_RACE_NAME' | translate }}">
       <div *ngIf="addRaceForm.get('name').errors && addRaceForm.get('name').touched" class="alert alert-danger">
-        <div [hidden]="!addRaceForm.get('name').hasError('required')">{{ 'RACE_NAME_REQUIRED' | translate }}</div>
-        <div [hidden]="!addRaceForm.get('name').hasError('minlength')">{{ 'RACE_NAME_TOO_SHORT' | translate }}</div>
-        <div [hidden]="!addRaceForm.get('name').hasError('maxlength')">{{ 'RACE_NAME_TOO_LONG' | translate }}</div>
-        <div [hidden]="!addRaceForm.get('name').hasError('existingName')">{{ 'RACE_NAME_ALREADY_EXISTS' | translate }}</div>
+        <div id="nameRequired" [hidden]="!addRaceForm.get('name').hasError('required')">{{ 'RACE_NAME_REQUIRED' | translate }}</div>
+        <div id="nameMinLength" [hidden]="!addRaceForm.get('name').hasError('minlength')">{{ 'RACE_NAME_TOO_SHORT' | translate }}</div>
+        <div id="nameMaxLength" [hidden]="!addRaceForm.get('name').hasError('maxlength')">{{ 'RACE_NAME_TOO_LONG' | translate }}</div>
+        <div id="nameExisting"[hidden]="!addRaceForm.get('name').hasError('existingName')">{{ 'RACE_NAME_ALREADY_EXISTS' | translate }}</div>
     </div>
   </div>
   <div class="form-group">
     <label>{{ 'RACE_ORDER' | translate }}:</label>
-      <input type="number" formControlName="raceOrder" required>
+      <input type="number" id="raceOrder" formControlName="raceOrder" required>
       <div *ngIf="addRaceForm.get('raceOrder').errors && addRaceForm.get('raceOrder').touched" class="alert alert-danger">
-        <div [hidden]="!addRaceForm.get('raceOrder').hasError('required')">{{ 'RACE_ORDER_REQUIRED' | translate }}</div>
-        <div [hidden]="!addRaceForm.get('raceOrder').hasError('tooSmall')">{{ 'RACE_ORDER_TOO_SMALL' | translate }}</div>
-        <div [hidden]="!addRaceForm.get('raceOrder').hasError('tooLarge')">{{ 'RACE_ORDER_TOO_LARGE' | translate }}</div>
-        <div [hidden]="!addRaceForm.get('raceOrder').hasError('existingNumber')">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</div>
+        <div id="numberRequired" [hidden]="!addRaceForm.get('raceOrder').hasError('required')">{{ 'RACE_ORDER_REQUIRED' | translate }}</div>
+        <div id="numberMinLength" [hidden]="!addRaceForm.get('raceOrder').hasError('tooSmall')">{{ 'RACE_ORDER_TOO_SMALL' | translate }}</div>
+        <div id="numberMaxLength" [hidden]="!addRaceForm.get('raceOrder').hasError('tooLarge')">{{ 'RACE_ORDER_TOO_LARGE' | translate }}</div>
+        <div id="numberExisting" [hidden]="!addRaceForm.get('raceOrder').hasError('existingNumber')">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</div>
    </div>
   </div>
-    <button type="submit" [disabled]="!addRaceForm.valid">{{ 'ADD_RACE' | translate }}</button>
+    <button type="submit" id="submit" [disabled]="!addRaceForm.valid">{{ 'ADD_RACE' | translate }}</button>
 </form>
 
 
@@ -36,10 +36,10 @@
         </thead>
         <tbody>
             <tr *ngFor="let race of getRacesArray.controls; let i=index" [formGroupName]="i">
-                <td><input type="text" formControlName="name"></td>
-                <td >{{ race.get('order').value }} </td>
-                <td><button class="btn primary" [disabled]="!race.get('name').valid" (click)="updateRace(race)">{{ 'UPDATE_RACE' | translate }}</button></td>
-                <td><button class="btn primary" (click)="removeRace(race)">{{ 'REMOVE_RACE' | translate }}</button></td>
+                <td><input type="text" id="name-{{i}}" formControlName="name"></td>
+                <td ><span id="order-{{i}}">{{ race.get('order').value }}</span></td>
+                <td><button id="update-{{i}}" class="btn primary" [disabled]="!race.get('name').valid" (click)="updateRace(race)">{{ 'UPDATE_RACE' | translate }}</button></td>
+                <td><button id="remove-{{i}}" class="btn primary" (click)="removeRace(race)">{{ 'REMOVE_RACE' | translate }}</button></td>
             </tr>
         </tbody>
     </table>
