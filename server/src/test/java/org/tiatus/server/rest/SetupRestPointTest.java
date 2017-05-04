@@ -7,24 +7,20 @@ import mockit.MockUp;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.tiatus.auth.TiatusSecurityContext;
-import org.tiatus.auth.UserPrincipal;
-import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
-import org.tiatus.entity.UserRole;
+import org.tiatus.service.ConfigServiceImpl;
 import org.tiatus.service.ServiceException;
 import org.tiatus.service.UserServiceImpl;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by johnreynolds on 13/09/2016.
@@ -32,6 +28,7 @@ import java.util.Set;
 public class SetupRestPointTest {
     private HttpSession session;
     private HttpServletRequest servletRequest;
+    private ServletContext context;
 
     @Before
     public void setup() {
@@ -39,8 +36,10 @@ public class SetupRestPointTest {
             @Mock
             void $init(Invocation invocation) {
                 SetupRestPoint restPoint = invocation.getInvokedInstance();
-                UserServiceImpl service = new UserServiceImpl(null, null);
-                Deencapsulation.setField(restPoint, "service", service);
+                UserServiceImpl userService = new UserServiceImpl(null, null);
+                ConfigServiceImpl configService = new ConfigServiceImpl(null);
+                Deencapsulation.setField(restPoint, "userService", userService);
+                Deencapsulation.setField(restPoint, "configService", configService);
 
             }
         };
@@ -57,12 +56,33 @@ public class SetupRestPointTest {
                 return session;
             }
         }.getMockInstance();
+
+        context = new MockUp<ServletContext>() {
+            @Mock
+            public InputStream getResourceAsStream(String path) {
+                return new InputStream() {
+                    @Override
+                    public int read() throws IOException {
+                        return 0;
+                    }
+                };
+            }
+        }.getMockInstance();
     }
 
     @Test
     public void testAddUser() throws Exception {
         UriInfo uriInfo = new MockUriInfo().getMockInstance();
         User user = new User();
+        new MockUp<ConfigServiceImpl>() {
+            @Mock
+            public void setEventTitle(String title) throws ServiceException {}
+
+            @Mock
+            public String setEventLogo(InputStream stream, String fileName) throws ServiceException {
+                return "logo";
+            }
+        };
 
         new MockUp<UserServiceImpl>() {
             @Mock
@@ -76,7 +96,7 @@ public class SetupRestPointTest {
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
-        Response response = setupRestPoint.addUser(uriInfo, servletRequest, user);
+        Response response = setupRestPoint.addUser(uriInfo, servletRequest, context, user);
         Assert.assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
         Assert.assertEquals(response.getLocation(), new URI("https://127.0.0.1:8080/rest/setup/1"));
     }
@@ -98,7 +118,7 @@ public class SetupRestPointTest {
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
-        setupRestPoint.addUser(uriInfo, servletRequest, user);
+        setupRestPoint.addUser(uriInfo, servletRequest, context, user);
     }
 
     @Test (expected = InternalServerErrorException.class)
@@ -123,13 +143,13 @@ public class SetupRestPointTest {
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
-        setupRestPoint.addUser(uriInfo, servletRequest, user);
+        setupRestPoint.addUser(uriInfo, servletRequest, context, user);
     }
 
     @Test
-    public void testSetService() throws Exception {
+    public void testSetUserService() throws Exception {
         SetupRestPoint setupRestPoint = new SetupRestPoint();
-        setupRestPoint.setService(null);
+        setupRestPoint.setUserService(null);
     }
 
     class MockUriInfo extends MockUp<UriInfo> {

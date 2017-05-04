@@ -1,33 +1,22 @@
 package org.tiatus.server.rest;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.User;
+import org.tiatus.service.ConfigService;
 import org.tiatus.service.ServiceException;
 import org.tiatus.service.UserService;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
-
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 /**
  * Created by johnreynolds on 04/09/2016.
@@ -38,7 +27,8 @@ public class SetupRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(SetupRestPoint.class);
 
-    private UserService service;
+    private ConfigService configService;
+    private UserService userService;
 
     /**
      * Add an admin user via setup page
@@ -51,11 +41,19 @@ public class SetupRestPoint {
     @Path("user")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response addUser(@Context UriInfo uriInfo, @Context HttpServletRequest request, User user) {
+    public Response addUser(@Context UriInfo uriInfo, @Context HttpServletRequest request, @Context ServletContext context, User user) {
         checkIfSetupHasAlreadyRun();
         LOG.debug("Adding admin user " + user);
         try {
-            service.addAdminUser(user, request.getSession().getId());
+            userService.addAdminUser(user, request.getSession().getId());
+            // create default entries in config file
+            configService.setEventTitle("Tiatus Timing System");
+            InputStream logoStream = getDefaultLogoFile(context);
+            if (logoStream != null) {
+                configService.setEventLogo(logoStream, "tiatus.svg");
+            } else {
+                LOG.warn("FAILED to find image");
+            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ user.getId())).entity(user).build();
 
         } catch (ServiceException e) {
@@ -68,14 +66,24 @@ public class SetupRestPoint {
         }
     }
 
+    private InputStream getDefaultLogoFile(ServletContext context) {
+        return context.getResourceAsStream("/assets/img/stopwatch.svg");
+    }
+
     @Inject
     // sonar want constructor injection which jaxrs does not support
-    public void setService(UserService service) {
-        this.service = service;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Inject
+    // sonar want constructor injection which jaxrs does not support
+    public void setConfigService(ConfigService configService) {
+        this.configService = configService;
     }
 
     private void checkIfSetupHasAlreadyRun() {
-        if (service.hasAdminUser()) {
+        if (userService.hasAdminUser()) {
             LOG.warn("Already have run setup");
             throw new InternalServerErrorException();
         }
