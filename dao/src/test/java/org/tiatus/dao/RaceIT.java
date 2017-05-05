@@ -63,7 +63,6 @@ public class RaceIT {
         List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         Race newRace = new Race();
-        newRace.setId(1L);
         newRace.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(newRace);
@@ -79,7 +78,6 @@ public class RaceIT {
         List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         Race newRace = new Race();
-        newRace.setId(1L);
         newRace.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(newRace);
@@ -91,7 +89,6 @@ public class RaceIT {
         List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         Race newRace = new Race();
-        newRace.setId(1L);
         newRace.setName("Race 1");
         EntityManager em = new MockUp<EntityManager>(){
             @Mock
@@ -109,7 +106,6 @@ public class RaceIT {
         List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         Race race = new Race();
-        race.setId(1L);
         race.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(race);
@@ -129,7 +125,6 @@ public class RaceIT {
         List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         Race race = new Race();
-        race.setId(1L);
         race.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(race);
@@ -139,7 +134,6 @@ public class RaceIT {
         Assert.assertTrue(races.size() == 1);
 
         Race race2 = new Race();
-        race2.setId(2L);
         race2.setName("Race 2");
         dao.removeRace(race2);
         races = dao.getRaces();
@@ -152,7 +146,6 @@ public class RaceIT {
     @Test (expected = DaoException.class)
     public void removeRaceWithException() throws Exception {
         Race race = new Race();
-        race.setId(1L);
         race.setName("Race 1");
 
         EntityManager em = new MockUp<EntityManager>(){
@@ -171,7 +164,6 @@ public class RaceIT {
         List<Race> races = dao.getRaces();
         Assert.assertTrue(races.isEmpty());
         Race newRace = new Race();
-        newRace.setId(1L);
         newRace.setName("Race 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addRace(newRace);
