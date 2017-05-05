@@ -111,6 +111,7 @@ export class RacesComponent implements OnInit {
     }
     return null;
   }
+
   private isEmptyInputValue(value: any): boolean {
     return value == null || value.length === 0;
   }
