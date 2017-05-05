@@ -50,10 +50,11 @@ public class RaceDaoImpl implements RaceDao {
                 existing = em.find(Race.class, race.getId());
             }
             if (existing == null) {
-                Race merged = em.merge(race);
+                em.persist(race);
                 tx.commit();
 
-                return merged;
+                return race;
+
             } else {
                 String message = "Failed to add race due to existing race with same id " + race.getId();
                 LOG.warn(message);
