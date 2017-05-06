@@ -51,10 +51,11 @@ public class RaceEventDaoImpl implements RaceEventDao {
                     position.setPosition(getPositionForId(position.getPositionId()));
                     em.persist(position);
                 }
-                RaceEvent merged = em.merge(raceEvent);
+                em.persist(raceEvent);
                 tx.commit();
 
-                return merged;
+                return raceEvent;
+
             } else {
                 String message = "Failed to add raceEvent due to existing raceEvent with same id " + raceEvent.getId();
                 LOG.warn(message);

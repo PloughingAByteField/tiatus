@@ -63,7 +63,6 @@ public class ClubIT {
         List<Club> clubs = dao.getClubs();
         Assert.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
-        newClub.setId(1L);
         newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
@@ -109,7 +108,6 @@ public class ClubIT {
         List<Club> clubs = dao.getClubs();
         Assert.assertTrue(clubs.isEmpty());
         Club club = new Club();
-        club.setId(1L);
         club.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(club);
@@ -129,7 +127,6 @@ public class ClubIT {
         List<Club> clubs = dao.getClubs();
         Assert.assertTrue(clubs.isEmpty());
         Club club = new Club();
-        club.setId(1L);
         club.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(club);
@@ -171,7 +168,6 @@ public class ClubIT {
         List<Club> clubs = dao.getClubs();
         Assert.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
-        newClub.setId(1L);
         newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);

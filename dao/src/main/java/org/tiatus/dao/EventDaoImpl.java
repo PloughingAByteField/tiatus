@@ -60,6 +60,7 @@ public class EventDaoImpl implements EventDao {
                 tx.commit();
 
                 return event;
+
             } else {
                 String message = "Failed to add event due to existing event with same id " + event.getId();
                 LOG.warn(message);

@@ -38,10 +38,11 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
                 existing = em.find(Disqualification.class, disqualification.getId());
             }
             if (existing == null) {
-                Disqualification merged = em.merge(disqualification);
+                em.persist(disqualification);
                 tx.commit();
 
-                return merged;
+                return disqualification;
+
             } else {
                 String message = "Failed to add disqualification due to existing disqualification with same id " + disqualification.getId();
                 LOG.warn(message);

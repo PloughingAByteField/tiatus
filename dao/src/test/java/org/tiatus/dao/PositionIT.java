@@ -63,7 +63,6 @@ public class PositionIT {
         List<Position> positions = dao.getPositions();
         Assert.assertTrue(positions.isEmpty());
         Position newPosition = new Position();
-        newPosition.setId(1L);
         newPosition.setName("Position 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addPosition(newPosition);
@@ -109,7 +108,6 @@ public class PositionIT {
         List<Position> positions = dao.getPositions();
         Assert.assertTrue(positions.isEmpty());
         Position position = new Position();
-        position.setId(1L);
         position.setName("Position 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addPosition(position);
@@ -129,7 +127,6 @@ public class PositionIT {
         List<Position> positions = dao.getPositions();
         Assert.assertTrue(positions.isEmpty());
         Position position = new Position();
-        position.setId(1L);
         position.setName("Position 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addPosition(position);
@@ -171,7 +168,6 @@ public class PositionIT {
         List<Position> positions = dao.getPositions();
         Assert.assertTrue(positions.isEmpty());
         Position newPosition = new Position();
-        newPosition.setId(1L);
         newPosition.setName("Position 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addPosition(newPosition);

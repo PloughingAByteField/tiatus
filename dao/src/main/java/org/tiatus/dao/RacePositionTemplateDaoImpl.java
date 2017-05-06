@@ -35,10 +35,11 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
                 existing = em.find(RacePositionTemplate.class, template.getId());
             }
             if (existing == null) {
-                RacePositionTemplate merged = em.merge(template);
+                em.persist(template);
                 tx.commit();
 
-                return merged;
+                return template;
+
             } else {
                 String message = "Failed to add RacePositionTemplate due to existing RacePositionTemplate with same id " + template.getId();
                 LOG.warn(message);
@@ -113,10 +114,10 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
             TypedQuery<RacePositionTemplateEntry> query = em.createQuery("FROM RacePositionTemplateEntry where template = :template and position = :position", RacePositionTemplateEntry.class);
             List<RacePositionTemplateEntry> existing = query.setParameter("template", entry.getTemplate()).setParameter("position", entry.getPosition()).getResultList();
             if (existing.isEmpty()) {
-                RacePositionTemplateEntry merged = em.merge(entry);
+                em.persist(entry);
                 tx.commit();
 
-                return merged;
+                return entry;
 
             } else {
                 String message = "Failed to add template entry due to existing template entry with same template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId();

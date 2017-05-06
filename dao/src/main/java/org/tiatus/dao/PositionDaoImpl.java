@@ -45,10 +45,11 @@ public class PositionDaoImpl implements PositionDao {
                 existing = em.find(Position.class, position.getId());
             }
             if (existing == null) {
-                Position merged = em.merge(position);
+                em.persist(position);
                 tx.commit();
 
-                return merged;
+                return position;
+
             } else {
                 String message = "Failed to add position due to existing position with same id " + position.getId();
                 LOG.warn(message);

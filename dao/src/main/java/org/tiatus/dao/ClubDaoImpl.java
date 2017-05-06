@@ -43,10 +43,10 @@ public class ClubDaoImpl implements ClubDao {
                 existing = em.find(Club.class, club.getId());
             }
             if (existing == null) {
-                Club merged = em.merge(club);
+                em.persist(club);
                 tx.commit();
 
-                return merged;
+                return club;
             } else {
                 String message = "Failed to add club due to existing club with same id " + club.getId();
                 LOG.warn(message);

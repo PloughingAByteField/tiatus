@@ -37,9 +37,9 @@ public class PenaltyDaolmpl implements PenaltyDao {
                 existing = em.find(Penalty.class, penalty.getId());
             }
             if (existing == null) {
-                Penalty merged = em.merge(penalty);
+                em.persist(penalty);
                 tx.commit();
-                return merged;
+                return penalty;
 
             } else {
                 String message = "Failed to add penalty due to existing penalty with same id " + penalty.getId();

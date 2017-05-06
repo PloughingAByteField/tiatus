@@ -54,10 +54,11 @@ public class EntryDaoImpl implements EntryDao {
             }
             if (existing == null) {
                 tx.begin();
-                Entry merged = em.merge(entry);
+                em.persist(entry);
                 tx.commit();
 
-                return merged;
+                return entry;
+
             } else {
                 String message = "Failed to add entry due to existing entry with same id " + entry.getId();
                 LOG.warn(message);

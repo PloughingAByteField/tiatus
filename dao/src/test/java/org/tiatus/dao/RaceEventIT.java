@@ -91,7 +91,6 @@ public class RaceEventIT {
         Event event1 = new Event();
         event1.setName("Event 1");
         RaceEvent raceEvent1 = new RaceEvent();
-        raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
         raceEvent1.setEvent(event1);
         dao.tx = new EntityUserTransaction(em);
@@ -160,7 +159,6 @@ public class RaceEventIT {
         Event event1 = new Event();
         event1.setName("Event 1");
         RaceEvent raceEvent1 = new RaceEvent();
-        raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
         raceEvent1.setEvent(event1);
         dao.tx = new EntityUserTransaction(em);
@@ -186,7 +184,6 @@ public class RaceEventIT {
         Event event1 = new Event();
         event1.setName("Event 1");
         RaceEvent raceEvent1 = new RaceEvent();
-        raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
         raceEvent1.setRaceEventOrder(1);
         raceEvent1.setEvent(event1);
@@ -245,7 +242,6 @@ public class RaceEventIT {
         Event event1 = new Event();
         event1.setName("Event 1");
         RaceEvent raceEvent1 = new RaceEvent();
-        raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
         raceEvent1.setEvent(event1);
         raceEvent1.setRaceEventOrder(1);
