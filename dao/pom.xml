@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.tiatus</groupId>
         <artifactId>tiatus</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>dao</artifactId>
     <name>dao</name>
@@ -50,13 +50,13 @@
         <dependency>
             <groupId>org.tiatus</groupId>
             <artifactId>entities</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.tiatus</groupId>
             <artifactId>api</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>

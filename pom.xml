@@ -4,7 +4,7 @@
 
 	<groupId>org.tiatus</groupId>
 	<artifactId>tiatus</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Tiatus is a timing unified system</name>

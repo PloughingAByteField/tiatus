@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.tiatus</groupId>
         <artifactId>tiatus</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>server</artifactId>
     <name>server</name>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>org.tiatus</groupId>
             <artifactId>service</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>

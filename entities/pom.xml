@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.tiatus</groupId>
         <artifactId>tiatus</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>entities</artifactId>
     <name>entities</name>
