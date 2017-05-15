@@ -4,17 +4,6 @@ import mockit.Deencapsulation;
 import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockUp;
-import org.infinispan.AdvancedCache;
-import org.infinispan.Cache;
-import org.infinispan.CacheCollection;
-import org.infinispan.CacheSet;
-import org.infinispan.commons.util.concurrent.NotifyingFuture;
-import org.infinispan.configuration.cache.Configuration;
-import org.infinispan.filter.KeyFilter;
-import org.infinispan.lifecycle.ComponentStatus;
-import org.infinispan.manager.EmbeddedCacheManager;
-import org.infinispan.notifications.cachelistener.filter.CacheEventConverter;
-import org.infinispan.notifications.cachelistener.filter.CacheEventFilter;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -33,9 +22,6 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -51,8 +37,6 @@ public class RaceRestPointTest extends RestTestBase {
                 RaceRestPoint restPoint = invocation.getInvokedInstance();
                 RaceServiceImpl service = new RaceServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
-                Cache cache = new StubbedCache();
-                Deencapsulation.setField(restPoint, "cache", cache);
             }
         };
 

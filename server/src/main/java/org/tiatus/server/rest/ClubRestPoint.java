@@ -1,12 +1,10 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Club;
 import org.tiatus.role.Role;
 import org.tiatus.service.ClubService;
-import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -26,9 +24,7 @@ public class ClubRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClubRestPoint.class);
 
-    private static final String CACHE_NAME = "clubs";
     private ClubService service;
-    private Cache cache;
 
     /**
      * Get clubs
@@ -38,27 +34,8 @@ public class ClubRestPoint extends RestBase {
     @GET
     @Produces("application/json")
     public Response getClubs(@Context Request request) {
-        Response.ResponseBuilder builder;
-        if (cache.get(CACHE_NAME) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<Club> clubs = (List<Club>)cacheEntry.getEntry();
-                builder = Response.ok(clubs).tag(cachedEntryETag);
-            }
-        } else {
-            List<Club> clubs = service.getClubs();
-            String hashCode = Integer.toString(clubs.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, clubs);
-            cache.put(CACHE_NAME, newCacheEntry);
-            builder = Response.ok(clubs).tag(etag);
-        }
-
-        return builder.build();
+        List<Club> clubs = service.getClubs();
+        return Response.ok(clubs).build();
     }
 
     /**
@@ -75,9 +52,6 @@ public class ClubRestPoint extends RestBase {
         LOG.debug("Adding club " + club);
         try {
             Club saved = service.addClub(club, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (Exception e) {
@@ -100,9 +74,6 @@ public class ClubRestPoint extends RestBase {
             Club club = service.getClubForId(Long.parseLong(id));;
             if (club != null) {
                 service.deleteClub(club, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
             }
             return Response.noContent().build();
 
@@ -131,9 +102,6 @@ public class ClubRestPoint extends RestBase {
             }
 
             service.updateClub(club, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -146,8 +114,4 @@ public class ClubRestPoint extends RestBase {
         this.service = service;
     }
 
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
 }

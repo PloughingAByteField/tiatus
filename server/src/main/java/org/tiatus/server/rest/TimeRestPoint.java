@@ -1,6 +1,5 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Entry;
@@ -25,13 +24,11 @@ import java.util.List;
 public class TimeRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimeRestPoint.class);
-    private static final String CACHE_NAME = "times";
 
     private TimesService service;
     private RaceService raceService;
     private EntryService entryService;
     private PositionService positionService;
-    private Cache cache;
 
     @GET
     @Path("position/{positionId}/race/{raceId}")
@@ -45,28 +42,8 @@ public class TimeRestPoint extends RestBase {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
 
-            Response.ResponseBuilder builder;
-            String cacheName = CACHE_NAME + "_" + positionId + "_" + raceId;
-            if (cache.get(cacheName) != null) {
-                CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
-                String cachedEntryETag = cacheEntry.getETag();
-
-                EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-                builder = request.evaluatePreconditions(cachedRacesETag);
-                if (builder == null) {
-                    List<EntryPositionTime> times = (List<EntryPositionTime>)cacheEntry.getEntry();
-                    builder = Response.ok(times).tag(cachedEntryETag);
-                }
-            } else {
-                List<EntryPositionTime> times = service.getPositionTimesForPositionInRace(race, position);
-                String hashCode = Integer.toString(times.hashCode());
-                EntityTag etag = new EntityTag(hashCode, false);
-                CacheEntry newCacheEntry = new CacheEntry(hashCode, times);
-                cache.put(cacheName, newCacheEntry);
-                builder = Response.ok(times).tag(etag);
-            }
-
-            return builder.build();
+            List<EntryPositionTime> times = service.getPositionTimesForPositionInRace(race, position);
+            return Response.ok(times).build();
 
         } catch (Exception e) {
             return logError(e);
@@ -91,7 +68,6 @@ public class TimeRestPoint extends RestBase {
             LOG.debug("have entry " + entryPositionTime.getEntry().getId());
             LOG.debug("Have time " + entryPositionTime.getTime());
             service.createTime(entryPositionTime, request.getSession().getId());
-            wipeCache(position, entry);
             return Response.created(URI.create(uriInfo.getPath())).build();
 
         } catch (Exception e) {
@@ -110,26 +86,10 @@ public class TimeRestPoint extends RestBase {
             Entry entry = entryService.getEntryForId(Long.parseLong(entryId));
             entryPositionTime.setEntry(entry);
             service.updateTime(entryPositionTime, request.getSession().getId());
-            wipeCache(position, entry);
             return Response.ok().build();
 
         } catch (Exception e) {
             return logError(e);
-        }
-    }
-
-    private void wipeCache(Position position, Entry entry) {
-        String cachePositionInRace = CACHE_NAME + "_" + position.getId() + "_" + entry.getRace().getId();
-        if (cache.get(cachePositionInRace) != null) {
-            cache.evict(cachePositionInRace);
-        }
-        String cacheFullForRace = CACHE_NAME + "_full_" + entry.getRace().getId();
-        if (cache.get(cacheFullForRace) != null) {
-            cache.evict(cacheFullForRace);
-        }
-        String cacheForRace = CACHE_NAME + "_" + entry.getRace().getId();
-        if (cache.get(cacheForRace) != null) {
-            cache.evict(cacheForRace);
         }
     }
 
@@ -144,28 +104,8 @@ public class TimeRestPoint extends RestBase {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
 
-            Response.ResponseBuilder builder;
-            String cacheName = CACHE_NAME + "_" + raceId;
-            if (cache.get(cacheName) != null) {
-                CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
-                String cachedEntryETag = cacheEntry.getETag();
-
-                EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-                builder = request.evaluatePreconditions(cachedRacesETag);
-                if (builder == null) {
-                    List<EntryPositionTime> times = (List<EntryPositionTime>)cacheEntry.getEntry();
-                    builder = Response.ok(times).tag(cachedEntryETag);
-                }
-            } else {
-                List<EntryPositionTime> times = service.getTimesForRace(race);
-                String hashCode = Integer.toString(times.hashCode());
-                EntityTag etag = new EntityTag(hashCode, false);
-                CacheEntry newCacheEntry = new CacheEntry(hashCode, times);
-                cache.put(cacheName, newCacheEntry);
-                builder = Response.ok(times).tag(etag);
-            }
-
-            return builder.build();
+            List<EntryPositionTime> times = service.getTimesForRace(race);
+            return Response.ok(times).build();
 
         } catch (Exception e) {
             return logError(e);
@@ -184,28 +124,8 @@ public class TimeRestPoint extends RestBase {
                 return Response.status(Response.Status.NOT_FOUND).build();
             }
 
-            Response.ResponseBuilder builder;
-            String cacheName = CACHE_NAME + "_full_" + raceId;
-            if (cache.get(cacheName) != null) {
-                CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
-                String cachedEntryETag = cacheEntry.getETag();
-
-                EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-                builder = request.evaluatePreconditions(cachedRacesETag);
-                if (builder == null) {
-                    List<EntryPositionTime> times = (List<EntryPositionTime>)cacheEntry.getEntry();
-                    builder = Response.ok(times).tag(cachedEntryETag);
-                }
-            } else {
-                List<EntryPositionTime> times = service.getAllTimesForRace(race);
-                String hashCode = Integer.toString(times.hashCode());
-                EntityTag etag = new EntityTag(hashCode, false);
-                CacheEntry newCacheEntry = new CacheEntry(hashCode, times);
-                cache.put(cacheName, newCacheEntry);
-                builder = Response.ok(times).tag(etag);
-            }
-
-            return builder.build();
+            List<EntryPositionTime> times = service.getAllTimesForRace(race);
+            return Response.ok(times).build();
 
         } catch (Exception e) {
             return logError(e);
@@ -232,8 +152,4 @@ public class TimeRestPoint extends RestBase {
         this.positionService = service;
     }
 
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
 }

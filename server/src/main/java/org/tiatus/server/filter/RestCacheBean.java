@@ -1,4 +1,4 @@
-package org.tiatus.server.rest;
+package org.tiatus.server.filter;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;

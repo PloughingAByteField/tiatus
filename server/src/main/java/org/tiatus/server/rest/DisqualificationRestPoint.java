@@ -1,12 +1,10 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Disqualification;
 import org.tiatus.role.Role;
 import org.tiatus.service.DisqualificationService;
-import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -25,10 +23,8 @@ import java.util.List;
 public class DisqualificationRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(DisqualificationRestPoint.class);
-    private static final String CACHE_NAME = "disqualifications";
 
     private DisqualificationService service;
-    private Cache cache;
 
     /**
      * Get disqualifications
@@ -38,27 +34,8 @@ public class DisqualificationRestPoint extends RestBase {
     @GET
     @Produces("application/json")
     public Response getDisqualifications(@Context Request request) {
-        Response.ResponseBuilder builder;
-        if (cache.get(CACHE_NAME) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<Disqualification> disqualifications = (List<Disqualification>)cacheEntry.getEntry();
-                builder = Response.ok(disqualifications).tag(cachedEntryETag);
-            }
-        } else {
-            List<Disqualification> disqualifications = service.getDisqualifications();
-            String hashCode = Integer.toString(disqualifications.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, disqualifications);
-            cache.put(CACHE_NAME, newCacheEntry);
-            builder = Response.ok(disqualifications).tag(etag);
-        }
-
-        return builder.build();
+        List<Disqualification> disqualifications = service.getDisqualifications();
+        return Response.ok(disqualifications).build();
     }
 
     /**
@@ -75,9 +52,6 @@ public class DisqualificationRestPoint extends RestBase {
         LOG.debug("Adding disqualification " + disqualification);
         try {
             Disqualification saved = service.addDisqualification(disqualification, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (Exception e) {
@@ -100,9 +74,6 @@ public class DisqualificationRestPoint extends RestBase {
             Disqualification disqualification = service.getDisqualificationForId(Long.parseLong(id));
             if (disqualification != null) {
                 service.deleteDisqualification(disqualification, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
             }
             return Response.noContent().build();
 
@@ -131,9 +102,6 @@ public class DisqualificationRestPoint extends RestBase {
             }
 
             service.updateDisqualification(disqualification, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -146,8 +114,4 @@ public class DisqualificationRestPoint extends RestBase {
         this.service = service;
     }
 
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
 }

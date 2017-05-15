@@ -1,6 +1,5 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
@@ -10,7 +9,6 @@ import org.tiatus.entity.RaceEvent;
 import org.tiatus.role.Role;
 import org.tiatus.service.EventService;
 import org.tiatus.service.PositionService;
-import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -27,13 +25,10 @@ import java.util.List;
 @Path("events")
 @SuppressWarnings("squid:S1166")
 public class EventRestPoint extends RestBase {
-    private static final String GENERAL_EXCEPTION = "Got general exception: ";
     private static final Logger LOG = LoggerFactory.getLogger(EventRestPoint.class);
-    private static final String CACHE_NAME = "events";
 
     private EventService service;
     private PositionService positionService;
-    private Cache cache;
 
 
     /**
@@ -55,9 +50,6 @@ public class EventRestPoint extends RestBase {
                 eventPosition.setPosition(position);
             }
             Event saved = service.addEvent(event, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (Exception e) {
@@ -91,9 +83,6 @@ public class EventRestPoint extends RestBase {
                 eventPosition.setPosition(position);
             }
             Event saved = service.updateEvent(event, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (Exception e) {
@@ -117,9 +106,6 @@ public class EventRestPoint extends RestBase {
             Event event = service.getEventForId(id);
             if (event != null) {
                 service.deleteEvent(event, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
             }
             return Response.noContent().build();
 
@@ -144,10 +130,6 @@ public class EventRestPoint extends RestBase {
             Event event = service.getEventForId(id);
             if (event != null) {
                 service.deleteEvent(event, request.getSession().getId());
-                String cacheName = CACHE_NAME + "_" + "Unassigned";
-                if (cache.get(cacheName) != null) {
-                    cache.evict(cacheName);
-                }
             }
             return Response.noContent().build();
 
@@ -164,27 +146,8 @@ public class EventRestPoint extends RestBase {
     @PermitAll
     @Produces("application/json")
     public Response getEvents(@Context Request request) {
-        Response.ResponseBuilder builder;
-        if (cache.get(CACHE_NAME) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<Event> events = (List<Event>)cacheEntry.getEntry();
-                builder = Response.ok(events).tag(cachedEntryETag);
-            }
-        } else {
-            List<Event> events = service.getEvents();
-            String hashCode = Integer.toString(events.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, events);
-            cache.put(CACHE_NAME, newCacheEntry);
-            builder = Response.ok(events).tag(etag);
-        }
-
-        return builder.build();
+        List<Event> events = service.getEvents();
+        return Response.ok(events).build();
     }
 
     /**
@@ -196,28 +159,8 @@ public class EventRestPoint extends RestBase {
     @Path("assigned")
     @Produces("application/json")
     public Response getAssignedEvents(@Context Request request) {
-        Response.ResponseBuilder builder;
-        String cacheName = CACHE_NAME + "_" + "Assigned";
-        if (cache.get(cacheName) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<RaceEvent> events = (List<RaceEvent>)cacheEntry.getEntry();
-                builder = Response.ok(events).tag(cachedEntryETag);
-            }
-        } else {
-            List<RaceEvent> events = service.getAssignedEvents();
-            String hashCode = Integer.toString(events.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, events);
-            cache.put(cacheName, newCacheEntry);
-            builder = Response.ok(events).tag(etag);
-        }
-
-        return builder.build();
+        List<RaceEvent> events = service.getAssignedEvents();
+        return Response.ok(events).build();
     }
 
     /**
@@ -235,10 +178,6 @@ public class EventRestPoint extends RestBase {
             RaceEvent raceEvent = service.getRaceEventForId(id);
             if (raceEvent != null) {
                 service.deleteRaceEvent(raceEvent, request.getSession().getId());
-                String cacheName = CACHE_NAME + "_" + "Assigned";
-                if (cache.get(cacheName) != null) {
-                    cache.evict(cacheName);
-                }
             }
             return Response.noContent().build();
 
@@ -261,13 +200,6 @@ public class EventRestPoint extends RestBase {
     public Response addAssignedEvent(RaceEvent raceEvent, @Context HttpServletRequest request, @Context UriInfo uriInfo) {
         try {
             RaceEvent saved = service.addRaceEvent(raceEvent, request.getSession().getId());
-            String cacheName = CACHE_NAME + "_" + "Assigned";
-            if (cache.get(cacheName) != null) {
-                cache.evict(cacheName);
-            }
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (Exception e) {
@@ -297,10 +229,6 @@ public class EventRestPoint extends RestBase {
             }
 
             service.updateRaceEvents(raceEvents, request.getSession().getId());
-            String cacheName = CACHE_NAME + "_" + "Assigned";
-            if (cache.get(cacheName) != null) {
-                cache.evict(cacheName);
-            }
 
         } catch (Exception e) {
             return logError(e);
@@ -317,28 +245,8 @@ public class EventRestPoint extends RestBase {
     @Path("unassigned")
     @Produces("application/json")
     public Response getUnassignedEvents(@Context Request request) {
-        Response.ResponseBuilder builder;
-        String cacheName = CACHE_NAME + "_" + "Unassigned";
-        if (cache.get(cacheName) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<Event> events = (List<Event>)cacheEntry.getEntry();
-                builder = Response.ok(events).tag(cachedEntryETag);
-            }
-        } else {
-            List<Event> events = service.getUnassignedEvents();
-            String hashCode = Integer.toString(events.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, events);
-            cache.put(cacheName, newCacheEntry);
-            builder = Response.ok(events).tag(etag);
-        }
-
-        return builder.build();
+        List<Event> events = service.getUnassignedEvents();
+        return Response.ok(events).build();
     }
 
     @Inject
@@ -352,8 +260,4 @@ public class EventRestPoint extends RestBase {
         this.positionService = service;
     }
 
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
 }

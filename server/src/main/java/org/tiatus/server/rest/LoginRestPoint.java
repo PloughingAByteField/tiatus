@@ -43,7 +43,6 @@ public class LoginRestPoint extends RestBase {
             HttpSession session = httpServletRequest.getSession();
             if (securityContext.getUserPrincipal() == null) {
                 LOG.warn("not logged in");
-                URI redirect = new URI(base.getScheme(), null, base.getHost(), base.getPort(), LoggedInFilter.LOGIN_URL, null, null);
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
             UserPrincipal principal = (UserPrincipal)securityContext.getUserPrincipal();

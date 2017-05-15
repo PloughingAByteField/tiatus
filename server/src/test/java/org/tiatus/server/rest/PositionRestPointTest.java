@@ -4,7 +4,6 @@ import mockit.Deencapsulation;
 import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockUp;
-import org.infinispan.Cache;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -38,8 +37,6 @@ public class PositionRestPointTest extends RestTestBase {
                 PositionRestPoint restPoint = invocation.getInvokedInstance();
                 PositionServiceImpl service = new PositionServiceImpl(null, null);
                 Deencapsulation.setField(restPoint, "service", service);
-                Cache cache = new StubbedCache();
-                Deencapsulation.setField(restPoint, "cache", cache);
             }
         };
 

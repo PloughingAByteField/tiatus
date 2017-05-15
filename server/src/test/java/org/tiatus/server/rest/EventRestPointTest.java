@@ -4,7 +4,6 @@ import mockit.Deencapsulation;
 import mockit.Invocation;
 import mockit.Mock;
 import mockit.MockUp;
-import org.infinispan.Cache;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -13,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.tiatus.entity.Event;
-import org.tiatus.entity.Position;
 import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 import org.tiatus.role.Role;
@@ -41,8 +39,6 @@ public class EventRestPointTest extends RestTestBase {
                 EventRestPoint restPoint = invocation.getInvokedInstance();
                 EventServiceImpl service = new EventServiceImpl(null, null, null);
                 Deencapsulation.setField(restPoint, "service", service);
-                Cache cache = new StubbedCache();
-                Deencapsulation.setField(restPoint, "cache", cache);
             }
         };
 

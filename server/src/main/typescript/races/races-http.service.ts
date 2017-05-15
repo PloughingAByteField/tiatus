@@ -13,7 +13,9 @@ export class RacesHttpService {
   public getRaces(): Observable<Race[]> {
     return this.http.get(this.endpoint)
       .map((response) => {
-        return convertResponseToRaces(response);
+        if (response.status === 200) {
+          return convertResponseToRaces(response);
+        }
       }).share();
    }
 }

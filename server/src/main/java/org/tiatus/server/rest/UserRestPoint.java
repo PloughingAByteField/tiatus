@@ -1,11 +1,9 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.User;
 import org.tiatus.role.Role;
-import org.tiatus.service.ServiceException;
 import org.tiatus.service.UserService;
 
 import javax.annotation.security.RolesAllowed;
@@ -23,10 +21,8 @@ import java.util.List;
 @SuppressWarnings("squid:S1166")
 public class UserRestPoint extends RestBase {
     private static final Logger LOG = LoggerFactory.getLogger(UserRestPoint.class);
-    private static final String CACHE_NAME = "users";
 
     private UserService service;
-    private Cache cache;
 
     /**
      * Get users
@@ -37,27 +33,8 @@ public class UserRestPoint extends RestBase {
     @Produces("application/json")
     public Response getUsers(@Context Request request) {
         try {
-            Response.ResponseBuilder builder;
-            if (cache.get(CACHE_NAME) != null) {
-                CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
-                String cachedEntryETag = cacheEntry.getETag();
-
-                EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-                builder = request.evaluatePreconditions(cachedRacesETag);
-                if (builder == null) {
-                    List<User> users = (List<User>)cacheEntry.getEntry();
-                    builder = Response.ok(users).tag(cachedEntryETag);
-                }
-            } else {
-                List<User> users = service.getUsers();
-                String hashCode = Integer.toString(users.hashCode());
-                EntityTag etag = new EntityTag(hashCode, false);
-                CacheEntry newCacheEntry = new CacheEntry(hashCode, users);
-                cache.put(CACHE_NAME, newCacheEntry);
-                builder = Response.ok(users).tag(etag);
-            }
-
-            return builder.build();
+            List<User> users = service.getUsers();
+            return Response.ok(users).build();
 
         } catch (Exception e) {
             return logError(e);
@@ -70,28 +47,8 @@ public class UserRestPoint extends RestBase {
     @Produces("application/json")
     public Response getUserRoles(@Context Request request) {
         try {
-            Response.ResponseBuilder builder;
-            String cacheName = CACHE_NAME + "_" + "Roles";
-            if (cache.get(cacheName) != null) {
-                CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
-                String cachedEntryETag = cacheEntry.getETag();
-
-                EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-                builder = request.evaluatePreconditions(cachedRacesETag);
-                if (builder == null) {
-                    List<org.tiatus.entity.Role> userRoles = (List<org.tiatus.entity.Role>)cacheEntry.getEntry();
-                    builder = Response.ok(userRoles).tag(cachedEntryETag);
-                }
-            } else {
-                List<org.tiatus.entity.Role> userRoles = service.getUserRoles();
-                String hashCode = Integer.toString(userRoles.hashCode());
-                EntityTag etag = new EntityTag(hashCode, false);
-                CacheEntry newCacheEntry = new CacheEntry(hashCode, userRoles);
-                cache.put(cacheName, newCacheEntry);
-                builder = Response.ok(userRoles).tag(etag);
-            }
-
-            return builder.build();
+            List<org.tiatus.entity.Role> userRoles = service.getUserRoles();
+            return Response.ok(userRoles).build();
 
         } catch (Exception e) {
             return logError(e);
@@ -112,9 +69,6 @@ public class UserRestPoint extends RestBase {
         LOG.debug("Adding user " + user);
         try {
             User saved = service.addUser(user, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (Exception e) {
@@ -137,9 +91,6 @@ public class UserRestPoint extends RestBase {
             User user = service.getUserForId(id);
             if (user != null) {
                 service.deleteUser(user, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
             }
             return Response.noContent().build();
 
@@ -168,9 +119,6 @@ public class UserRestPoint extends RestBase {
             }
 
             service.updateUser(user, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -183,8 +131,4 @@ public class UserRestPoint extends RestBase {
         this.service = service;
     }
 
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
 }

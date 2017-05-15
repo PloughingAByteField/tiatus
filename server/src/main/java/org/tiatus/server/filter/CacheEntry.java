@@ -1,4 +1,4 @@
-package org.tiatus.server.rest;
+package org.tiatus.server.filter;
 
 /**
  * Created by johnreynolds on 05/04/2017.

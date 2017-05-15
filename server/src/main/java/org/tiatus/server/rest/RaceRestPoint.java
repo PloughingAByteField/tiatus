@@ -1,22 +1,18 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Race;
 import org.tiatus.role.Role;
 import org.tiatus.service.RaceService;
-import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,10 +23,8 @@ import java.util.List;
 public class RaceRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
-    private static final String CACHE_NAME = "races";
 
     private RaceService service;
-    private Cache cache;
 
     /**
      * Get races
@@ -40,27 +34,8 @@ public class RaceRestPoint extends RestBase {
     @GET
     @Produces("application/json")
     public Response getRaces(@Context Request request) {
-        Response.ResponseBuilder builder;
-        if (cache.get(CACHE_NAME) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<Race> races = (List<Race>)cacheEntry.getEntry();
-                builder = Response.ok(races).tag(cachedEntryETag);
-            }
-        } else {
-            List<Race> races = service.getRaces();
-            String hashCode = Integer.toString(races.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, races);
-            cache.put(CACHE_NAME, newCacheEntry);
-            builder = Response.ok(races).tag(etag);
-        }
-
-        return builder.build();
+        List<Race> races = service.getRaces();
+        return Response.ok(races).build();
     }
 
     /**
@@ -77,9 +52,6 @@ public class RaceRestPoint extends RestBase {
         LOG.debug("Adding race " + race);
         try {
             Race saved = service.addRace(race, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (Exception e) {
@@ -102,9 +74,6 @@ public class RaceRestPoint extends RestBase {
             Race race = service.getRaceForId(id);
             if (race != null) {
                 service.deleteRace(race, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
             }
             return Response.noContent().build();
 
@@ -133,9 +102,6 @@ public class RaceRestPoint extends RestBase {
             }
 
             service.updateRace(race, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -147,10 +113,5 @@ public class RaceRestPoint extends RestBase {
     // sonar want constructor injection which jaxrs does not support
     public void setService(RaceService service) {
         this.service = service;
-    }
-
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
     }
 }

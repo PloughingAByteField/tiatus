@@ -1,6 +1,5 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Entry;
@@ -8,7 +7,6 @@ import org.tiatus.entity.Race;
 import org.tiatus.role.Role;
 import org.tiatus.service.EntryService;
 import org.tiatus.service.RaceService;
-import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -29,11 +27,9 @@ import java.util.Set;
 public class EntryRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntryRestPoint.class);
-    private static final String CACHE_NAME = "entries";
 
     private EntryService service;
     private RaceService raceService;
-    private Cache cache;
 
     /**
      * Get entries
@@ -43,27 +39,8 @@ public class EntryRestPoint extends RestBase {
     @GET
     @Produces("application/json")
     public Response getEntries(@Context Request request) {
-        Response.ResponseBuilder builder;
-        if (cache.get(CACHE_NAME) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<Entry> entries = (List<Entry>)cacheEntry.getEntry();
-                builder = Response.ok(entries).tag(cachedEntryETag);
-            }
-        } else {
-            List<Entry> entries = service.getEntries();
-            String hashCode = Integer.toString(entries.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, entries);
-            cache.put(CACHE_NAME, newCacheEntry);
-            builder = Response.ok(entries).tag(etag);
-        }
-
-        return builder.build();
+        List<Entry> entries = service.getEntries();
+        return Response.ok(entries).build();
     }
 
     @PermitAll
@@ -77,28 +54,8 @@ public class EntryRestPoint extends RestBase {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        Response.ResponseBuilder builder;
-        String cacheName = CACHE_NAME + "_" + raceId;
-        if (cache.get(cacheName) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(cacheName);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<Entry> entries = (List<Entry>)cacheEntry.getEntry();
-                builder = Response.ok(entries).tag(cachedEntryETag);
-            }
-        } else {
-            List<Entry> entries = service.getEntriesForRace(race);
-            String hashCode = Integer.toString(entries.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, entries);
-            cache.put(cacheName, newCacheEntry);
-            builder = Response.ok(entries).tag(etag);
-        }
-
-        return builder.build();
+        List<Entry> entries = service.getEntriesForRace(race);
+        return Response.ok(entries).build();
     }
 
     /**
@@ -115,7 +72,6 @@ public class EntryRestPoint extends RestBase {
         LOG.debug("Adding entry " + entry);
         try {
             Entry saved = service.addEntry(entry, request.getSession().getId());
-            wipeCaches(entry.getRace());
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
         } catch (Exception e) {
@@ -138,7 +94,6 @@ public class EntryRestPoint extends RestBase {
             Entry entry = service.getEntryForId(Long.parseLong(id));
             if (entry != null) {
                 service.deleteEntry(entry, request.getSession().getId());
-                wipeCaches(entry.getRace());
             }
             return Response.noContent().build();
 
@@ -167,7 +122,6 @@ public class EntryRestPoint extends RestBase {
             }
 
             service.updateEntry(entry, request.getSession().getId());
-            wipeCaches(entry.getRace());
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -203,9 +157,6 @@ public class EntryRestPoint extends RestBase {
             }
 
             service.updateEntries(entries, request.getSession().getId());
-            for (Race race: races) {
-                wipeCaches(race);
-            }
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -227,7 +178,6 @@ public class EntryRestPoint extends RestBase {
             }
 
             service.swapEntryNumbers(from, to, request.getSession().getId());
-            wipeCaches(from.getRace());
             return Response.ok().build();
 
         } catch (Exception e) {
@@ -246,21 +196,4 @@ public class EntryRestPoint extends RestBase {
         this.raceService = service;
     }
 
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
-
-    private void wipeCaches(Race race) {
-        if (cache.get(CACHE_NAME) != null) {
-            cache.evict(CACHE_NAME);
-        }
-
-        if (race != null) {
-            String cacheName = CACHE_NAME + "_" + race.getId();
-            if (cache.get(cacheName) != null) {
-                cache.evict(cacheName);
-            }
-        }
-    }
 }

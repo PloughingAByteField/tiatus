@@ -1,6 +1,5 @@
 package org.tiatus.server.rest;
 
-import org.infinispan.Cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Position;
@@ -9,7 +8,6 @@ import org.tiatus.entity.RacePositionTemplateEntry;
 import org.tiatus.role.Role;
 import org.tiatus.service.PositionService;
 import org.tiatus.service.RacePositionTemplateService;
-import org.tiatus.service.ServiceException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -27,11 +25,9 @@ import java.util.List;
 public class RacePositionTemplateRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateRestPoint.class);
-    private static final String CACHE_NAME = "racePositionTemplates";
 
     private RacePositionTemplateService service;
     private PositionService positionService;
-    private Cache cache;
 
     /**
      * Get templates restricted to Admin users
@@ -41,27 +37,8 @@ public class RacePositionTemplateRestPoint extends RestBase {
     @GET
     @Produces("application/json")
     public Response getTemplates(@Context Request request) {
-        Response.ResponseBuilder builder;
-        if (cache.get(CACHE_NAME) != null) {
-            CacheEntry cacheEntry = (CacheEntry)cache.get(CACHE_NAME);
-            String cachedEntryETag = cacheEntry.getETag();
-
-            EntityTag cachedRacesETag = new EntityTag(cachedEntryETag, false);
-            builder = request.evaluatePreconditions(cachedRacesETag);
-            if (builder == null) {
-                List<RacePositionTemplate> templates = (List<RacePositionTemplate>)cacheEntry.getEntry();
-                builder = Response.ok(templates).tag(cachedEntryETag);
-            }
-        } else {
-            List<RacePositionTemplate> templates = service.getRacePositionTemplates();
-            String hashCode = Integer.toString(templates.hashCode());
-            EntityTag etag = new EntityTag(hashCode, false);
-            CacheEntry newCacheEntry = new CacheEntry(hashCode, templates);
-            cache.put(CACHE_NAME, newCacheEntry);
-            builder = Response.ok(templates).tag(etag);
-        }
-
-        return builder.build();
+        List<RacePositionTemplate> templates = service.getRacePositionTemplates();
+        return Response.ok(templates).build();
     }
 
     /**
@@ -78,9 +55,6 @@ public class RacePositionTemplateRestPoint extends RestBase {
         LOG.debug("Adding template " + template.getName());
         try {
             RacePositionTemplate saved = service.addRacePositionTemplate(template, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (Exception e) {
@@ -103,9 +77,6 @@ public class RacePositionTemplateRestPoint extends RestBase {
             RacePositionTemplate template = service.getTemplateForId(id);
             if (template != null) {
                 service.deleteRacePositionTemplate(template, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
             }
             return Response.noContent().build();
 
@@ -136,9 +107,6 @@ public class RacePositionTemplateRestPoint extends RestBase {
             templateToUpdate.setName(template.getName());
             templateToUpdate.setDefaultTemplate(template.getDefaultTemplate());
             service.updateRacePositionTemplate(templateToUpdate, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -165,9 +133,6 @@ public class RacePositionTemplateRestPoint extends RestBase {
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
             entry.setTemplate(template);
             RacePositionTemplateEntry saved = service.addTemplateEntry(entry, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
         } catch (Exception e) {
@@ -195,9 +160,6 @@ public class RacePositionTemplateRestPoint extends RestBase {
             entry.setTemplate(template);
             if (position != null && template != null) {
                 service.deleteTemplateEntry(entry, request.getSession().getId());
-                if (cache.get(CACHE_NAME) != null) {
-                    cache.evict(CACHE_NAME);
-                }
             }
             return Response.noContent().build();
 
@@ -223,9 +185,6 @@ public class RacePositionTemplateRestPoint extends RestBase {
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
             entry.setTemplate(template);
             service.updateTemplateEntry(entry, request.getSession().getId());
-            if (cache.get(CACHE_NAME) != null) {
-                cache.evict(CACHE_NAME);
-            }
             return Response.noContent().build();
 
         } catch (Exception e) {
@@ -244,8 +203,4 @@ public class RacePositionTemplateRestPoint extends RestBase {
         this.positionService = service;
     }
 
-    @Inject
-    public void setCache(Cache cache) {
-        this.cache = cache;
-    }
 }
