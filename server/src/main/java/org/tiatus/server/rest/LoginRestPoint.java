@@ -20,7 +20,7 @@ import java.net.URI;
  * Created by johnreynolds on 27/08/2016.
  */
 @Path("login")
-public class LoginRestPoint {
+public class LoginRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
 
@@ -63,8 +63,7 @@ public class LoginRestPoint {
             return Response.accepted().location(redirect).build();
 
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 }

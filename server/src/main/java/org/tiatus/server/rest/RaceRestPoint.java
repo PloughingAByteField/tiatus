@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Path("races")
 @SuppressWarnings("squid:S1166")
-public class RaceRestPoint {
+public class RaceRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
     private static final String CACHE_NAME = "races";
@@ -82,13 +82,8 @@ public class RaceRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -113,13 +108,8 @@ public class RaceRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -148,13 +138,8 @@ public class RaceRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 

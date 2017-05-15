@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Path("clubs")
 @SuppressWarnings("squid:S1166")
-public class ClubRestPoint {
+public class ClubRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClubRestPoint.class);
 
@@ -80,13 +80,8 @@ public class ClubRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -111,13 +106,8 @@ public class ClubRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -146,13 +136,8 @@ public class ClubRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 

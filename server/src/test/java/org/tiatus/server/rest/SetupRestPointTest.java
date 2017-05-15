@@ -102,7 +102,7 @@ public class SetupRestPointTest {
     }
 
 
-    @Test (expected = InternalServerErrorException.class)
+    @Test
     public void testAddUserServiceException() throws Exception {
         UriInfo uriInfo = new MockUriInfo().getMockInstance();
         User user = new User();
@@ -118,10 +118,11 @@ public class SetupRestPointTest {
         };
         SetupRestPoint setupRestPoint = new SetupRestPoint();
 
-        setupRestPoint.addUser(uriInfo, servletRequest, context, user);
+        Response response = setupRestPoint.addUser(uriInfo, servletRequest, context, user);
+        Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
 
-    @Test (expected = InternalServerErrorException.class)
+    @Test
     public void testAddUserException() throws Exception {
         UriInfo uriInfo = new MockUriInfo(){
             @Mock

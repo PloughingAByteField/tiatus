@@ -26,7 +26,7 @@ import java.util.Set;
  */
 @Path("entries")
 @SuppressWarnings("squid:S1166")
-public class EntryRestPoint {
+public class EntryRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntryRestPoint.class);
     private static final String CACHE_NAME = "entries";
@@ -118,13 +118,8 @@ public class EntryRestPoint {
             wipeCaches(entry.getRace());
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -147,13 +142,8 @@ public class EntryRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -180,13 +170,8 @@ public class EntryRestPoint {
             wipeCaches(entry.getRace());
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -223,13 +208,8 @@ public class EntryRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -250,13 +230,8 @@ public class EntryRestPoint {
             wipeCaches(from.getRace());
             return Response.ok().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 

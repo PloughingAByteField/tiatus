@@ -81,7 +81,7 @@ public class LoginRestPointTest {
         Assert.assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
     }
 
-    @Test (expected = InternalServerErrorException.class)
+    @Test
     public void testLogoutException() throws Exception {
         UriInfo uriInfo = new MockUriInfo().getMockInstance();
 
@@ -97,7 +97,8 @@ public class LoginRestPointTest {
 
         LoginRestPoint logoutRestPoint = new LoginRestPoint();
 
-        logoutRestPoint.login(uriInfo, httpServletRequest, securityContext);
+        Response response = logoutRestPoint.login(uriInfo, httpServletRequest, securityContext);
+        Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
 
     class MockHttpSession extends MockUp<HttpSession> {

@@ -23,7 +23,7 @@ import java.net.URI;
  */
 @Path("setup")
 @SuppressWarnings("squid:S1166")
-public class SetupRestPoint {
+public class SetupRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(SetupRestPoint.class);
 
@@ -52,17 +52,12 @@ public class SetupRestPoint {
             if (logoStream != null) {
                 configService.setEventLogo(logoStream, "tiatus.svg");
             } else {
-                LOG.warn("FAILED to find image");
+                LOG.warn("Failed to find image");
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ user.getId())).entity(user).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 

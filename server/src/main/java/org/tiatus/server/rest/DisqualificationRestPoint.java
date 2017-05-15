@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Path("disqualifications")
 @SuppressWarnings("squid:S1166")
-public class DisqualificationRestPoint {
+public class DisqualificationRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(DisqualificationRestPoint.class);
     private static final String CACHE_NAME = "disqualifications";
@@ -80,13 +80,8 @@ public class DisqualificationRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -111,13 +106,8 @@ public class DisqualificationRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -146,13 +136,8 @@ public class DisqualificationRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 

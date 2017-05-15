@@ -22,7 +22,7 @@ import java.util.List;
  * Created by johnreynolds on 08/02/2017.
  */
 @Path("time")
-public class TimeRestPoint {
+public class TimeRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimeRestPoint.class);
     private static final String CACHE_NAME = "times";
@@ -68,13 +68,8 @@ public class TimeRestPoint {
 
             return builder.build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -99,13 +94,8 @@ public class TimeRestPoint {
             wipeCache(position, entry);
             return Response.created(URI.create(uriInfo.getPath())).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -123,13 +113,8 @@ public class TimeRestPoint {
             wipeCache(position, entry);
             return Response.ok().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -182,13 +167,8 @@ public class TimeRestPoint {
 
             return builder.build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -227,13 +207,8 @@ public class TimeRestPoint {
 
             return builder.build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 

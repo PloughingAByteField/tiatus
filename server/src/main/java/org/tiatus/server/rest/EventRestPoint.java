@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Path("events")
 @SuppressWarnings("squid:S1166")
-public class EventRestPoint {
+public class EventRestPoint extends RestBase {
     private static final String GENERAL_EXCEPTION = "Got general exception: ";
     private static final Logger LOG = LoggerFactory.getLogger(EventRestPoint.class);
     private static final String CACHE_NAME = "events";
@@ -60,13 +60,8 @@ public class EventRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn(GENERAL_EXCEPTION, e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -101,13 +96,8 @@ public class EventRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn(GENERAL_EXCEPTION, e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -133,12 +123,8 @@ public class EventRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Failed to delete event: " + id, e);
-            throw new InternalServerErrorException();
         } catch (Exception e) {
-            LOG.warn(GENERAL_EXCEPTION, e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -165,12 +151,8 @@ public class EventRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Failed to delete event: " + id, e);
-            throw new InternalServerErrorException();
         } catch (Exception e) {
-            LOG.warn(GENERAL_EXCEPTION, e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -260,12 +242,8 @@ public class EventRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Failed to delete raceEvent: " + id, e);
-            throw new InternalServerErrorException();
         } catch (Exception e) {
-            LOG.warn(GENERAL_EXCEPTION, e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -292,13 +270,8 @@ public class EventRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn(GENERAL_EXCEPTION, e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -329,13 +302,8 @@ public class EventRestPoint {
                 cache.evict(cacheName);
             }
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn(GENERAL_EXCEPTION, e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
         return Response.ok().build();
     }

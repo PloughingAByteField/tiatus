@@ -71,7 +71,7 @@ public class ConfigRestPoint {
             return Response.ok().build();
 
         } catch (Exception e) {
-            LOG.warn("File upload failed", e);
+            LOG.warn("Event title upload failed", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
@@ -88,7 +88,7 @@ public class ConfigRestPoint {
             return Response.ok().build();
 
         } catch (Exception e) {
-            LOG.warn("File upload failed", e);
+            LOG.warn("Event footer upload failed", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }

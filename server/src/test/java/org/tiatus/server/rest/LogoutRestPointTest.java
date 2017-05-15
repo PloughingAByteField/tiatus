@@ -45,7 +45,7 @@ public class LogoutRestPointTest {
         Assert.assertEquals(Response.Status.TEMPORARY_REDIRECT.getStatusCode(), response.getStatus());
     }
 
-    @Test (expected = InternalServerErrorException.class)
+    @Test
     public void testLogoutException() throws Exception {
         UriInfo uriInfo = new MockUriInfo().getMockInstance();
 
@@ -59,7 +59,8 @@ public class LogoutRestPointTest {
 
         LogoutRestPoint logoutRestPoint = new LogoutRestPoint();
 
-        logoutRestPoint.logout(uriInfo, httpServletRequest);
+        Response response = logoutRestPoint.logout(uriInfo, httpServletRequest);
+        Assert.assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
     }
 
     class MockHttpSession extends MockUp<HttpSession> {

@@ -19,7 +19,7 @@ import java.net.URI;
  * Created by johnreynolds on 27/08/2016.
  */
 @Path("logout")
-public class LogoutRestPoint {
+public class LogoutRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
 
@@ -45,8 +45,7 @@ public class LogoutRestPoint {
             return Response.temporaryRedirect(redirect).build();
 
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 }

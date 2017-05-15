@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Path("racePositionTemplates")
 @SuppressWarnings("squid:S1166")
-public class RacePositionTemplateRestPoint {
+public class RacePositionTemplateRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateRestPoint.class);
     private static final String CACHE_NAME = "racePositionTemplates";
@@ -83,13 +83,8 @@ public class RacePositionTemplateRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -114,13 +109,8 @@ public class RacePositionTemplateRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -151,13 +141,8 @@ public class RacePositionTemplateRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -185,13 +170,8 @@ public class RacePositionTemplateRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).entity(saved).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -221,13 +201,8 @@ public class RacePositionTemplateRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -253,13 +228,8 @@ public class RacePositionTemplateRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 

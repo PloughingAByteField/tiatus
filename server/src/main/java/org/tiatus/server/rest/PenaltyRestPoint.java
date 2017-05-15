@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Path("penalties")
 @SuppressWarnings("squid:S1166")
-public class PenaltyRestPoint {
+public class PenaltyRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(PenaltyRestPoint.class);
     private static final String CACHE_NAME = "penalties";
@@ -80,13 +80,8 @@ public class PenaltyRestPoint {
             }
             return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -111,13 +106,8 @@ public class PenaltyRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
@@ -146,13 +136,8 @@ public class PenaltyRestPoint {
             }
             return Response.noContent().build();
 
-        } catch (ServiceException e) {
-            LOG.warn("Got service exception: ", e.getSuppliedException());
-            throw new InternalServerErrorException();
-
         } catch (Exception e) {
-            LOG.warn("Got general exception ", e);
-            throw new InternalServerErrorException();
+            return logError(e);
         }
     }
 
