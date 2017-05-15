@@ -270,7 +270,7 @@ public class AuthenticationFilterTest {
 
         HttpServletRequest servletRequest = new MockUp<HttpServletRequest>() {
             @Mock
-            public HttpSession getSession(boolean create) {
+            public HttpSession getSession() {
                 return session;
             }
         }.getMockInstance();
