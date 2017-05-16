@@ -50,6 +50,11 @@ export class AdjudicatorComponent implements OnInit, OnDestroy {
     this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
     this.keepalive.interval(360);
     this.keepalive.request('/rest/keepalive');
+    this.keepalive.onPingResponse.subscribe((response: Response) => {
+      if (response.status === 401) {
+        window.location.href = '/rest/logout';
+      }
+    });
     this.idle.watch();
     this.idle.onTimeout.subscribe(() => {
       console.log('Timed out');
