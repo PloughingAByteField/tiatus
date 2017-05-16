@@ -3,22 +3,22 @@
 <form [formGroup]="addRaceForm" class="form-group" (ngSubmit)="onSubmit(addRaceForm)" novalidate>
   <div class="form-group">
     <label>{{ 'RACE_NAME' | translate }}:</label>
-      <input type="text" id="name" formControlName="name" placeholder="{{ 'ENTER_RACE_NAME' | translate }}">
-      <div *ngIf="addRaceForm.get('name').errors && addRaceForm.get('name').touched" class="alert alert-danger">
-        <div id="nameRequired" [hidden]="!addRaceForm.get('name').hasError('required')">{{ 'RACE_NAME_REQUIRED' | translate }}</div>
-        <div id="nameMinLength" [hidden]="!addRaceForm.get('name').hasError('minlength')">{{ 'RACE_NAME_TOO_SHORT' | translate }}</div>
-        <div id="nameMaxLength" [hidden]="!addRaceForm.get('name').hasError('maxlength')">{{ 'RACE_NAME_TOO_LONG' | translate }}</div>
-        <div id="nameExisting"[hidden]="!addRaceForm.get('name').hasError('existingName')">{{ 'RACE_NAME_ALREADY_EXISTS' | translate }}</div>
+      <input type="text" id="newName" formControlName="newName" placeholder="{{ 'ENTER_RACE_NAME' | translate }}">
+      <div *ngIf="addRaceForm.get('newName').errors && addRaceForm.get('newName').touched" class="alert alert-danger">
+        <div id="nameRequired" [hidden]="!addRaceForm.get('newName').hasError('required')">{{ 'RACE_NAME_REQUIRED' | translate }}</div>
+        <div id="nameMinLength" [hidden]="!addRaceForm.get('newName').hasError('minlength')">{{ 'RACE_NAME_TOO_SHORT' | translate }}</div>
+        <div id="nameMaxLength" [hidden]="!addRaceForm.get('newName').hasError('maxlength')">{{ 'RACE_NAME_TOO_LONG' | translate }}</div>
+        <div id="nameExisting"[hidden]="!addRaceForm.get('newName').hasError('existingName')">{{ 'RACE_NAME_ALREADY_EXISTS' | translate }}</div>
     </div>
   </div>
   <div class="form-group">
     <label>{{ 'RACE_ORDER' | translate }}:</label>
-      <input type="number" id="raceOrder" formControlName="raceOrder" required>
-      <div *ngIf="addRaceForm.get('raceOrder').errors && addRaceForm.get('raceOrder').touched" class="alert alert-danger">
-        <div id="numberRequired" [hidden]="!addRaceForm.get('raceOrder').hasError('required')">{{ 'RACE_ORDER_REQUIRED' | translate }}</div>
-        <div id="numberMinLength" [hidden]="!addRaceForm.get('raceOrder').hasError('tooSmall')">{{ 'RACE_ORDER_TOO_SMALL' | translate }}</div>
-        <div id="numberMaxLength" [hidden]="!addRaceForm.get('raceOrder').hasError('tooLarge')">{{ 'RACE_ORDER_TOO_LARGE' | translate }}</div>
-        <div id="numberExisting" [hidden]="!addRaceForm.get('raceOrder').hasError('existingNumber')">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</div>
+      <input type="number" id="newRaceOrder" formControlName="newRaceOrder" required>
+      <div *ngIf="addRaceForm.get('newRaceOrder').errors && addRaceForm.get('newRaceOrder').touched" class="alert alert-danger">
+        <div id="numberRequired" [hidden]="!addRaceForm.get('newRaceOrder').hasError('required')">{{ 'RACE_ORDER_REQUIRED' | translate }}</div>
+        <div id="numberMinLength" [hidden]="!addRaceForm.get('newRaceOrder').hasError('tooSmall')">{{ 'RACE_ORDER_TOO_SMALL' | translate }}</div>
+        <div id="numberMaxLength" [hidden]="!addRaceForm.get('newRaceOrder').hasError('tooLarge')">{{ 'RACE_ORDER_TOO_LARGE' | translate }}</div>
+        <div id="numberExisting" [hidden]="!addRaceForm.get('newRaceOrder').hasError('existingNumber')">{{ 'RACE_ORDER_ALREADY_EXISTS' | translate }}</div>
    </div>
   </div>
     <button type="submit" id="submit" [disabled]="!addRaceForm.valid">{{ 'ADD_RACE' | translate }}</button>

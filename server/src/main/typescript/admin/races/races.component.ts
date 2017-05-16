@@ -23,13 +23,13 @@ export class RacesComponent implements OnInit {
 
   public ngOnInit() {
     this.addRaceForm = new FormGroup({
-      name: new FormControl('', [
+      newName: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(10),
         this.validateRaceName()
       ]),
-      raceOrder: new FormControl(
+      newRaceOrder: new FormControl(
           this.races.length > 0 ? this.races[this.races.length - 1].raceOrder + 1 : 1, [
         Validators.required, this.validateRaceOrder()
       ])
@@ -39,7 +39,7 @@ export class RacesComponent implements OnInit {
       .subscribe((races: Race[]) => {
         this.races = races;
         this.addRaceForm.patchValue({
-          raceOrder: this.races.length > 0 ? this.races[this.races.length - 1].raceOrder + 1 : 1
+          newRaceOrder: this.races.length > 0 ? this.races[this.races.length - 1].raceOrder + 1 : 1
         });
         this.racesForm = new FormGroup({
           races: new FormArray([])
@@ -92,14 +92,14 @@ export class RacesComponent implements OnInit {
     console.log(race);
   }
 
-  public onSubmit({ value, valid }: { value: Race, valid: boolean }) {
+  public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     const race: Race = new Race();
-    race.name = value.name;
-    race.raceOrder = value.raceOrder;
+    race.name = value.newName;
+    race.raceOrder = value.newRaceOrder;
     this.racesService.addRace(race);
     this.addRaceForm.reset({
-      name: '',
-      raceOrder: race.raceOrder + 1
+      newName: '',
+      newRaceOrder: race.raceOrder + 1
     });
   }
 
