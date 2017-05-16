@@ -43,35 +43,34 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        LOG.debug("in filter");
+        UserPrincipal user;
+        String scheme = requestContext.getUriInfo().getRequestUri().getScheme();
 
         // are we already logged in the session
-        HttpSession session = servletRequest.getSession();
-        if (session != null){
-            String scheme = requestContext.getUriInfo().getRequestUri().getScheme();
-            UserPrincipal user;
-            if (session.getAttribute("principal") == null) {
-                LOG.debug("Creating new user principal");
-                if (!requestContext.hasEntity() || !requestContext.getMediaType().equals(APPLICATION_FORM_URLENCODED_TYPE)) {
-                    LOG.debug("not a form");
-                    return;
-                }
-
-                Form form = getForm(requestContext);
-                MultivaluedMap<String, String> parameters = form.asMap();
-
-                // do we have the auth details - in post
-                if (parameters.get("user") == null || parameters.get("pwd") == null) {
-                    LOG.warn("Do not have user or pwd set in the form");
-                    return;
-                }
-                user = getUser(parameters.get("user").get(0), parameters.get("pwd").get(0));
-            } else {
-                user = (UserPrincipal)session.getAttribute("principal");
+        HttpSession session = servletRequest.getSession(false);
+        if (session == null) {
+            if (!requestContext.hasEntity() || !requestContext.getMediaType().equals(APPLICATION_FORM_URLENCODED_TYPE)) {
+                LOG.debug("not a form");
+                return;
             }
-            if (user != null) {
-                requestContext.setSecurityContext(new TiatusSecurityContext(user, scheme));
+
+            LOG.debug("Creating new user principal");
+            Form form = getForm(requestContext);
+            MultivaluedMap<String, String> parameters = form.asMap();
+
+            // do we have the auth details - in post
+            if (parameters.get("user") == null || parameters.get("pwd") == null) {
+                LOG.warn("Do not have user or pwd set in the form");
+                return;
             }
+            user = getUser(parameters.get("user").get(0), parameters.get("pwd").get(0));
+
+        } else {
+            user = (UserPrincipal)session.getAttribute("principal");
+        }
+
+        if (user != null) {
+            requestContext.setSecurityContext(new TiatusSecurityContext(user, scheme));
         }
     }
 
