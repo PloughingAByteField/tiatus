@@ -21,7 +21,7 @@ export class PositionsComponent implements OnInit {
 
   public ngOnInit() {
     this.addPositionForm = new FormGroup({
-      name: this.getNameControlWithValidators('')
+      newName: this.getNameControlWithValidators('')
     });
     this.positionsService.getPositions()
       .subscribe((positions: Position[]) => {
@@ -61,16 +61,16 @@ export class PositionsComponent implements OnInit {
     }
   }
 
-  public onSubmit({ value, valid }: { value: Position, valid: boolean }) {
+  public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     const position: Position = new Position();
-    position.name = value.name;
+    position.name = value.newName;
     this.positionsService.addPosition(position);
     this.addPositionForm.reset({
-      name: ''
+      newName: ''
     });
   }
 
-  private getPositionFormArray(): FormArray {
+  public getPositionFormArray(): FormArray {
     if (this.positionsForm) {
       return this.positionsForm.get('positions') as FormArray;
     }
