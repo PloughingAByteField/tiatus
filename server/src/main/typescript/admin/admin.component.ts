@@ -27,7 +27,7 @@ export class AdminComponent implements OnInit {
     this.idle.setIdle(600);
     this.idle.setTimeout(300);
     this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
-    this.keepalive.interval(360);
+    this.keepalive.interval(180);
     this.keepalive.request('/rest/keepalive');
     this.keepalive.onPingResponse.subscribe((response: Response) => {
       if (response.status === 401) {
