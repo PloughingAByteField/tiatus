@@ -34,26 +34,30 @@ public class WebSocketServiceImpl implements WebSocketService {
     @OnOpen
     public void open(Session session, EndpointConfig config) {
         LOG.debug("Socket open " + session.getId());
+        boolean loggedIn = false;
         HttpSession httpSession = (HttpSession)config.getUserProperties().get(HttpSession.class.getName());
-        LOG.debug("http session " + httpSession.getId());
+        if (httpSession != null) {
+            LOG.debug("http session " + httpSession.getId());
+            // are we an authenticated session
+            UserPrincipal userPrincipal = (UserPrincipal) httpSession.getAttribute("principal");
+            if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADMIN)
+                    || TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADJUDICATOR)
+                    || TiatusSecurityContext.isUserInRole(userPrincipal, Role.TIMING)) {
+                loggedIn = true;
+                clients.put(session, httpSession);
+                ClientDetails details = new ClientDetails();
+                details.setUserName(userPrincipal.getName());
+                details.setRole(getUserRole(userPrincipal));
+                connectedDetails.put(session, details);
+                LOG.debug("After add Have " + clients.size() + " clients for " + this);
 
-        // are we an authenticated session
-        UserPrincipal userPrincipal = (UserPrincipal)httpSession.getAttribute("principal");
-        if (TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADMIN)
-            || TiatusSecurityContext.isUserInRole(userPrincipal, Role.ADJUDICATOR)
-            || TiatusSecurityContext.isUserInRole(userPrincipal, Role.TIMING)) {
-            clients.put(session, httpSession);
-            ClientDetails details = new ClientDetails();
-            details.setUserName(userPrincipal.getName());
-            details.setRole(getUserRole(userPrincipal));
-            connectedDetails.put(session, details);
-            LOG.debug("After add Have " + clients.size() + " clients for " + this);
-
-            // send connected out
-            sendMessage(Message.createMessage(buildContent(details), MessageType.CONNECTED, httpSession.getId()));
-            // send who else is connected and position to the connecting client
-            sendConnectedClients(session);
-        } else {
+                // send connected out
+                sendMessage(Message.createMessage(buildContent(details), MessageType.CONNECTED, httpSession.getId()));
+                // send who else is connected and position to the connecting client
+                sendConnectedClients(session);
+            }
+        }
+        if (!loggedIn) {
             LOG.warn("Got non logged in websocket attempt");
             close(session);
         }
