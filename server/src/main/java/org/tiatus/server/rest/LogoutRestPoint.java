@@ -20,7 +20,7 @@ import java.net.URI;
 @Path("logout")
 public class LogoutRestPoint extends RestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LogoutRestPoint.class);
 
     /**
      * Logout and redirect a user back to login page

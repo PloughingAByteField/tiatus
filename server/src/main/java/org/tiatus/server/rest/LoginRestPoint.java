@@ -22,7 +22,7 @@ import java.net.URI;
 @Path("login")
 public class LoginRestPoint extends RestBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoginRestPoint.class);
 
     /**
      * Check to see if user has been logged in and redirect to the correct location
