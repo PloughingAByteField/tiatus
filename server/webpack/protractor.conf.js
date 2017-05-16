@@ -22,7 +22,8 @@ exports.config = {
   allScriptsTimeout: 110000,
 
   capabilities: {
-    'browserName': 'chrome'
+    'browserName': 'chrome',
+    'acceptSslCerts': 'true'
   },
 
   /**
