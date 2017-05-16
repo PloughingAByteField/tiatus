@@ -67,7 +67,7 @@ public class WebSocketServiceImpl implements WebSocketService {
     public void close(Session session) {
         LOG.debug("Socket close");
         removeSession(session);
-        LOG.debug("After error Have " + clients.size() + " clients for " + this);
+        LOG.debug("After close Have " + clients.size() + " clients for " + this);
     }
 
     @OnError
