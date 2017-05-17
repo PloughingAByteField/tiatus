@@ -30,7 +30,7 @@ export class ClubsComponent implements OnInit, OnDestroy {
     });
 
     this.addClubForm = this.fb.group({
-      name: this.fb.control('', [
+      newName: this.fb.control('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(250),
@@ -65,8 +65,14 @@ export class ClubsComponent implements OnInit, OnDestroy {
 
   public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     const newClub: Club = new Club();
-    newClub.clubName = value.name;
+    newClub.clubName = value.newName;
     this.clubsService.createClub(newClub).then((club: Club) => this.addClubForm.reset());
+  }
+
+  public getClubsFormArray(): FormArray {
+    if (this.clubsForm) {
+      return this.clubsForm.get('clubs') as FormArray;
+    }
   }
 
   private populateClubsForm(clubs): void {

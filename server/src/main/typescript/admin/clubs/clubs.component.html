@@ -2,16 +2,16 @@
 <form [formGroup]="addClubForm" class="form-group" (ngSubmit)="onSubmit(addClubForm)" novalidate>
     <div class="form-group">
         <label>{{ 'CLUB_NAME' | translate }}:</label>
-        <input type="text" formControlName="name" placeholder="{{ 'ENTER_CLUB_NAME' | translate }}">
-        <div *ngIf="addClubForm.get('name').errors && addClubForm.get('name').touched" class="alert alert-danger">
-            <div [hidden]="!addClubForm.get('name').hasError('required')">{{ 'CLUB_NAME_REQUIRED' | translate }}</div>
-            <div [hidden]="!addClubForm.get('name').hasError('minlength')">{{ 'CLUB_NAME_TOO_SHORT' | translate }}</div>
-            <div [hidden]="!addClubForm.get('name').hasError('maxlength')">{{ 'CLUB_NAME_TOO_LONG' | translate }}</div>
-            <div [hidden]="!addClubForm.get('name').hasError('existingClubName')">{{ 'CLUB_NAME_ALREADY_EXISTS' | translate }}</div>
+        <input type="text" id="newName" formControlName="newName" placeholder="{{ 'ENTER_CLUB_NAME' | translate }}">
+        <div *ngIf="addClubForm.get('newName').errors && addClubForm.get('newName').touched" class="alert alert-danger">
+            <div id="nameRequired" [hidden]="!addClubForm.get('newName').hasError('required')">{{ 'CLUB_NAME_REQUIRED' | translate }}</div>
+            <div id="nameMinLength" [hidden]="!addClubForm.get('newName').hasError('minlength')">{{ 'CLUB_NAME_TOO_SHORT' | translate }}</div>
+            <div id="nameMaxLength" [hidden]="!addClubForm.get('newName').hasError('maxlength')">{{ 'CLUB_NAME_TOO_LONG' | translate }}</div>
+            <div id="nameExisting" [hidden]="!addClubForm.get('newName').hasError('existingClubName')">{{ 'CLUB_NAME_ALREADY_EXISTS' | translate }}</div>
         </div>
     </div>
 
-    <button type="submit" [disabled]="!addClubForm.valid">{{ 'ADD_CLUB' | translate }}</button>
+    <button type="submit" id="submit" [disabled]="!addClubForm.valid">{{ 'ADD_CLUB' | translate }}</button>
 </form>
 
 <div *ngIf="clubs" [formGroup]="clubsForm">
@@ -23,10 +23,10 @@
                 <th></th>
             </thead>
             <tbody>
-                <tr *ngFor="let clubControl of clubsForm.get('clubs').controls; let i=index" [formGroupName]="i">
-                    <td><input type="text" formControlName="name"></td>
-                    <td><button class="btn primary" [disabled]="!clubControl.get('name').valid" (click)="updateClub(clubControl)">{{ 'UPDATE_CLUBNAME' | translate }}</button></td>
-                    <td><button class="btn primary" (click)="removeClub(clubControl)">{{ 'REMOVE_CLUB' | translate }}</button></td>
+                <tr *ngFor="let clubControl of getClubsFormArray().controls; let i=index" [formGroupName]="i">
+                    <td><input type="text" id="name-{{i}}" formControlName="name"></td>
+                    <td><button class="btn primary" id="update-{{i}}" [disabled]="!clubControl.get('name').valid" (click)="updateClub(clubControl)">{{ 'UPDATE_CLUBNAME' | translate }}</button></td>
+                    <td><button class="btn primary" id="remove-{{i}}" (click)="removeClub(clubControl)">{{ 'REMOVE_CLUB' | translate }}</button></td>
                 </tr>
             </tbody>
         </table>

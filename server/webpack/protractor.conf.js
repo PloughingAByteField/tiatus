@@ -12,7 +12,8 @@ exports.config = {
     admin: [
       helpers.root('./src/main/typescript/admin/login.e2e.ts'),
       helpers.root('./src/main/typescript/admin/races/races.e2e.ts'),
-      helpers.root('./src/main/typescript/admin/positions/positions.e2e.ts')
+      helpers.root('./src/main/typescript/admin/positions/positions.e2e.ts'),
+      helpers.root('./src/main/typescript/admin/clubs/clubs.e2e.ts')
     ]
   },
   exclude: [],
