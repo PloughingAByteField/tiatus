@@ -19,15 +19,7 @@ export class ResultsClubsService extends ClubsService {
 
     public refresh(): void {
         this.service.getClubsData().subscribe((data: Data) => {
-            let updateData: boolean = false;
-            if (data.cached) {
-                if (data.data.length !== this.clubs.length) {
-                    updateData = true;
-                }
-            } else {
-                updateData = true;
-            }
-            if (updateData) {
+            if (!data.cached) {
                 this.clubs = data.data;
                 this.subject.next(this.clubs);
             }

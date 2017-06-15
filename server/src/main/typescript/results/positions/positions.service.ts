@@ -19,15 +19,7 @@ export class ResultsPositionsService extends PositionsService {
 
     public refresh(): void {
         this.service.getPositionsData().subscribe((data: Data) => {
-            let updateData: boolean = false;
-            if (data.cached) {
-                if (data.data.length !== this.positions.length) {
-                    updateData = true;
-                }
-            } else {
-                updateData = true;
-            }
-            if (updateData) {
+            if (!data.cached) {
                 this.positions = data.data;
                 this.subject.next(this.positions);
             }

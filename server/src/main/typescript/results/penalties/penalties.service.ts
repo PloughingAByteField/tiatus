@@ -14,15 +14,7 @@ export class ResultsPenaltiesService extends PenaltiesService {
 
     public refresh(): void {
         this.service.getPenaltiesData().subscribe((data: Data) => {
-            let updateData: boolean = false;
-            if (data.cached) {
-                if (data.data.length !== this.penalties.length) {
-                    updateData = true;
-                }
-            } else {
-                updateData = true;
-            }
-            if (updateData) {
+            if (!data.cached) {
                 this.penalties = data.data;
                 this.penaltiesSubject.next(this.penalties);
             }

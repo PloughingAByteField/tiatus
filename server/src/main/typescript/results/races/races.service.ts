@@ -14,15 +14,7 @@ export class ResultsRacesService extends RacesService {
 
     public refresh(): void {
         this.service.getRacesData().subscribe((data: Data) => {
-            let updateData: boolean = false;
-            if (data.cached) {
-                if (data.data.length !== this.races.length) {
-                    updateData = true;
-                }
-            } else {
-                updateData = true;
-            }
-            if (updateData) {
+            if (!data.cached) {
                 this.races = data.data;
                 this.racesSubject.next(this.races);
             }

@@ -19,15 +19,7 @@ export class ResultsDisqualificationService extends DisqualificationService {
 
     public refresh(): void {
         this.service.getDisqualificationsData().subscribe((data: Data) => {
-            let updateData: boolean = false;
-            if (data.cached) {
-                if (data.data.length !== this.disqualifications.length) {
-                    updateData = true;
-                }
-            } else {
-                updateData = true;
-            }
-            if (updateData) {
+            if (!data.cached) {
                 this.disqualifications = data.data;
                 this.disqualificationsSubject.next(this.disqualifications);
             }

@@ -19,15 +19,7 @@ export class ResultsEventsService extends EventsService {
 
     public refresh(): void {
         this.service.getEventsData().subscribe((data: Data) => {
-            let updateData: boolean = false;
-            if (data.cached) {
-                if (data.data.length !== this.events.length) {
-                    updateData = true;
-                }
-            } else {
-                updateData = true;
-            }
-            if (updateData) {
+            if (!data.cached) {
                 this.events = data.data;
                 this.subject.next(this.events);
             }
