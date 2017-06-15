@@ -16,13 +16,16 @@
         <resteasy.version>3.0.8.Final</resteasy.version>
         <sonar.javascript.coveragePlugin>lcov</sonar.javascript.coveragePlugin>
         <sonar.javascript.lcov.reportPath>target/coverage/lcov.info</sonar.javascript.lcov.reportPath>
-        <sonar.exclusions>src/main/webapp/public/js/**,src/main/typescript/**/*.spec.ts,src/main/typescript/**/*.e2e.ts</sonar.exclusions>
+        <sonar.exclusions>
+            src/main/webapp/public/js/**,src/main/typescript/**/*.spec.ts,src/main/typescript/**/*.e2e.ts
+        </sonar.exclusions>
         <sonar.sources>src/main/java,src/main/webapp,src/main/typescript</sonar.sources>
         <sonar.tests>src/test/javascript,src/test/e2e,src/test/java</sonar.tests>
         <sonar.tests.inclusions>src/main/typescript/**/*.spec.ts</sonar.tests.inclusions>
         <sonar.ts.tslintconfigpath>tslint.json</sonar.ts.tslintconfigpath>
         <sonar.ts.lcov.reportpath>target/ts-coverage/lcov.info</sonar.ts.lcov.reportpath>
-        <sonar.genericcoverage.unitTestReportPaths>target/js/protractor.xml,target/js/TESTS.xml</sonar.genericcoverage.unitTestReportPaths>
+        <sonar.genericcoverage.unitTestReportPaths>target/js/protractor.xml,target/js/TESTS.xml
+        </sonar.genericcoverage.unitTestReportPaths>
         <docker.not-stop-instances>false</docker.not-stop-instances>
     </properties>
 
@@ -153,7 +156,7 @@
                         </goals>
                         <configuration>
                             <nodeVersion>v6.9.5</nodeVersion>
-                            <npmVersion>4.3.0</npmVersion>
+                            <npmVersion>5.0.3</npmVersion>
                         </configuration>
                     </execution>
 
@@ -164,7 +167,7 @@
                         </goals>
                         <configuration>
                             <nodeVersion>v6.9.5</nodeVersion>
-                            <yarnVersion>v0.16.1</yarnVersion>
+                            <yarnVersion>v0.24.6</yarnVersion>
                         </configuration>
                     </execution>
 
@@ -263,7 +266,9 @@
                                                     <include>${project.groupId}:${project.artifactId}</include>
                                                 </includes>
                                                 <outputDirectory>.</outputDirectory>
-                                                <outputFileNameMapping>${project.build.finalName}.${artifact.extension}</outputFileNameMapping>
+                                                <outputFileNameMapping>
+                                                    ${project.build.finalName}.${artifact.extension}
+                                                </outputFileNameMapping>
                                             </dependencySet>
                                         </dependencySets>
                                     </inline>
@@ -300,8 +305,8 @@
                                 </log>
 
                                 <!--<env>-->
-                                    <!--<VIDEO>true</VIDEO>-->
-                                    <!--<WAIT_TIMEOUT>60s</WAIT_TIMEOUT>-->
+                                <!--<VIDEO>true</VIDEO>-->
+                                <!--<WAIT_TIMEOUT>60s</WAIT_TIMEOUT>-->
                                 <!--</env>-->
 
                                 <!-- Add only if chrome crashes -->
@@ -315,9 +320,9 @@
 
                                 <!-- add if we need to upload files -->
                                 <!--<volumes>-->
-                                    <!--<bind>-->
-                                        <!--<volume>${project.basedir}/src/test/e2e:/protractor</volume>-->
-                                    <!--</bind>-->
+                                <!--<bind>-->
+                                <!--<volume>${project.basedir}/src/test/e2e:/protractor</volume>-->
+                                <!--</bind>-->
                                 <!--</volumes>-->
                             </run>
                         </image>
