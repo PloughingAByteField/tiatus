@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -10,7 +10,7 @@ export class SwapEntriesHttpService {
 
     private endpoint: string = '/rest/entries/swapEntries';
 
-    constructor(private http: Http) {}
+    constructor(private http: HttpClient) {}
 
     public swapEntries(from: Entry, to: Entry): Promise<Entry> {
         console.log('Swap from ' + from.number + ' to ' + to.number);

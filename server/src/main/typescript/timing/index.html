@@ -13,17 +13,9 @@
 
   <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
 
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
-
   <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
   
-  <% if (webpackConfig.htmlElements.headTags) { %>
-    <!-- Configured Head Tags  -->
-    <%= webpackConfig.htmlElements.headTags %>
-  <% } %>
-
-  <base href="/timing/">
+  <base href="/timing">
 
 </head>
 
@@ -32,11 +24,6 @@
   <timing>
     Loading Timing ...
   </timing>
-
-  <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
-  <!-- Webpack Dev Server reload -->
-  <script src="/webpack-dev-server.js"></script>
-  <% } %>
 
 </body>
 </html>

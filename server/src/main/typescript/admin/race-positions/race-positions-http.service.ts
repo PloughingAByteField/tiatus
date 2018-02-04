@@ -1,23 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { RacePositionTemplate, convertObjectToRacePositionTemplate } from './race-position-template.model';
+import { RacePositionTemplate } from './race-position-template.model';
+import { CachedHttpService } from '../../http/cached-http.service';
+import { Data } from '../../model/data.model';
 
 @Injectable()
-export class RacePositionsHttpService {
+export class RacePositionsHttpService extends CachedHttpService {
 
     public templates: RacePositionTemplate[];
 
     private endPoint: string = '/rest/racePositionTemplates';
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http) {}
+    constructor(protected http: HttpClient) {
+        super(http);
+    }
 
     public createTemplate(template: RacePositionTemplate): Promise<RacePositionTemplate> {
         return this.http
             .post(this.endPoint,
-            JSON.stringify(template), { headers: this.headers })
+                JSON.stringify(template), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
                 if (res.status === 201) {
@@ -44,7 +48,7 @@ export class RacePositionsHttpService {
     public updateTemplate(template: RacePositionTemplate): Promise<RacePositionTemplate> {
         return this.http
             .put(this.endPoint,
-            JSON.stringify(template), { headers: this.headers })
+            { headers: this.headers })
             .toPromise()
             .then(() => {
                 return template;
@@ -53,16 +57,6 @@ export class RacePositionsHttpService {
     }
 
     public getTemplates(): Observable<RacePositionTemplate[]> {
-        return this.http.get(this.endPoint)
-        .map(convertJsonToRacePositionTemplates).share();
+        return this.http.get<RacePositionTemplate[]>(this.endPoint);
     }
-}
-
-function convertJsonToRacePositionTemplates(response: Response): RacePositionTemplate[] {
-    const jsonTemplates: RacePositionTemplate[] = response.json();
-    const templates: RacePositionTemplate[] = new Array<RacePositionTemplate>();
-    jsonTemplates.map((json: RacePositionTemplate) => {
-      templates.push(convertObjectToRacePositionTemplate(json));
-    });
-    return templates;
 }

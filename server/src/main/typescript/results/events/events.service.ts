@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Entry } from '../../entries/entry.model';
 
-import { Data } from '../model/data.model';
+import { Data } from '../../model/data.model';
 
 import { EventsService } from '../../events/events.service';
 import { ResultsHttpEventsService } from './events-http.service';

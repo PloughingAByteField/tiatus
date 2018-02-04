@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Event } from '../events/event.model';
 import { Race } from '../races/race.model';
+import { Data } from '../model/data.model';
 
 import { UnassignedEventsHttpService } from './unassigned-events-http.service';
 
@@ -38,8 +39,8 @@ export class UnassignedEventsService implements OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
-        this.subscription = this.service.getUnassignedEvents().subscribe((events: Event[]) => {
-            this.events = events;
+        this.subscription = this.service.getUnassignedEvents().subscribe((data: Data) => {
+            this.events = data.data;
             this.subject.next(this.events);
         });
     }

@@ -1,27 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
-import { Event, convertObjectToEvent } from '../events/event.model';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
+import { Event } from '../events/event.model';
+import { CachedHttpService } from '../http/cached-http.service';
+import { Data } from '../model/data.model';
 
 @Injectable()
-export class UnassignedEventsHttpService {
+export class UnassignedEventsHttpService extends CachedHttpService {
 
-  protected endpoint: string = '/rest/events/unassigned';
+  protected endPoint: string = '/rest/events/unassigned';
 
-  constructor(protected http: Http) {}
+  constructor(protected http: HttpClient) {
+    super(http);
+  }
 
-  public getUnassignedEvents(): Observable<Event[]> {
-    return this.http.get(this.endpoint)
-      .map(convertJsonToUnassignedEvents).share();
+  public getUnassignedEvents(): Observable<Data> {
+    return this.getData(this.endPoint);
    }
-}
-
-function convertJsonToUnassignedEvents(response: Response): Event[] {
-    const jsonEvents: Event[] = response.json();
-    const events: Event[] = new Array<Event>();
-    jsonEvents.map((json: Event) => {
-      events.push(convertObjectToEvent(json));
-    });
-    return events;
 }

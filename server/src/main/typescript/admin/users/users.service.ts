@@ -8,6 +8,7 @@ import { MessageType } from '../../websocket/message-type.model';
 import { User, convertObjectToUser } from './user.model';
 
 import { AdminUsersHttpService } from './users-http.service';
+import { Data } from '../../model/data.model';
 
 @Injectable()
 export class AdminUsersService {
@@ -66,8 +67,8 @@ export class AdminUsersService {
     }
 
     public refresh(): void {
-         this.service.getUsers().subscribe((users: User[]) => {
-            this.users = users;
+         this.service.getUsers().subscribe((data: Data) => {
+            this.users = data.data;
             this.subject.next(this.users);
         });
     }

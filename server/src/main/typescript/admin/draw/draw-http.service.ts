@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class AdminDrawHttpService  {
 
-    constructor(private http: Http) {}
+    constructor(private http: HttpClient) {}
 }

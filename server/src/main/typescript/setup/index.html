@@ -11,19 +11,10 @@
 
   <title><%= htmlWebpackPlugin.options.title %></title>
 
-  <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
-
-  <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
 
   <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
   
-  <% if (webpackConfig.htmlElements.headTags) { %>
-    <!-- Configured Head Tags  -->
-    <%= webpackConfig.htmlElements.headTags %>
-  <% } %>
-
-  <base href="/setup/">
+  <base href="/setup">
 
 </head>
 
@@ -32,11 +23,6 @@
   <setup>
     Loading Setup ...
   </setup>
-
-  <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
-  <!-- Webpack Dev Server reload -->
-  <script src="/webpack-dev-server.js"></script>
-  <% } %>
 
 </body>
 </html>

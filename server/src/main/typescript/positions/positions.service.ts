@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Position, convertObjectoPosition } from './position.model';
+import { Data } from '../model/data.model';
 
 import { PositionsHttpService } from './positions-http.service';
 
@@ -29,8 +30,8 @@ export class PositionsService {
     }
 
     public refresh(): void {
-        this.service.getPositions().subscribe((positions: Position[]) => {
-            this.positions = positions;
+        this.service.getPositions().subscribe((data: Data) => {
+            this.positions = data.data;
             this.subject.next(this.positions);
         });
     }

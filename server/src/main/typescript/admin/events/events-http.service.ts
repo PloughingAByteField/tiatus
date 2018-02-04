@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Event, convertObjectToEvent } from '../../events/event.model';
 
@@ -8,15 +8,15 @@ import { EventsHttpService } from '../../events/events-http.service';
 @Injectable()
 export class AdminEventsHttpService extends EventsHttpService {
 
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    constructor(protected http: Http) {
+    constructor(protected http: HttpClient) {
         super(http);
     }
 
     public createEvent(event: Event): Promise<Event> {
         return this.http
-            .post(this.endpoint,
+            .post(this.endPoint,
             JSON.stringify(event), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
@@ -34,7 +34,7 @@ export class AdminEventsHttpService extends EventsHttpService {
 
     public updateEvent(event: Event): Promise<Event> {
         return this.http
-            .put(this.endpoint + '/' + event.id,
+            .put(this.endPoint + '/' + event.id,
             JSON.stringify(event), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {

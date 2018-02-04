@@ -1,30 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 
 import { User } from '../admin/users/user.model';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class LoginHttpService {
 
-    private headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     private endPoint: string = '/rest/login';
 
-    constructor(protected http: Http) { }
+    private location: string = null;
+    private locationObservable: BehaviorSubject<string> = new BehaviorSubject<string>(this.location);
 
-    public loginUser(user: User): Promise<string> {
+    constructor(protected http: HttpClient) { }
+
+    public loginUser(user: User): Observable<string> {
         const formData: string = 'user=' + user.userName + '&pwd=' + user.password;
-        return this.http
-            .post(this.endPoint, formData, { headers: this.headers })
-            .toPromise()
-            .then((res: Response) => {
+        this.http
+            .post<string>(this.endPoint, formData, { observe: 'response', headers: this.headers })
+            .subscribe((res: HttpResponse<string>) => {
                 if (res.status === 202) {
-                    return res.headers.get('location');
+                    this.location = res.headers.get('location');
+                    this.locationObservable.next(this.location);
                 }
-                return null;
-            })
-            .catch((err) => Promise.reject(err));
+            }, (err: HttpErrorResponse) => {
+                console.log(err);
+            }
+
+        );
+        return this.locationObservable;
     }
 
 }

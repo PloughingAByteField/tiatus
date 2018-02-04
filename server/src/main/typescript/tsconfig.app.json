@@ -1,0 +1,37 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "baseUrl": "./",
+    "module": "es2015",
+    "types": []
+  },
+  "include": [
+    "results/*.ts",
+    "login/*.ts",
+    "admin/*.ts",
+    "adjudicator/*.ts",
+    "clubs/*.ts",
+    "dissqualification/*.ts",
+    "components/**/*.ts",
+    "config/*.ts",
+    "entries/*.ts",
+    "events/*.ts",
+    "messages/*.ts",
+    "penalties/*.ts",
+    "positions/*.ts",
+    "race-events/*.ts",
+    "races/*.ts",
+    "setup/*.ts",
+    "times/*.ts",
+    "timing/*.ts",
+    "unassigned-events/*.ts",
+    "polyfills.ts",
+    "vendor.ts"
+  ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts",
+    "**/*.e2e.ts"
+  ]
+}

@@ -159,7 +159,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       raceEvent.race = this.selectedRace.id;
       raceEvent.event = event;
       raceEvent.raceEventOrder = this.eventsForRace.length + 1;
-      this.raceEventsService.createRaceEvent(raceEvent).then((newRaceEvent: RaceEvent) => {
+      this.raceEventsService.createRaceEvent(raceEvent).subscribe((newRaceEvent: RaceEvent) => {
         this.goBack();
       });
     }
@@ -180,9 +180,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
   public removePosition(index: number): void {
     const array: FormArray = this.addEntryForm.get('positions') as FormArray;
     for (let i = index + 1; i < array.controls.length; i++) {
-      const group: FormGroup = array.controls[i] as FormGroup;
-      const orderValue: number = group.get('positionOrder').value;
-      const orderControl: AbstractControl = group.get('positionOrder');
+      const controlGroup: FormGroup = array.controls[i] as FormGroup;
+      const orderValue: number = controlGroup.get('positionOrder').value;
+      const orderControl: AbstractControl = controlGroup.get('positionOrder');
       orderControl.setValue(orderValue - 1);
     }
     const group: FormGroup = array.controls[index] as FormGroup;

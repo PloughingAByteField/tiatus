@@ -1,0 +1,198 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "project": {
+    "name": "tiatus"
+  },
+  "apps": [
+    {
+      "name": "login",
+      "root": "src/main/typescript",
+      "outDir": "dist",
+      "assets": [
+        "login/assets",
+        { "glob": "**/*", "input": "./login/i18n", "output": "login/i18n/" },
+        "favicon.ico"
+      ],
+      "index": "login/index.html",
+      "main": "login/main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "login",
+      "styles": [
+        "styles.css",
+        "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    },
+    {
+      "name": "results",
+      "root": "src/main/typescript",
+      "outDir": "dist/results",
+      "assets": [
+        "assets",
+        { "glob": "**/*", "input": "./results/i18n", "output": "results/i18n/" },
+        "favicon.ico"
+      ],
+      "index": "results/index.html",
+      "main": "results/main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "results",
+      "styles": [
+        "styles.css",
+        "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    },
+    {
+      "name": "admin",
+      "root": "src/main/typescript",
+      "outDir": "dist/admin",
+      "assets": [
+        "assets",
+        { "glob": "**/*", "input": "./admin/i18n", "output": "admin/i18n/" },
+        "favicon.ico"
+      ],
+      "index": "admin/index.html",
+      "main": "admin/main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "admin",
+      "styles": [
+        "styles.css",
+        "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    },
+    {
+      "name": "adjudicator",
+      "root": "src/main/typescript",
+      "outDir": "dist/adjudicator",
+      "assets": [
+        "assets",
+        "i18n",
+        "favicon.ico"
+      ],
+      "index": "adjudicator/index.html",
+      "main": "adjudicator/main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "adjudicator",
+      "styles": [
+        "styles.css",
+        "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    },
+    {
+      "name": "timing",
+      "root": "src/main/typescript",
+      "outDir": "dist/timing",
+      "assets": [
+        "assets",
+        "i18n",
+        "favicon.ico"
+      ],
+      "index": "timing/index.html",
+      "main": "timing/main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "timing",
+      "styles": [
+        "styles.css",
+        "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    },
+    {
+      "name": "setup",
+      "root": "src/main/typescript",
+      "outDir": "dist/setup",
+      "assets": [
+        "assets",
+        "i18n",
+        "favicon.ico"
+      ],
+      "index": "setup/index.html",
+      "main": "timing/main.ts",
+      "polyfills": "polyfills.ts",
+      "test": "test.ts",
+      "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
+      "prefix": "setup",
+      "styles": [
+        "styles.css",
+        "../../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
+      "environments": {
+        "dev": "environments/environment.ts",
+        "prod": "environments/environment.prod.ts"
+      }
+    }
+  ],
+  "e2e": {
+    "protractor": {
+      "config": "./protractor.conf.js"
+    }
+  },
+  "lint": [
+    {
+      "project": "tsconfig.app.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "tsconfig.spec.json",
+      "exclude": "**/node_modules/**"
+    },
+    {
+      "project": "e2e/tsconfig.e2e.json",
+      "exclude": "**/node_modules/**"
+    }
+  ],
+  "test": {
+    "karma": {
+      "config": "src/test/javascript/karma.conf.js"
+    }
+  },
+  "defaults": {
+    "styleExt": "css",
+    "component": {}
+  }
+}

@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     const user: User = new User();
     user.userName = value.name;
     user.password = value.password;
-    this.service.loginUser(user).then((redirectTo: string) => {
+    this.service.loginUser(user).subscribe((redirectTo: string) => {
       if (redirectTo !== null) {
         window.location.href = redirectTo;
       }

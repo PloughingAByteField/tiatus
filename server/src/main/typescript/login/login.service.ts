@@ -11,9 +11,7 @@ import { LoginHttpService } from './login-http.service';
 export class LoginService {
     constructor(private service: LoginHttpService) {}
 
-    public loginUser(user: User): Promise<string> {
-        return new Promise((resolve) => this.service.loginUser(user).then((redirectTo: string) => {
-            resolve(redirectTo);
-        }));
+    public loginUser(user: User): Observable<string> {
+        return this.service.loginUser(user);
     }
 }

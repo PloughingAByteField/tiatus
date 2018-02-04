@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { Race } from '../../races/race.model';
@@ -8,15 +8,15 @@ import { RacesHttpService } from '../../races/races-http.service';
 
 @Injectable()
 export class AdjudicatorRacesHttpService extends RacesHttpService {
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});
 
-  constructor(protected http: Http) {
+  constructor(protected http: HttpClient) {
     super(http);
   }
 
   public updateRace(race: Race): Promise<Race> {
     return this.http
-      .put(this.endpoint + '/' + race.id,
+      .put(this.endPoint + '/' + race.id,
         JSON.stringify(race), {headers: this.headers})
       .toPromise()
       .then((res: Response) => {

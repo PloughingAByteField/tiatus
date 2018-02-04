@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Penalty } from './penalty.model';
+import { Data } from '../model/data.model';
 
 import { PenaltiesHttpService } from './penalties-http.service';
 
@@ -26,8 +27,8 @@ export class PenaltiesService {
     }
 
     public refresh(): void {
-        this.service.getPenalties().subscribe((penalties: Penalty[]) => {
-            this.penalties = penalties;
+        this.service.getPenalties().subscribe((data: Data) => {
+            this.penalties = data.data;
             this.penaltiesSubject.next(this.penalties);
         });
     }

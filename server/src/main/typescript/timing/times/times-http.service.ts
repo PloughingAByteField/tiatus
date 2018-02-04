@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Headers, Http, URLSearchParams, Response } from '@angular/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { PositionTime, convertJsonToPositionTime } from '../../times/postion-time.model';
@@ -9,18 +9,19 @@ import { EntryTime } from '../../times/entry-time.model';
 import { Position } from '../../positions/position.model';
 
 import { TimesHttpService } from '../../times/times-http.service';
+import { Data } from '../../model/data.model';
 
 @Injectable()
 export class TimingTimesHttpService extends TimesHttpService {
 
   protected timeEndPoint: string = '/rest/time/race/';
 
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});
   private timePositionEndPoint: string = '/rest/time/position/';
   private entryEndPoint: string = '/entry/';
   private raceEndPoint: string = '/race/';
 
-  constructor(protected http: Http) {
+  constructor(protected http: HttpClient) {
     super(http);
   }
 
@@ -50,8 +51,8 @@ public setTimeForEntryAtPosition(
       .catch((err) => Promise.reject(err));
   }
 
-  public getTimesForPositionInRace(position: Position, race: Race): Observable<EntryTime[]> {
+  public getTimesForPositionInRace(position: Position, race: Race): Observable<Data> {
     const url: string = this.timePositionEndPoint + position.id + this.raceEndPoint + race.id;
-    return this.getTimesForRaceWithUrl(race, url);
+    return this.getData(url);
   }
 }

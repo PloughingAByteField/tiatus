@@ -1,26 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Position, convertObjectoPosition } from './position.model';
+import { Position } from './position.model';
+
+import { CachedHttpService } from '../http/cached-http.service';
+import { Data } from '../model/data.model';
 
 @Injectable()
-export class PositionsHttpService {
-  protected endpoint: string = '/rest/positions';
+export class PositionsHttpService extends CachedHttpService {
+  protected endPoint: string = '/rest/positions';
 
-  constructor(protected http: Http) {}
-
-  public getPositions(): Observable<Position[]> {
-    return this.http.get(this.endpoint)
-      .map(convertResponseToPositions).share();
+  constructor(protected http: HttpClient) {
+    super(http);
   }
-}
 
-export function convertResponseToPositions(response: Response): Position[] {
-    const jsonPositions: Position[] = response.json();
-    const positions: Position[] = new Array<Position>();
-    jsonPositions.map((json: Position) => {
-      positions.push(convertObjectoPosition(json));
-    });
-    return positions;
+  public getPositions(): Observable<Data> {
+    return this.getData(this.endPoint);
+  }
 }

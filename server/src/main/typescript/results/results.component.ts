@@ -30,9 +30,10 @@ export class ResultsComponent implements OnInit {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
     this.races = this.racesService.getRaces();
+    console.log(this.races);
   }
 
-  public setTitle( newTitle: string) {
+  public setTitle(newTitle: string) {
     this.translate.get(newTitle).subscribe((res: string) => {
       console.log('res is ', res);
       this.titleService.setTitle( res );

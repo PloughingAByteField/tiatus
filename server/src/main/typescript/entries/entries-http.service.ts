@@ -1,30 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+
 import { Observable } from 'rxjs/Observable';
 
-import { Entry, convertObjectToEntry } from './entry.model';
+import { CachedHttpService } from '../http/cached-http.service';
+import { Data } from '../model/data.model';
 import { Race } from '../races/race.model';
 
 @Injectable()
-export class EntriesHttpService {
-  constructor(protected http: Http) {}
-
-  public getEntries(): Observable<Entry[]> {
-    return this.http.get('/rest/entries')
-      .map(convertResponseToEntries).share();
+export class EntriesHttpService extends CachedHttpService {
+  constructor(protected http: HttpClient) {
+    super(http);
   }
 
-  public getEntriesForRace(race: Race): Observable<Entry[]> {
-    return this.http.get('/rest/entries/race/' + race.id)
-      .map(convertResponseToEntries).share();
+  public getEntries(): Observable<Data> {
+    return this.getData('/rest/entries');
+  }
+
+  public getEntriesForRace(race: Race): Observable<Data> {
+    return this.getData('/rest/entries/race/' + race.id);
   }
  }
-
-function convertResponseToEntries(response: Response): Entry[] {
-    const jsonEntries: Entry[] = response.json();
-    const entries: Entry[] = new Array<Entry>();
-    jsonEntries.map((entry: Entry) => {
-      entries.push(convertObjectToEntry(entry));
-    });
-    return entries;
-}

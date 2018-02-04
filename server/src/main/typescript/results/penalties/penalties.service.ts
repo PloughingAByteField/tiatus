@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Data } from '../model/data.model';
+import { Data } from '../../model/data.model';
 
 import { PenaltiesService } from '../../penalties/penalties.service';
 import { ResultsHttpPenaltiesService } from './penalties-http.service';

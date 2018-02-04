@@ -1,0 +1,29 @@
+{
+  "vendor": {
+    "js": "vendor/vendor.bundle.js"
+  },
+  "admin": {
+    "js": "admin/admin.bundle.js"
+  },
+  "adjudicator": {
+    "js": "adjudicator/adjudicator.bundle.js"
+  },
+  "results": {
+    "js": "results/results.bundle.js"
+  },
+  "timing": {
+    "js": "timing/timing.bundle.js"
+  },
+  "setup": {
+    "js": "setup/setup.bundle.js"
+  },
+  "login": {
+    "js": "login/login.bundle.js"
+  },
+  "polyfills": {
+    "js": "polyfills/polyfills.bundle.js"
+  },
+  "common": {
+    "js": "common/ad06afe576a4499f140c.bundle.js"
+  }
+}

@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Position } from '../../positions/position.model';
 import { PositionsHttpService } from '../../positions/positions-http.service';
 
 @Injectable()
 export class AdminPositionsHttpService extends PositionsHttpService {
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    constructor(protected http: Http) {
+    constructor(protected http: HttpClient) {
         super(http);
     }
 
     public createPosition(position: Position): Promise<Position> {
         return this.http
-            .post(this.endpoint,
+            .post(this.endPoint,
             JSON.stringify(position), { headers: this.headers })
             .toPromise()
             .then((res: Response) => {
@@ -31,7 +31,7 @@ export class AdminPositionsHttpService extends PositionsHttpService {
 
     public removePosition(position: Position): Promise<Position> {
         return this.http
-            .delete(this.endpoint + '/' + position.id)
+            .delete(this.endPoint + '/' + position.id)
             .toPromise()
             .then(() => {
                 return position;
@@ -41,7 +41,7 @@ export class AdminPositionsHttpService extends PositionsHttpService {
 
     public updatePosition(position: Position): Promise<Position> {
         return this.http
-            .put(this.endpoint,
+            .put(this.endPoint,
             JSON.stringify(position), { headers: this.headers })
             .toPromise()
             .then(() => {

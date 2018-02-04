@@ -1,21 +1,22 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Headers, Http, URLSearchParams, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { EntryTime } from '../../times/entry-time.model';
 import { Race } from '../../races/race.model';
 
 import { TimesHttpService } from '../../times/times-http.service';
+import { Data } from '../../model/data.model';
 
 @Injectable()
 export class TimesFullHttpService extends TimesHttpService {
 
-  constructor(protected http: Http) {
+  constructor(protected http: HttpClient) {
     super(http);
   }
 
-  public getTimesForRace(race: Race): Observable<EntryTime[]> {
+  public getTimesForRace(race: Race): Observable<Data> {
     const url: string = this.timeEndPoint + race.id + '/full';
-    return this.getTimesForRaceWithUrl(race, url);
+    return this.getData(url);
   }
 }

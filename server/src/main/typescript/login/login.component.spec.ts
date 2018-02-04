@@ -1,58 +1,76 @@
-import { inject, getTestBed, TestBed } from '@angular/core/testing';
-import { Injector } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { getTestBed, TestBed, async } from '@angular/core/testing';
+import { Component, Injector, ChangeDetectorRef, ChangeDetectionStrategy, Injectable, ViewContainerRef } from '@angular/core';
 import { XHRBackend, HttpModule } from '@angular/http';
 import { MockConnection, MockBackend } from '@angular/http/testing';
-import { Observable } from 'rxjs/Observable';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { TranslateService, TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+
+import { TranslateService, TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 
 import { LoginComponent } from './login.component';
 import { LoginService } from './login.service';
-import { LoginHttpService } from './login-http.service';
+// import { FormBuilder } from '@angular/forms/src/form_builder';
 
-let mockRouter = {
-  navigate: jasmine.createSpy('navigate')
-};
+let translations: any = { TEST: 'This is a test' };
 
-describe('Login', () => {
-    let translate: any;
-    let injector: Injector;
-    let backend: any;
-    let connection: MockConnection;
+// class FakeLoader implements TranslateLoader {
+//   public getTranslation(lang: string): Observable<any> {
+//     return Observable.of(translations);
+//   }
+// }
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [HttpModule, TranslateModule.forRoot()],
-            providers: [
-                { provide: XHRBackend, useClass: MockBackend },
-                Title,
-                LoginComponent,
-                LoginService,
-                LoginHttpService,
-                FormBuilder,
-                { provide: Router, useValue: mockRouter }
-            ]
-        });
+// class FakeTranslateService extends TranslateService {
+// }
 
-        injector = getTestBed();
-        backend = injector.get(XHRBackend);
-        translate = injector.get(TranslateService);
-        // sets the connection when someone tries to access the backend with an xhr request
-        backend.connections.subscribe((c: MockConnection) => connection = c);
+describe('LoginComponent', () => {
+  let translate: any;
+  let injector: Injector;
+  let loginServiceStub = {};
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ ReactiveFormsModule,
+        TranslateModule.forRoot({loader: {provide: TranslateLoader, useClass: TranslateFakeLoader}})],
+      // providers: [ {provide: TranslateService, use: FakeTranslateService}]
+      // imports: [TranslateModule.forRoot()], providers: []
+      providers: [ { provide: LoginService, use: loginServiceStub } ]
     });
 
-    afterEach(() => {
-        injector = undefined;
-        backend = undefined;
-        translate = undefined;
-        connection = undefined;
-    });
+    injector = getTestBed();
+    // translate = injector.get(TranslateService);
 
-    it('should have loginForm created', inject([ LoginComponent ], (app: LoginComponent) => {
-        expect(app.loginForm).not.toBeNull();
+  });
+
+  afterEach(() => {
+    injector = undefined;
+    translate = undefined;
+    translations = { TEST: 'This is a test'};
+    TestBed.resetTestingModule();
+  });
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        LoginComponent
+      ],
+    }).compileComponents();
   }));
-
+  it('should create the app', async(() => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
+  }));
+  xit(`should have as title 'app'`, async(() => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    const app = fixture.debugElement.componentInstance;
+    expect(app.title).toEqual('app');
+  }));
+  xit('should render title in a h1 tag', async(() => {
+    const fixture = TestBed.createComponent(LoginComponent);
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h1').textContent).toContain('hello');
+  }));
 });

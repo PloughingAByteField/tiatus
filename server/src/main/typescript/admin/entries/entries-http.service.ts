@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Entry, convertObjectToEntry } from '../../entries/entry.model';
 
@@ -8,10 +8,10 @@ import { EntriesHttpService } from '../../entries/entries-http.service';
 @Injectable()
 export class AdminEntriesHttpService extends EntriesHttpService {
 
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     private endPoint: string = '/rest/entries';
 
-    constructor(protected http: Http) {
+    constructor(protected http: HttpClient) {
         super(http);
     }
 

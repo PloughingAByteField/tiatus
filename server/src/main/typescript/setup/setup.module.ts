@@ -1,7 +1,7 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 
 import 'rxjs/add/operator/toPromise';
@@ -9,16 +9,15 @@ import 'rxjs/add/operator/toPromise';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { ENV_PROVIDERS } from './environment';
 import { SetupComponent } from './setup.component';
 import { SetupService } from './setup.service';
 import { SetupHttpService } from './setup-http.service';
 
-export function HttpLoaderFactory(http: Http) {
+export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
 }
 
-export function createTranslateLoader(http: Http) {
+export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './i18n/', '.json');
 }
 
@@ -31,18 +30,17 @@ export function createTranslateLoader(http: Http) {
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
+    HttpClientModule,
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,
             useFactory: (createTranslateLoader),
-            deps: [Http]
+            deps: [HttpClient]
         }
     }),
     RouterModule.forRoot([], { useHash: false, preloadingStrategy: PreloadAllModules})
   ],
   providers: [
-    ENV_PROVIDERS,
     Title,
     SetupService,
     SetupHttpService

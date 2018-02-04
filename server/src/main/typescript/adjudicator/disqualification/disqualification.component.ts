@@ -9,13 +9,13 @@ import { Club } from '../../clubs/club.model';
 import { Event } from '../../events/event.model';
 import { Disqualification } from '../../disqualification/disqualification.model';
 import { Entry } from '../../entries/entry.model';
-import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
+import { convertToTimeStamp, convertFromTimeStamp } from '../../times/postion-time.model';
 
 import { EntriesService } from '../../entries/entries.service';
 import { EventsService } from '../../events/events.service';
 import { ClubsService } from '../../clubs/clubs.service';
 import { AdjudicatorRacesService } from '../races/races.service';
-import { AdjudicatorHttpDisqualificationsService } from './disqualifications.service';
+import { AdjudicatorHttpDisqualificationsService } from './disqualification-http.service';
 import { AdjudicatorDisqualificationService } from './disqualification.service';
 
 @Component({

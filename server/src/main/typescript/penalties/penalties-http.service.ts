@@ -1,26 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { Penalty, convertObjectToPenalty } from './penalty.model';
+import { Penalty } from './penalty.model';
+import { CachedHttpService } from '../http/cached-http.service';
+import { Data } from '../model/data.model';
 
 @Injectable()
-export class PenaltiesHttpService {
-  protected endpoint: string = '/rest/penalties';
+export class PenaltiesHttpService extends CachedHttpService {
+  protected endPoint: string = '/rest/penalties';
 
-  constructor(protected http: Http) {}
+  constructor(protected http: HttpClient) {
+    super(http);
+  }
 
-  public getPenalties(): Observable<Penalty[]> {
-    return this.http.get(this.endpoint)
-      .map(convertResponseToPenalties).share();
+  public getPenalties(): Observable<Data> {
+    return this.getData(this.endPoint);
    }
-}
-
-export function convertResponseToPenalties(response: Response): Penalty[] {
-    const jsonPenalties: Penalty[] = response.json();
-    const penalties: Penalty[] = new Array<Penalty>();
-    jsonPenalties.map((json: Penalty) => {
-      penalties.push(convertObjectToPenalty(json));
-    });
-    return penalties;
 }

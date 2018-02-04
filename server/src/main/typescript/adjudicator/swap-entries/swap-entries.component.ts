@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
-import { convertToTimeStamp, convertFromTimeStamp } from '../../models/postion-time.model';
+import { convertToTimeStamp, convertFromTimeStamp } from '../../times/postion-time.model';
 
 import { SwapEntriesHttpService } from './swap-entries-http.service';
 import { SwapEntriesService } from './swap-entries.service';

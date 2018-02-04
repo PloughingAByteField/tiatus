@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Data } from '../model/data.model';
+import { Data } from '../../model/data.model';
 
 import { RacesService } from '../../races/races.service';
 import { ResultsHttpRacesService } from './races-http.service';

@@ -13,8 +13,9 @@ import { Entry } from '../../entries/entry.model';
 import { Race } from '../../races/race.model';
 import { PositionTime } from '../../times/postion-time.model';
 
-import { RaceEntryTimes } from './race-entry-times.model';
+import { RaceEntryTimes } from '../../times/race-entry-times.model';
 import { EntryTimesService } from '../../times/entry-times.service';
+import { Data } from '../../model/data.model';
 
 @Injectable()
 export class TimingEntryTimesService extends EntryTimesService {
@@ -53,8 +54,8 @@ export class TimingEntryTimesService extends EntryTimesService {
         this.entriesService.getEntriesForRace(race).subscribe((entriesData: Entry[]) => {
             entries = entriesData;
             this.timesService.getTimesForPositionInRace(position, race)
-            .subscribe((data: EntryTime[]) => {
-                times = data;
+            .subscribe((data: Data) => {
+                times = data.data;
                 if (entries) {
                     times = mergeEntriesIntoEntryTimes(entries, times);
                     subject.next(times);

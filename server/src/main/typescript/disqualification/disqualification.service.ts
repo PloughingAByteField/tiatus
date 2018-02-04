@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Disqualification } from './disqualification.model';
+import { Data } from '../model/data.model';
 
 import { DisqualificationHttpService } from './disqualification-http.service';
 
@@ -26,8 +27,8 @@ export class DisqualificationService {
     }
 
     public refresh(): void {
-        this.service.getDisqualifications().subscribe((disqualifications: Disqualification[]) => {
-            this.disqualifications = disqualifications;
+        this.service.getDisqualifications().subscribe((data: Data) => {
+            this.disqualifications = data.data;
             this.disqualificationsSubject.next(this.disqualifications);
         });
     }

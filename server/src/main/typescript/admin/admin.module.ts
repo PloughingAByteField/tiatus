@@ -2,15 +2,13 @@ import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 
 import 'rxjs/add/operator/toPromise';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-
-import { ENV_PROVIDERS } from './environment';
 
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
@@ -93,12 +91,12 @@ import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
-export function HttpLoaderFactory(http: Http) {
+export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
 }
 
-export function createTranslateLoader(http: Http) {
-    return new TranslateHttpLoader(http, './i18n/', '.json');
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, 'admin/i18n/', '.json');
 }
 
 @NgModule({
@@ -126,7 +124,7 @@ export function createTranslateLoader(http: Http) {
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
+    HttpClientModule,
     NgxPaginationModule,
     FooterModule,
     SidebarModule,
@@ -138,7 +136,7 @@ export function createTranslateLoader(http: Http) {
         loader: {
             provide: TranslateLoader,
             useFactory: (createTranslateLoader),
-            deps: [Http]
+            deps: [HttpClient]
         }
     }),
     RouterModule.forRoot(
@@ -146,7 +144,6 @@ export function createTranslateLoader(http: Http) {
     )
   ],
   providers: [
-    ENV_PROVIDERS,
     AdminRacesService,
     AdminRacesHttpService,
     RacesHttpService,

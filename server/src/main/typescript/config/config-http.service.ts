@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
+import { CachedHttpService } from '../http/cached-http.service';
+import { Data } from '../model/data.model';
 
 @Injectable()
-export class ConfigHttpService {
-    protected endpoint: string = '/tiatus/config/config.json';
+export class ConfigHttpService extends CachedHttpService {
+    protected endPoint: string = '/tiatus/config/config.json';
 
-    constructor(protected http: Http) {}
+    constructor(protected http: HttpClient) {
+        super(http);
+    }
 
-    public getConfig(): Observable<object> {
-        return this.http.get(this.endpoint)
-            .map((res: Response) =>  res.json()).share();
+    public getConfig(): Observable<Data> {
+        return this.getData(this.endPoint);
     }
 }

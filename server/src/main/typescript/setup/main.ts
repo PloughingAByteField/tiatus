@@ -1,25 +1,12 @@
-/*
- * Angular bootstraping
- */
+import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { decorateModuleRef } from './environment';
-import { bootloader } from '@angularclass/hmr';
-/*
- * App Module
- * our top level module that holds all of our components
- */
-import { SetupModule } from './';
 
-/*
- * Bootstrap our Angular app with a top level NgModule
- */
-export function main(): Promise<any> {
-  return platformBrowserDynamic()
-    .bootstrapModule(SetupModule)
-    .then(decorateModuleRef)
-    .catch((err) => console.error(err));
+import { SetupModule } from './';
+import { environment } from '../environments/environment';
+
+if (environment.production) {
+  enableProdMode();
 }
 
-// needed for hmr
-// in prod this is replace for document ready
-bootloader(main);
+platformBrowserDynamic().bootstrapModule(SetupModule)
+  .catch((err: any) => console.log(err));

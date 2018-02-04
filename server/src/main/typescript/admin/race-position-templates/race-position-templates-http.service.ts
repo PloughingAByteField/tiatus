@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { RacePositionTemplateEntry } from './race-position-template-entry.model';
@@ -10,9 +10,9 @@ export class RacePositionTemplatesHttpService {
     public entries: RacePositionTemplateEntry[];
 
     private endPoint: string = '/rest/racePositionTemplates/entry';
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    constructor(private http: Http) {}
+    constructor(private http: HttpClient) {}
 
     public createTemplateEntry(entry: RacePositionTemplateEntry):
         Promise<RacePositionTemplateEntry> {

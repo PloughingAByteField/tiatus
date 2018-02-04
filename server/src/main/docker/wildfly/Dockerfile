@@ -1,4 +1,5 @@
-FROM jboss/wildfly:latest
+FROM jboss/wildfly:10.1.0.Final
+#FROM jboss/wildfly:latest
 MAINTAINER John Reynolds <john.reynolds.irl@acm.org>
 
 ADD /maven/server*.war /opt/jboss/wildfly/standalone/deployments/

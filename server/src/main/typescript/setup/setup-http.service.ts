@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -8,10 +8,10 @@ import { User } from '../admin/users/user.model';
 @Injectable()
 export class SetupHttpService {
 
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     private endPoint: string = '/rest/setup/user';
 
-    constructor(protected http: Http) { }
+    constructor(protected http: HttpClient) { }
 
     public createUser(user: User): Promise<User> {
         return this.http

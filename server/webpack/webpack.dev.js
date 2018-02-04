@@ -187,7 +187,7 @@ module: {
      * See: https://webpack.github.io/docs/webpack-dev-server.html
      */
     devServer: {
-      stats: 'minimal',
+      stats: 'verbose',
       port: METADATA.port,
       host: METADATA.host,
       historyApiFallback: {

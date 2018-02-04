@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Entry } from '../../entries/entry.model';
 
-import { Data } from '../model/data.model';
+import { Data } from '../../model/data.model';
 
 import { ClubsService } from '../../clubs/clubs.service';
 import { ResultsHttpClubsService } from './clubs-http.service';

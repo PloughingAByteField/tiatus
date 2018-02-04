@@ -1,7 +1,7 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 
 import 'rxjs/add/operator/toPromise';
@@ -40,7 +40,6 @@ import { EventsHttpService } from '../events/events-http.service';
 import { RaceEventsService } from '../race-events/race-events.service';
 import { RaceEventsHttpService } from '../race-events/race-events-http.service';
 
-import { ENV_PROVIDERS } from './environment';
 import { resultsRoutes } from './results.routes';
 import { ResultsComponent } from './results.component';
 import { LandingComponent } from './landing';
@@ -53,12 +52,12 @@ import { SidebarModule } from '../components/sidebar/sidebar.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
-export function HttpLoaderFactory(http: Http) {
+export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
 }
 
-export function createTranslateLoader(http: Http) {
-    return new TranslateHttpLoader(http, './i18n/', '.json');
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, 'results/i18n/', '.json');
 }
 
 @NgModule({
@@ -72,7 +71,7 @@ export function createTranslateLoader(http: Http) {
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     FooterModule,
     SidebarModule,
     TitlebarModule,
@@ -83,13 +82,12 @@ export function createTranslateLoader(http: Http) {
         loader: {
             provide: TranslateLoader,
             useFactory: (createTranslateLoader),
-            deps: [Http]
+            deps: [HttpClient]
         }
     }),
     RouterModule.forRoot(resultsRoutes, { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
   providers: [
-    ENV_PROVIDERS,
     ResultsRacesService,
     ResultsHttpRacesService,
     RacesHttpService,

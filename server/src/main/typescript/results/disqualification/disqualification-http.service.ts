@@ -1,43 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Disqualification } from '../../disqualification/disqualification.model';
-import { Data } from '../model/data.model';
+import { Data } from '../../model/data.model';
 
-import { DisqualificationHttpService, convertResponseToDisqualifications } from '../../disqualification/disqualification-http.service';
+import { DisqualificationHttpService } from '../../disqualification/disqualification-http.service';
 
 @Injectable()
 export class ResultsHttpDisqualificationsService extends DisqualificationHttpService {
 
-    private previousEtag: string;
-
-    constructor(protected http: Http) {
+    constructor(protected http: HttpClient) {
         super(http);
     }
 
   public getDisqualificationsData(): Observable<Data> {
-    return this.http.get(this.endpoint)
-      .map((response: Response) => {
-        if (response.status === 200) {
-            const disqualifications: Disqualification[]
-                = convertResponseToDisqualifications(response);
-            const data: Data = new Data();
-            data.data = disqualifications;
-            data.cached = false;
-            const currentEtag: string = response.headers.get('etag');
-            if (this.previousEtag) {
-                if (this.previousEtag === currentEtag) {
-                    data.cached = true;
-                } else {
-                    this.previousEtag = currentEtag;
-                }
-            } else {
-                this.previousEtag = currentEtag;
-            }
-            return data;
-        }
-      })
-      .share();
+    return this.getData(this.endPoint);
    }
 }

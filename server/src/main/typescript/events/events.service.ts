@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Event, convertObjectToEvent } from './event.model';
 import { Race } from '../races/race.model';
+import { Data } from '../model/data.model';
 
 import { EventsHttpService } from './events-http.service';
 
@@ -38,8 +39,8 @@ export class EventsService implements OnDestroy {
     }
 
     public refresh(): void {
-        this.subscription = this.service.getEvents().subscribe((events: Event[]) => {
-            this.events = events;
+        this.subscription = this.service.getEvents().subscribe((data: Data) => {
+            this.events = data.data;
             this.subject.next(this.events);
         });
     }

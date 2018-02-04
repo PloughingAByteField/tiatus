@@ -3,6 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import 'rxjs/add/operator/map';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -170,7 +171,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
             this.penaltyText = res;
         });
 
-        this.polling = Observable.interval(this.pollingPeriod).map(() => {
+        this.polling = Observable.interval(this.pollingPeriod)
+        .map(() => {
             this.racesService.refresh();
             this.positionsService.refresh();
             this.clubsService.refresh();

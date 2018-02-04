@@ -1,28 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient} from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { RaceEvent, convertJsonToRaceEvent } from './race-event.model';
-import { Race } from '../races/race.model';
+import { CachedHttpService } from '../http/cached-http.service';
+import { Data } from '../model/data.model';
 
 @Injectable()
-export class RaceEventsHttpService {
+export class RaceEventsHttpService extends CachedHttpService {
 
-  protected endpoint: string = '/rest/events/assigned';
+  protected endPoint: string = '/rest/events/assigned';
 
-  constructor(protected http: Http) {}
-
-  public getRaceEvents(): Observable<RaceEvent[]> {
-    return this.http.get(this.endpoint)
-      .map(convertJsonToRaceEvents).share();
+  constructor(protected http: HttpClient) {
+    super(http);
   }
-}
 
-function convertJsonToRaceEvents(response: Response): RaceEvent[] {
-    const jsonEvents: RaceEvent[] = response.json();
-    const events: RaceEvent[] = new Array<RaceEvent>();
-    jsonEvents.map((json: RaceEvent) => {
-      events.push(convertJsonToRaceEvent(json));
-    });
-    return events;
+  public getRaceEvents(): Observable<Data> {
+    return this.getData(this.endPoint);
+  }
 }

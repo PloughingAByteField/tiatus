@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { Club, convertObjectToClub } from './club.model';
 import { ClubsHttpService } from './clubs-http.service';
+import { Data } from '../model/data.model';
 
 import { Message } from '../websocket/message.model';
 import { MessageType } from '../websocket/message-type.model';
@@ -29,8 +30,8 @@ export class ClubsService {
     }
 
     public refresh(): void {
-        this.service.getClubs().subscribe((clubs: Club[]) => {
-            this.clubs = clubs;
+        this.service.getClubs().subscribe((data: Data) => {
+            this.clubs = data.data;
             this.subject.next(this.clubs);
         });
     }

@@ -1,7 +1,7 @@
 import { NgModule, ApplicationRef } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 
 import 'rxjs/add/operator/toPromise';
@@ -44,7 +44,6 @@ import { ClubsHttpService } from '../clubs/clubs-http.service';
 import { EventsService } from '../events/events.service';
 import { EventsHttpService } from '../events/events-http.service';
 
-import { ENV_PROVIDERS } from './environment';
 import { adjudicatorRoutes } from './adjudicator.routes';
 import { AdjudicatorComponent } from './adjudicator.component';
 import { LandingComponent } from './landing';
@@ -62,11 +61,11 @@ import { MessagingModule } from '../components/messaging/messaging.module';
 import { TitlebarModule } from '../components/titlebar/titlebar.module';
 import { NoContentModule } from '../components/no-content/no-content.module';
 
-export function HttpLoaderFactory(http: Http) {
+export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http);
 }
 
-export function createTranslateLoader(http: Http) {
+export function createTranslateLoader(http: HttpClient) {
     return new TranslateHttpLoader(http, './i18n/', '.json');
 }
 
@@ -83,7 +82,7 @@ export function createTranslateLoader(http: Http) {
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     FooterModule,
     SidebarModule,
     TimeEntryModule,
@@ -97,7 +96,7 @@ export function createTranslateLoader(http: Http) {
         loader: {
             provide: TranslateLoader,
             useFactory: (createTranslateLoader),
-            deps: [Http]
+            deps: [HttpClient]
         }
     }),
     RouterModule.forRoot(
@@ -105,7 +104,6 @@ export function createTranslateLoader(http: Http) {
     )
   ],
   providers: [
-    ENV_PROVIDERS,
     RacesService,
     RacesHttpService,
     AdjudicatorRacesService,

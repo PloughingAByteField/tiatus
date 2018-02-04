@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Entry, convertObjectToEntry } from './entry.model';
 import { RaceEntriesSubject } from './race-entries-subject.model';
 import { Race } from '../races/race.model';
+import { Data } from '../model/data.model';
 
 import { EntriesHttpService } from './entries-http.service';
 
@@ -30,8 +31,8 @@ export class EntriesService {
     }
 
     public refresh(): void {
-        this.service.getEntries().subscribe((entries: Entry[]) => {
-            this.entries = entries;
+        this.service.getEntries().subscribe((data: Data) => {
+            this.entries = data.data;
             this.subject.next(this.entries);
         });
     }
@@ -41,8 +42,8 @@ export class EntriesService {
                 = this.raceEntries.filter((s: RaceEntriesSubject) => s.race.id === race.id).shift();
 
         if (subject) {
-            this.service.getEntriesForRace(race).subscribe((entries: Entry[]) => {
-                subject.entries = entries;
+            this.service.getEntriesForRace(race).subscribe((data: Data) => {
+                subject.entries = data.data;
                 subject.subject.next(subject.entries);
             });
         }
@@ -63,8 +64,8 @@ export class EntriesService {
             const raceEntriesSubject: RaceEntriesSubject = new RaceEntriesSubject();
             raceEntriesSubject.race = race;
             this.raceEntries.push(raceEntriesSubject);
-            this.service.getEntriesForRace(race).subscribe((entries: Entry[]) => {
-                raceEntriesSubject.entries = entries;
+            this.service.getEntriesForRace(race).subscribe((data: Data) => {
+                raceEntriesSubject.entries = data.data;
                 raceEntriesSubject.subject.next(raceEntriesSubject.entries);
             });
             return raceEntriesSubject.subject;

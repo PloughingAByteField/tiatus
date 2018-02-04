@@ -7,6 +7,7 @@ import { Race } from '../races/race.model';
 
 import { TimesHttpService } from './times-http.service';
 import { RaceTimesSubject } from './race-times-subject.model';
+import { Data } from '../model/data.model';
 
 @Injectable()
 export class TimesService {
@@ -29,8 +30,8 @@ export class TimesService {
             const raceTimesSubject: RaceTimesSubject = new RaceTimesSubject();
             raceTimesSubject.race = race;
             this.raceEntries.push(raceTimesSubject);
-            this.service.getTimesForRace(race).subscribe((times: EntryTime[]) => {
-                raceTimesSubject.times = times;
+            this.service.getTimesForRace(race).subscribe((data: Data) => {
+                raceTimesSubject.times = data.data;
                 raceTimesSubject.subject.next(raceTimesSubject.times);
             });
             return raceTimesSubject.subject;
@@ -41,8 +42,8 @@ export class TimesService {
         const subject: RaceTimesSubject
                 = this.raceEntries.filter((s: RaceTimesSubject) => s.race.id === race.id).shift();
         if (subject) {
-            this.service.getTimesForRace(race).subscribe((times: EntryTime[]) => {
-                subject.times = times;
+            this.service.getTimesForRace(race).subscribe((data: Data) => {
+                subject.times = data.data;
                 subject.subject.next(subject.times);
             });
         }

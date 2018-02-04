@@ -9,6 +9,7 @@ import { Message } from '../websocket/message.model';
 import { MessageType } from '../websocket/message-type.model';
 
 import { RacesHttpService } from './races-http.service';
+import { Data } from '../model/data.model';
 
 @Injectable()
 export class RacesService {
@@ -33,8 +34,8 @@ export class RacesService {
     }
 
     public refresh(): void {
-         this.service.getRaces().subscribe((races: Race[]) => {
-            this.races = races;
+         this.service.getRaces().subscribe((data: Data) => {
+            this.races = data.data;
             this.racesSubject.next(this.races);
         });
     }

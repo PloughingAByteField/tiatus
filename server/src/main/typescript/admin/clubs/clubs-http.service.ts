@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Club } from '../../clubs/club.model';
 import { ClubsHttpService } from '../../clubs/clubs-http.service';
@@ -7,9 +7,9 @@ import { ClubsHttpService } from '../../clubs/clubs-http.service';
 @Injectable()
 export class AdminClubsHttpService extends ClubsHttpService {
 
-    private headers = new Headers({ 'Content-Type': 'application/json' });
+    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-    constructor(protected http: Http) {
+    constructor(protected http: HttpClient) {
         super(http);
     }
 

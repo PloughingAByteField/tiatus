@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { PositionTime, convertJsonToPositionTime } from '../../times/postion-time.model';
@@ -12,13 +12,14 @@ import { RacePositionTimes } from './race-position-times';
 
 import { TimesService } from '../../times/times.service';
 import { TimingTimesHttpService } from './times-http.service';
+import { Data } from '../../model/data.model';
 
 @Injectable()
 export class TimingTimesService extends TimesService {
 
   private racePositionTimes: RacePositionTimes[] = new Array<RacePositionTimes>();
   private observable: Observable<PositionTime[]>;
-  private headers = new Headers({'Content-Type': 'application/json'});
+  private headers = new HttpHeaders({'Content-Type': 'application/json'});
   private timePositionEndPoint: string = '/rest/time/position/';
   private entryEndPoint: string = '/entry/';
   private raceEndPoint: string = '/race/';
@@ -37,8 +38,7 @@ export class TimingTimesService extends TimesService {
       return this.service.updateTimeForEntryAtPosition(entry, position, positionTime);
   }
 
-  public getTimesForPositionInRace(position: Position, race: Race): Observable<EntryTime[]> {
-    console.log('xy');
+  public getTimesForPositionInRace(position: Position, race: Race): Observable<Data> {
     return this.service.getTimesForPositionInRace(position, race);
   }
 
