@@ -1,11 +1,12 @@
 package org.tiatus.dao;
 
-import mockit.Mock;
-import mockit.MockUp;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Role;
@@ -15,6 +16,10 @@ import org.tiatus.entity.UserRole;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.transaction.NotSupportedException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +27,7 @@ import java.util.Set;
 /**
  * Created by johnreynolds on 19/06/2016.
  */
+@ExtendWith(MockitoExtension.class)
 public class UserDaoIT {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserDaoIT.class);
@@ -30,7 +36,7 @@ public class UserDaoIT {
     private Role adminRole;
     private Role adjudicatorRole;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dao = new UserDaoImpl();
         em = Persistence.createEntityManagerFactory("primary").createEntityManager();
@@ -38,7 +44,7 @@ public class UserDaoIT {
         populateRoles();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         em.close();
     }
@@ -46,7 +52,7 @@ public class UserDaoIT {
     @Test
     public void testHasAdminUser() {
         boolean hasAdminUser = dao.hasAdminUser();
-        Assert.assertFalse(hasAdminUser);
+        Assertions.assertFalse(hasAdminUser);
 
         // add user
         em.getTransaction().begin();
@@ -55,7 +61,7 @@ public class UserDaoIT {
         em.getTransaction().commit();
 
         hasAdminUser = dao.hasAdminUser();
-        Assert.assertTrue(hasAdminUser);
+        Assertions.assertTrue(hasAdminUser);
     }
 
     @Test
@@ -65,25 +71,28 @@ public class UserDaoIT {
         dao.addUser(user);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testAddUserExistingUser() throws Exception {
         User user = createUser(adminRole, "user", "pass");
         dao.tx = new EntityUserTransaction(em);
         dao.addUser(user);
-        dao.addUser(user);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addUser(user);
+        });
     }
 
     @Test
     public void testGetRole() {
         Role role = dao.getRoleForRole(adminRole.getRoleName());
-        Assert.assertNotNull(role);
-        Assert.assertEquals(role.getRoleName(), adminRole.getRoleName());
+        Assertions.assertNotNull(role);
+        Assertions.assertEquals(role.getRoleName(), adminRole.getRoleName());
     }
 
     @Test
     public void testGetRoleInvalid() {
         Role role = dao.getRoleForRole("BAD");
-        Assert.assertNull(role);
+        Assertions.assertNull(role);
     }
 
     @Test
@@ -93,8 +102,8 @@ public class UserDaoIT {
         dao.addUser(user);
 
         User fetchedUser = dao.getUser("user", "pass");
-        Assert.assertNotNull(fetchedUser);
-        Assert.assertEquals(fetchedUser.getUserName(), user.getUserName());
+        Assertions.assertNotNull(fetchedUser);
+        Assertions.assertEquals(fetchedUser.getUserName(), user.getUserName());
     }
 
     @Test
@@ -104,22 +113,22 @@ public class UserDaoIT {
         dao.addUser(user);
 
         User fetchedUser = dao.getUser("bad", "pass");
-        Assert.assertNull(fetchedUser);
+        Assertions.assertNull(fetchedUser);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testDaoExceptionWithException() throws Exception {
         User user = new User();
         user.setId(new Long(1));
-        EntityManager em = new MockUp<EntityManager>(){
-            @Mock
-            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
-                throw new NotSupportedException();
-            }
-        }.getMockInstance();
+        
+        EntityManager em = Mockito.mock(EntityManager.class);
+        doThrow(NotSupportedException.class).when(em).find(any(), any());
+        
         dao.em = em;
 
-        dao.addUser(user);
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addUser(user);
+        });
     }
 
     private User createUser(Role role, String username, String password) {

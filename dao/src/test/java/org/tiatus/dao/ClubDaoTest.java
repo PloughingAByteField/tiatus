@@ -1,189 +1,111 @@
 package org.tiatus.dao;
 
-import mockit.Mock;
-import mockit.MockUp;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.tiatus.entity.Club;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by johnreynolds on 14/09/2016.
  */
+@ExtendWith(MockitoExtension.class)
 public class ClubDaoTest {
+    
+    @Mock
+    private EntityManager entityManagerMock;
+
+    @Mock
+    private UserTransaction userTransactionMock;
+
+    @Mock
+    private TypedQuery typedQueryMock;
+
     @Test
     public void testAddClub() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Club find(Class entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Club club = new Club();
         club.setId(1L);
         dao.addClub(club);
     }
 
-    @Test (expected = DaoException.class)
+    @Test 
     public void testAddClubExisting() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Club find(Class entityClass, Object primaryKey) {
-                Club club = new Club();
-                club.setId(1L);
-                return club;
-            }
+        Club existingClub = new Club();
+        existingClub.setId(1L);
 
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
+        when(entityManagerMock.find(any(), any())).thenReturn(existingClub);
+        
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Club club = new Club();
         club.setId(1L);
-        dao.addClub(club);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addClub(club);
+        });
     }
 
-    @Test (expected = DaoException.class)
-    public void testAddClubException() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Club find(Class entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
+    @Test 
+    public void testAddClubException() throws DaoException, IllegalStateException, SecurityException, HeuristicMixedException, HeuristicRollbackException, RollbackException, SystemException {
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Club club = new Club();
         club.setId(1L);
-        dao.addClub(club);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addClub(club);
+        });
     }
 
     @Test
     public void testGetClubs() {
-        TypedQuery typedQuery = new MockUp<TypedQuery>() {
-            @Mock
-            public List<Club> getResultList() {
-                List<Club> list = new ArrayList<>();
-                Club club = new Club();
-                list.add(club);
-                return list;
-            }
-        }.getMockInstance();
+        List<Club> list = new ArrayList<>();
+        Club club = new Club();
+        club.setId(1L);
+        list.add(club);
 
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public TypedQuery createQuery(String qlString, Class resultClass) {
-                return typedQuery;
-            }
-        }.getMockInstance();
+        when(typedQueryMock.getResultList()).thenReturn(list);
+        when(entityManagerMock.createQuery(any(), any())).thenReturn(typedQueryMock);
+
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        Assert.assertFalse(dao.getClubs().isEmpty());
+        dao.em = entityManagerMock;
+        Assertions.assertFalse(dao.getClubs().isEmpty());
     }
 
     @Test
     public void testRemoveClub() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
+        
+        Club existingClub = new Club();
+        existingClub.setId(1L);
 
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Club find(Class<Club> entityClass, Object primaryKey) {
-                Club club = new Club();
-                club.setId(1L);
-                return club;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        when(entityManagerMock.find(any(), any())).thenReturn(existingClub);
+        when(entityManagerMock.contains(any())).thenReturn(false);
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
+
         Club club = new Club();
         club.setId(1L);
         dao.removeClub(club);
@@ -191,143 +113,61 @@ public class ClubDaoTest {
 
     @Test
     public void testRemoveClubNoClub() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Club find(Class<Club> entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        when(entityManagerMock.find(any(), any())).thenReturn(null);
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
+
         Club club = new Club();
         club.setId(1L);
         dao.removeClub(club);
     }
 
-    @Test (expected = DaoException.class)
+    @Test 
     public void testRemoveClubException() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
-            }
+        Club existingClub = new Club();
+        existingClub.setId(1L);
 
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Club find(Class<Club> entityClass, Object primaryKey) {
-                Club club = new Club();
-                club.setId(1L);
-                return club;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        when(entityManagerMock.find(any(), any())).thenReturn(existingClub);
+        when(entityManagerMock.contains(any())).thenReturn(false);
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Club club = new Club();
         club.setId(1L);
-        dao.removeClub(club);
+        
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.removeClub(club);
+        });
     }
 
     @Test
     public void testUpdateClub() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
-
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Club club = new Club();
         club.setId(1L);
+
         dao.updateClub(club);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testUpdateClubException() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Club club = new Club();
         club.setId(1L);
-        dao.updateClub(club);
+        
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.updateClub(club);
+        });
     }
 }

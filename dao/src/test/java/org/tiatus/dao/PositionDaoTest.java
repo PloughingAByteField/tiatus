@@ -1,189 +1,110 @@
 package org.tiatus.dao;
 
-import mockit.Mock;
-import mockit.MockUp;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.tiatus.entity.Position;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by johnreynolds on 14/09/2016.
  */
+@ExtendWith(MockitoExtension.class)
 public class PositionDaoTest {
+
+    @Mock
+    private EntityManager entityManagerMock;
+
+    @Mock
+    private UserTransaction userTransactionMock;
+
+    @Mock
+    private TypedQuery typedQueryMock;
+
     @Test
     public void testAddPosition() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Position find(Class entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
+        when(entityManagerMock.find(any(), any())).thenReturn(null);
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
         dao.addPosition(position);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testAddPositionExisting() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Position find(Class entityClass, Object primaryKey) {
-                Position position = new Position();
-                position.setId(1L);
-                return position;
-            }
-
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
+        Position existingPosition = new Position();
+        existingPosition.setId(1L);
+        when(entityManagerMock.find(any(), any())).thenReturn(existingPosition);
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
-        dao.addPosition(position);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addPosition(position);
+        });
     }
 
-    @Test (expected = DaoException.class)
-    public void testAddPositionException() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Position find(Class entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
+    @Test
+    public void testAddPositionException() throws Exception {
+        when(entityManagerMock.find(any(), any())).thenReturn(null);
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
-        dao.addPosition(position);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addPosition(position);
+        });
     }
 
     @Test
     public void testGetPositions() {
-        TypedQuery typedQuery = new MockUp<TypedQuery>() {
-            @Mock
-            public List<Position> getResultList() {
-                List<Position> list = new ArrayList<>();
-                Position position = new Position();
-                list.add(position);
-                return list;
-            }
-        }.getMockInstance();
+        List<Position> list = new ArrayList<>();
+        Position existingPosition = new Position();
+        list.add(existingPosition);
 
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public TypedQuery createQuery(String qlString, Class resultClass) {
-                return typedQuery;
-            }
-        }.getMockInstance();
+        when(typedQueryMock.getResultList()).thenReturn(list);
+        when(entityManagerMock.createQuery(any(), any())).thenReturn(typedQueryMock);
+
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        Assert.assertFalse(dao.getPositions().isEmpty());
+        dao.em = entityManagerMock;
+        Assertions.assertFalse(dao.getPositions().isEmpty());
     }
 
     @Test
     public void testRemovePosition() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
+        Position existingPosition = new Position();
+        existingPosition.setId(1L);
 
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Position find(Class<Position> entityClass, Object primaryKey) {
-                Position position = new Position();
-                position.setId(1L);
-                return position;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        when(entityManagerMock.find(any(), any())).thenReturn(existingPosition);
+        when(entityManagerMock.contains(any())).thenReturn(false);
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
         dao.removePosition(position);
@@ -191,143 +112,57 @@ public class PositionDaoTest {
 
     @Test
     public void testRemovePositionNoPosition() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Position find(Class<Position> entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        when(entityManagerMock.find(any(), any())).thenReturn(null);
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
         dao.removePosition(position);
     }
 
-    @Test (expected = DaoException.class)
+    @Test 
     public void testRemovePositionException() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Position find(Class<Position> entityClass, Object primaryKey) {
-                Position position = new Position();
-                position.setId(1L);
-                return position;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        Position existingPosition = new Position();
+        existingPosition.setId(1L);
+        when(entityManagerMock.find(any(), any())).thenReturn(existingPosition);
+        when(entityManagerMock.contains(any())).thenReturn(false);
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
-        dao.removePosition(position);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.removePosition(position);
+        });
     }
 
     @Test
     public void testUpdatePosition() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
-
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
         dao.updatePosition(position);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testUpdatePositionException() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         PositionDaoImpl dao = new PositionDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         Position position = new Position();
         position.setId(1L);
-        dao.updatePosition(position);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.updatePosition(position);
+        });
     }
 }

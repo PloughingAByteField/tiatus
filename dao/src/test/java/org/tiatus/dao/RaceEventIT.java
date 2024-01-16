@@ -1,11 +1,12 @@
 package org.tiatus.dao;
 
-import mockit.Mock;
-import mockit.MockUp;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Event;
@@ -15,25 +16,30 @@ import org.tiatus.entity.RaceEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.transaction.*;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+
 import java.util.List;
 
 /**
  * Created by johnreynolds on 19/06/2016.
  */
+@ExtendWith(MockitoExtension.class)
 public class RaceEventIT {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceEventIT.class);
     private RaceEventDaoImpl dao;
     private EntityManager em;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dao = new RaceEventDaoImpl();
         em = Persistence.createEntityManagerFactory("primary").createEntityManager();
         dao.em = em;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         em.close();
     }
@@ -41,7 +47,7 @@ public class RaceEventIT {
     @Test
     public void getRaceEvents() {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
 
         // add race
         em.getTransaction().begin();
@@ -76,14 +82,14 @@ public class RaceEventIT {
         em.getTransaction().commit();
 
         raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(!raceEvents.isEmpty());
-        Assert.assertTrue(raceEvents.size() == 2);
+        Assertions.assertTrue(!raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.size() == 2);
     }
 
     @Test
     public void addRaceEvent() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -97,15 +103,15 @@ public class RaceEventIT {
         dao.addRaceEvent(raceEvent1);
 
         raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(!raceEvents.isEmpty());
-        Assert.assertTrue(raceEvents.size() == 1);
+        Assertions.assertTrue(!raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.size() == 1);
     }
 
 
-    @Test (expected = DaoException.class)
+    @Test
     public void addExistingRaceEvent() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -120,13 +126,16 @@ public class RaceEventIT {
         raceEvent1.setEvent(event1);
         dao.tx = new EntityUserTransaction(em);
         dao.addRaceEvent(raceEvent1);
-        dao.addRaceEvent(raceEvent1);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addRaceEvent(raceEvent1);
+        });
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testAddRaceEventWithException() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -137,21 +146,22 @@ public class RaceEventIT {
         raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
         raceEvent1.setEvent(event1);
-        EntityManager em = new MockUp<EntityManager>(){
-            @Mock
-            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
-                throw new NotSupportedException();
-            }
-        }.getMockInstance();
+
+        EntityManager em = Mockito.mock(EntityManager.class);
+        doThrow(NotSupportedException.class).when(em).find(any(), any());
+        
         dao.tx = new EntityUserTransaction(em);
         dao.em = em;
-        dao.addRaceEvent(raceEvent1);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addRaceEvent(raceEvent1);
+        });
     }
 
     @Test
     public void removeRaceEvent() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -165,18 +175,18 @@ public class RaceEventIT {
         dao.addRaceEvent(raceEvent1);
 
         raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(!raceEvents.isEmpty());
-        Assert.assertTrue(raceEvents.size() == 1);
+        Assertions.assertTrue(!raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.size() == 1);
 
         dao.deleteRaceEvent(raceEvent1);
         raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
     }
 
     @Test
     public void removeRaceEventNotExisting() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -191,8 +201,8 @@ public class RaceEventIT {
         dao.addRaceEvent(raceEvent1);
 
         raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(!raceEvents.isEmpty());
-        Assert.assertTrue(raceEvents.size() == 1);
+        Assertions.assertTrue(!raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.size() == 1);
 
         RaceEvent raceEvent2 = new RaceEvent();
         raceEvent2.setId(2L);
@@ -201,16 +211,15 @@ public class RaceEventIT {
         raceEvent2.setEvent(event1);
 
         dao.deleteRaceEvent(raceEvent2);
-        Assert.assertTrue(!raceEvents.isEmpty());
-        Assert.assertTrue(raceEvents.size() == 1);
-        Assert.assertEquals(raceEvents.get(0).getRaceEventOrder(), 1L);
-
+        Assertions.assertTrue(!raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.size() == 1);
+        Assertions.assertEquals(raceEvents.get(0).getRaceEventOrder(), 1L);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void removeRaceEventWithException() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -220,21 +229,22 @@ public class RaceEventIT {
         raceEvent1.setId(1L);
         raceEvent1.setRace(race1);
         raceEvent1.setEvent(event1);
-        EntityManager em = new MockUp<EntityManager>(){
-            @Mock
-            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
-                throw new NotSupportedException();
-            }
-        }.getMockInstance();
+        
+        EntityManager em = Mockito.mock(EntityManager.class);
+        doThrow(NotSupportedException.class).when(em).find(any(), any());
+        
         dao.tx = new EntityUserTransaction(em);
         dao.em = em;
-        dao.deleteRaceEvent(raceEvent1);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.deleteRaceEvent(raceEvent1);
+        });
     }
 
     @Test
     public void updateRaceEvent() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -249,22 +259,22 @@ public class RaceEventIT {
         dao.addRaceEvent(raceEvent1);
 
         raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(!raceEvents.isEmpty());
-        Assert.assertTrue(raceEvents.size() == 1);
-        Assert.assertEquals(raceEvents.get(0).getRaceEventOrder(), 1);
+        Assertions.assertTrue(!raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.size() == 1);
+        Assertions.assertEquals(raceEvents.get(0).getRaceEventOrder(), 1);
 
         raceEvent1.setRaceEventOrder(2);
         dao.updateRaceEvent(raceEvent1);
         raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(!raceEvents.isEmpty());
-        Assert.assertTrue(raceEvents.size() == 1);
-        Assert.assertEquals(raceEvents.get(0).getRaceEventOrder(), 2);
+        Assertions.assertTrue(!raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.size() == 1);
+        Assertions.assertEquals(raceEvents.get(0).getRaceEventOrder(), 2);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void updateRaceEventWithException() throws Exception {
         List<RaceEvent> raceEvents = dao.getRaceEvents();
-        Assert.assertTrue(raceEvents.isEmpty());
+        Assertions.assertTrue(raceEvents.isEmpty());
         Race race1 = new Race();
         race1.setId(1L);
         race1.setName("Race 1");
@@ -278,14 +288,14 @@ public class RaceEventIT {
         raceEvent1.setRaceEventOrder(1);
         em.merge(race1);
         em.merge(event1);
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
+       
+        UserTransaction userTransactionMock = Mockito.mock(UserTransaction.class);
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
+        
+        dao.tx = userTransactionMock;
 
-        }.getMockInstance();
-        dao.tx = tx;
-        dao.updateRaceEvent(raceEvent1);
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.updateRaceEvent(raceEvent1);
+        });
     }
 }

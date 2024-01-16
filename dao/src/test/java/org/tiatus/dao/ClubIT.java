@@ -1,11 +1,12 @@
 package org.tiatus.dao;
 
-import mockit.Mock;
-import mockit.MockUp;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.Club;
@@ -13,25 +14,30 @@ import org.tiatus.entity.Club;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.transaction.*;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+
 import java.util.List;
 
 /**
  * Created by johnreynolds on 19/06/2016.
  */
+@ExtendWith(MockitoExtension.class)
 public class ClubIT {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClubIT.class);
     private ClubDaoImpl dao;
     private EntityManager em;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         dao = new ClubDaoImpl();
         em = Persistence.createEntityManagerFactory("primary").createEntityManager();
         dao.em = em;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         em.close();
     }
@@ -39,7 +45,7 @@ public class ClubIT {
     @Test
     public void getClubs() {
         List<Club> clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
 
         // add club
         em.getTransaction().begin();
@@ -54,151 +60,152 @@ public class ClubIT {
         em.getTransaction().commit();
 
         clubs = dao.getClubs();
-        Assert.assertTrue(!clubs.isEmpty());
-        Assert.assertTrue(clubs.size() == 2);
+        Assertions.assertTrue(!clubs.isEmpty());
+        Assertions.assertTrue(clubs.size() == 2);
     }
 
     @Test
     public void addClub() throws Exception {
         List<Club> clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
 
         clubs = dao.getClubs();
-        Assert.assertTrue(!clubs.isEmpty());
-        Assert.assertTrue(clubs.size() == 1);
+        Assertions.assertTrue(!clubs.isEmpty());
+        Assertions.assertTrue(clubs.size() == 1);
     }
 
 
-    @Test (expected = DaoException.class)
+    @Test
     public void addExistingClub() throws Exception {
         List<Club> clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setId(1L);
         newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
-        dao.addClub(newClub);
+        
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addClub(newClub);
+        });
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testDaoExceptionWithException() throws Exception {
         List<Club> clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setId(1L);
         newClub.setClubName("Club 1");
-        EntityManager em = new MockUp<EntityManager>(){
-            @Mock
-            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
-                throw new NotSupportedException();
-            }
-        }.getMockInstance();
+
+        EntityManager em = Mockito.mock(EntityManager.class);
+        doThrow(NotSupportedException.class).when(em).find(any(), any());
+        
         dao.em = em;
         dao.tx = new EntityUserTransaction(em);
-        dao.addClub(newClub);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addClub(newClub);
+        });
     }
 
     @Test
     public void removeClub() throws Exception {
         List<Club> clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
         Club club = new Club();
         club.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(club);
 
         clubs = dao.getClubs();
-        Assert.assertTrue(!clubs.isEmpty());
-        Assert.assertTrue(clubs.size() == 1);
+        Assertions.assertTrue(!clubs.isEmpty());
+        Assertions.assertTrue(clubs.size() == 1);
 
         dao.removeClub(club);
         clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
     }
 
 
     @Test
     public void removeClubNotExisting() throws Exception {
         List<Club> clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
         Club club = new Club();
         club.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(club);
 
         clubs = dao.getClubs();
-        Assert.assertTrue(!clubs.isEmpty());
-        Assert.assertTrue(clubs.size() == 1);
+        Assertions.assertTrue(!clubs.isEmpty());
+        Assertions.assertTrue(clubs.size() == 1);
 
         Club club2 = new Club();
         club2.setId(2L);
         club2.setClubName("Club 2");
         dao.removeClub(club2);
         clubs = dao.getClubs();
-        Assert.assertTrue(!clubs.isEmpty());
-        Assert.assertTrue(clubs.size() == 1);
-        Assert.assertEquals(clubs.get(0).getClubName(), "Club 1");
+        Assertions.assertTrue(!clubs.isEmpty());
+        Assertions.assertTrue(clubs.size() == 1);
+        Assertions.assertEquals(clubs.get(0).getClubName(), "Club 1");
     }
 
 
-    @Test (expected = DaoException.class)
+    @Test
     public void removeClubWithException() throws Exception {
         Club club = new Club();
         club.setId(1L);
         club.setClubName("Club 1");
 
-        EntityManager em = new MockUp<EntityManager>(){
-            @Mock
-            public <T> T find(Class<T> entityClass, Object primaryKey) throws NotSupportedException {
-                throw new NotSupportedException();
-            }
-        }.getMockInstance();
+        doThrow(NotSupportedException.class).when(em).find(any(), any());
         dao.em = em;
         dao.tx = new EntityUserTransaction(em);
-        dao.removeClub(club);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.removeClub(club);
+        });
     }
 
     @Test
     public void updateClub() throws Exception {
         List<Club> clubs = dao.getClubs();
-        Assert.assertTrue(clubs.isEmpty());
+        Assertions.assertTrue(clubs.isEmpty());
         Club newClub = new Club();
         newClub.setClubName("Club 1");
         dao.tx = new EntityUserTransaction(em);
         dao.addClub(newClub);
 
         clubs = dao.getClubs();
-        Assert.assertTrue(!clubs.isEmpty());
-        Assert.assertTrue(clubs.size() == 1);
-        Assert.assertEquals(clubs.get(0).getClubName(), "Club 1");
+        Assertions.assertTrue(!clubs.isEmpty());
+        Assertions.assertTrue(clubs.size() == 1);
+        Assertions.assertEquals(clubs.get(0).getClubName(), "Club 1");
         newClub.setClubName("new name");
         dao.updateClub(newClub);
         clubs = dao.getClubs();
-        Assert.assertTrue(!clubs.isEmpty());
-        Assert.assertTrue(clubs.size() == 1);
-        Assert.assertEquals(clubs.get(0).getId(), Long.valueOf(1L));
-        Assert.assertEquals(clubs.get(0).getClubName(), "new name");
+        Assertions.assertTrue(!clubs.isEmpty());
+        Assertions.assertTrue(clubs.size() == 1);
+        Assertions.assertEquals(clubs.get(0).getId(), Long.valueOf(1L));
+        Assertions.assertEquals(clubs.get(0).getClubName(), "new name");
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void updateClubWithException() throws Exception {
         Club club = new Club();
         club.setId(1L);
         club.setClubName("Club 1");
 
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
+        UserTransaction userTransactionMock = Mockito.mock(UserTransaction.class);
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
-        }.getMockInstance();
-        dao.tx = tx;
-        dao.updateClub(club);
+        dao.tx = userTransactionMock;
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.updateClub(club);
+        });
     }
 }

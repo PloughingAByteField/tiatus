@@ -1,9 +1,11 @@
 package org.tiatus.dao;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import mockit.Mock;
-import mockit.MockUp;
-import org.junit.Assert;
-import org.junit.Test;
 import org.tiatus.entity.Event;
 import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
@@ -11,60 +13,40 @@ import org.tiatus.entity.RaceEvent;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.*;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by johnreynolds on 14/09/2016.
  */
+@ExtendWith(MockitoExtension.class)
 public class RaceEventDaoTest {
+
+    @Mock
+    private EntityManager entityManagerMock;
+
+    @Mock
+    private UserTransaction userTransactionMock;
+
+    @Mock
+    private TypedQuery typedQueryMock;
+
     @Test
     public void testAddRace() throws DaoException {
-        TypedQuery typedQuery = new MockUp<TypedQuery>() {
-            @Mock
-            public List<RaceEvent> getResultList() {
-                return new ArrayList<>();
-            }
-
-            @Mock
-            public TypedQuery setParameter(String name, Object value) {
-                return this.getMockInstance();
-            }
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public RaceEvent find(Class entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public void persist(Object entity) {
-
-            }
-
-            @Mock
-            public TypedQuery createQuery(String qlString, Class resultClass) {
-                return typedQuery;
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
+        when(typedQueryMock.getResultList()).thenReturn(new ArrayList<>());
+        when(typedQueryMock.setParameter(anyString(), any())).thenReturn(typedQueryMock);
+        when(entityManagerMock.find(any(), any())).thenReturn(null);
+        when(entityManagerMock.createQuery(any(), any())).thenReturn(typedQueryMock);
 
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
@@ -76,38 +58,16 @@ public class RaceEventDaoTest {
         dao.addRaceEvent(raceEvent);
     }
 
-    @Test (expected = DaoException.class)
+    @Test 
     public void testAddRaceEventExisting() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public RaceEvent find(Class entityClass, Object primaryKey) {
-                RaceEvent RaceEvent = new RaceEvent();
-                RaceEvent.setId(1L);
-                return RaceEvent;
-            }
+        RaceEvent existingRaceEvent = new RaceEvent();
+        existingRaceEvent.setId(1L);
+        when(entityManagerMock.find(any(), any())).thenReturn(existingRaceEvent);
 
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
 
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
@@ -116,39 +76,24 @@ public class RaceEventDaoTest {
         raceEvent.setId(1L);
         raceEvent.setEvent(event);
         raceEvent.setRace(race);
-        dao.addRaceEvent(raceEvent);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addRaceEvent(raceEvent);
+        });
     }
 
-    @Test (expected = DaoException.class)
-    public void testAddRaceEventException() throws DaoException {
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public RaceEvent find(Class entityClass, Object primaryKey) {
-                return null;
-            }
+    @Test
+    public void testAddRaceEventException() throws Exception {
+        when(typedQueryMock.getResultList()).thenReturn(new ArrayList<>());
+        when(typedQueryMock.setParameter(anyString(), any())).thenReturn(typedQueryMock);
+        when(entityManagerMock.find(any(), any())).thenReturn(null);
+        when(entityManagerMock.createQuery(any(), any())).thenReturn(typedQueryMock);
 
-            @Mock
-            public void persist(Object entity) {
-
-            }
-        }.getMockInstance();
-
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
@@ -157,7 +102,10 @@ public class RaceEventDaoTest {
         raceEvent.setId(1L);
         raceEvent.setEvent(event);
         raceEvent.setRace(race);
-        dao.addRaceEvent(raceEvent);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.addRaceEvent(raceEvent);
+        });
     }
 
     private List<RaceEvent> getRaceEvents() {
@@ -176,107 +124,41 @@ public class RaceEventDaoTest {
 
     @Test
     public void testGetRaceEvents() {
-        TypedQuery typedQuery = new MockUp<TypedQuery>() {
-            @Mock
-            public List<RaceEvent> getResultList() {
-               return getRaceEvents();
-            }
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public TypedQuery createQuery(String qlString, Class resultClass) {
-                return typedQuery;
-            }
-        }.getMockInstance();
-
+        when(entityManagerMock.createQuery(any(), any())).thenReturn(typedQueryMock);
+        when(typedQueryMock.getResultList()).thenReturn(getRaceEvents());
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        Assert.assertFalse(dao.getRaceEvents().isEmpty());
+        dao.em = entityManagerMock;
+
+        Assertions.assertFalse(dao.getRaceEvents().isEmpty());
     }
 
     @Test
     public void testGetRaceEventByEvent() {
-        TypedQuery typedQuery = new MockUp<TypedQuery>() {
-            @Mock
-            public List<RaceEvent> getResultList() {
-                return getRaceEvents();
-            }
-
-            @Mock
-            public TypedQuery setParameter(String name, Object value) {
-                return this.getMockInstance();
-            }
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public TypedQuery createQuery(String qlString, Class resultClass) {
-                return typedQuery;
-            }
-        }.getMockInstance();
+        when(entityManagerMock.createQuery(any(), any())).thenReturn(typedQueryMock);
+        when(typedQueryMock.setParameter(anyString(), any())).thenReturn(typedQueryMock);
 
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
+        dao.em = entityManagerMock;
         dao.getRaceEventByEvent(getRaceEvents().get(0).getEvent());
     }
 
     @Test
     public void testRemoveRaceEvent() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public Object find(Class<?> entityClass, Object primaryKey) {
-                if (entityClass.isAssignableFrom(RaceEvent.class)) {
-                    RaceEvent raceEvent = new RaceEvent();
-                    Race race = new Race();
-                    race.setId(1L);
-                    Event event = new Event();
-                    event.setId(1L);
-                    raceEvent.setId(1L);
-                    raceEvent.setEvent(event);
-                    raceEvent.setRace(race);
-                    return raceEvent;
-                }
-                if (entityClass.isAssignableFrom(Event.class)) {
-                    Event event = new Event();
-                    event.setId(1L);
-                    return event;
-                }
-                return null;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
-
-        RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
-        RaceEvent raceEvent = new RaceEvent();
+        RaceEvent existingRaceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
         Event event = new Event();
         event.setId(1L);
+        existingRaceEvent.setId(1L);
+        existingRaceEvent.setEvent(event);
+        existingRaceEvent.setRace(race);
+
+        when(entityManagerMock.find(Mockito.eq(RaceEvent.class), any())).thenReturn(existingRaceEvent);
+
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
+        RaceEvent raceEvent = new RaceEvent();
         raceEvent.setId(1L);
         raceEvent.setEvent(event);
         raceEvent.setRace(race);
@@ -285,93 +167,11 @@ public class RaceEventDaoTest {
 
     @Test
     public void testRemoveRaceEventNoRaceEvent() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public RaceEvent find(Class<Race> entityClass, Object primaryKey) {
-                return null;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        when(entityManagerMock.find(any(), any())).thenReturn(null);
 
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
-        RaceEvent raceEvent = new RaceEvent();
-        Race race = new Race();
-        race.setId(1L);
-        Event event = new Event();
-        event.setId(1L);
-        raceEvent.setId(1L);
-        raceEvent.setEvent(event);
-        raceEvent.setRace(race);
-        dao.deleteRaceEvent(raceEvent);
-    }
-
-    @Test (expected = DaoException.class)
-    public void testRemoveRaceEventException() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public RaceEvent find(Class<Race> entityClass, Object primaryKey) {
-                RaceEvent raceEvent = new RaceEvent();
-                Race race = new Race();
-                race.setId(1L);
-                Event event = new Event();
-                event.setId(1L);
-                raceEvent.setId(1L);
-                raceEvent.setEvent(event);
-                raceEvent.setRace(race);
-                return raceEvent;
-            }
-
-            @Mock
-            public boolean contains(Object entity) {
-                return false;
-            }
-
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
-
-        RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
@@ -384,30 +184,35 @@ public class RaceEventDaoTest {
     }
 
     @Test
-    public void testUpdateRaceEvent() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
+    public void testRemoveRaceEventException() throws Exception {
+        RaceEvent existingRaceEvent = new RaceEvent();
+        existingRaceEvent.setId(1L);
+        when(entityManagerMock.find(any(), any())).thenReturn(existingRaceEvent);
 
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
+        RaceEvent raceEvent = new RaceEvent();
+        Race race = new Race();
+        race.setId(1L);
+        Event event = new Event();
+        event.setId(1L);
+        raceEvent.setId(1L);
+        raceEvent.setEvent(event);
+        raceEvent.setRace(race);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.deleteRaceEvent(raceEvent);
+        });
+    }
+
+    @Test
+    public void testUpdateRaceEvent() throws Exception {
+        RaceEventDaoImpl dao = new RaceEventDaoImpl();
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
@@ -419,31 +224,13 @@ public class RaceEventDaoTest {
         dao.updateRaceEvent(raceEvent);
     }
 
-    @Test (expected = DaoException.class)
+    @Test
     public void testUpdateRaceEventException() throws Exception {
-        UserTransaction tx = new MockUp<UserTransaction>() {
-            @Mock
-            void begin() throws NotSupportedException, SystemException {
-
-            }
-
-            @Mock
-            void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException, RollbackException, SecurityException, SystemException {
-                throw new HeuristicMixedException();
-            }
-
-        }.getMockInstance();
-
-        EntityManager em = new MockUp<EntityManager>() {
-            @Mock
-            public <T> T merge(T entity) {
-                return entity;
-            }
-        }.getMockInstance();
+        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
 
         RaceEventDaoImpl dao = new RaceEventDaoImpl();
-        dao.em = em;
-        dao.tx = tx;
+        dao.em = entityManagerMock;
+        dao.tx = userTransactionMock;
         RaceEvent raceEvent = new RaceEvent();
         Race race = new Race();
         race.setId(1L);
@@ -452,6 +239,9 @@ public class RaceEventDaoTest {
         raceEvent.setId(1L);
         raceEvent.setEvent(event);
         raceEvent.setRace(race);
-        dao.updateRaceEvent(raceEvent);
+
+        Assertions.assertThrows(DaoException.class, () -> {
+            dao.updateRaceEvent(raceEvent);
+        });
     }
 }
