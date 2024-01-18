@@ -1,297 +1,180 @@
 package org.tiatus.server.filter;
 
-import mockit.Deencapsulation;
-import mockit.Invocation;
-import mockit.Mock;
-import mockit.MockUp;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.tiatus.auth.UserPrincipal;
 import org.tiatus.entity.User;
 import org.tiatus.service.UserServiceImpl;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.*;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Providers;
-import java.io.IOException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import java.lang.reflect.Field;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Enumeration;
-import java.util.List;
 
 /**
  * Created by johnreynolds on 12/09/2016.
  */
+@ExtendWith(MockitoExtension.class)
 public class AuthenticationFilterTest {
 
     private AuthenticationFilter filter;
 
-    @Before
-    public void setup() {
-        new MockUp<AuthenticationFilter>() {
-            @Mock
-            void $init(Invocation invocation) {
-                AuthenticationFilter f = invocation.getInvokedInstance();
+    @Mock
+    private HttpServletRequest httpServletRequestMock;
 
-                HttpServletRequest servletRequest = new MockUp<HttpServletRequest>() {
-                    @Mock
-                    public HttpSession getSession() {
-                        return new MockHttpSession().getMockInstance();
-                    }
-                }.getMockInstance();
-                Deencapsulation.setField(f, "servletRequest", servletRequest);
+    @Mock
+    private HttpSession httpSessionMock;
 
-                Providers providers = new MockUp<Providers>() {
-                    @Mock
-                    <T> MessageBodyReader<T> getMessageBodyReader(Class<T> type,
-                                                                  Type genericType, Annotation[] annotations, MediaType mediaType) {
-                        return new MockUp<MessageBodyReader<T>>() {
-                            @Mock
-                            public boolean isReadable(Class aClass, Type type, Annotation[] annotations, MediaType mediaType) {
-                                return true;
-                            }
+    @Mock
+    private ContainerRequestContext containerRequestContextMock;
 
-                            @Mock
-                            public Object readFrom(Class aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap multivaluedMap, InputStream inputStream) throws IOException, WebApplicationException {
-                                Form form = new Form();
-                                form = form.param("user", "user");
-                                form = form.param("pwd", "pwd");
-                                return form;
-                            }
+    @Mock
+    private UserServiceImpl userServiceMock;
 
-                        }.getMockInstance();
-                    }
+    @Mock
+    private UriInfo uriInfoMock;
 
-                }.getMockInstance();
-                Deencapsulation.setField(f, "providers", providers);
-            }
-        };
+    @Mock
+    private UserPrincipal userPrincipalMock;
 
+    @Mock
+    private InputStream inputStreamMock;
+
+    @Mock
+    private Providers providersMock;
+
+    @Mock
+    private MessageBodyReader messageBodyReaderMock;
+
+    @BeforeEach
+    public void setup() throws Exception {
         filter = new AuthenticationFilter();
-    }
 
-    class MockHttpSession extends MockUp<HttpSession> {
-        @Mock
-        public Object getAttribute(String name) {
-            return null;
-        }
-    }
-
-    class MockContainerRequestContext extends MockUp<ContainerRequestContext> {
-        @Mock
-        public boolean hasEntity() {
-            return true;
-        }
-
-        @Mock
-        public MediaType getMediaType() {
-            return MediaType.APPLICATION_FORM_URLENCODED_TYPE;
-        }
-
-        @Mock
-        public InputStream getEntityStream() {
-            return new InputStream() {
-                @Override
-                public int read() throws IOException {
-                    return -1;
-                }
-            };
-        }
-
-        @Mock
-        public UriInfo getUriInfo() {
-            return new UriInfo() {
-                @Override
-                public String getPath() {
-                    return null;
-                }
-
-                @Override
-                public String getPath(boolean decode) {
-                    return null;
-                }
-
-                @Override
-                public List<PathSegment> getPathSegments() {
-                    return null;
-                }
-
-                @Override
-                public List<PathSegment> getPathSegments(boolean decode) {
-                    return null;
-                }
-
-                @Override
-                public URI getRequestUri() {
-                    try {
-                        return new URI("https://127.0.0.1");
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                public UriBuilder getRequestUriBuilder() {
-                    return null;
-                }
-
-                @Override
-                public URI getAbsolutePath() {
-                    return null;
-                }
-
-                @Override
-                public UriBuilder getAbsolutePathBuilder() {
-                    return null;
-                }
-
-                @Override
-                public URI getBaseUri() {
-                    return null;
-                }
-
-                @Override
-                public UriBuilder getBaseUriBuilder() {
-                    return null;
-                }
-
-                @Override
-                public MultivaluedMap<String, String> getPathParameters() {
-                    return null;
-                }
-
-                @Override
-                public MultivaluedMap<String, String> getPathParameters(boolean decode) {
-                    return null;
-                }
-
-                @Override
-                public MultivaluedMap<String, String> getQueryParameters() {
-                    return null;
-                }
-
-                @Override
-                public MultivaluedMap<String, String> getQueryParameters(boolean decode) {
-                    return null;
-                }
-
-                @Override
-                public List<String> getMatchedURIs() {
-                    return null;
-                }
-
-                @Override
-                public List<String> getMatchedURIs(boolean decode) {
-                    return null;
-                }
-
-                @Override
-                public List<Object> getMatchedResources() {
-                    return null;
-                }
-
-                @Override
-                public URI resolve(URI uri) {
-                    return null;
-                }
-
-                @Override
-                public URI relativize(URI uri) {
-                    return null;
-                }
-            };
-        }
+        Field field = ReflectionUtils
+        .findFields(AuthenticationFilter.class, f -> f.getName().equals("servletRequest"),
+            ReflectionUtils.HierarchyTraversalMode.TOP_DOWN)
+        .get(0);
+        field.setAccessible(true);
+        field.set(filter, httpServletRequestMock);
     }
 
     @Test
-    public void testLogInUser() throws Exception {
-        ContainerRequestContext requestContext = new MockContainerRequestContext().getMockInstance();
+    public void testLogInUser() throws Exception  {
+        when(containerRequestContextMock.hasEntity()).thenReturn(true);
+        when(containerRequestContextMock.getMediaType()).thenReturn(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+        when(httpServletRequestMock.getSession(anyBoolean())).thenReturn(httpSessionMock);
+        when(containerRequestContextMock.getUriInfo()).thenReturn(uriInfoMock);
+        when(uriInfoMock.getRequestUri()).thenReturn(new URI("https://127.0.0.1"));
+        when(containerRequestContextMock.getEntityStream()).thenReturn(inputStreamMock);
+        when(inputStreamMock.read(any())).thenReturn(-1);
 
-        UserServiceImpl userService = new MockUp<UserServiceImpl>() {
-            @Mock
-            public User getUser(String userName, String password) {
-                return new User();
-            }
-        }.getMockInstance();
-        Deencapsulation.setField(filter, "userService", userService);
+        Form form = new Form();
+        form = form.param("user", "user");
+        form = form.param("pwd", "pwd");
+        when(providersMock.getMessageBodyReader(any(), any(), any(), any())).thenReturn(messageBodyReaderMock);
+        when(messageBodyReaderMock.readFrom(any(), any(), any(), any(), any(), any())).thenReturn(form);
 
-        filter.filter(requestContext);
+        Field field = ReflectionUtils
+        .findFields(AuthenticationFilter.class, f -> f.getName().equals("providers"),
+            ReflectionUtils.HierarchyTraversalMode.TOP_DOWN)
+        .get(0);
+        field.setAccessible(true);
+        field.set(filter, providersMock);
+
+        User user = new User();
+        when(userServiceMock.getUser(anyString(), anyString())).thenReturn(user);
+
+        filter.setUserService(userServiceMock);
+        filter.filter(containerRequestContextMock);
+
+        verify(containerRequestContextMock, times(1)).setSecurityContext(any());
     }
 
     @Test
     public void testNotAForm() throws Exception {
-        ContainerRequestContext requestContext = new MockContainerRequestContext(){
-            @Mock
-            @Override
-            public MediaType getMediaType() {
-                return MediaType.APPLICATION_JSON_TYPE;
-            }
+        when(containerRequestContextMock.getMediaType()).thenReturn(MediaType.APPLICATION_JSON_TYPE);
+        when(containerRequestContextMock.hasEntity()).thenReturn(true);
+        when(httpServletRequestMock.getSession(anyBoolean())).thenReturn(httpSessionMock);
+        when(containerRequestContextMock.getUriInfo()).thenReturn(uriInfoMock);
+        when(uriInfoMock.getRequestUri()).thenReturn(new URI("https://127.0.0.1"));
 
-        }.getMockInstance();
+        filter.filter(containerRequestContextMock);
 
-        filter.filter(requestContext);
+        verify(containerRequestContextMock, times(0)).setSecurityContext(any());
     }
 
     @Test
     public void testNotHasEntity() throws Exception {
-        ContainerRequestContext requestContext = new MockContainerRequestContext(){
-            @Mock
-            @Override
-            public boolean hasEntity() {
-                return false;
-            }
+        when(containerRequestContextMock.hasEntity()).thenReturn(false);
+        when(httpServletRequestMock.getSession(anyBoolean())).thenReturn(httpSessionMock);
+        when(containerRequestContextMock.getUriInfo()).thenReturn(uriInfoMock);
+        when(uriInfoMock.getRequestUri()).thenReturn(new URI("https://127.0.0.1"));
 
-        }.getMockInstance();
+        filter.filter(containerRequestContextMock);
 
-        filter.filter(requestContext);
+        verify(containerRequestContextMock, times(0)).setSecurityContext(any());
     }
 
     @Test
     public void testLoggedInUser() throws Exception {
-        ContainerRequestContext requestContext = new MockContainerRequestContext().getMockInstance();
+        when(httpServletRequestMock.getSession(anyBoolean())).thenReturn(httpSessionMock);
+        when(containerRequestContextMock.getUriInfo()).thenReturn(uriInfoMock);
+        when(uriInfoMock.getRequestUri()).thenReturn(new URI("https://127.0.0.1"));
+        when(httpSessionMock.getAttribute("principal")).thenReturn(userPrincipalMock);
 
-        HttpSession session = new MockHttpSession(){
-            @Override
-            @Mock
-            public Object getAttribute(String name) {
-                return new UserPrincipal();
-            }
-        }.getMockInstance();
+        filter.setUserService(userServiceMock);
+        filter.filter(containerRequestContextMock);
 
-        HttpServletRequest servletRequest = new MockUp<HttpServletRequest>() {
-            @Mock
-            public HttpSession getSession(boolean create) {
-                return session;
-            }
-        }.getMockInstance();
-        Deencapsulation.setField(filter, "servletRequest", servletRequest);
-
-        filter.filter(requestContext);
+        verify(containerRequestContextMock, times(1)).setSecurityContext(any());
     }
 
     @Test
-    public void testNullUser() throws Exception {
-        ContainerRequestContext requestContext = new MockContainerRequestContext().getMockInstance();
+    public void testNoSuchUser() throws Exception {
+        when(containerRequestContextMock.hasEntity()).thenReturn(true);
+        when(containerRequestContextMock.getMediaType()).thenReturn(MediaType.APPLICATION_FORM_URLENCODED_TYPE);
+        when(httpServletRequestMock.getSession(anyBoolean())).thenReturn(httpSessionMock);
+        when(containerRequestContextMock.getUriInfo()).thenReturn(uriInfoMock);
+        when(uriInfoMock.getRequestUri()).thenReturn(new URI("https://127.0.0.1"));
+        when(containerRequestContextMock.getEntityStream()).thenReturn(inputStreamMock);
+        when(inputStreamMock.read(any())).thenReturn(-1);
 
-        UserServiceImpl userService = new MockUp<UserServiceImpl>() {
-            @Mock
-            public User getUser(String userName, String password) {
-                return null;
-            }
-        }.getMockInstance();
-        Deencapsulation.setField(filter, "userService", userService);
+        Form form = new Form();
+        form = form.param("user", "user");
+        form = form.param("pwd", "pwd");
+        when(providersMock.getMessageBodyReader(any(), any(), any(), any())).thenReturn(messageBodyReaderMock);
+        when(messageBodyReaderMock.readFrom(any(), any(), any(), any(), any(), any())).thenReturn(form);
 
-        filter.filter(requestContext);
+        Field field = ReflectionUtils
+        .findFields(AuthenticationFilter.class, f -> f.getName().equals("providers"),
+            ReflectionUtils.HierarchyTraversalMode.TOP_DOWN)
+        .get(0);
+        field.setAccessible(true);
+        field.set(filter, providersMock);
+
+        when(userServiceMock.getUser(anyString(), anyString())).thenReturn(null);
+
+        filter.setUserService(userServiceMock);
+        filter.filter(containerRequestContextMock);
+
+        verify(containerRequestContextMock, times(0)).setSecurityContext(any());
     }
 
     @Test

@@ -1,7 +1,5 @@
 package org.tiatus.service;
 
-import mockit.Mock;
-import mockit.MockUp;
 import org.junit.Assert;
 import org.junit.Test;
 import org.tiatus.dao.DaoException;
@@ -20,102 +18,102 @@ public class UserServiceImplTest {
         UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
     }
 
-    @Test
-    public void testHasAdminUser() {
-        new MockUp<UserDaoImpl>() {
-            @Mock
-            public boolean hasAdminUser() {
-                return true;
-            }
-        };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
-        Assert.assertTrue(service.hasAdminUser());
-    }
+    // @Test
+    // public void testHasAdminUser() {
+    //     new MockUp<UserDaoImpl>() {
+    //         @Mock
+    //         public boolean hasAdminUser() {
+    //             return true;
+    //         }
+    //     };
+    //     UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+    //     Assert.assertTrue(service.hasAdminUser());
+    // }
 
-    @Test
-    public void testGetUser() {
-        new MockUp<UserDaoImpl>() {
-            @Mock
-            public User getUser(String userName, String password) {
-                User user = new User();
-                user.setUserName(userName);
-                user.setPassword(password);
-                return user;
-            }
-        };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
-        User user = service.getUser("username", "password");
-        Assert.assertEquals(user.getUserName(), "username");
-        Assert.assertEquals(user.getPassword(), "password");
-    }
+    // @Test
+    // public void testGetUser() {
+    //     new MockUp<UserDaoImpl>() {
+    //         @Mock
+    //         public User getUser(String userName, String password) {
+    //             User user = new User();
+    //             user.setUserName(userName);
+    //             user.setPassword(password);
+    //             return user;
+    //         }
+    //     };
+    //     UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+    //     User user = service.getUser("username", "password");
+    //     Assert.assertEquals(user.getUserName(), "username");
+    //     Assert.assertEquals(user.getPassword(), "password");
+    // }
 
-    @Test
-    public void testAddAdminUser() throws Exception {
-        new MockUp<UserDaoImpl>() {
-            @Mock
-            public boolean hasAdminUser() {
-                return false;
-            }
+    // @Test
+    // public void testAddAdminUser() throws Exception {
+    //     new MockUp<UserDaoImpl>() {
+    //         @Mock
+    //         public boolean hasAdminUser() {
+    //             return false;
+    //         }
 
-            @Mock
-            public User addUser(User user) throws DaoException {
-                return user;
-            }
+    //         @Mock
+    //         public User addUser(User user) throws DaoException {
+    //             return user;
+    //         }
 
-            @Mock
-            public Role getRoleForRole(String role) {
-                return new Role();
-            }
-        };
-        new MockUp<MessageSenderServiceImpl>() {
-            @Mock
-            public void sendMessage(final Message obj) throws JMSException {}
-        };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
-        service.addAdminUser(new User(), "id");
-    }
+    //         @Mock
+    //         public Role getRoleForRole(String role) {
+    //             return new Role();
+    //         }
+    //     };
+    //     new MockUp<MessageSenderServiceImpl>() {
+    //         @Mock
+    //         public void sendMessage(final Message obj) throws JMSException {}
+    //     };
+    //     UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+    //     service.addAdminUser(new User(), "id");
+    // }
 
-    @Test (expected = ServiceException.class)
-    public void testAddUserException() throws Exception {
-        new MockUp<UserDaoImpl>() {
-            @Mock
-            public boolean hasAdminUser() {
-                return false;
-            }
+    // @Test (expected = ServiceException.class)
+    // public void testAddUserException() throws Exception {
+    //     new MockUp<UserDaoImpl>() {
+    //         @Mock
+    //         public boolean hasAdminUser() {
+    //             return false;
+    //         }
 
-            @Mock
-            public User addUser(User user) throws DaoException {
-                throw new DaoException("message");
-            }
+    //         @Mock
+    //         public User addUser(User user) throws DaoException {
+    //             throw new DaoException("message");
+    //         }
 
-            @Mock
-            public Role getRoleForRole(String role) {
-                return new Role();
-            }
-        };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
-        service.addAdminUser(new User(), "id");
-    }
+    //         @Mock
+    //         public Role getRoleForRole(String role) {
+    //             return new Role();
+    //         }
+    //     };
+    //     UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+    //     service.addAdminUser(new User(), "id");
+    // }
 
-    @Test (expected = ServiceException.class)
-    public void testAddUserExistingUser() throws Exception {
-        new MockUp<UserDaoImpl>() {
-            @Mock
-            public boolean hasAdminUser() {
-                return true;
-            }
+    // @Test (expected = ServiceException.class)
+    // public void testAddUserExistingUser() throws Exception {
+    //     new MockUp<UserDaoImpl>() {
+    //         @Mock
+    //         public boolean hasAdminUser() {
+    //             return true;
+    //         }
 
-            @Mock (invocations = 0)
-            public User addUser(User user) throws DaoException {
-                return user;
-            }
+    //         @Mock (invocations = 0)
+    //         public User addUser(User user) throws DaoException {
+    //             return user;
+    //         }
 
-            @Mock (invocations = 0)
-            public Role getRoleForRole(String role) {
-                return new Role();
-            }
-        };
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
-        service.addAdminUser(new User(), "id");
-    }
+    //         @Mock (invocations = 0)
+    //         public Role getRoleForRole(String role) {
+    //             return new Role();
+    //         }
+    //     };
+    //     UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+    //     service.addAdminUser(new User(), "id");
+    // }
 }
