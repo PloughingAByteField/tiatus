@@ -100,7 +100,7 @@ export function createTranslateLoader(http: HttpClient) {
         }
     }),
     RouterModule.forRoot(
-      adjudicatorRoutes, { useHash: false, preloadingStrategy: PreloadAllModules}
+      adjudicatorRoutes, { useHash: false, preloadingStrategy: PreloadAllModules, relativeLinkResolution: 'legacy' }
     )
   ],
   providers: [

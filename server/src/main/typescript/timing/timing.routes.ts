@@ -11,5 +11,5 @@ const timingRoutes: Routes = [
 ];
 
 export const timingRouting: ModuleWithProviders<any> = RouterModule.forRoot(
-    timingRoutes, { preloadingStrategy: PreloadAllModules }
+    timingRoutes, { preloadingStrategy: PreloadAllModules, relativeLinkResolution: 'legacy' }
 );
