@@ -1,7 +1,7 @@
 import { Entry } from './entry.model';
 import { Race } from '../races/race.model';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 export class RaceEntriesSubject {
     public race: Race;

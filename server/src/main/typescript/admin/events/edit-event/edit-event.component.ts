@@ -4,7 +4,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms';
 import { Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { Race } from '../../../races/race.model';
 

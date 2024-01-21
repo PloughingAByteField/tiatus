@@ -4,8 +4,8 @@ import { Validators } from '@angular/forms';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { User } from '../admin/users/user.model';
 import { LoginService } from './login.service';

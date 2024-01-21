@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { User, convertObjectToUser } from './user.model';
 
 import { CachedHttpService } from '../../http/cached-http.service';
 import { Data } from '../../model/data.model';
-import { subscribeOn } from 'rxjs/operator/subscribeOn';
+import { subscribeOn } from 'rxjs/operators';
 
 @Injectable()
 export class AdminUsersHttpService extends CachedHttpService {

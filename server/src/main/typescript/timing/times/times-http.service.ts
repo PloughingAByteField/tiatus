@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { PositionTime, convertJsonToPositionTime } from '../../times/postion-time.model';
 import { Race } from '../../races/race.model';

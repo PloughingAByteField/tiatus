@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { Message, convertObjectToMessage } from '../../websocket/message.model';
 import { MessageType } from '../../websocket/message-type.model';
@@ -22,7 +22,7 @@ import { PositionsService } from '../../positions/positions.service';
 @Injectable()
 export class AdjudicatorWebSocketService extends WebSocketService {
 
-    private message: ConverstationMessage;
+    private message: ConverstationMessage = null;
     private subject: BehaviorSubject<ConverstationMessage>
         = new BehaviorSubject<ConverstationMessage>(this.message);
     private connected: Connected[] = new Array<Connected>();

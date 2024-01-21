@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 import { RacePositionTemplatesHttpService } from './race-position-templates-http.service';
 import { RacePositionTemplateEntry, convertObjectToRacePositionTemplateEntry } from './race-position-template-entry.model';

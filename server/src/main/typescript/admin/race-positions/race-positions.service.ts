@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { RacePositionsHttpService } from './race-positions-http.service';
 import { RacePositionTemplate, convertObjectToRacePositionTemplate } from './race-position-template.model';

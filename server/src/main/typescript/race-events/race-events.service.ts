@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { RaceEvent } from './race-event.model';
 import { Race } from '../races/race.model';

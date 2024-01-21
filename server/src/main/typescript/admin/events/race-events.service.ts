@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { RaceEvent } from '../../race-events/race-event.model';
 import { RaceEventPojo } from './create-event/race-event-pojo.model';
