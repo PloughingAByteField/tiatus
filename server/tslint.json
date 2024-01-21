@@ -7,7 +7,16 @@
   ],
   "rules": {
     // Custom
-    "trailing-comma": [false, {"multiline": "always", "singleline": "never"}],
+    "trailing-comma": [
+      false,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "deprecation": {
+      "severity": "warning"
+    },
     "interface-name": [false, "always-prefix"],
     // Angular 2
     "component-class-suffix": true,
@@ -36,7 +45,6 @@
       160
     ],
     "no-string-literal": false,
-    "no-use-before-declare": true,
     "object-literal-sort-keys": false,
     "ordered-imports": false,
     "quotemark": [
