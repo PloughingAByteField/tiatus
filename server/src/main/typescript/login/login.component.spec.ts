@@ -1,16 +1,16 @@
 import { getTestBed, TestBed, async } from '@angular/core/testing';
+
 import { Component, Injector, ChangeDetectorRef, ChangeDetectionStrategy, Injectable, ViewContainerRef } from '@angular/core';
-import { XHRBackend, HttpModule } from '@angular/http';
-import { MockConnection, MockBackend } from '@angular/http/testing';
 import { Title } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
 
 import { TranslateService, TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 
 import { LoginComponent } from './login.component';
 import { LoginService } from './login.service';
+import { LoginHttpService } from './login-http.service';
 // import { FormBuilder } from '@angular/forms/src/form_builder';
 
 let translations: any = { TEST: 'This is a test' };
@@ -31,11 +31,14 @@ describe('LoginComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ ReactiveFormsModule,
+      imports: [ HttpClientTestingModule, ReactiveFormsModule,
         TranslateModule.forRoot({loader: {provide: TranslateLoader, useClass: TranslateFakeLoader}})],
       // providers: [ {provide: TranslateService, use: FakeTranslateService}]
       // imports: [TranslateModule.forRoot()], providers: []
-      providers: [ { provide: LoginService, use: loginServiceStub } ]
+      providers: [  
+        { provide: LoginService, use: loginServiceStub },
+        { provide: LoginHttpService, use: {} }
+       ]
     });
 
     injector = getTestBed();

@@ -3,9 +3,12 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    "module": "es2015",
-    "types": []
+    "types": ["jest", "node"]
   },
+  "files": [
+    "login/main.ts",
+    "polyfills.ts"
+  ],
   "include": [
     "results/*.ts",
     "login/*.ts",
@@ -13,7 +16,7 @@
     "adjudicator/*.ts",
     "clubs/*.ts",
     "dissqualification/*.ts",
-    "components/**/*.ts",
+    "components/**/*.d.ts",
     "config/*.ts",
     "entries/*.ts",
     "events/*.ts",
@@ -28,10 +31,5 @@
     "unassigned-events/*.ts",
     "polyfills.ts",
     "vendor.ts"
-  ],
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts",
-    "**/*.e2e.ts"
   ]
 }

@@ -10,6 +10,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+            "aot": true,
                         "outputPath": "dist",
                         "main": "src/main/typescript/login/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -41,6 +42,12 @@
                     },
                     "configurations": {
                         "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
                             "fileReplacements": [
                                 {
                                     "src": "src/main/typescript/environments/environment.ts",
@@ -108,6 +115,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+            "aot": true,
                         "outputPath": "dist/results",
                         "main": "src/main/typescript/results/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -139,6 +147,12 @@
                     },
                     "configurations": {
                         "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
                             "fileReplacements": [
                                 {
                                     "src": "src/main/typescript/environments/environment.ts",
@@ -206,6 +220,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+            "aot": true,
                         "outputPath": "dist/admin",
                         "main": "src/main/typescript/admin/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -237,6 +252,12 @@
                     },
                     "configurations": {
                         "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
                             "fileReplacements": [
                                 {
                                     "src": "src/main/typescript/environments/environment.ts",
@@ -304,6 +325,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+            "aot": true,
                         "outputPath": "dist/adjudicator",
                         "main": "src/main/typescript/adjudicator/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -330,6 +352,12 @@
                     },
                     "configurations": {
                         "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
                             "fileReplacements": [
                                 {
                                     "src": "src/main/typescript/environments/environment.ts",
@@ -397,6 +425,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+            "aot": true,
                         "outputPath": "dist/timing",
                         "main": "src/main/typescript/timing/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -423,6 +452,12 @@
                     },
                     "configurations": {
                         "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
                             "fileReplacements": [
                                 {
                                     "src": "src/main/typescript/environments/environment.ts",
@@ -490,6 +525,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
+            "aot": true,
                         "outputPath": "dist/setup",
                         "main": "src/main/typescript/timing/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -516,6 +552,12 @@
                     },
                     "configurations": {
                         "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
                             "fileReplacements": [
                                 {
                                     "src": "src/main/typescript/environments/environment.ts",

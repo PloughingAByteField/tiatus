@@ -10,6 +10,6 @@ const timingRoutes: Routes = [
   { path: '**',    component: NoContentComponent }
 ];
 
-export const timingRouting: ModuleWithProviders = RouterModule.forRoot(
+export const timingRouting: ModuleWithProviders<any> = RouterModule.forRoot(
     timingRoutes, { preloadingStrategy: PreloadAllModules }
 );
