@@ -77,7 +77,7 @@ export function createTranslateLoader(http: HttpClient) {
     TimeEntryModule,
     MessagingModule,
     NoContentModule,
-    NgbModule.forRoot(),
+    NgbModule,
     NgIdleKeepaliveModule.forRoot(),
     TranslateModule.forRoot({
         loader: {

@@ -90,7 +90,7 @@ export function createTranslateLoader(http: HttpClient) {
     TitlebarModule,
     NoContentModule,
     NgxPaginationModule,
-    NgbModule.forRoot(),
+    NgbModule,
     NgIdleKeepaliveModule.forRoot(),
     TranslateModule.forRoot({
         loader: {

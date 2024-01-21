@@ -130,7 +130,7 @@ export function createTranslateLoader(http: HttpClient) {
     SidebarModule,
     TitlebarModule,
     NoContentModule,
-    NgbModule.forRoot(),
+    NgbModule,
     NgIdleKeepaliveModule.forRoot(),
     TranslateModule.forRoot({
         loader: {
