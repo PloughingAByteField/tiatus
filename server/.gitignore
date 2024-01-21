@@ -52,6 +52,8 @@ bower_components
 etc
 node
 target
+target_js
+.history/*
 
 
 
