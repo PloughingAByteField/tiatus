@@ -65,7 +65,7 @@
                         "main": "src/main/typescript/test.ts",
                         "polyfills": "src/main/typescript/polyfills.ts",
                         "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/main/typescript/karma.conf.js",
+                        "karmaConfig": "src/test/typescript/karma.conf.js",
                         "styles": [],
                         "scripts": [],
                         "assets": []
@@ -163,7 +163,7 @@
                         "main": "src/main/typescript/test.ts",
                         "polyfills": "src/main/typescript/polyfills.ts",
                         "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/main/typescript/karma.conf.js",
+                        "karmaConfig": "src/test/typescript/karma.conf.js",
                         "styles": [],
                         "scripts": [],
                         "assets": []
@@ -261,7 +261,7 @@
                         "main": "src/main/typescript/test.ts",
                         "polyfills": "src/main/typescript/polyfills.ts",
                         "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/main/typescript/karma.conf.js",
+                        "karmaConfig": "src/test/typescript/karma.conf.js",
                         "styles": [],
                         "scripts": [],
                         "assets": []
@@ -354,7 +354,7 @@
                         "main": "src/main/typescript/test.ts",
                         "polyfills": "src/main/typescript/polyfills.ts",
                         "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/main/typescript/karma.conf.js",
+                        "karmaConfig": "src/test/typescript/karma.conf.js",
                         "styles": [],
                         "scripts": [],
                         "assets": []
@@ -447,7 +447,7 @@
                         "main": "src/main/typescript/test.ts",
                         "polyfills": "src/main/typescript/polyfills.ts",
                         "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/main/typescript/karma.conf.js",
+                        "karmaConfig": "src/test/typescript/karma.conf.js",
                         "styles": [],
                         "scripts": [],
                         "assets": []
@@ -540,7 +540,7 @@
                         "main": "src/main/typescript/test.ts",
                         "polyfills": "src/main/typescript/polyfills.ts",
                         "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/main/typescript/karma.conf.js",
+                        "karmaConfig": "src/test/typescript/karma.conf.js",
                         "styles": [],
                         "scripts": [],
                         "assets": []

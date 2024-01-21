@@ -16,6 +16,7 @@
   "include": [
     "results/*.spec.ts",
     "login/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "polyfills.ts"
   ]
 }
