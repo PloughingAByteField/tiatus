@@ -167,30 +167,9 @@
                     </execution>
 
                     <execution>
-                        <id>install node and yarn</id>
+                        <id>npm run build</id>
                         <goals>
-                            <goal>install-node-and-yarn</goal>
-                        </goals>
-                        <configuration>
-                            <nodeVersion>v8.9.3</nodeVersion>
-                            <yarnVersion>v1.3.2</yarnVersion>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>yarn install</id>
-                        <goals>
-                            <goal>yarn</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>install</arguments>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>yarn run build</id>
-                        <goals>
-                            <goal>yarn</goal>
+                            <goal>npm</goal>
                         </goals>
                         <configuration>
                             <arguments>run build</arguments>
@@ -201,10 +180,10 @@
                     </execution>
 
                     <execution>
-                        <id>yarn run tests</id>
+                        <id>npm run tests</id>
                         <phase>test</phase>
                         <goals>
-                            <goal>yarn</goal>
+                            <goal>npm</goal>
                         </goals>
                         <configuration>
                             <arguments>run test</arguments>
@@ -212,10 +191,10 @@
                     </execution>
 
                     <!--<execution>-->
-                    <!--<id>yarn run integration tests</id>-->
+                    <!--<id>npm run integration tests</id>-->
                     <!--<phase>integration-test</phase>-->
                     <!--<goals>-->
-                    <!--<goal>yarn</goal>-->
+                    <!--<goal>npm</goal>-->
                     <!--</goals>-->
                     <!--<configuration>-->
                     <!--<skip>${docker.skip}</skip>-->
