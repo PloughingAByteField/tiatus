@@ -10,7 +10,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-            "aot": true,
                         "outputPath": "dist",
                         "main": "src/main/typescript/login/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -38,7 +37,13 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
                         ],
                         "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts"
+                        "polyfills": "src/main/typescript/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
                     },
                     "configurations": {
                         "production": {
@@ -58,12 +63,12 @@
                             "outputHashing": "all",
                             "sourceMap": false,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true
                         }
-                    }
+                    },
+                    "defaultConfiguration": ""
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
@@ -114,7 +119,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-            "aot": true,
                         "outputPath": "dist/results",
                         "main": "src/main/typescript/results/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -142,7 +146,13 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
                         ],
                         "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts"
+                        "polyfills": "src/main/typescript/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
                     },
                     "configurations": {
                         "production": {
@@ -162,12 +172,12 @@
                             "outputHashing": "all",
                             "sourceMap": false,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true
                         }
-                    }
+                    },
+                    "defaultConfiguration": ""
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
@@ -218,7 +228,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-            "aot": true,
                         "outputPath": "dist/admin",
                         "main": "src/main/typescript/admin/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -246,7 +255,13 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
                         ],
                         "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts"
+                        "polyfills": "src/main/typescript/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
                     },
                     "configurations": {
                         "production": {
@@ -266,12 +281,12 @@
                             "outputHashing": "all",
                             "sourceMap": false,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true
                         }
-                    }
+                    },
+                    "defaultConfiguration": ""
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
@@ -322,7 +337,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-            "aot": true,
                         "outputPath": "dist/adjudicator",
                         "main": "src/main/typescript/adjudicator/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -345,7 +359,13 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
                         ],
                         "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts"
+                        "polyfills": "src/main/typescript/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
                     },
                     "configurations": {
                         "production": {
@@ -365,12 +385,12 @@
                             "outputHashing": "all",
                             "sourceMap": false,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true
                         }
-                    }
+                    },
+                    "defaultConfiguration": ""
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
@@ -421,7 +441,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-            "aot": true,
                         "outputPath": "dist/timing",
                         "main": "src/main/typescript/timing/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -444,7 +463,13 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
                         ],
                         "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts"
+                        "polyfills": "src/main/typescript/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
                     },
                     "configurations": {
                         "production": {
@@ -464,12 +489,12 @@
                             "outputHashing": "all",
                             "sourceMap": false,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true
                         }
-                    }
+                    },
+                    "defaultConfiguration": ""
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
@@ -520,7 +545,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-            "aot": true,
                         "outputPath": "dist/setup",
                         "main": "src/main/typescript/timing/main.ts",
                         "tsConfig": "src/main/typescript/tsconfig.app.json",
@@ -543,7 +567,13 @@
                             "node_modules/bootstrap/dist/css/bootstrap.min.css"
                         ],
                         "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts"
+                        "polyfills": "src/main/typescript/polyfills.ts",
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
                     },
                     "configurations": {
                         "production": {
@@ -563,12 +593,12 @@
                             "outputHashing": "all",
                             "sourceMap": false,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true
                         }
-                    }
+                    },
+                    "defaultConfiguration": ""
                 },
                 "test": {
                     "builder": "@angular-devkit/build-angular:karma",
