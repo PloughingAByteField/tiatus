@@ -73,7 +73,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/jquery": "^3.2.17",
     "@types/node": "^17.0.21",
-    "@types/selenium-webdriver": "3.0.8",
+    "@types/selenium-webdriver": "4.1.21",
     "@types/source-map": "^0.5.2",
     "@types/uglify-js": "^2.6.29",
     "@types/jest": "^27.4.1",
