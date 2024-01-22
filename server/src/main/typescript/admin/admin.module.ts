@@ -140,7 +140,7 @@ export function createTranslateLoader(http: HttpClient) {
         }
     }),
     RouterModule.forRoot(
-      adminRoutes, { useHash: false, preloadingStrategy: PreloadAllModules, relativeLinkResolution: 'legacy' }
+      adminRoutes, { useHash: false, preloadingStrategy: PreloadAllModules }
     )
   ],
   providers: [

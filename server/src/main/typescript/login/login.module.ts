@@ -38,7 +38,7 @@ export function createTranslateLoader(http: HttpClient) {
             deps: [HttpClient]
         }
     }),
-    RouterModule.forRoot([], { useHash: false, preloadingStrategy: PreloadAllModules, relativeLinkResolution: 'legacy' })
+    RouterModule.forRoot([], { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
   providers: [
     Title,

@@ -85,7 +85,7 @@ export function createTranslateLoader(http: HttpClient) {
             deps: [HttpClient]
         }
     }),
-    RouterModule.forRoot(resultsRoutes, { useHash: false, preloadingStrategy: PreloadAllModules, relativeLinkResolution: 'legacy' })
+    RouterModule.forRoot(resultsRoutes, { useHash: false, preloadingStrategy: PreloadAllModules })
   ],
   providers: [
     ResultsRacesService,
