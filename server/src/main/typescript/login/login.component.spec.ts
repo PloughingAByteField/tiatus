@@ -31,15 +31,16 @@ describe('LoginComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, ReactiveFormsModule,
-        TranslateModule.forRoot({loader: {provide: TranslateLoader, useClass: TranslateFakeLoader}})],
-      // providers: [ {provide: TranslateService, use: FakeTranslateService}]
-      // imports: [TranslateModule.forRoot()], providers: []
-      providers: [  
+    imports: [HttpClientTestingModule, ReactiveFormsModule,
+        TranslateModule.forRoot({ loader: { provide: TranslateLoader, useClass: TranslateFakeLoader } })],
+    // providers: [ {provide: TranslateService, use: FakeTranslateService}]
+    // imports: [TranslateModule.forRoot()], providers: []
+    providers: [
         { provide: LoginService, use: loginServiceStub },
         { provide: LoginHttpService, use: {} }
-       ]
-    });
+    ],
+    teardown: { destroyAfterEach: false }
+});
 
     injector = getTestBed();
     // translate = injector.get(TranslateService);
@@ -55,10 +56,11 @@ describe('LoginComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
+    declarations: [
         LoginComponent
-      ],
-    }).compileComponents();
+    ],
+    teardown: { destroyAfterEach: false }
+}).compileComponents();
   }));
   it('should create the app', waitForAsync(() => {
     const fixture = TestBed.createComponent(LoginComponent);
