@@ -4,28 +4,26 @@ import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EntryPositionTimeDao;
 import org.tiatus.entity.*;
 
+import jakarta.jms.JMSException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
-import javax.jms.JMSException;
 import java.sql.Timestamp;
 import java.util.*;
 
-@Default
+@Service
 public class TimesServiceImpl implements TimesService {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimesServiceImpl.class);
 
-    private final EntryPositionTimeDao dao;
-    private MessageSenderService sender;
+    @Autowired
+    protected EntryPositionTimeDao dao;
 
-    @Inject
-    public TimesServiceImpl(EntryPositionTimeDao dao, MessageSenderService sender) {
-        this.dao = dao;
-        this.sender = sender;
-    }
+    @Autowired
+    protected MessageSenderService sender;
 
     @Override
     public void createTime(EntryPositionTime entryPositionTime, String sessionId) throws ServiceException {
@@ -37,6 +35,7 @@ public class TimesServiceImpl implements TimesService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -53,6 +52,7 @@ public class TimesServiceImpl implements TimesService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);

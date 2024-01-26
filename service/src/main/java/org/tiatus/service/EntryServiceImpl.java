@@ -2,36 +2,29 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EntryDao;
 import org.tiatus.entity.Entry;
 import org.tiatus.entity.Race;
 
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 import java.util.List;
 
 /**
  * Created by johnreynolds on 25/06/2016.
  */
-@Default
+@Service
 public class EntryServiceImpl implements EntryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntryServiceImpl.class);
 
-    private final EntryDao dao;
-    private MessageSenderService sender;
+    @Autowired
+    protected EntryDao dao;
 
-    /**
-     * Constructor for service
-     * @param dao object injected by cdi
-     */
-    @Inject
-    public EntryServiceImpl(EntryDao dao, MessageSenderService sender) {
-       this.dao = dao;
-        this.sender = sender;
-    }
+    @Autowired
+    protected MessageSenderService sender;
 
     @Override
     public Entry getEntryForId(Long id) {
@@ -50,6 +43,7 @@ public class EntryServiceImpl implements EntryService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -67,6 +61,7 @@ public class EntryServiceImpl implements EntryService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -84,6 +79,7 @@ public class EntryServiceImpl implements EntryService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -102,6 +98,7 @@ public class EntryServiceImpl implements EntryService {
             } catch (DaoException e) {
                 LOG.warn("Got dao exception");
                 throw new ServiceException(e);
+
             } catch (JMSException e) {
                 LOG.warn("Got jms exception", e);
                 throw new ServiceException(e);
@@ -144,6 +141,7 @@ public class EntryServiceImpl implements EntryService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);

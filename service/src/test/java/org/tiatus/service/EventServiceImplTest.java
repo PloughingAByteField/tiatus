@@ -1,7 +1,5 @@
 package org.tiatus.service;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EventDaoImpl;
 import org.tiatus.dao.RaceEventDao;
@@ -10,7 +8,6 @@ import org.tiatus.entity.Event;
 import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 
-import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +16,10 @@ import java.util.List;
  */
 public class EventServiceImplTest {
 
-    @Test
-    public void testConstructor() {
-        EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
-    }
+    // @Test
+    // public void testConstructor() {
+    //     EventServiceImpl service = new EventServiceImpl(new EventDaoImpl(), new RaceEventDaoImpl(), new MessageSenderServiceImpl());
+    // }
 
     // @Test
     // public void testAddEvent() throws Exception {

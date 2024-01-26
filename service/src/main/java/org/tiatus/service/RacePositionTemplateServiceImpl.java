@@ -2,33 +2,29 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RacePositionTemplateDao;
 import org.tiatus.entity.RacePositionTemplate;
 import org.tiatus.entity.RacePositionTemplateEntry;
 
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
+
 import java.util.List;
 
 /**
  * Created by johnreynolds on 09/03/2017.
  */
+@Service
 public class RacePositionTemplateServiceImpl implements RacePositionTemplateService {
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateServiceImpl.class);
 
-    private final RacePositionTemplateDao dao;
-    private MessageSenderService sender;
+    @Autowired
+    protected RacePositionTemplateDao dao;
 
-    /**
-     * Constructor for service
-     * @param dao object injected by cdi
-     */
-    @Inject
-    public RacePositionTemplateServiceImpl(RacePositionTemplateDao dao, MessageSenderService sender) {
-        this.dao = dao;
-        this.sender = sender;
-    }
+    @Autowired
+    protected MessageSenderService sender;
 
     @Override
     public RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException {
@@ -42,6 +38,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -59,6 +56,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -76,6 +74,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -103,6 +102,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -119,6 +119,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -135,6 +136,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);

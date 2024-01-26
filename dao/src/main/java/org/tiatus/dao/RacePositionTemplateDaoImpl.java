@@ -2,55 +2,42 @@ package org.tiatus.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.entity.RacePositionTemplate;
 import org.tiatus.entity.RacePositionTemplateEntry;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.*;
 import java.util.List;
 
 /**
  * Created by johnreynolds on 09/03/2017.
  */
+@Service
 public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
 
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateDaoImpl.class);
 
-    @PersistenceContext(unitName = "primary")
-    protected EntityManager em;
+    @Autowired
+    private RacePositionTemplateRepository repository;
 
-    @Resource
-    protected UserTransaction tx;
+    @Autowired
+    private RacePositionTemplateEntryRepository racePositionTemplateEntryRepository;
 
     @Override
     public RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         LOG.debug("Adding RacePositionTemplate " + template.getName());
         try {
-            tx.begin();
-            RacePositionTemplate existing = null;
-            if (template.getId() != null) {
-                existing = em.find(RacePositionTemplate.class, template.getId());
-            }
-            if (existing == null) {
-                em.persist(template);
-                tx.commit();
-
-                return template;
+            if (!repository.existsById(template.getId())) {
+                return repository.save(template);
 
             } else {
                 String message = "Failed to add RacePositionTemplate due to existing RacePositionTemplate with same id " + template.getId();
                 LOG.warn(message);
-                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (DaoException e) {
-            throw e;
+
         } catch (Exception e) {
             LOG.warn("Failed to persist RacePositionTemplate", e.getMessage());
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e);
         }
     }
@@ -58,27 +45,21 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public void deleteRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         try {
-            tx.begin();
-            RacePositionTemplate existing = null;
-            if (template.getId() != null) {
-                existing = em.find(RacePositionTemplate.class, template.getId());
-            }
-            if (existing != null) {
+            if (repository.existsById(template.getId())) {
                 // remove the template entries
-                List<RacePositionTemplateEntry> entries = em.createQuery("FROM RacePositionTemplateEntry where template_id = :template").setParameter("template", template.getId()).getResultList();
+                List<RacePositionTemplateEntry> entries = racePositionTemplateEntryRepository.findByTemplate(template);
                 for (int i = entries.size() - 1; i >= 0; i--) {
                     RacePositionTemplateEntry entry = entries.get(i);
-                    em.remove(em.contains(entry) ? entry : em.merge(entry));
+                    racePositionTemplateEntryRepository.delete(entry);
                 }
-                em.remove(em.contains(template) ? template : em.merge(template));
-                tx.commit();
+                repository.delete(template);
+
             } else {
                 LOG.warn("No such RacePositionTemplate of id " + template.getId());
-                tx.rollback();
             }
+
         } catch (Exception e) {
             LOG.warn("Failed to delete RacePositionTemplate", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -86,50 +67,38 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public void updateRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         try {
-            tx.begin();
-            em.merge(template);
-            tx.commit();
+            repository.save(template);
+
         } catch(Exception e) {
             LOG.warn("Failed to update RacePositionTemplate", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
 
     @Override
     public List<RacePositionTemplate> getRacePositionTemplates() {
-        TypedQuery<RacePositionTemplate> query = em.createQuery("FROM RacePositionTemplate order by race", RacePositionTemplate.class);
-        return query.getResultList();
+        return repository.findByOrderByRace();
     }
 
     @Override
     public RacePositionTemplate getTemplateForId(Long id) {
-        return em.find(RacePositionTemplate.class, id);
+        return repository.findById(id).orElse(null);
     }
 
     @Override
     public RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
-            tx.begin();
-            TypedQuery<RacePositionTemplateEntry> query = em.createQuery("FROM RacePositionTemplateEntry where template = :template and position = :position", RacePositionTemplateEntry.class);
-            List<RacePositionTemplateEntry> existing = query.setParameter("template", entry.getTemplate()).setParameter("position", entry.getPosition()).getResultList();
-            if (existing.isEmpty()) {
-                em.persist(entry);
-                tx.commit();
-
-                return entry;
+            if (racePositionTemplateEntryRepository.findByTemplateAndPosition(entry.getTemplate(), entry.getPosition()) == null) {
+                return racePositionTemplateEntryRepository.save(entry);
 
             } else {
                 String message = "Failed to add template entry due to existing template entry with same template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId();
                 LOG.warn(message);
-                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (DaoException e) {
-            throw e;
+
         } catch (Exception e) {
             LOG.warn("Failed to add template entry", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -137,20 +106,15 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public void deleteTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
-            tx.begin();
-            TypedQuery<RacePositionTemplateEntry> query = em.createQuery("FROM RacePositionTemplateEntry where template = :template and position = :position", RacePositionTemplateEntry.class);
-            RacePositionTemplateEntry existing = query.setParameter("template", entry.getTemplate()).setParameter("position", entry.getPosition()).getSingleResult();
+            RacePositionTemplateEntry existing = racePositionTemplateEntryRepository.findByTemplateAndPosition(entry.getTemplate(), entry.getPosition());
             if (existing != null) {
-                RacePositionTemplateEntry merged = em.merge(existing);
-                em.remove(merged);
-                tx.commit();
+                racePositionTemplateEntryRepository.delete(existing);
+
             } else {
                 LOG.warn("No such template entry of template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId());
-                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete template entry", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -158,12 +122,10 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public void updateTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
-            tx.begin();
-            em.merge(entry);
-            tx.commit();
+            racePositionTemplateEntryRepository.save(entry);
+
         } catch(Exception e) {
             LOG.warn("Failed to update template entry", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }

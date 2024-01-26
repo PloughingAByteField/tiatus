@@ -2,9 +2,8 @@ package org.tiatus.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -35,12 +34,7 @@ public class Race implements Serializable {
     private String startTime;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "UseExistingOrGenerateIdGenerator")
-    @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-            strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "race_id_sequence")
-    })
+    @GeneratedValue
     @Column(name = "id")
     private Long id;
 

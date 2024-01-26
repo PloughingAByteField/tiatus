@@ -1,23 +1,23 @@
 package org.tiatus.server.rest;
 
-import org.jboss.resteasy.mock.MockDispatcherFactory;
-import org.jboss.resteasy.mock.MockHttpRequest;
-import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.plugins.server.resourcefactory.POJOResourceFactory;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.tiatus.entity.Event;
-import org.tiatus.entity.Race;
-import org.tiatus.entity.RaceEvent;
-import org.tiatus.role.Role;
-import org.tiatus.service.EventServiceImpl;
-import org.tiatus.service.ServiceException;
+// import org.jboss.resteasy.mock.MockDispatcherFactory;
+// import org.jboss.resteasy.mock.MockHttpRequest;
+// import org.jboss.resteasy.mock.MockHttpResponse;
+// import org.jboss.resteasy.plugins.server.resourcefactory.POJOResourceFactory;
+// import org.junit.Assert;
+// import org.junit.Before;
+// import org.junit.Test;
+// import org.tiatus.entity.Event;
+// import org.tiatus.entity.Race;
+// import org.tiatus.entity.RaceEvent;
+// import org.tiatus.role.Role;
+// import org.tiatus.service.EventServiceImpl;
+// import org.tiatus.service.ServiceException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.MediaType;
+// import javax.servlet.http.HttpServletRequest;
+// import javax.servlet.http.HttpServletResponse;
+// import javax.servlet.http.HttpSession;
+// import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 

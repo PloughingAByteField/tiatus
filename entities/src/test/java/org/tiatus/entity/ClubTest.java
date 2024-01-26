@@ -1,7 +1,7 @@
 package org.tiatus.entity;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by johnreynolds on 14/09/2016.
@@ -11,26 +11,26 @@ public class ClubTest {
     public void testClubId() {
         Club club = new Club();
         club.setId(1L);
-        Assert.assertEquals(club.getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), club.getId());
     }
 
     @Test
     public void testClubName() {
         Club club = new Club();
         club.setClubName("name");
-        Assert.assertEquals(club.getClubName(), "name");
+        Assertions.assertEquals("name", club.getClubName());
     }
 
     @Test
     public void testClubEqualsSameInstance() {
         Club club = new Club();
-        Assert.assertTrue(club.equals(club));
+        Assertions.assertTrue(club.equals(club));
     }
 
     @Test
     public void testClubEqualsDifferentType() {
         Club club = new Club();
-        Assert.assertFalse(club.equals(new User()));
+        Assertions.assertFalse(club.equals(new User()));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class ClubTest {
         Club club2 = new Club();
         club2.setId(1L);
         club2.setClubName("name");
-        Assert.assertTrue(club.equals(club2));
+        Assertions.assertTrue(club.equals(club2));
     }
 
     @Test
@@ -52,6 +52,6 @@ public class ClubTest {
         Club club2 = new Club();
         club2.setId(1L);
         club2.setClubName("name");
-        Assert.assertEquals(club.hashCode(), club2.hashCode());
+        Assertions.assertEquals(club.hashCode(), club2.hashCode());
     }
 }

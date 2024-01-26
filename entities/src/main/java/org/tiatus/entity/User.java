@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,12 +19,7 @@ import java.util.Set;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "UseExistingOrGenerateIdGenerator")
-    @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-            strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "app_user_id_sequence")
-            })
+    @GeneratedValue
     @Column(name = "id")
     private Long id;
 

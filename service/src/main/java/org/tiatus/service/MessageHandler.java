@@ -2,49 +2,35 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.entity.Disqualification;
 import org.tiatus.entity.EntryPositionTime;
 import org.tiatus.entity.Penalty;
 import org.tiatus.entity.Race;
 
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageListener;
+import jakarta.jms.ObjectMessage;
+
 
 /**
  * Created by johnreynolds on 06/04/2017.
  */
 
-@MessageDriven(mappedName = "Messages", activationConfig = {
-        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:jboss/exported/jms/queue/message"),
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Dups-ok-acknowledge") })
-@TransactionManagement(value= TransactionManagementType.BEAN)
+@Service
 public class MessageHandler implements MessageListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(MessageHandler.class);
 
-    private WebSocketService ws;
-    private ReportService reportService;
+    @Autowired
+    protected WebSocketService ws;
 
-    @Inject
-    public void setWebSocketService(WebSocketService service) {
-        this.ws = service;
-    }
-
-    @Inject
-    public void setReportService(ReportService service) {
-        this.reportService = service;
-    }
+    @Autowired
+    protected ReportService reportService;
 
     @Override
-    public void onMessage(Message message) {
+    public void onMessage(jakarta.jms.Message message) {
         try {
             LOG.debug("Received message " + message + " instance " + this);
             if (message instanceof ObjectMessage) {

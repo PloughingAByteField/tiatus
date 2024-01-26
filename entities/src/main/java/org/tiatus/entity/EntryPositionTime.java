@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
 @NamedQuery(name = "findByRace", query = "select t from EntryPositionTime t where t.entry in (select e from Entry e where e.race = :race) order by t.entry, t.position")
 @Table(name = "entry_position_time", uniqueConstraints = { @UniqueConstraint(columnNames = { "position_id", "entry_id" }) })
+@IdClass(EntryPositionId.class)
 public class EntryPositionTime implements Serializable {
 
 	private static final long serialVersionUID = 486591711029352048L;

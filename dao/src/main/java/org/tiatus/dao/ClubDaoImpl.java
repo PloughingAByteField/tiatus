@@ -2,62 +2,48 @@ package org.tiatus.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.entity.Club;
 
-import javax.annotation.Resource;
-import javax.enterprise.inject.Default;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.*;
 import java.util.List;
-
 
 /**
  * Created by johnreynolds on 19/06/2016.
  */
-@Default
+@Service
 public class ClubDaoImpl implements ClubDao {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClubDaoImpl.class);
 
-    @PersistenceContext(unitName = "primary")
-    protected EntityManager em;
-
-    @Resource
-    protected UserTransaction tx;
-
+    @Autowired
+    protected ClubRepository repository;
+    
     @Override
     public List<Club> getClubs() {
-        TypedQuery<Club> query = em.createQuery("FROM Club", Club.class);
-        return query.getResultList();
+        return repository.findAll();
     }
 
     @Override
     public Club addClub(Club club) throws DaoException {
         LOG.debug("Adding club " + club);
-        try {
-            tx.begin();
-            Club existing = null;
-            if (club.getId() != null) {
-                existing = em.find(Club.class, club.getId());
-            }
-            if (existing == null) {
-                em.persist(club);
-                tx.commit();
 
-                return club;
+        try {
+            boolean exists = false;
+            if (club.getId() != null) {
+                exists = repository.existsById(club.getId());
+            }
+            if (!exists) {
+                return repository.save(club);
+
             } else {
                 String message = "Failed to add club due to existing club with same id " + club.getId();
                 LOG.warn(message);
-                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (DaoException e) {
-            throw e;
+
         } catch (Exception e) {
             LOG.warn("Failed to persist club", e.getMessage());
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e);
         }
     }
@@ -65,41 +51,35 @@ public class ClubDaoImpl implements ClubDao {
     @Override
     public void removeClub(Club club) throws DaoException {
         try {
-            tx.begin();
-            Club existing = null;
+            boolean exists = false;
             if (club.getId() != null) {
-                existing = em.find(Club.class, club.getId());
+                exists = repository.existsById(club.getId());
             }
-            if (existing != null) {
-                em.remove(em.contains(club) ? club : em.merge(club));
-                tx.commit();
+            if (exists) {
+                repository.delete(club);
+
             } else {
                 LOG.warn("No such club of id " + club.getId());
-                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete club", e.getMessage());
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e);
         }
-
     }
 
     @Override
-    public void updateClub(Club club) throws DaoException {
+    public Club updateClub(Club club) throws DaoException {
         try {
-            tx.begin();
-            em.merge(club);
-            tx.commit();
+            return repository.save(club);
+
         } catch (Exception e) {
             LOG.warn("Failed to update club", e.getMessage());
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e);
         }
     }
 
     @Override
     public Club getClubForId(Long id) {
-        return em.find(Club.class, id);
+        return repository.findById(id).orElse(null);
     }
 }

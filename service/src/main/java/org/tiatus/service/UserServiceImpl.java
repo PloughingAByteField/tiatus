@@ -2,14 +2,16 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.UserDao;
 import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
 import org.tiatus.entity.UserRole;
 
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,22 +19,16 @@ import java.util.Set;
 /**
  * Created by johnreynolds on 02/09/2016.
  */
+@Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserDao dao = null;
-    private MessageSenderService sender;
+    @Autowired
+    protected UserDao dao;
 
-    /**
-     * Constructor for service
-     * @param dao is injected by CDI
-     */
-    @Inject
-    public UserServiceImpl(UserDao dao, MessageSenderService sender) {
-        this.dao = dao;
-        this.sender = sender;
-    }
+    @Autowired
+    protected MessageSenderService sender;
 
     @Override
     public boolean hasAdminUser() {
@@ -77,6 +73,7 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -93,6 +90,7 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -109,6 +107,7 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -146,6 +145,4 @@ public class UserServiceImpl implements UserService {
     public User getUserForId(Long id) {
         return dao.getUserForId(id);
     }
-
-
 }

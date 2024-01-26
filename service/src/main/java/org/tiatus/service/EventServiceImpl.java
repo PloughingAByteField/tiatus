@@ -2,6 +2,8 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EventDao;
 import org.tiatus.dao.RaceEventDao;
@@ -9,35 +11,28 @@ import org.tiatus.entity.Event;
 import org.tiatus.entity.Race;
 import org.tiatus.entity.RaceEvent;
 
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
+
 import java.util.List;
 
 /**
  * Created by johnreynolds on 10/10/2016.
  */
-@Default
+@Service
 public class EventServiceImpl implements EventService {
     private static final Logger LOG = LoggerFactory.getLogger(EventServiceImpl.class);
 
     private static final String DAO_EXCEPTION = "Got dao exception: ";
     private static final String JMS_EXCEPTION = "Got jms exception: ";
-    private final EventDao dao;
-    private final RaceEventDao raceEventDao;
-    private MessageSenderService sender;
 
-    /**
-     * Constructor for service
-     * @param dao Event dao object injected by cdi
-     * @param raceEventDao RaceEvent dao object injected by cdi
-     */
-    @Inject
-    public EventServiceImpl(EventDao dao, RaceEventDao raceEventDao, MessageSenderService sender) {
-        this.dao = dao;
-        this.raceEventDao = raceEventDao;
-        this.sender = sender;
-    }
+    @Autowired
+    protected EventDao dao;
+
+    @Autowired
+    protected RaceEventDao raceEventDao;
+
+    @Autowired
+    protected MessageSenderService sender;
 
     @Override
     public Event addEvent(Event event, String sessionId) throws ServiceException {
@@ -51,6 +46,7 @@ public class EventServiceImpl implements EventService {
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
@@ -69,6 +65,7 @@ public class EventServiceImpl implements EventService {
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
@@ -87,6 +84,7 @@ public class EventServiceImpl implements EventService {
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
@@ -104,6 +102,7 @@ public class EventServiceImpl implements EventService {
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
@@ -121,6 +120,7 @@ public class EventServiceImpl implements EventService {
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);
@@ -143,6 +143,7 @@ public class EventServiceImpl implements EventService {
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn(JMS_EXCEPTION, e);
             throw new ServiceException(e);

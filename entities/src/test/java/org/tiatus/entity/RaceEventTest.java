@@ -1,7 +1,7 @@
 package org.tiatus.entity;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by johnreynolds on 14/09/2016.
@@ -11,7 +11,7 @@ public class RaceEventTest {
     public void testRaceEventId() {
         RaceEvent raceEvent = new RaceEvent();
         raceEvent.setId(1L);
-        Assert.assertEquals(raceEvent.getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), raceEvent.getId());
     }
 
     @Test
@@ -20,7 +20,7 @@ public class RaceEventTest {
         Race race = new Race();
         race.setId(1L);
         raceEvent.setRace(race);
-        Assert.assertEquals(raceEvent.getRace().getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), raceEvent.getRace().getId());
     }
 
     @Test
@@ -29,7 +29,7 @@ public class RaceEventTest {
         Race race = new Race();
         race.setName("name");
         raceEvent.setRace(race);
-        Assert.assertEquals(raceEvent.getRace().getName(), "name");
+        Assertions.assertEquals("name", raceEvent.getRace().getName());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class RaceEventTest {
         Event event = new Event();
         event.setId(1L);
         raceEvent.setEvent(event);
-        Assert.assertEquals(raceEvent.getEvent().getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), raceEvent.getEvent().getId());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class RaceEventTest {
         Event event = new Event();
         event.setName("name");
         raceEvent.setEvent(event);
-        Assert.assertEquals(raceEvent.getEvent().getName(), "name");
+        Assertions.assertEquals("name", raceEvent.getEvent().getName());
     }
 
 
@@ -55,19 +55,19 @@ public class RaceEventTest {
     public void testRaceOrder() {
         RaceEvent raceEvent = new RaceEvent();
         raceEvent.setRaceEventOrder(1);
-        Assert.assertEquals(raceEvent.getRaceEventOrder(), 1);
+        Assertions.assertEquals(1, raceEvent.getRaceEventOrder());
     }
 
     @Test
     public void testRaceEventEqualsSameInstance() {
         RaceEvent raceEvent = new RaceEvent();
-        Assert.assertTrue(raceEvent.equals(raceEvent));
+        Assertions.assertTrue(raceEvent.equals(raceEvent));
     }
 
     @Test
     public void testRaceEventEqualsDifferentType() {
         RaceEvent raceEvent = new RaceEvent();
-        Assert.assertFalse(raceEvent.equals(new User()));
+        Assertions.assertFalse(raceEvent.equals(new User()));
     }
 
     @Test
@@ -78,7 +78,7 @@ public class RaceEventTest {
         Race race2 = new Race();
         race2.setId(1L);
         race2.setName("name");
-        Assert.assertTrue(race.equals(race2));
+        Assertions.assertTrue(race.equals(race2));
 
         Event event = new Event();
         event.setId(1L);
@@ -86,7 +86,7 @@ public class RaceEventTest {
         Event event2 = new Event();
         event2.setId(1L);
         event2.setName("name");
-        Assert.assertTrue(event.equals(event2));
+        Assertions.assertTrue(event.equals(event2));
 
         RaceEvent raceEvent = new RaceEvent();
         raceEvent.setId(1L);
@@ -100,7 +100,7 @@ public class RaceEventTest {
         raceEvent2.setEvent(event2);
         raceEvent2.setRace(race2);
 
-        Assert.assertTrue(raceEvent.equals(raceEvent2));
+        Assertions.assertTrue(raceEvent.equals(raceEvent2));
     }
 
     @Test
@@ -111,7 +111,7 @@ public class RaceEventTest {
         Race race2 = new Race();
         race2.setId(1L);
         race2.setName("name");
-        Assert.assertTrue(race.equals(race2));
+        Assertions.assertTrue(race.equals(race2));
 
         Event event = new Event();
         event.setId(1L);
@@ -119,7 +119,7 @@ public class RaceEventTest {
         Event event2 = new Event();
         event2.setId(1L);
         event2.setName("name");
-        Assert.assertTrue(event.equals(event2));
+        Assertions.assertTrue(event.equals(event2));
 
         RaceEvent raceEvent = new RaceEvent();
         raceEvent.setId(1L);
@@ -132,6 +132,6 @@ public class RaceEventTest {
         raceEvent2.setRaceEventOrder(1);
         raceEvent2.setEvent(event2);
         raceEvent2.setRace(race2);
-        Assert.assertEquals(raceEvent.hashCode(), raceEvent2.hashCode());
+        Assertions.assertEquals(raceEvent.hashCode(), raceEvent2.hashCode());
     }
 }

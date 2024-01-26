@@ -3,14 +3,16 @@ package org.tiatus.auth;
 import org.tiatus.entity.Role;
 import org.tiatus.entity.UserRole;
 
-import javax.ws.rs.core.SecurityContext;
+// import javax.ws.rs.core.SecurityContext;
 import java.security.Principal;
 import java.util.Optional;
 
 /**
  * SecurityContext to hold UserPrincipal used for checking a users roles
  */
-public class TiatusSecurityContext implements SecurityContext {
+public class TiatusSecurityContext 
+// implements SecurityContext 
+{
     private UserPrincipal user;
     private boolean secure = false;
 
@@ -26,22 +28,22 @@ public class TiatusSecurityContext implements SecurityContext {
         }
     }
 
-    @Override
+    // @Override
     public Principal getUserPrincipal() {
         return user;
     }
 
-    @Override
+    // @Override
     public boolean isUserInRole(String roleString) {
         return isUserInRole(user, roleString);
     }
 
-    @Override
+    // @Override
     public boolean isSecure() {
         return secure;
     }
 
-    @Override
+    // @Override
     public String getAuthenticationScheme() {
         return null;
     }

@@ -1,7 +1,7 @@
 package org.tiatus.entity;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,35 +14,35 @@ public class UserTest {
     public void testUserId() {
         User user = new User();
         user.setId(1L);
-        Assert.assertEquals(user.getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), user.getId());
     }
 
     @Test
     public void testUserName() {
         User user = new User();
         user.setUserName("username");
-        Assert.assertEquals(user.getUserName(), "username");
+        Assertions.assertEquals("username", user.getUserName());
     }
 
     @Test
     public void testPassword() {
         User user = new User();
         user.setPassword("password");
-        Assert.assertEquals(user.getPassword(), "password");
+        Assertions.assertEquals("password", user.getPassword());
     }
 
     @Test
     public void testUserFirstName() {
         User user = new User();
         user.setFirstName("name");
-        Assert.assertEquals(user.getFirstName(), "name");
+        Assertions.assertEquals("name", user.getFirstName());
     }
 
     @Test
     public void testUserLastName() {
         User user = new User();
         user.setLastName("name");
-        Assert.assertEquals(user.getLastName(), "name");
+        Assertions.assertEquals("name", user.getLastName());
     }
 
     @Test
@@ -56,6 +56,6 @@ public class UserTest {
         Set<UserRole> userRoleList = new HashSet<>();
         userRoleList.add(userRole);
         user.setRoles(userRoleList);
-        Assert.assertEquals(user.getRoles(), userRoleList);
+        Assertions.assertEquals(user.getRoles(), userRoleList);
     }
 }

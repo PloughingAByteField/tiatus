@@ -2,32 +2,28 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.DisqualificationDao;
 import org.tiatus.entity.Disqualification;
 
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
+
 import java.util.List;
 
 /**
  * Created by johnreynolds on 01/03/2017.
  */
+@Service
 public class DisqualificationServiceImpl implements DisqualificationService {
     private static final Logger LOG = LoggerFactory.getLogger(DisqualificationServiceImpl.class);
 
-    private final DisqualificationDao dao;
-    private MessageSenderService sender;
+    @Autowired
+    protected DisqualificationDao dao;
 
-    /**
-     * Constructor for service
-     * @param dao object injected by cdi
-     */
-    @Inject
-    public DisqualificationServiceImpl(DisqualificationDao dao, MessageSenderService sender) {
-        this.dao = dao;
-        this.sender = sender;
-    }
+    @Autowired
+    protected MessageSenderService sender;
 
     @Override
     public Disqualification addDisqualification(Disqualification disqualification, String sessionId) throws ServiceException {
@@ -41,6 +37,7 @@ public class DisqualificationServiceImpl implements DisqualificationService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -58,6 +55,7 @@ public class DisqualificationServiceImpl implements DisqualificationService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
@@ -65,16 +63,19 @@ public class DisqualificationServiceImpl implements DisqualificationService {
     }
 
     @Override
-    public void updateDisqualification(Disqualification disqualification, String sessionId) throws ServiceException {
+    public Disqualification updateDisqualification(Disqualification disqualification, String sessionId) throws ServiceException {
         LOG.debug("Update disqualification " + disqualification.getId());
         try {
-            dao.updateDisqualification(disqualification);
+            Disqualification updated = dao.updateDisqualification(disqualification);
             Message message = Message.createMessage(disqualification, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
 
+            return updated;
+            
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);

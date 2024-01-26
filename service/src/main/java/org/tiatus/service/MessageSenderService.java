@@ -1,6 +1,6 @@
 package org.tiatus.service;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 
 /**
  * Created by johnreynolds on 06/04/2017.

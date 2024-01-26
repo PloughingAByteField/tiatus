@@ -1,7 +1,8 @@
 package org.tiatus.entity;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * Created by johnreynolds on 14/09/2016.
@@ -11,61 +12,61 @@ public class RaceTest {
     public void testRaceId() {
         Race race = new Race();
         race.setId(1L);
-        Assert.assertEquals(race.getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), race.getId());
     }
 
     @Test
     public void testRaceName() {
         Race race = new Race();
         race.setName("name");
-        Assert.assertEquals(race.getName(), "name");
+        Assertions.assertEquals("name", race.getName());
     }
 
     @Test
     public void testRaceStartTime() {
         Race race = new Race();
         race.setStartTime("time");
-        Assert.assertEquals(race.getStartTime(), "time");
+        Assertions.assertEquals("time", race.getStartTime());
     }
 
     @Test
     public void testRaceActive() {
         Race race = new Race();
         race.setActive(true);
-        Assert.assertTrue(race.isActive());
+        Assertions.assertTrue(race.isActive());
     }
 
     @Test
     public void testRaceClosed() {
         Race race = new Race();
         race.setClosed(true);
-        Assert.assertTrue(race.isClosed());
+        Assertions.assertTrue(race.isClosed());
     }
 
     @Test
     public void testRaceDrawLocked() {
         Race race = new Race();
         race.setDrawLocked(true);
-        Assert.assertTrue(race.isDrawLocked());
+        Assertions.assertTrue(race.isDrawLocked());
     }
 
     @Test
     public void testRaceOrder() {
         Race race = new Race();
         race.setRaceOrder(1);
-        Assert.assertEquals(race.getRaceOrder(), 1);
+        Assertions.assertEquals(1, race.getRaceOrder());
     }
 
     @Test
     public void testRaceEqualsSameInstance() {
         Race race = new Race();
-        Assert.assertTrue(race.equals(race));
+        Assertions.assertTrue(race.equals(race));
     }
 
     @Test
     public void testRaceEqualsDifferentType() {
         Race race = new Race();
-        Assert.assertFalse(race.equals(new User()));
+        Assertions.assertFalse(race.equals(new User()));
     }
 
     @Test
@@ -86,7 +87,7 @@ public class RaceTest {
         race2.setDrawLocked(true);
         race2.setStartTime("time");
         race2.setName("name");
-        Assert.assertTrue(race.equals(race2));
+        Assertions.assertTrue(race.equals(race2));
     }
 
     @Test
@@ -107,6 +108,6 @@ public class RaceTest {
         race2.setDrawLocked(true);
         race2.setStartTime("time");
         race2.setName("name");
-        Assert.assertEquals(race.hashCode(), race2.hashCode());
+        Assertions.assertEquals(race.hashCode(), race2.hashCode());
     }
 }

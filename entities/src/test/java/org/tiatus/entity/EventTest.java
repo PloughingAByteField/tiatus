@@ -1,7 +1,7 @@
 package org.tiatus.entity;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by johnreynolds on 14/09/2016.
@@ -11,35 +11,35 @@ public class EventTest {
     public void testId() {
         Event event = new Event();
         event.setId(1L);
-        Assert.assertEquals(event.getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), event.getId());
     }
 
     @Test
     public void testName() {
         Event event = new Event();
         event.setName("name");
-        Assert.assertEquals(event.getName(), "name");
+        Assertions.assertEquals("name", event.getName());
     }
 
     @Test
     public void testWeighted() {
         Event event = new Event();
         event.setWeighted(true);
-        Assert.assertTrue(event.isWeighted());
+        Assertions.assertTrue(event.isWeighted());
         event.setWeighted(false);
-        Assert.assertFalse(event.isWeighted());
+        Assertions.assertFalse(event.isWeighted());
     }
 
     @Test
     public void testEventEqualsSameInstance() {
         Event event = new Event();
-        Assert.assertTrue(event.equals(event));
+        Assertions.assertTrue(event.equals(event));
     }
 
     @Test
     public void testEventEqualsDifferentType() {
         Event event = new Event();
-        Assert.assertFalse(event.equals(new User()));
+        Assertions.assertFalse(event.equals(new User()));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class EventTest {
         event2.setId(1L);
         event2.setName("name");
         event2.setWeighted(true);
-        Assert.assertTrue(event.equals(event2));
+        Assertions.assertTrue(event.equals(event2));
     }
 
     @Test
@@ -65,6 +65,6 @@ public class EventTest {
         event2.setId(1L);
         event2.setName("name");
         event2.setWeighted(true);
-        Assert.assertEquals(event.hashCode(), event2.hashCode());
+        Assertions.assertEquals(event.hashCode(), event2.hashCode());
     }
 }

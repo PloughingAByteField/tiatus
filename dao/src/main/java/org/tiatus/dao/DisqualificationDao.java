@@ -34,7 +34,7 @@ public interface DisqualificationDao {
      * @param disqualification Disqualification to update
      * @throws DaoException on error
      */
-    void updateDisqualification(Disqualification disqualification) throws DaoException;
+    Disqualification updateDisqualification(Disqualification disqualification) throws DaoException;
 
     Disqualification getDisqualificationForId(Long id);
 }

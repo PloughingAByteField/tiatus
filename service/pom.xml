@@ -12,12 +12,18 @@
     <name>service</name>
 
     <dependencies>
+
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.tiatus</groupId>
+            <artifactId>dao</artifactId>
+            <version>1.0.2-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-artemis</artifactId>
+        </dependency>
+    
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -31,45 +37,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.tiatus</groupId>
-            <artifactId>dao</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.5</version>
+            <version>3.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.github.dhorions</groupId>
             <artifactId>boxable</artifactId>
-            <version>1.4</version>
-        </dependency>
+            <version>1.7.0</version>
+        </dependency> 
     </dependencies>
 </project>

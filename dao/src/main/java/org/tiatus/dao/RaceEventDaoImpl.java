@@ -2,40 +2,37 @@ package org.tiatus.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.entity.*;
 
-import javax.annotation.Resource;
-import javax.enterprise.inject.Default;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.*;
 import java.util.List;
 
 /**
  * Created by johnreynolds on 10/10/2016.
  */
-@Default
+@Service
 public class RaceEventDaoImpl implements RaceEventDao {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceEventDaoImpl.class);
 
-    @PersistenceContext(unitName = "primary")
-    protected EntityManager em;
+    @Autowired
+    private RaceEventRepository repository;
 
-    @Resource
-    protected UserTransaction tx;
+    @Autowired
+    private EventRepository eventRepository;
+
+    @Autowired
+    private PositionRepository positionRepository;
+
+    @Autowired
+    private EventPositionRepository eventPositionRepository;
 
     @Override
     public RaceEvent addRaceEvent(RaceEvent raceEvent) throws DaoException {
         LOG.debug("Adding raceEvent " + raceEvent);
         try {
-            tx.begin();
-            RaceEvent existing = null;
-            if (raceEvent.getId() != null) {
-                existing = em.find(RaceEvent.class, raceEvent.getId());
-            }
-            if (existing == null) {
+            if (!repository.existsById(raceEvent.getId())) {
                 List<RaceEvent> raceEvents = getRaceEventsForRace(raceEvent.getRace());
                 for (RaceEvent re: raceEvents) {
                     if (re.getEvent().getName().equals(raceEvent.getEvent().getName())) {
@@ -45,28 +42,23 @@ public class RaceEventDaoImpl implements RaceEventDao {
                     }
                 }
 
-                em.persist(raceEvent.getEvent());
+                eventRepository.save(raceEvent.getEvent());
                 for (EventPosition position: raceEvent.getEvent().getPositions()) {
                     position.setEvent(raceEvent.getEvent());
                     position.setPosition(getPositionForId(position.getPositionId()));
-                    em.persist(position);
+                    eventPositionRepository.save(position);
                 }
-                em.persist(raceEvent);
-                tx.commit();
-
-                return raceEvent;
+                
+                return repository.save(raceEvent);
 
             } else {
                 String message = "Failed to add raceEvent due to existing raceEvent with same id " + raceEvent.getId();
                 LOG.warn(message);
-                tx.rollback();
                 throw new DaoException(message);
             }
-        } catch (DaoException e) {
-            throw e;
+
         } catch (Exception e) {
             LOG.warn("Failed to persist race event", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -74,22 +66,14 @@ public class RaceEventDaoImpl implements RaceEventDao {
     @Override
     public void deleteRaceEvent(RaceEvent raceEvent) throws DaoException {
         try {
-            tx.begin();
-            RaceEvent existing = null;
-            if (raceEvent.getId() != null) {
-                existing = em.find(RaceEvent.class, raceEvent.getId());
-            }
-            if (existing != null) {
-                em.remove(existing);
-                em.remove(em.contains(existing.getEvent()) ? existing.getEvent() : em.merge(existing.getEvent()));
-                tx.commit();
+            if (repository.existsById(raceEvent.getId())) {
+                repository.delete(raceEvent);
+
             } else {
                 LOG.warn("No such event of id " + raceEvent.getId());
-                tx.rollback();
             }
         } catch (Exception e) {
             LOG.warn("Failed to delete race event", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
@@ -98,42 +82,37 @@ public class RaceEventDaoImpl implements RaceEventDao {
     @Override
     public void updateRaceEvent(RaceEvent raceEvent) throws DaoException {
         try {
-            tx.begin();
-            em.merge(raceEvent);
-            tx.commit();
+            repository.save(raceEvent);
+
         } catch (Exception e) {
             LOG.warn("Failed to update race event", e);
-            try { tx.rollback(); } catch (SystemException se) { LOG.warn("Failed to rollback", se); }
             throw new DaoException(e.getMessage());
         }
     }
 
     @Override
     public List<RaceEvent> getRaceEventsForRace(Race race) {
-        TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent re where re.race.id = :race_id order by raceEventOrder", RaceEvent.class);
-        return query.setParameter("race_id", race.getId()).getResultList();
+        return repository.getRaceEventsForRace(race.getId());
     }
 
     @Override
     public List<RaceEvent> getRaceEvents() {
-        TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent order by raceEventOrder", RaceEvent.class);
-        return query.getResultList();
+        return repository.findByOrderByRaceEventOrder();
     }
 
     @Override
     public RaceEvent getRaceEventByEvent(Event event) {
-        TypedQuery<RaceEvent> query = em.createQuery("FROM RaceEvent re where re.event.id = :event_id", RaceEvent.class);
-        return query.setParameter("event_id", event.getId()).getSingleResult();
+        return repository.findByEvent(event);
     }
 
     @Override
     public RaceEvent getRaceEventForId(Long id) {
-        return em.find(RaceEvent.class, id);
+        return repository.findById(id).orElse(null);
     }
 
 
     private Position getPositionForId(Long id) {
-        return em.find(Position.class, id);
+        return positionRepository.findById(id).orElse(null);
     }
 
 }

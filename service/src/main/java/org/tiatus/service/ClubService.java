@@ -28,7 +28,7 @@ public interface ClubService {
      * @param club to update
      * @throws ServiceException on error
      */
-    void updateClub(Club club, String sessionId) throws ServiceException;
+    Club updateClub(Club club, String sessionId) throws ServiceException;
 
     Club getClubForId(Long id);
 

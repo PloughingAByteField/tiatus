@@ -2,35 +2,29 @@ package org.tiatus.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RaceDao;
 import org.tiatus.entity.Race;
 
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
+
 import java.util.List;
 
 /**
  * Created by johnreynolds on 25/06/2016.
  */
-@Default
+@Service
 public class RaceServiceImpl implements RaceService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceServiceImpl.class);
 
-    private final RaceDao dao;
-    private MessageSenderService sender;
+    @Autowired
+    protected RaceDao dao;
 
-    /**
-     * Constructor for service
-     * @param dao object injected by cdi
-     */
-    @Inject
-    public RaceServiceImpl(RaceDao dao, MessageSenderService sender) {
-       this.dao = dao;
-       this.sender = sender;
-    }
+    @Autowired
+    protected MessageSenderService sender;
 
     @Override
     public Race getRaceForId(Long id) {
@@ -49,6 +43,7 @@ public class RaceServiceImpl implements RaceService {
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+            
         } catch (JMSException e) {
             LOG.warn("Got jms exception");
             throw new ServiceException(e);
@@ -62,9 +57,11 @@ public class RaceServiceImpl implements RaceService {
             dao.removeRace(race);
             Message message = Message.createMessage(race, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception");
             throw new ServiceException(e);
@@ -78,9 +75,11 @@ public class RaceServiceImpl implements RaceService {
             dao.updateRace(race);
             Message message = Message.createMessage(race, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);
+
         } catch (JMSException e) {
             LOG.warn("Got jms exception");
             throw new ServiceException(e);

@@ -3,9 +3,8 @@ package org.tiatus.entity;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -31,12 +30,7 @@ public class Penalty implements Serializable {
     private Timestamp time;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
-    @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-            strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "penalty_id_sequence")
-            })
+    @GeneratedValue
     @Column(name = "id")
     private Long id;
 

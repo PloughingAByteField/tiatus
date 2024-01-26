@@ -8,10 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.tiatus.entity.Club;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.*;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -26,19 +22,12 @@ import java.util.List;
 public class ClubDaoTest {
     
     @Mock
-    private EntityManager entityManagerMock;
-
-    @Mock
-    private UserTransaction userTransactionMock;
-
-    @Mock
-    private TypedQuery typedQueryMock;
+    private ClubRepository repository;
 
     @Test
     public void testAddClub() throws DaoException {
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
         Club club = new Club();
         club.setId(1L);
         dao.addClub(club);
@@ -49,11 +38,10 @@ public class ClubDaoTest {
         Club existingClub = new Club();
         existingClub.setId(1L);
 
-        when(entityManagerMock.find(any(), any())).thenReturn(existingClub);
+        when(repository.existsById(any())).thenReturn(true);
         
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
         Club club = new Club();
         club.setId(1L);
 
@@ -63,12 +51,11 @@ public class ClubDaoTest {
     }
 
     @Test 
-    public void testAddClubException() throws DaoException, IllegalStateException, SecurityException, HeuristicMixedException, HeuristicRollbackException, RollbackException, SystemException {
-        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
+    public void testAddClubException() throws DaoException {
+        doThrow(IllegalArgumentException .class).when(repository).save(any());
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
         Club club = new Club();
         club.setId(1L);
 
@@ -84,27 +71,19 @@ public class ClubDaoTest {
         club.setId(1L);
         list.add(club);
 
-        when(typedQueryMock.getResultList()).thenReturn(list);
-        when(entityManagerMock.createQuery(any(), any())).thenReturn(typedQueryMock);
-
+        when(repository.findAll()).thenReturn(list);
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
+        dao.repository = repository;
         Assertions.assertFalse(dao.getClubs().isEmpty());
     }
 
     @Test
     public void testRemoveClub() throws Exception {
-        
-        Club existingClub = new Club();
-        existingClub.setId(1L);
-
-        when(entityManagerMock.find(any(), any())).thenReturn(existingClub);
-        when(entityManagerMock.contains(any())).thenReturn(false);
+        when(repository.existsById(any())).thenReturn(true);
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
 
         Club club = new Club();
         club.setId(1L);
@@ -113,11 +92,10 @@ public class ClubDaoTest {
 
     @Test
     public void testRemoveClubNoClub() throws Exception {
-        when(entityManagerMock.find(any(), any())).thenReturn(null);
+        when(repository.existsById(any())).thenReturn(false);
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
 
         Club club = new Club();
         club.setId(1L);
@@ -126,17 +104,12 @@ public class ClubDaoTest {
 
     @Test 
     public void testRemoveClubException() throws Exception {
-        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
-
-        Club existingClub = new Club();
-        existingClub.setId(1L);
-
-        when(entityManagerMock.find(any(), any())).thenReturn(existingClub);
-        when(entityManagerMock.contains(any())).thenReturn(false);
+        when(repository.existsById(any())).thenReturn(true);
+        doThrow(IllegalArgumentException .class).when(repository).delete(any());
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
+
         Club club = new Club();
         club.setId(1L);
         
@@ -148,8 +121,8 @@ public class ClubDaoTest {
     @Test
     public void testUpdateClub() throws Exception {
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
+
         Club club = new Club();
         club.setId(1L);
 
@@ -158,11 +131,11 @@ public class ClubDaoTest {
 
     @Test
     public void testUpdateClubException() throws Exception {
-        doThrow(HeuristicMixedException.class).when(userTransactionMock).commit();
+        doThrow(IllegalArgumentException .class).when(repository).save(any());
 
         ClubDaoImpl dao = new ClubDaoImpl();
-        dao.em = entityManagerMock;
-        dao.tx = userTransactionMock;
+        dao.repository = repository;
+
         Club club = new Club();
         club.setId(1L);
         

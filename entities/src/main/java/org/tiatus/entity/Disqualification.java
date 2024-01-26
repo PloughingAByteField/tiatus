@@ -3,11 +3,9 @@ package org.tiatus.entity;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * Created by johnreynolds on 12/11/2016.
@@ -28,12 +26,7 @@ public class Disqualification implements Serializable {
     private String comment;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
-    @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-            strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "disqualification_id_sequence")
-            })
+    @GeneratedValue
     @Column(name = "id")
     private Long id;
 

@@ -27,10 +27,22 @@
         <sonar.genericcoverage.unitTestReportPaths>target/js/protractor.xml,target/js/TESTS.xml
         </sonar.genericcoverage.unitTestReportPaths>
         <docker.not-stop-instances>false</docker.not-stop-instances>
+        <ui.skip>true</ui.skip>
     </properties>
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <scope>provided</scope>
@@ -40,21 +52,21 @@
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
             <scope>provided</scope>
-        </dependency>
+        </dependency> -->
 
-        <dependency>
+        <!-- <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
 
-        <dependency>
+        <!-- <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>provided</scope>
-        </dependency>
+        </dependency> -->
 
-        <dependency>
+        <!-- <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
             <version>${resteasy.version}</version>
@@ -87,9 +99,9 @@
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>${resteasy.version}</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency> -->
 
-        <dependency>
+        <!-- <dependency>
             <groupId>org.infinispan</groupId>
             <artifactId>infinispan-core</artifactId>
             <version>8.2.6.Final</version>
@@ -101,12 +113,12 @@
             <artifactId>infinispan-commons</artifactId>
             <version>8.2.6.Final</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency> -->
 
-        <dependency>
+        <!-- <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>org.tiatus</groupId>
@@ -126,12 +138,19 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>io.fabric8</groupId>
             <artifactId>docker-maven-plugin</artifactId>
             <scope>test</scope>
+        </dependency> -->
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.1</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -152,7 +171,9 @@
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.6</version>
-
+                <configuration>
+                     <skip>${ui.skip}</skip>
+                </configuration>
                 <executions>
 
                     <execution>
@@ -161,8 +182,8 @@
                             <goal>install-node-and-npm</goal>
                         </goals>
                         <configuration>
-                            <nodeVersion>v8.9.3</nodeVersion>
-                            <npmVersion>5.6.0</npmVersion>
+                            <nodeVersion>v18.19.0</nodeVersion>
+                            <npmVersion>10.2.3</npmVersion>
                         </configuration>
                     </execution>
 
@@ -361,7 +382,8 @@
                     <dependency>
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
-                        <version>9.4-1200-jdbc41</version>
+                        <version>42.7.1</version>
+                        <scope>runtime</scope>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -373,6 +395,11 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

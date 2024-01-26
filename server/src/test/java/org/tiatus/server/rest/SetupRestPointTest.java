@@ -1,18 +1,18 @@
 package org.tiatus.server.rest;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.tiatus.entity.User;
-import org.tiatus.service.ConfigServiceImpl;
-import org.tiatus.service.ServiceException;
-import org.tiatus.service.UserServiceImpl;
+// import org.junit.Assert;
+// import org.junit.Before;
+// import org.junit.Test;
+// import org.tiatus.entity.User;
+// import org.tiatus.service.ConfigServiceImpl;
+// import org.tiatus.service.ServiceException;
+// import org.tiatus.service.UserServiceImpl;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+// import javax.servlet.ServletContext;
+// import javax.servlet.http.HttpServletRequest;
+// import javax.servlet.http.HttpSession;
+// import javax.ws.rs.core.Response;
+// import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -21,9 +21,9 @@ import java.net.URI;
  * Created by johnreynolds on 13/09/2016.
  */
 public class SetupRestPointTest {
-    private HttpSession session;
-    private HttpServletRequest servletRequest;
-    private ServletContext context;
+    // private HttpSession session;
+    // private HttpServletRequest servletRequest;
+    // private ServletContext context;
 
     // @Before
     // public void setup() {

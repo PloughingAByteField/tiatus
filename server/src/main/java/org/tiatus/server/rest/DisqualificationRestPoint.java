@@ -6,112 +6,121 @@ import org.tiatus.entity.Disqualification;
 import org.tiatus.role.Role;
 import org.tiatus.service.DisqualificationService;
 
-import javax.annotation.security.PermitAll;
-import javax.annotation.security.RolesAllowed;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+// import javax.annotation.security.PermitAll;
+// import javax.annotation.security.RolesAllowed;
+// import javax.inject.Inject;
+// import javax.servlet.http.HttpServletRequest;
+// import javax.ws.rs.*;
+// import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by johnreynolds on 19/06/2016.
  */
-@Path("disqualifications")
-@SuppressWarnings("squid:S1166")
+// @SuppressWarnings("squid:S1166")
+@RestController
+@RequestMapping("disqualifications")
 public class DisqualificationRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(DisqualificationRestPoint.class);
 
-    private DisqualificationService service;
+    @Autowired
+    protected DisqualificationService service;
 
     /**
      * Get disqualifications
      * @return response containing list of disqualifications
      */
-    @PermitAll
-    @GET
-    @Produces("application/json")
-    public Response getDisqualifications(@Context Request request) {
-        List<Disqualification> disqualifications = service.getDisqualifications();
-        return Response.ok(disqualifications).build();
+    // @PermitAll
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+    public List<Disqualification>  getDisqualifications() {
+        return service.getDisqualifications();
     }
 
-    /**
-     * Add disqualification, restricted to Adjudicator users
-     * @param uriInfo location details
-     * @param disqualification to add
-     * @return 201 response with location containing uri of newly created disqualification or an error code
-     */
-    @RolesAllowed({Role.ADJUDICATOR})
-    @POST
-    @Consumes("application/json")
-    @Produces("application/json")
-    public Response addDisqualification(@Context UriInfo uriInfo, @Context HttpServletRequest request, Disqualification disqualification) {
+    // /**
+    //  * Add disqualification, restricted to Adjudicator users
+    //  * @param uriInfo location details
+    //  * @param disqualification to add
+    //  * @return 201 response with location containing uri of newly created disqualification or an error code
+    //  */
+    // @RolesAllowed({Role.ADJUDICATOR})
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public URI addDisqualification(Disqualification disqualification, HttpServletRequest request) {
         LOG.debug("Adding disqualification " + disqualification);
         try {
             Disqualification saved = service.addDisqualification(disqualification, request.getSession().getId());
-            return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
+            return URI.create(request.getServletContext().getContextPath() + "/"+ saved.getId());
 
         } catch (Exception e) {
-            return logError(e);
+            logError(e);
         }
+
+        return null;
     }
 
-    /**
-     * Remove disqualification, restricted to Adjudicator users
-     * @param id of disqualification to remove
-     * @return response with 204
-     */
-    @RolesAllowed({Role.ADJUDICATOR})
-    @DELETE
-    @Path("{id}")
-    @Produces("application/json")
-    public Response removeDisqualification(@PathParam("id") String id, @Context HttpServletRequest request) {
+    // /**
+    //  * Remove disqualification, restricted to Adjudicator users
+    //  * @param id of disqualification to remove
+    //  * @return response with 204
+    //  */
+    // @RolesAllowed({Role.ADJUDICATOR})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @DeleteMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public void removeDisqualification(@PathVariable("id") Long id, HttpSession session) {
         LOG.debug("Removing disqualification with id " + id);
         try {
-            Disqualification disqualification = service.getDisqualificationForId(Long.parseLong(id));
+            Disqualification disqualification = service.getDisqualificationForId(id);
             if (disqualification != null) {
-                service.deleteDisqualification(disqualification, request.getSession().getId());
+                service.deleteDisqualification(disqualification, session.getId());
             }
-            return Response.noContent().build();
 
         } catch (Exception e) {
-            return logError(e);
+            logError(e);
         }
     }
 
-    /**
-     * Update disqualification, restricted to Adjudicator users
-     * @param id of disqualification to update
-     * @param disqualification to update
-     * @return 200 response or an error code
-     */
-    @PUT
-    @Path("{id}")
-    @RolesAllowed({Role.ADJUDICATOR})
-    @Produces("application/json")
-    public Response updateDisqualification(@PathParam("id") String id, @Context HttpServletRequest request, Disqualification disqualification) {
+    // /**
+    //  * Update disqualification, restricted to Adjudicator users
+    //  * @param id of disqualification to update
+    //  * @param disqualification to update
+    //  * @return 200 response or an error code
+    //  */
+    // @RolesAllowed({Role.ADJUDICATOR})
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public Disqualification updateDisqualification(@PathVariable("id") Long id, HttpSession session, Disqualification disqualification, HttpServletResponse response) {
         LOG.debug("updating disqualification");
         try {
-            Disqualification existing = service.getDisqualificationForId(Long.parseLong(id));
+            Disqualification existing = service.getDisqualificationForId(id);
             if (existing == null) {
                 LOG.warn("Failed to get disqualification for supplied id");
-                return Response.status(Response.Status.NOT_FOUND).build();
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return disqualification;
             }
 
-            service.updateDisqualification(disqualification, request.getSession().getId());
-            return Response.noContent().build();
+            return service.updateDisqualification(disqualification, session.getId());
 
         } catch (Exception e) {
-            return logError(e);
+            logError(e);
         }
-    }
-
-    @Inject
-    public void setService(DisqualificationService service) {
-        this.service = service;
+        return disqualification;
     }
 
 }

@@ -1,7 +1,7 @@
 package org.tiatus.api.exception;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by johnreynolds on 01/08/2016.
@@ -12,8 +12,8 @@ public class EnclosingExceptionTest {
     public void messageTest() throws Exception {
         EnclosingException ee = new EnclosingException("message");
 
-        Assert.assertNull(ee.getSuppliedException());
-        Assert.assertEquals(ee.getMessage(), "message");
+        Assertions.assertNull(ee.getSuppliedException());
+        Assertions.assertEquals("message", ee.getMessage());
     }
 
     @Test
@@ -21,8 +21,8 @@ public class EnclosingExceptionTest {
         Exception exception = new Exception();
         EnclosingException ee = new EnclosingException(exception);
 
-        Assert.assertNotNull(ee.getSuppliedException());
-        Assert.assertEquals(ee.getSuppliedException(), exception);
+        Assertions.assertNotNull(ee.getSuppliedException());
+        Assertions.assertEquals(exception, ee.getSuppliedException());
     }
 
 
@@ -32,8 +32,8 @@ public class EnclosingExceptionTest {
         EnclosingException enclosingException = new EnclosingException(exception);
         EnclosingException ee = new EnclosingException(enclosingException);
 
-        Assert.assertNotNull(ee.getSuppliedException());
-        Assert.assertEquals(ee.getSuppliedException(), exception);
+        Assertions.assertNotNull(ee.getSuppliedException());
+        Assertions.assertEquals(exception, ee.getSuppliedException());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class EnclosingExceptionTest {
         EnclosingException doubleEnclosingException = new EnclosingException(enclosingException);
         EnclosingException ee = new EnclosingException(doubleEnclosingException);
 
-        Assert.assertNotNull(ee.getSuppliedException());
-        Assert.assertEquals(ee.getSuppliedException(), exception);
+        Assertions.assertNotNull(ee.getSuppliedException());
+        Assertions.assertEquals(exception, ee.getSuppliedException());
     }
 }

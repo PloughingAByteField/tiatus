@@ -2,9 +2,8 @@ package org.tiatus.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +23,8 @@ public class Event implements Serializable {
 	@Column(name = "is_weighted")
 	private boolean isWeighted = false;
 
-	@Id  @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
-	@GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-			strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequence_name", value = "event_id_sequence")
-			})
+	@Id  
+	@GeneratedValue
 	@Column(name = "id")
 	private Long id;
 

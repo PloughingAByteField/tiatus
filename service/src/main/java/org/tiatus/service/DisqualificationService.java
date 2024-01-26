@@ -28,7 +28,7 @@ public interface DisqualificationService {
      * @param disqualification to update
      * @throws ServiceException on error
      */
-    void updateDisqualification(Disqualification disqualification, String sessionId) throws ServiceException;
+    Disqualification updateDisqualification(Disqualification disqualification, String sessionId) throws ServiceException;
 
     Disqualification getDisqualificationForId(Long id);
 

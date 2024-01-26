@@ -2,7 +2,6 @@ package org.tiatus.dao;
 
 import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
-import org.tiatus.entity.UserRole;
 
 import java.util.List;
 

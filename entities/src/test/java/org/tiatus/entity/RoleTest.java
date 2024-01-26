@@ -1,7 +1,7 @@
 package org.tiatus.entity;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by johnreynolds on 14/09/2016.
@@ -11,14 +11,14 @@ public class RoleTest {
     public void testRoleId() {
         Role role = new Role();
         role.setId(1L);
-        Assert.assertEquals(role.getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), role.getId());
     }
 
     @Test
     public void testRoleName() {
         Role role = new Role();
         role.setRoleName("name");
-        Assert.assertEquals(role.getRoleName(), "name");
+        Assertions.assertEquals("name", role.getRoleName());
     }
 
     @Test
@@ -26,7 +26,7 @@ public class RoleTest {
         Role role = new Role();
         role.setId(1L);
         role.setRoleName("name");
-        Assert.assertTrue(role.equals(role));
+        Assertions.assertTrue(role.equals(role));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class RoleTest {
         Role role = new Role();
         role.setId(1L);
         role.setRoleName("name");
-        Assert.assertFalse(role.equals(new User()));
+        Assertions.assertFalse(role.equals(new User()));
     }
 
     @Test
@@ -45,6 +45,6 @@ public class RoleTest {
         Role role2 = new Role();
         role2.setId(1L);
         role2.setRoleName("name");
-        Assert.assertTrue(role.equals(role2));
+        Assertions.assertTrue(role.equals(role2));
     }
 }

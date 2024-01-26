@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 /**
  * Created by johnreynolds on 29/03/2017.
  */
+@Service
 public class ConfigDaoImpl implements ConfigDao {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigDaoImpl.class);
 

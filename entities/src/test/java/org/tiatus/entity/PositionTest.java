@@ -1,7 +1,7 @@
 package org.tiatus.entity;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by johnreynolds on 14/09/2016.
@@ -11,26 +11,26 @@ public class PositionTest {
     public void testPositionId() {
         Position position = new Position();
         position.setId(1L);
-        Assert.assertEquals(position.getId(), Long.valueOf(1L));
+        Assertions.assertEquals(Long.valueOf(1L), position.getId());
     }
 
     @Test
     public void testPositionName() {
         Position position = new Position();
         position.setName("name");
-        Assert.assertEquals(position.getName(), "name");
+        Assertions.assertEquals("name", position.getName());
     }
 
     @Test
     public void testPositionEqualsSameInstance() {
         Position position = new Position();
-        Assert.assertTrue(position.equals(position));
+        Assertions.assertTrue(position.equals(position));
     }
 
     @Test
     public void testPositionEqualsDifferentType() {
         Position position = new Position();
-        Assert.assertFalse(position.equals(new User()));
+        Assertions.assertFalse(position.equals(new User()));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class PositionTest {
         Position position2 = new Position();
         position2.setId(1L);
         position2.setName("name");
-        Assert.assertTrue(position.equals(position2));
+        Assertions.assertTrue(position.equals(position2));
     }
 
     @Test
@@ -52,6 +52,6 @@ public class PositionTest {
         Position position2 = new Position();
         position2.setId(1L);
         position2.setName("name");
-        Assert.assertEquals(position.hashCode(), position2.hashCode());
+        Assertions.assertEquals(position.hashCode(), position2.hashCode());
     }
 }

@@ -3,9 +3,8 @@ package org.tiatus.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -15,12 +14,7 @@ import java.io.Serializable;
 @Table(name = "user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
 public class UserRole implements Serializable {
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE, generator = "UseExistingOrGenerateIdGenerator")
-    @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-            strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "user_role_id_sequence")
-            })
+    @GeneratedValue
     @Column(name = "id")
     private Long id;
 

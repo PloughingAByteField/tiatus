@@ -32,9 +32,10 @@ public interface ClubDao {
     /**
      * Update a Club
      * @param club Club to update
+     * @return Club Updated club
      * @throws DaoException on error
      */
-    void updateClub(Club club) throws DaoException;
+    Club updateClub(Club club) throws DaoException;
 
     Club getClubForId(Long id);
 }

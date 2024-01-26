@@ -2,9 +2,9 @@ package org.tiatus.entity;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 /**
@@ -19,12 +19,7 @@ public class Club implements Serializable {
     private String clubName;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
-    @GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-            strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-            parameters = {
-                    @org.hibernate.annotations.Parameter(name = "sequence_name", value = "club_id_sequence")
-            })
+    @GeneratedValue
     @Column(name = "id")
     private Long id;
 

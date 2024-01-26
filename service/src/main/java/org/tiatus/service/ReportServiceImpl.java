@@ -10,13 +10,15 @@ import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.tiatus.entity.*;
 import org.tiatus.entity.Event;
 
-import javax.inject.Inject;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -30,17 +32,29 @@ import java.util.List;
 /**
  * Created by johnreynolds on 07/04/2017.
  */
+@Service
 public class ReportServiceImpl implements ReportService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReportServiceImpl.class);
     private static final String JBOSS_HOME_DIR = "jboss.home.dir";
 
-    private ConfigService configService;
-    private DisqualificationService disqualificationService;
-    private EventService eventService;
-    private EntryService entryService;
-    private PenaltyService penaltyService;
-    private TimesService timesService;
+    @Autowired
+    protected ConfigService configService;
+
+    @Autowired
+    protected DisqualificationService disqualificationService;
+
+    @Autowired
+    protected EventService eventService;
+
+    @Autowired
+    protected EntryService entryService;
+
+    @Autowired
+    protected PenaltyService penaltyService;
+
+    @Autowired
+    protected TimesService timesService;
 
     private List<Disqualification> disqualifications;
     private List<Penalty> penalties;
@@ -51,14 +65,7 @@ public class ReportServiceImpl implements ReportService {
     private Locale currentLocale;
     private ResourceBundle messages;
 
-    @Inject
-    public ReportServiceImpl(ConfigService configService, DisqualificationService disqualificationService, EntryService entryService, EventService eventService, PenaltyService penaltyService, TimesService timesService) {
-        this.configService = configService;
-        this.disqualificationService = disqualificationService;
-        this.eventService = eventService;
-        this.entryService = entryService;
-        this.penaltyService = penaltyService;
-        this.timesService = timesService;
+    public ReportServiceImpl() {
         // TODO pull language and country from config service which is to be configured as part of setup
         String language = "en";
         String country = "GB";
@@ -77,6 +84,7 @@ public class ReportServiceImpl implements ReportService {
             times = timesService.getAllTimesForRace(race);
             Date now = new Date();
             createPdfReports(race, now);
+
         } catch (ServiceException | IOException | URISyntaxException e) {
             LOG.warn("Failed to create report ", e);
         }
@@ -263,26 +271,28 @@ public class ReportServiceImpl implements ReportService {
 
         int fontSize = 12;
         float center = page.getMediaBox().getWidth() / 2;
-        float titleWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(title) / 1000 * fontSize;
+        PDType1Font helvericaBoldFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+        PDType1Font helvericaFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+        float titleWidth = helvericaBoldFont.getStringWidth(title) / 1000 * fontSize;
         contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA_BOLD, fontSize);
+        contentStream.setFont(helvericaBoldFont, fontSize);
         contentStream.newLineAtOffset(center - (titleWidth / 2), yStartNewPage - (pdImage.getHeight() * scale)/2 + 20);
         contentStream.showText(title);
         contentStream.endText();
 
         String report = messages.getString(reportType);
-        float reportWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(report) / 1000 * fontSize;
+        float reportWidth = helvericaBoldFont.getStringWidth(report) / 1000 * fontSize;
         contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA_BOLD, fontSize);
+        contentStream.setFont(helvericaBoldFont, fontSize);
         contentStream.newLineAtOffset(center - (reportWidth / 2), yStartNewPage - (pdImage.getHeight() * scale)/2);
         contentStream.showText(report);
         contentStream.endText();
 
         int correctAsFontSize = 10;
         String correct = messages.getString("correct_as_of") + " " + now;
-        float correctWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(correct) / 1000 * correctAsFontSize;
+        float correctWidth = helvericaFont.getStringWidth(correct) / 1000 * correctAsFontSize;
         contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA, correctAsFontSize);
+        contentStream.setFont(helvericaFont, correctAsFontSize);
         contentStream.newLineAtOffset(center - (correctWidth / 2), yStartNewPage - (pdImage.getHeight() * scale)/2 - 50);
         contentStream.showText(correct);
         contentStream.endText();
@@ -295,7 +305,7 @@ public class ReportServiceImpl implements ReportService {
         int numberOfPages = pages.getCount();
         int count = 1;
         Iterator<PDPage> iterator = pages.iterator();
-        PDFont footerFont = PDType1Font.TIMES_ROMAN;
+        PDFont footerFont = new PDType1Font(Standard14Fonts.FontName.TIMES_ROMAN);
         while (iterator.hasNext()) {
             PDPage pdPage = iterator.next();
             String text = messages.getString("page") + " " + count + " " + messages.getString("of") + " " + numberOfPages;
@@ -321,7 +331,8 @@ public class ReportServiceImpl implements ReportService {
 
     private Cell<PDPage> createCellForRow(Row<PDPage> row, int width, String data, boolean fastestInSection) {
         Cell<PDPage> cell = row.createCell(width, data);
-        cell.setFont(PDType1Font.HELVETICA);
+        PDType1Font helvericaFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+        cell.setFont(helvericaFont);
         cell.setFontSize(10);
         if (fastestInSection) {
             cell.setFillColor(Color.YELLOW);
@@ -349,6 +360,7 @@ public class ReportServiceImpl implements ReportService {
         float bottomMargin = 20;
 
         boolean firstTable = true;
+        PDType1Font helvericaFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
         for (EntriesForEventPositions e: entriesByEventPositions) {
             if (firstTable) {
                 firstTable = false;
@@ -365,7 +377,7 @@ public class ReportServiceImpl implements ReportService {
                 positions = e.getPositions().get(0).getPosition().getName() + " " + messages.getString("to") + " " + e.getPositions().get(e.getPositions().size() - 1).getPosition().getName();
             }
             Cell<PDPage> cell = positionsRow.createCell(100, positions);
-            cell.setFont(PDType1Font.HELVETICA_BOLD);
+            cell.setFont(helvericaFont);
             cell.setFillColor(Color.BLACK);
             cell.setTextColor(Color.WHITE);
             table.addHeaderRow(positionsRow);
@@ -383,7 +395,8 @@ public class ReportServiceImpl implements ReportService {
 
     private void addHeaderCell(int width, String text, Row<PDPage> headerRow)  {
         Cell<PDPage> cell = headerRow.createCell(width, text);
-        cell.setFont(PDType1Font.HELVETICA);
+        PDType1Font helvericaFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+        cell.setFont(helvericaFont);
         cell.setFillColor(Color.BLACK);
         cell.setTextColor(Color.WHITE);
     }

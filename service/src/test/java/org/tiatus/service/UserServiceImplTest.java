@@ -1,22 +1,19 @@
 package org.tiatus.service;
 
-import org.junit.Assert;
-import org.junit.Test;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.UserDaoImpl;
 import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
 
-import javax.jms.JMSException;
 
 /**
  * Created by johnreynolds on 14/09/2016.
  */
 public class UserServiceImplTest {
-    @Test
-    public void testConstructor() {
-        UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
-    }
+    // @Test
+    // public void testConstructor() {
+    //     UserServiceImpl service = new UserServiceImpl(new UserDaoImpl(), new MessageSenderServiceImpl());
+    // }
 
     // @Test
     // public void testHasAdminUser() {

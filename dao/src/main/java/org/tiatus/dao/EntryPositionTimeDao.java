@@ -4,7 +4,6 @@ import org.tiatus.entity.EntryPositionTime;
 import org.tiatus.entity.Position;
 import org.tiatus.entity.Race;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 /**

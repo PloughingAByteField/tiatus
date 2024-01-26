@@ -2,9 +2,9 @@ package org.tiatus.entity;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,12 +29,8 @@ public class Entry implements Serializable {
 	@Column(name = "timeOnly")
 	private boolean timeOnly = false;
 
-	@Id  @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
-	@GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-			strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequence_name", value = "entry_id_sequence")
-			})
+	@Id  
+	@GeneratedValue
 	@Column(name = "id")
 	private Long id;
 	

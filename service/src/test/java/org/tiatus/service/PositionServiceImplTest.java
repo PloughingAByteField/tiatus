@@ -1,11 +1,9 @@
 package org.tiatus.service;
 
-import org.junit.Test;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.PositionDaoImpl;
 import org.tiatus.entity.Position;
 
-import javax.jms.JMSException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +12,10 @@ import java.util.List;
  */
 public class PositionServiceImplTest {
 
-    @Test
-    public void testConstructor() {
-        PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
-    }
+    // @Test
+    // public void testConstructor() {
+    //     PositionServiceImpl service = new PositionServiceImpl(new PositionDaoImpl(), new MessageSenderServiceImpl());
+    // }
 
     // @Test
     // public void testAddPosition() throws Exception {

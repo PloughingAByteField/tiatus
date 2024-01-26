@@ -1,10 +1,9 @@
 package org.tiatus.entity;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -19,12 +18,8 @@ public class Position implements Serializable {
 	@Column(name = "name", unique = true)
 	private String name;
 	
-	@Id  @GeneratedValue(strategy=GenerationType.IDENTITY, generator = "UseExistingOrGenerateIdGenerator")
-	@GenericGenerator(name="UseExistingOrGenerateIdGenerator",
-			strategy="org.tiatus.entity.UseExistingOrGenerateIdGenerator",
-			parameters = {
-					@org.hibernate.annotations.Parameter(name = "sequence_name", value = "position_id_sequence")
-			})
+	@Id  
+	@GeneratedValue
     @Column(name = "id")
 	private Long id;
 
