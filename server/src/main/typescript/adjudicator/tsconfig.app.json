@@ -1,14 +1,14 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
     "types": ["jest", "node"]
   },
   "files": [
-    "polyfills.ts"
+    "../polyfills.ts"
   ],
   "include": [
-    "admin/main.ts"
+    "main.ts"
   ]
 }

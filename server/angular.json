@@ -12,7 +12,7 @@
                     "options": {
                         "outputPath": "dist",
                         "main": "src/main/typescript/login/main.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.app.json",
+                        "tsConfig": "src/main/typescript/login/tsconfig.app.json",
                         "serviceWorker": false,
                         "index": "src/main/typescript/login/index.html",
                         "assets": [
@@ -85,7 +85,8 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "login:build"
+                      "buildTarget": "login:build",
+                      "proxyConfig": "src/main/typescript/proxy.conf.json"
                     },
                     "configurations": {
                         "production": {
@@ -110,7 +111,7 @@
                     "options": {
                         "outputPath": "dist/results",
                         "main": "src/main/typescript/results/main.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.app.json",
+                        "tsConfig": "src/main/typescript/results/tsconfig.app.json",
                         "serviceWorker": false,
                         "index": "src/main/typescript/results/index.html",
                         "assets": [
@@ -183,7 +184,8 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "results:build"
+                      "buildTarget": "results:build",
+                      "proxyConfig": "src/main/typescript/proxy.conf.json"
                     },
                     "configurations": {
                         "production": {
@@ -281,7 +283,8 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "admin:build"
+                      "buildTarget": "admin:build",
+                      "proxyConfig": "src/main/typescript/proxy.conf.json"
                     },
                     "configurations": {
                         "production": {
@@ -306,7 +309,7 @@
                     "options": {
                         "outputPath": "dist/adjudicator",
                         "main": "src/main/typescript/adjudicator/main.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.app.json",
+                        "tsConfig": "src/main/typescript/adjudicator/tsconfig.app.json",
                         "serviceWorker": false,
                         "index": "src/main/typescript/adjudicator/index.html",
                         "assets": [
@@ -314,6 +317,11 @@
                                 "glob": "**/*",
                                 "input": "src/main/typescript/assets",
                                 "output": "assets"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "src/main/typescript/adjudicator/i18n",
+                                "output": "adjudicator/i18n/"
                             },
                             {
                                 "glob": "favicon.ico",
@@ -374,7 +382,8 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "adjudicator:build"
+                      "buildTarget": "adjudicator:build",
+                      "proxyConfig": "src/main/typescript/proxy.conf.json"
                     },
                     "configurations": {
                         "production": {
@@ -399,7 +408,7 @@
                     "options": {
                         "outputPath": "dist/timing",
                         "main": "src/main/typescript/timing/main.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.app.json",
+                        "tsConfig": "src/main/typescript/timing/tsconfig.app.json",
                         "serviceWorker": false,
                         "index": "src/main/typescript/timing/index.html",
                         "assets": [
@@ -407,6 +416,11 @@
                                 "glob": "**/*",
                                 "input": "src/main/typescript/assets",
                                 "output": "assets"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "src/main/typescript/timing/i18n",
+                                "output": "timing/i18n/"
                             },
                             {
                                 "glob": "favicon.ico",
@@ -467,7 +481,8 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "timing:build"
+                      "buildTarget": "timing:build",
+                      "proxyConfig": "src/main/typescript/proxy.conf.json"
                     },
                     "configurations": {
                         "production": {
@@ -491,8 +506,8 @@
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
                         "outputPath": "dist/setup",
-                        "main": "src/main/typescript/timing/main.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.app.json",
+                        "main": "src/main/typescript/setup/main.ts",
+                        "tsConfig": "src/main/typescript/setup/tsconfig.app.json",
                         "serviceWorker": false,
                         "index": "src/main/typescript/setup/index.html",
                         "assets": [
@@ -500,6 +515,11 @@
                                 "glob": "**/*",
                                 "input": "src/main/typescript/assets",
                                 "output": "assets"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "src/main/typescript/setup/i18n",
+                                "output": "setup/i18n/"
                             },
                             {
                                 "glob": "favicon.ico",
@@ -560,7 +580,8 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                      "buildTarget": "setup:build"
+                      "buildTarget": "setup:build",
+                      "proxyConfig": "src/main/typescript/proxy.conf.json"
                     },
                     "configurations": {
                         "production": {
