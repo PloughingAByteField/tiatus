@@ -48,7 +48,7 @@ public interface EntryDao {
      * @param entry Entry to update
      * @throws DaoException on error
      */
-    void updateEntry(Entry entry) throws DaoException;
+    Entry updateEntry(Entry entry) throws DaoException;
 
     /**
      * Swap the numbers of two entries

@@ -35,7 +35,7 @@ public interface EntryService {
      * @param entry to update
      * @throws ServiceException on error
      */
-    void updateEntry(Entry entry, String sessionId) throws ServiceException;
+    Entry updateEntry(Entry entry, String sessionId) throws ServiceException;
 
     /**
      * Update list of entries

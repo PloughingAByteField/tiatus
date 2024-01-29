@@ -31,7 +31,7 @@ public interface RacePositionTemplateDao {
      * @param template RacePositionTemplate to update
      * @throws DaoException on error
      */
-    void updateRacePositionTemplate(RacePositionTemplate template) throws DaoException;
+    RacePositionTemplate updateRacePositionTemplate(RacePositionTemplate template) throws DaoException;
 
     /**
      * Get list of RaceEvents
@@ -47,6 +47,8 @@ public interface RacePositionTemplateDao {
     RacePositionTemplate getTemplateForId(Long id);
 
     RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws DaoException;
+    
     void deleteTemplateEntry(RacePositionTemplateEntry entry) throws DaoException;
-    void updateTemplateEntry(RacePositionTemplateEntry entry) throws DaoException;
+    
+    RacePositionTemplateEntry updateTemplateEntry(RacePositionTemplateEntry entry) throws DaoException;
 }

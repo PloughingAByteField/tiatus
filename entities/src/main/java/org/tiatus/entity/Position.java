@@ -19,7 +19,10 @@ public class Position implements Serializable {
 	private String name;
 	
 	@Id  
-	@GeneratedValue
+	@SequenceGenerator(name="position_id_sequence",
+                       sequenceName="position_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "position_id_sequence")
     @Column(name = "id")
 	private Long id;
 

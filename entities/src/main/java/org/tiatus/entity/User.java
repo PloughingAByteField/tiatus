@@ -19,7 +19,10 @@ import java.util.Set;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="app_user_id_sequence",
+                       sequenceName="app_user_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_user_id_sequence")
     @Column(name = "id")
     private Long id;
 

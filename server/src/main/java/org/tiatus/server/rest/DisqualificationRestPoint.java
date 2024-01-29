@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -63,7 +64,7 @@ public class DisqualificationRestPoint extends RestBase {
     //  */
     // @RolesAllowed({Role.ADJUDICATOR})
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public URI addDisqualification(Disqualification disqualification, HttpServletRequest request) {
+    public URI addDisqualification(@RequestBody Disqualification disqualification, HttpServletRequest request) {
         LOG.debug("Adding disqualification " + disqualification);
         try {
             Disqualification saved = service.addDisqualification(disqualification, request.getSession().getId());
@@ -83,7 +84,7 @@ public class DisqualificationRestPoint extends RestBase {
     //  */
     // @RolesAllowed({Role.ADJUDICATOR})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @DeleteMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    @DeleteMapping(path = "{id}")
     public void removeDisqualification(@PathVariable("id") Long id, HttpSession session) {
         LOG.debug("Removing disqualification with id " + id);
         try {
@@ -105,7 +106,7 @@ public class DisqualificationRestPoint extends RestBase {
     //  */
     // @RolesAllowed({Role.ADJUDICATOR})
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public Disqualification updateDisqualification(@PathVariable("id") Long id, HttpSession session, Disqualification disqualification, HttpServletResponse response) {
+    public Disqualification updateDisqualification(@PathVariable("id") Long id, @RequestBody Disqualification disqualification, HttpSession session, HttpServletResponse response) {
         LOG.debug("updating disqualification");
         try {
             Disqualification existing = service.getDisqualificationForId(id);

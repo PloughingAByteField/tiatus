@@ -34,7 +34,10 @@ public class Race implements Serializable {
     private String startTime;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="race_id_sequence",
+                       sequenceName="race_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "race_id_sequence")
     @Column(name = "id")
     private Long id;
 

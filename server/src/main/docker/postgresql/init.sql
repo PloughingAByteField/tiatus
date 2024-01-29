@@ -1,0 +1,5 @@
+CREATE USER tiatus WITH PASSWORD 'tiatus';
+CREATE DATABASE tiatus;
+GRANT ALL PRIVILEGES ON DATABASE tiatus TO tiatus;
+\c tiatus;
+GRANT ALL ON SCHEMA public TO tiatus;

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -60,7 +61,7 @@ public class ClubRestPoint extends RestBase {
     //  */
     // @RolesAllowed({Role.ADMIN})
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Club addClub(HttpSession session, Club club) {
+    public Club addClub(@RequestBody Club club, HttpSession session) {
         LOG.debug("Adding club " + club);
         try {
             return service.addClub(club, session.getId());
@@ -78,7 +79,7 @@ public class ClubRestPoint extends RestBase {
     //  */
     // @RolesAllowed({Role.ADMIN})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @DeleteMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    @DeleteMapping(path = "{id}")
     public void removeClub(@PathVariable("id") Long id, HttpSession session) {
         LOG.debug("Removing club with id " + id);
         try {
@@ -100,7 +101,7 @@ public class ClubRestPoint extends RestBase {
     //  */
     // @RolesAllowed({Role.ADMIN})
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public Club updateClub(@PathVariable("id") Long id, HttpSession session, Club club, HttpServletResponse response) {
+    public Club updateClub(@PathVariable("id") Long id, @RequestBody Club club, HttpSession session, HttpServletResponse response) {
         LOG.debug("updating club of id " + id);
         try {
             Club existing = service.getClubForId(id);

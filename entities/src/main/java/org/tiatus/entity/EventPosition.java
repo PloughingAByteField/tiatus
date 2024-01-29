@@ -22,7 +22,10 @@ public class EventPosition implements Serializable {
 	private Event event;
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name="event_position_sequence",
+                       sequenceName="event_position_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_position_sequence")
 	@Column(name = "id")
 	private Long id;
 

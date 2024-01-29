@@ -36,8 +36,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User addUser(User user) throws DaoException {
-        LOG.debug("Adding user " + user);
+        LOG.debug("Adding user " + user.getUserName());
         try {
+            if (user.getId() == null) {
+                return repository.save(user);
+            } 
+
             if (!repository.existsById(user.getId())) {
                 return repository.save(user);
 
@@ -70,7 +74,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUser(User user) throws DaoException {
+    public User updateUser(User user) throws DaoException {
         try {
             User existing = null;
             if (user.getId() != null) {
@@ -98,11 +102,13 @@ public class UserDaoImpl implements UserDao {
                         existing.getRoles().add(updatedUserRole);
                     }
                 }
-                repository.save(existing);
+                return repository.save(existing);
 
             } else {
                 LOG.warn("No such user of id " + user.getId());
             }
+
+            return user;
 
         } catch (Exception e) {
             LOG.warn("Failed to update user", e.getMessage());

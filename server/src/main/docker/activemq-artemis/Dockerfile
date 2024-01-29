@@ -1,5 +1,4 @@
-FROM postgres:latest
+FROM apache/activemq-artemis:latest
 LABEL org.opencontainers.image.authors="John Reynolds <john.reynolds.irl@acm.org>"
 
-ADD init.sql /docker-entrypoint-initdb.d/
-EXPOSE 5432
+EXPOSE 61616

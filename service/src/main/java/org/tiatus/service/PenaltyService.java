@@ -28,7 +28,7 @@ public interface PenaltyService {
      * @param penalty to update
      * @throws ServiceException on error
      */
-    void updatePenalty(Penalty penalty, String sessionId) throws ServiceException;
+    Penalty updatePenalty(Penalty penalty, String sessionId) throws ServiceException;
 
     /**
      * Get penalties

@@ -14,7 +14,10 @@ import java.io.Serializable;
 @Table(name = "user_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
 public class UserRole implements Serializable {
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="user_role_id_sequence",
+                       sequenceName="user_role_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_role_id_sequence")
     @Column(name = "id")
     private Long id;
 

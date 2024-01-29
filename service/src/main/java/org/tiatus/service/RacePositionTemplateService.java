@@ -30,7 +30,7 @@ public interface RacePositionTemplateService {
      * @param template to update
      * @throws ServiceException on error
      */
-    void updateRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException;
+    RacePositionTemplate updateRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException;
 
     /**
      * Get races
@@ -45,6 +45,8 @@ public interface RacePositionTemplateService {
     RacePositionTemplate getTemplateForId(Long id);
 
     RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException;
+    
     void deleteTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException;
-    void updateTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException;
+    
+    RacePositionTemplateEntry updateTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException;
 }

@@ -30,7 +30,10 @@ public class Penalty implements Serializable {
     private Timestamp time;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="penalty_id_sequence",
+                       sequenceName="penalty_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "penalty_id_sequence")
     @Column(name = "id")
     private Long id;
 

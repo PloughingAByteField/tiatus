@@ -35,7 +35,7 @@ public interface UserDao {
      * @param user to update
      * @throws DaoException on error
      */
-    void updateUser(User user) throws DaoException;
+    User updateUser(User user) throws DaoException;
 
     /**
      * Get the role for string identifier of the role.

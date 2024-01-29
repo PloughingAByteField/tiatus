@@ -26,11 +26,12 @@ public class TimesServiceImpl implements TimesService {
     protected MessageSenderService sender;
 
     @Override
-    public void createTime(EntryPositionTime entryPositionTime, String sessionId) throws ServiceException {
+    public EntryPositionTime createTime(EntryPositionTime entryPositionTime, String sessionId) throws ServiceException {
         try {
-            dao.createTime(entryPositionTime);
-            Message message = Message.createMessage(entryPositionTime, MessageType.ADD, sessionId);
+            EntryPositionTime newTime = dao.createTime(entryPositionTime);
+            Message message = Message.createMessage(newTime, MessageType.ADD, sessionId);
             sender.sendMessage(message);
+            return newTime;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -43,12 +44,13 @@ public class TimesServiceImpl implements TimesService {
     }
 
     @Override
-    public void updateTime(EntryPositionTime entryPositionTime, String sessionId) throws ServiceException {
+    public EntryPositionTime updateTime(EntryPositionTime entryPositionTime, String sessionId) throws ServiceException {
         try {
-            dao.updateTime(entryPositionTime);
-            Message message = Message.createMessage(entryPositionTime, MessageType.UPDATE, sessionId);
+            EntryPositionTime updatedTime = dao.updateTime(entryPositionTime);
+            Message message = Message.createMessage(updatedTime, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
-
+            return updatedTime;
+            
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
             throw new ServiceException(e);

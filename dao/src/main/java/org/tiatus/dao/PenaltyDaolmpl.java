@@ -63,9 +63,9 @@ public class PenaltyDaolmpl implements PenaltyDao {
     }
 
     @Override
-    public void updatePenalty(Penalty penalty) throws DaoException {
+    public Penalty updatePenalty(Penalty penalty) throws DaoException {
         try {
-            repository.save(penalty);
+            return repository.save(penalty);
 
         } catch (Exception e) {
             LOG.warn("Failed to update penalty", e);

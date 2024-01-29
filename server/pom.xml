@@ -42,83 +42,16 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <scope>provided</scope>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-artemis</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <scope>provided</scope>
-        </dependency> -->
-
-        <!-- <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency> -->
-
-        <!-- <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>provided</scope>
-        </dependency> -->
-
-        <!-- <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jaxrs</artifactId>
-            <version>${resteasy.version}</version>
-            <scope>provided</scope>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-jakarta-server</artifactId>
+            <version>2.31.2</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-client</artifactId>
-            <version>${resteasy.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-jackson2-provider</artifactId>
-            <version>${resteasy.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-servlet-initializer</artifactId>
-            <version>${resteasy.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-multipart-provider</artifactId>
-            <version>${resteasy.version}</version>
-            <scope>provided</scope>
-        </dependency> -->
-
-        <!-- <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-core</artifactId>
-            <version>8.2.6.Final</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-commons</artifactId>
-            <version>8.2.6.Final</version>
-            <scope>provided</scope>
-        </dependency> -->
-
-        <!-- <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency> -->
 
         <dependency>
             <groupId>org.tiatus</groupId>
@@ -255,42 +188,21 @@
                             </run>
                         </image>
                         <image>
-                            <alias>wildfly</alias>
-                            <name>jreynolds/wildfly-tiatus</name>
+                            <alias>activemq-artemis</alias>
+                            <name>jreynolds/activemq-artemis-tiatus</name>
                             <build>
-                                <dockerFileDir>wildfly</dockerFileDir>
-                                <assembly>
-                                    <mode>dir</mode>
-                                    <inline xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                            xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
-                                            xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-                                        <id>server-it</id>
-                                        <dependencySets>
-                                            <dependencySet>
-                                                <useProjectArtifact>true</useProjectArtifact>
-                                                <includes>
-                                                    <include>${project.groupId}:${project.artifactId}</include>
-                                                </includes>
-                                                <outputDirectory>.</outputDirectory>
-                                                <outputFileNameMapping>
-                                                    ${project.build.finalName}.${artifact.extension}
-                                                </outputFileNameMapping>
-                                            </dependencySet>
-                                        </dependencySets>
-                                    </inline>
-                                </assembly>
+                                <dockerFileDir>activemq-artemis</dockerFileDir>
                             </build>
                             <run>
                                 <ports>
-                                    <port>7080:8080</port>
-                                    <port>9990:9990</port>
+                                    <port>61616:61616</port>
                                 </ports>
                                 <wait>
-                                    <log>started in</log>
+                                    <log>HTTP Server started at</log>
                                     <time>300000</time>
                                 </wait>
                                 <log>
-                                    <prefix>Wildfly</prefix>
+                                    <prefix>MQ</prefix>
                                     <color>yellow</color>
                                 </log>
                                 <links>

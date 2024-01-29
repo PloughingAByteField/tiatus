@@ -34,7 +34,7 @@ public interface RaceService {
      * @param race to update
      * @throws ServiceException on error
      */
-    void updateRace(Race race, String sessionId) throws ServiceException;
+    Race updateRace(Race race, String sessionId) throws ServiceException;
 
     /**
      * Get races

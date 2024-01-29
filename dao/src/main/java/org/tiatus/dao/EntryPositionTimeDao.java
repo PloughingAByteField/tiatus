@@ -31,9 +31,9 @@ public interface EntryPositionTimeDao {
      * Record a time for entry at position in a race
      * @throws DaoException on error
      */
-    void createTime(EntryPositionTime entryPositionTime) throws DaoException;
+    EntryPositionTime createTime(EntryPositionTime entryPositionTime) throws DaoException;
 
-    void updateTime(EntryPositionTime entryPositionTime) throws DaoException;
+    EntryPositionTime updateTime(EntryPositionTime entryPositionTime) throws DaoException;
 
 
 }

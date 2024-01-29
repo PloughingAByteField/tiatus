@@ -40,6 +40,6 @@ public interface RaceDao {
      * @param race Race to update
      * @throws DaoException on error
      */
-    void updateRace(Race race) throws DaoException;
+    Race updateRace(Race race) throws DaoException;
 
 }

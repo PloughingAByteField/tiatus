@@ -41,7 +41,7 @@ public interface UserService {
      * @param user to update
      * @throws ServiceException on error
      */
-    void updateUser(User user, String sessionId) throws ServiceException;
+    User updateUser(User user, String sessionId) throws ServiceException;
 
     /**
      * Get user for supplied username and password

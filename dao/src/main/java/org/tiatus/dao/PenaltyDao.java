@@ -34,7 +34,7 @@ public interface PenaltyDao {
      * @param penalty Penalty to update
      * @throws DaoException on error
      */
-    void updatePenalty(Penalty penalty) throws DaoException;
+    Penalty updatePenalty(Penalty penalty) throws DaoException;
 
     Penalty getPenaltyForId(Long id);
 }

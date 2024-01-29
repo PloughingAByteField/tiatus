@@ -24,7 +24,10 @@ public class RacePositionTemplate implements Serializable {
     private Boolean defaultTemplate;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="race_position_template_id_sequence",
+                       sequenceName="race_position_template_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "race_position_template_id_sequence")
     @Column(name = "id")
     private Long id;
 

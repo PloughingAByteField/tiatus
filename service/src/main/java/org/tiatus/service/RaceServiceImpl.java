@@ -69,12 +69,14 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
-    public void updateRace(Race race, String sessionId) throws ServiceException {
+    public Race updateRace(Race race, String sessionId) throws ServiceException {
         LOG.debug("Update race " + race.getId());
         try {
-            dao.updateRace(race);
-            Message message = Message.createMessage(race, MessageType.UPDATE, sessionId);
+            Race updated = dao.updateRace(race);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+
+            return updated;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

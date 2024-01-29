@@ -19,7 +19,10 @@ public class Club implements Serializable {
     private String clubName;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="club_id_sequence",
+                       sequenceName="club_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "club_id_sequence")
     @Column(name = "id")
     private Long id;
 

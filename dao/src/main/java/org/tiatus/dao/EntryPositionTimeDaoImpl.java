@@ -54,12 +54,12 @@ public class EntryPositionTimeDaoImpl implements EntryPositionTimeDao {
     }
 
     @Override
-    public void createTime(EntryPositionTime entryPositionTime) throws DaoException {
+    public EntryPositionTime createTime(EntryPositionTime entryPositionTime) throws DaoException {
         try {
             if (entryPositionTime.getPosition() != null && entryPositionTime.getEntry() != null) {
                 if (repository.getTimesForEntryAtPosition(entryPositionTime.getEntry().getId(), entryPositionTime.getPosition().getId()).isEmpty()) {
                     entryPositionTime.setSynced(true);
-                    repository.save(entryPositionTime);
+                    return repository.save(entryPositionTime);
 
                 } else {
                     String message = "Failed to create time due to existing entryPositionTime with same position " + entryPositionTime.getPosition().getId() + " and entry " + entryPositionTime.getEntry().getId();
@@ -80,12 +80,12 @@ public class EntryPositionTimeDaoImpl implements EntryPositionTimeDao {
     }
 
     @Override
-    public void updateTime(EntryPositionTime entryPositionTime) throws DaoException {
+    public EntryPositionTime updateTime(EntryPositionTime entryPositionTime) throws DaoException {
         try {
             if (entryPositionTime.getPosition() != null && entryPositionTime.getEntry() != null) {
                 if (!repository.getTimesForEntryAtPosition(entryPositionTime.getEntry().getId(), entryPositionTime.getPosition().getId()).isEmpty()) {
                     entryPositionTime.setSynced(true);
-                    repository.save(entryPositionTime);
+                    return repository.save(entryPositionTime);
 
                 } else {
                     String message = "Failed to update time as one does not exist for the position " + entryPositionTime.getPosition().getId() + " and entry " + entryPositionTime.getEntry().getId();

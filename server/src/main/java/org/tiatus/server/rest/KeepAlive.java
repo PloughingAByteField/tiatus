@@ -1,32 +1,38 @@
 package org.tiatus.server.rest;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // import javax.annotation.security.PermitAll;
-// import javax.servlet.http.HttpServletRequest;
-// import javax.ws.rs.GET;
-// import javax.ws.rs.Path;
-// import javax.ws.rs.core.Context;
-// import javax.ws.rs.core.Response;
 
 /**
  * Created by johnreynolds on 21/04/2017.
  */
 // @Path("keepalive")
 // @SuppressWarnings("squid:S1166")
+@RestController
+@RequestMapping("keepalive")
 public class KeepAlive {
 
-    // private static final Logger LOG = LoggerFactory.getLogger(KeepAlive.class);
+    private static final Logger LOG = LoggerFactory.getLogger(KeepAlive.class);
 
-    // @GET
     // @PermitAll
-    // public Response keepAlive(@Context HttpServletRequest request) {
-    //     if (request == null || request.getSession(false) == null || request.getSession(false).getAttribute("userId") == null) {
-    //         LOG.warn("User is not logged in");
-    //         return Response.status(Response.Status.UNAUTHORIZED).build();
-    //     }
+    @GetMapping()
+    public void keepAlive(HttpServletRequest request, HttpServletResponse response) {
+        if (request == null || request.getSession(false) == null || request.getSession(false).getAttribute("userId") == null) {
+            LOG.warn("User is not logged in");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            return;
+        }
 
-    //     return Response.ok().build();
-    // }
+        response.setStatus(HttpStatus.OK.value());
+    }
 }

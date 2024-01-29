@@ -69,12 +69,14 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
-    public void updateEntry(Entry entry, String sessionId) throws ServiceException {
+    public Entry updateEntry(Entry entry, String sessionId) throws ServiceException {
         LOG.debug("Update entry " + entry.getId());
         try {
-            dao.updateEntry(entry);
-            Message message = Message.createMessage(entry, MessageType.UPDATE, sessionId);
+            Entry updated = dao.updateEntry(entry);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+
+            return updated;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

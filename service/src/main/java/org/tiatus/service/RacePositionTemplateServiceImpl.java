@@ -64,12 +64,14 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
     }
 
     @Override
-    public void updateRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException {
+    public RacePositionTemplate updateRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException {
         LOG.debug("Update template " + template.getId());
         try {
-            dao.updateRacePositionTemplate(template);
-            Message message = Message.createMessage(template, MessageType.UPDATE, sessionId);
+            RacePositionTemplate updated = dao.updateRacePositionTemplate(template);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+
+            return updated;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -127,11 +129,12 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
     }
 
     @Override
-    public void updateTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException {
+    public RacePositionTemplateEntry updateTemplateEntry(RacePositionTemplateEntry entry, String sessionId) throws ServiceException {
         try {
-            dao.updateTemplateEntry(entry);
-            Message message = Message.createMessage(entry, MessageType.UPDATE, sessionId);
+            RacePositionTemplateEntry updated = dao.updateTemplateEntry(entry);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            return updated;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

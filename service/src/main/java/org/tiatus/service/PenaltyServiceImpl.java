@@ -63,12 +63,13 @@ public class PenaltyServiceImpl implements PenaltyService {
     }
 
     @Override
-    public void updatePenalty(Penalty penalty, String sessionId) throws ServiceException {
+    public Penalty updatePenalty(Penalty penalty, String sessionId) throws ServiceException {
         LOG.debug("Update penalty " + penalty.getId());
         try {
-            dao.updatePenalty(penalty);
-            Message message = Message.createMessage(penalty, MessageType.UPDATE, sessionId);
+            Penalty updated = dao.updatePenalty(penalty);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            return updated;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Existing user");
         }
 
-        LOG.debug("Adding admin user " + user.getUserName());
+        LOG.debug("Y Adding admin user " + user.getUserName());
         try {
             UserRole userRole = new UserRole();
             // get role for admin from db
@@ -98,11 +98,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user, String sessionId) throws ServiceException {
+    public User updateUser(User user, String sessionId) throws ServiceException {
         try {
-            dao.updateUser(user);
-            Message message = Message.createMessage(user, MessageType.UPDATE, sessionId);
+            User updatedUser = dao.updateUser(user);
+            Message message = Message.createMessage(updatedUser, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            return updatedUser;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

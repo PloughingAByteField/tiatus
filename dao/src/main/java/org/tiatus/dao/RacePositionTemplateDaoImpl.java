@@ -65,9 +65,9 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     }
 
     @Override
-    public void updateRacePositionTemplate(RacePositionTemplate template) throws DaoException {
+    public RacePositionTemplate updateRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         try {
-            repository.save(template);
+            return repository.save(template);
 
         } catch(Exception e) {
             LOG.warn("Failed to update RacePositionTemplate", e);
@@ -120,9 +120,9 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     }
 
     @Override
-    public void updateTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
+    public RacePositionTemplateEntry updateTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
-            racePositionTemplateEntryRepository.save(entry);
+            return racePositionTemplateEntryRepository.save(entry);
 
         } catch(Exception e) {
             LOG.warn("Failed to update template entry", e);

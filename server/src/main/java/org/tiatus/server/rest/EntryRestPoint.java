@@ -1,20 +1,34 @@
 package org.tiatus.server.rest;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-// import org.tiatus.entity.Entry;
-// import org.tiatus.entity.Race;
-// import org.tiatus.role.Role;
-// import org.tiatus.service.EntryService;
-// import org.tiatus.service.RaceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.tiatus.entity.Disqualification;
+import org.tiatus.entity.Entry;
+import org.tiatus.entity.Race;
+import org.tiatus.role.Role;
+import org.tiatus.service.EntryService;
+import org.tiatus.service.RaceService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 // import javax.annotation.security.PermitAll;
 // import javax.annotation.security.RolesAllowed;
-// import javax.inject.Inject;
-// import javax.servlet.http.HttpServletRequest;
-// import javax.ws.rs.*;
-// import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,41 +36,41 @@ import java.util.Set;
 /**
  * Created by johnreynolds on 19/06/2016.
  */
-// @Path("entries")
 // @SuppressWarnings("squid:S1166")
+@RestController
+@RequestMapping("entries")
 public class EntryRestPoint extends RestBase {
 
-    // private static final Logger LOG = LoggerFactory.getLogger(EntryRestPoint.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EntryRestPoint.class);
 
-    // private EntryService service;
-    // private RaceService raceService;
+    @Autowired
+    protected EntryService service;
+
+    @Autowired
+    protected RaceService raceService;
 
     /**
      * Get entries
      * @return response containing list of entries
      */
     // @PermitAll
-    // @GET
-    // @Produces("application/json")
-    // public Response getEntries(@Context Request request) {
-    //     List<Entry> entries = service.getEntries();
-    //     return Response.ok(entries).build();
-    // }
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
+    public List<Entry> getEntries() {
+        return service.getEntries();
+    }
 
     // @PermitAll
-    // @GET
-    // @Path("race/{raceId}")
-    // @Produces("application/json")
-    // public Response getEntriesForRace(@PathParam("raceId") String raceId, @Context Request request) {
-    //     Race race = raceService.getRaceForId(Long.parseLong(raceId));
-    //     if (race == null) {
-    //         LOG.warn("Failed to get race for supplied id");
-    //         return Response.status(Response.Status.NOT_FOUND).build();
-    //     }
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "race/{raceId}")
+    public List<Entry> getEntriesForRace(@PathVariable("raceId") Long raceId, HttpSession session, HttpServletResponse response) {
+        Race race = raceService.getRaceForId(raceId);
+        if (race == null) {
+            LOG.warn("Failed to get race for supplied id");
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+            return new ArrayList<>();
+        }
 
-    //     List<Entry> entries = service.getEntriesForRace(race);
-    //     return Response.ok(entries).build();
-    // }
+        return service.getEntriesForRace(race);
+    }
 
     // /**
     //  * Add entry, restricted to Admin users
@@ -65,19 +79,19 @@ public class EntryRestPoint extends RestBase {
     //  * @return 201 response with location containing uri of newly created entry or an error code
     //  */
     // @RolesAllowed({Role.ADMIN})
-    // @POST
-    // @Consumes("application/json")
-    // @Produces("application/json")
-    // public Response addEntry(@Context UriInfo uriInfo, @Context HttpServletRequest request, Entry entry) {
-    //     LOG.debug("Adding entry " + entry);
-    //     try {
-    //         Entry saved = service.addEntry(entry, request.getSession().getId());
-    //         return Response.created(URI.create(uriInfo.getPath() + "/"+ saved.getId())).build();
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    public URI addEntry(@RequestBody Entry entry, HttpServletRequest request) {
+        LOG.debug("Adding entry " + entry);
+        try {
+            Entry saved = service.addEntry(entry, request.getSession().getId());
+            return URI.create(request.getServletContext().getContextPath() + "/"+ saved.getId());
 
-    //     } catch (Exception e) {
-    //         return logError(e);
-    //     }
-    // }
+        } catch (Exception e) {
+            logError(e);
+        }
+
+        return null;
+    }
 
     // /**
     //  * Remove entry, restricted to Admin users
@@ -85,22 +99,20 @@ public class EntryRestPoint extends RestBase {
     //  * @return response with 204
     //  */
     // @RolesAllowed({Role.ADMIN})
-    // @DELETE
-    // @Path("{id}")
-    // @Produces("application/json")
-    // public Response removeEntry(@PathParam("id") String id, @Context HttpServletRequest request) {
-    //     LOG.debug("Removing entry with id " + id);
-    //     try {
-    //         Entry entry = service.getEntryForId(Long.parseLong(id));
-    //         if (entry != null) {
-    //             service.deleteEntry(entry, request.getSession().getId());
-    //         }
-    //         return Response.noContent().build();
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @DeleteMapping(path = "{id}")
+    public void removeEntry(@PathVariable("id") Long id, HttpSession session) {
+        LOG.debug("Removing entry with id " + id);
+        try {
+            Entry entry = service.getEntryForId(id);
+            if (entry != null) {
+                service.deleteEntry(entry, session.getId());
+            }
 
-    //     } catch (Exception e) {
-    //         return logError(e);
-    //     }
-    // }
+        } catch (Exception e) {
+            logError(e);
+        }
+    }
 
     // /**
     //  * Update entry, restricted to Admin users
@@ -108,26 +120,25 @@ public class EntryRestPoint extends RestBase {
     //  * @return 404 if entity does not exist else return 204
     //  */
     // @RolesAllowed({Role.ADMIN})
-    // @PUT
-    // @Path("{id}")
-    // @Consumes("application/json")
-    // @Produces("application/json")
-    // public Response updateEntry(@PathParam("id") String id, @Context HttpServletRequest request, Entry entry) {
-    //     LOG.debug("Updating entry " + id);
-    //     try {
-    //         Entry existing = service.getEntryForId(Long.parseLong(id));
-    //         if (existing == null) {
-    //             LOG.warn("Failed to get entry for supplied id");
-    //             return Response.status(Response.Status.NOT_FOUND).build();
-    //         }
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public Entry updateEntry(@PathVariable("id") Long id, @RequestBody Entry entry, HttpSession session, HttpServletResponse response) {
+        LOG.debug("Updating entry " + id);
+        try {
+            Entry existing = service.getEntryForId(id);
+            if (existing == null) {
+                LOG.warn("Failed to get entry for supplied id");
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return entry;
+            }
 
-    //         service.updateEntry(entry, request.getSession().getId());
-    //         return Response.noContent().build();
+            return service.updateEntry(entry, session.getId());
 
-    //     } catch (Exception e) {
-    //         return logError(e);
-    //     }
-    // }
+        } catch (Exception e) {
+            logError(e);
+        }
+
+        return entry;
+    }
 
     // /**
     //  * Update list of entries, restricted to Admin users
@@ -135,65 +146,51 @@ public class EntryRestPoint extends RestBase {
     //  * @return 201 response with location containing uri of newly created entry or an error code
     //  */
     // @RolesAllowed({Role.ADMIN})
-    // @PUT
-    // @Path("updates")
-    // @Consumes("application/json")
-    // @Produces("application/json")
-    // public Response updateEntries(@Context HttpServletRequest request, List<Entry> entries) {
-    //     LOG.debug("Updating " + entries.size() + " entries");
-    //     try {
-    //         if (entries.size() == 0) {
-    //             LOG.warn("Got empty entries updates");
-    //             return Response.noContent().build();
-    //         }
-    //         Set<Race> races = new HashSet<>();
-    //         for (Entry entry: entries) {
-    //             Entry existing = service.getEntryForId(entry.getId());
-    //             if (existing == null) {
-    //                 LOG.warn("Failed to get entry for supplied id");
-    //                 return Response.status(Response.Status.NOT_FOUND).build();
-    //             }
-    //             races.add(entry.getRace());
-    //         }
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "updates")
+    public void updateEntries(@RequestBody List<Entry> entries, HttpSession session, HttpServletResponse response) {
+        LOG.debug("Updating " + entries.size() + " entries");
+        try {
+            if (entries.size() == 0) {
+                LOG.warn("Got empty entries updates");
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return;
+            }
+            Set<Race> races = new HashSet<>();
+            for (Entry entry: entries) {
+                Entry existing = service.getEntryForId(entry.getId());
+                if (existing == null) {
+                    LOG.warn("Failed to get entry for supplied id");
+                    response.setStatus(HttpStatus.NOT_FOUND.value());
+                    return;
+                }
+                races.add(entry.getRace());
+            }
 
-    //         service.updateEntries(entries, request.getSession().getId());
-    //         return Response.noContent().build();
+            service.updateEntries(entries, session.getId());
+            response.setStatus(HttpStatus.NO_CONTENT.value());
 
-    //     } catch (Exception e) {
-    //         return logError(e);
-    //     }
-    // }
+        } catch (Exception e) {
+            logError(e);
+        }
+    }
 
     // @RolesAllowed({Role.ADJUDICATOR})
-    // @POST
-    // @Path("swapEntries/{fromId}/{toId}")
-    // @Produces("application/json")
-    // public Response swapEntries(@PathParam("fromId") String fromId, @PathParam("toId") String toId, @Context HttpServletRequest request) {
-    //     try {
-    //         Entry from = service.getEntryForId(Long.parseLong(fromId));
-    //         Entry to = service.getEntryForId(Long.parseLong(toId));
-    //         if (from == null || to == null) {
-    //             LOG.warn("Failed to get entry for supplied id");
-    //             return Response.status(Response.Status.NOT_FOUND).build();
-    //         }
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "swapEntries/{fromId}/{toId}")
+    public void swapEntries(@PathVariable("fromId") Long fromId, @PathVariable("toId") Long toId, HttpSession session, HttpServletResponse response) {
+        try {
+            Entry from = service.getEntryForId(fromId);
+            Entry to = service.getEntryForId(toId);
+            if (from == null || to == null) {
+                LOG.warn("Failed to get entry for supplied id");
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return;
+            }
 
-    //         service.swapEntryNumbers(from, to, request.getSession().getId());
-    //         return Response.ok().build();
+            service.swapEntryNumbers(from, to, session.getId());
 
-    //     } catch (Exception e) {
-    //         return logError(e);
-    //     }
-    // }
-
-    // @Inject
-    // // sonar want constructor injection which jaxrs does not support
-    // public void setService(EntryService service) {
-    //     this.service = service;
-    // }
-
-    // @Inject
-    // public void setRaceService(RaceService service) {
-    //     this.raceService = service;
-    // }
+        } catch (Exception e) {
+            logError(e);
+        }
+    }
 
 }

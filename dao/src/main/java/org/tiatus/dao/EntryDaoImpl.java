@@ -79,7 +79,7 @@ public class EntryDaoImpl implements EntryDao {
     }
 
     @Override
-    public void updateEntry(Entry entry) throws DaoException {
+    public Entry updateEntry(Entry entry) throws DaoException {
         try {
             Entry existing = null;
             if (entry.getId() != null) {
@@ -108,7 +108,7 @@ public class EntryDaoImpl implements EntryDao {
                     existing.setRaceOrder(entry.getRaceOrder());
                 }
 
-                repository.save(existing);
+                return repository.save(existing);
 
             } else {
                 LOG.warn("No such entry of id " + entry.getId());
@@ -117,6 +117,8 @@ public class EntryDaoImpl implements EntryDao {
             LOG.warn("Failed to update entry", e);
             throw new DaoException(e.getMessage());
         }
+
+        return entry;
     }
 
     /*

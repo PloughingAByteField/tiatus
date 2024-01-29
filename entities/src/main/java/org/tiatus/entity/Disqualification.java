@@ -26,7 +26,10 @@ public class Disqualification implements Serializable {
     private String comment;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="disqualification_id_sequence",
+                       sequenceName="disqualification_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "disqualification_id_sequence")
     @Column(name = "id")
     private Long id;
 

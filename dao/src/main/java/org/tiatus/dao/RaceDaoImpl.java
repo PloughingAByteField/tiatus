@@ -66,9 +66,9 @@ public class RaceDaoImpl implements RaceDao {
     }
 
     @Override
-    public void updateRace(Race race) throws DaoException {
+    public Race updateRace(Race race) throws DaoException {
         try {
-            repository.save(race);
+            return repository.save(race);
 
         } catch (Exception e) {
             LOG.warn("Failed to update race", e);

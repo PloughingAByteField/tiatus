@@ -22,7 +22,10 @@ public class RacePositionTemplateEntry implements Serializable {
 	private RacePositionTemplate template;
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name="race_position_template_entry_sequence",
+                       sequenceName="race_position_template_entry_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "race_position_template_entry_sequence")
 	@Column(name = "id")
 	private Long id;
 

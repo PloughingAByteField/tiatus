@@ -30,7 +30,10 @@ public class Entry implements Serializable {
 	private boolean timeOnly = false;
 
 	@Id  
-	@GeneratedValue
+	@SequenceGenerator(name="entry_id_sequence",
+                       sequenceName="entry_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "entry_id_sequence")
 	@Column(name = "id")
 	private Long id;
 	

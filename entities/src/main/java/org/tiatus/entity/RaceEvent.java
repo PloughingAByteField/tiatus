@@ -17,7 +17,10 @@ public class RaceEvent implements Serializable {
     private static final long serialVersionUID = 486591711029352049L;
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name="race_event_id_sequence",
+                       sequenceName="race_event_id_sequence",
+                       allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "race_event_id_sequence")
     @Column(name = "id")
     private Long id;
 
