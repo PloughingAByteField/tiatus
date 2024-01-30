@@ -26,7 +26,7 @@ public class Entry implements Serializable {
     @Column(name = "weighting")
     private String weighting;
 	
-	@Column(name = "timeOnly")
+	@Column(name = "time_only")
 	private boolean timeOnly = false;
 
 	@Id  
@@ -48,10 +48,10 @@ public class Entry implements Serializable {
 	@Column(name = "number")
     private Integer number;
 
-	@Column(name = "raceOrder")
+	@Column(name = "race_order")
 	private Integer raceOrder;
 
-    @Column(name = "isFixedNumber")
+    @Column(name = "is_fixed_number")
     private boolean isFixedNumber = false;
 
 	public Entry() {}

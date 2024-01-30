@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class Club implements Serializable {
     private static final long serialVersionUID = 8109059549918273345L;
 
-    @Column(name = "clubName")
+    @Column(name = "club_name")
     private String clubName;
 
     @Id

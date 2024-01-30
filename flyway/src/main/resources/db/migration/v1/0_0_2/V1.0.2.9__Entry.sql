@@ -1,10 +1,10 @@
 CREATE TABLE entry (
     id bigint NOT NULL PRIMARY KEY,
     crew character varying(255),
-    isfixednumber boolean,
+    is_fixed_number boolean,
     number integer,
-    raceorder integer,
-    timeonly boolean,
+    race_order integer,
+    time_only boolean,
     weighting character varying(255),
     event_id bigint NOT NULL REFERENCES event (id),
     race_id bigint NOT NULL REFERENCES race (id)
