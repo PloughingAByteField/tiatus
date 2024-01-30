@@ -46,8 +46,10 @@ export class RaceEventsService implements OnDestroy {
             this.subscription.unsubscribe();
         }
         this.subscription = this.service.getRaceEvents().subscribe((data: Data) => {
-            this.events = data.data;
-            this.subject.next(this.events);
+            if (data.data !== undefined) {
+                this.events = data.data;
+                this.subject.next(this.events);
+            }
         });
     }
 }

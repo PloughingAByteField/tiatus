@@ -31,8 +31,10 @@ export class TimesService {
             raceTimesSubject.race = race;
             this.raceEntries.push(raceTimesSubject);
             this.service.getTimesForRace(race).subscribe((data: Data) => {
-                raceTimesSubject.times = data.data;
-                raceTimesSubject.subject.next(raceTimesSubject.times);
+                if (data.data !== undefined) {
+                    raceTimesSubject.times = data.data;
+                    raceTimesSubject.subject.next(raceTimesSubject.times);
+                }
             });
             return raceTimesSubject.subject;
         }
@@ -43,8 +45,10 @@ export class TimesService {
                 = this.raceEntries.filter((s: RaceTimesSubject) => s.race.id === race.id).shift();
         if (subject) {
             this.service.getTimesForRace(race).subscribe((data: Data) => {
-                subject.times = data.data;
-                subject.subject.next(subject.times);
+                if (data.data !== undefined) {
+                    subject.times = data.data;
+                    subject.subject.next(subject.times);
+                }
             });
         }
     }

@@ -31,8 +31,10 @@ export class ClubsService {
 
     public refresh(): void {
         this.service.getClubs().subscribe((data: Data) => {
-            this.clubs = data.data;
-            this.subject.next(this.clubs);
+            if (data.data !== undefined) {
+                this.clubs = data.data;
+                this.subject.next(this.clubs);
+            }
         });
     }
 

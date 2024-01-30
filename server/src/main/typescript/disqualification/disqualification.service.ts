@@ -28,8 +28,10 @@ export class DisqualificationService {
 
     public refresh(): void {
         this.service.getDisqualifications().subscribe((data: Data) => {
-            this.disqualifications = data.data;
-            this.disqualificationsSubject.next(this.disqualifications);
+            if (data.data !== undefined) {
+                this.disqualifications = data.data;
+                this.disqualificationsSubject.next(this.disqualifications);
+            }
         });
     }
 }

@@ -35,8 +35,10 @@ export class RacesService {
 
     public refresh(): void {
          this.service.getRaces().subscribe((data: Data) => {
-            this.races = data.data;
-            this.racesSubject.next(this.races);
+            if (data.data !== undefined) {
+                this.races = data.data;
+                this.racesSubject.next(this.races);
+            }
         });
     }
 

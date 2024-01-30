@@ -32,8 +32,10 @@ export class EntriesService {
 
     public refresh(): void {
         this.service.getEntries().subscribe((data: Data) => {
-            this.entries = data.data;
-            this.subject.next(this.entries);
+            if (data.data !== undefined) {
+                this.entries = data.data;
+                this.subject.next(this.entries);
+            }
         });
     }
 

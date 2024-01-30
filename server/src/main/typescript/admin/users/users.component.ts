@@ -52,8 +52,9 @@ export class UsersComponent implements OnInit, OnDestroy {
 
     this.usersSubscription = this.usersService.getUsers()
       .subscribe((users: User[]) => {
-        this.users = users;
-        if (this.users.length > 0) {
+        if (users.length > 0) {
+          this.users = users;
+          console.log("populate users " + users.length);
           this.populateUsersForm(this.users);
         }
     });
@@ -188,6 +189,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     if (users.length > 0) {
       const newUsersArray: FormArray = this.fb.array([]);
       users.map((user: User) => {
+        console.log("user is " + user.userName);
         const userControl: FormControl = this.fb.control(user);
 
         const nameControl: FormControl = this.fb.control(user.userName, [
@@ -201,6 +203,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           Validators.maxLength(250)
         ]);
 
+        console.log("get role "+ user.getRole());
         const typeControl: FormControl = this.fb.control(user.getRole().id);
 
         const group: FormGroup = this.fb.group({

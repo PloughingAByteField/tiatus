@@ -40,8 +40,10 @@ export class UnassignedEventsService implements OnDestroy {
             this.subscription.unsubscribe();
         }
         this.subscription = this.service.getUnassignedEvents().subscribe((data: Data) => {
-            this.events = data.data;
-            this.subject.next(this.events);
+            if (data.data !== undefined) {
+                this.events = data.data;
+                this.subject.next(this.events);
+            }
         });
     }
 }

@@ -28,8 +28,10 @@ export class PenaltiesService {
 
     public refresh(): void {
         this.service.getPenalties().subscribe((data: Data) => {
-            this.penalties = data.data;
-            this.penaltiesSubject.next(this.penalties);
+            if (data.data !== undefined) {
+                this.penalties = data.data;
+                this.penaltiesSubject.next(this.penalties);
+            }
         });
     }
 }

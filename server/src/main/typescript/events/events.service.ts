@@ -40,8 +40,10 @@ export class EventsService implements OnDestroy {
 
     public refresh(): void {
         this.subscription = this.service.getEvents().subscribe((data: Data) => {
-            this.events = data.data;
-            this.subject.next(this.events);
+            if (data.data !== undefined) {
+                this.events = data.data;
+                this.subject.next(this.events);
+            }
         });
     }
 

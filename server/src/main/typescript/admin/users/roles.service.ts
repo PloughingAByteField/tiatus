@@ -33,8 +33,10 @@ export class AdminRolesService {
 
     public refresh(): void {
          this.service.getRoles().subscribe((data: Data) => {
-            this.roles = data.data;
-            this.subject.next(this.roles);
+            if (data.data !== undefined) {
+                this.roles = data.data;
+                this.subject.next(this.roles);
+            }
         });
     }
 

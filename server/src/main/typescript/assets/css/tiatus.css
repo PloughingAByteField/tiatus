@@ -14,7 +14,6 @@ active {
   background-color: gray;
 }
 
-
 .sidebar {
   box-sizing: border-box;
   position: fixed;
@@ -22,7 +21,7 @@ active {
   bottom: 0;
   left: 0;
   padding: 20px;
-  width: 25%;
+  width: 15%;
 }
 
 /* Sidebar navigation */

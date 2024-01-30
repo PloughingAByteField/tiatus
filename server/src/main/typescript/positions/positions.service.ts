@@ -31,8 +31,10 @@ export class PositionsService {
 
     public refresh(): void {
         this.service.getPositions().subscribe((data: Data) => {
-            this.positions = data.data;
-            this.subject.next(this.positions);
+            if (data.data !== undefined) {
+                this.positions = data.data;
+                this.subject.next(this.positions);
+            }
         });
     }
 
