@@ -222,7 +222,7 @@
                             {
                                 "glob": "**/*",
                                 "input": "src/main/typescript/admin/i18n",
-                                "output": "admin/i18n/"
+                                "output": "i18n/"
                             },
                             {
                                 "glob": "favicon.ico",
