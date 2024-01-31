@@ -32,7 +32,7 @@ import java.util.List;
  * Created by johnreynolds on 19/06/2016.
  */
 @RestController
-@RequestMapping("clubs")
+@RequestMapping("/rest/clubs")
 // @SuppressWarnings("squid:S1166")
 public class ClubRestPoint extends RestBase {
 

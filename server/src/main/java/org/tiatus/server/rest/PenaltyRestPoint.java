@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 // @Path("penalties")
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("penalties")
+@RequestMapping("/rest/penalties")
 public class PenaltyRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(PenaltyRestPoint.class);

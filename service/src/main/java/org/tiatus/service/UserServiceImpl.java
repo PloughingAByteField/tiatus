@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.UserDao;
 import org.tiatus.entity.Role;
@@ -30,6 +32,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     protected MessageSenderService sender;
 
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
+
     @Override
     public boolean hasAdminUser() {
         return dao.hasAdminUser();
@@ -43,7 +48,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Existing user");
         }
 
-        LOG.debug("Y Adding admin user " + user.getUserName());
+        LOG.debug("Adding admin user " + user.getUserName());
         try {
             UserRole userRole = new UserRole();
             // get role for admin from db
@@ -53,6 +58,8 @@ public class UserServiceImpl implements UserService {
             Set<UserRole> userRoleList = new HashSet<>();
             userRoleList.add(userRole);
             user.setRoles(userRoleList);
+            String password = passwordEncoder.encode(user.getPassword());
+            user.setPassword(password);
             return dao.addUser(user);
 
         } catch (DaoException e) {

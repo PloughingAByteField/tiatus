@@ -26,7 +26,7 @@ import java.net.URI;
  */
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("setup")
+@RequestMapping("/rest/setup")
 public class SetupRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(SetupRestPoint.class);

@@ -37,7 +37,7 @@ import java.util.List;
  */
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("events")
+@RequestMapping("/rest/events")
 public class EventRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(EventRestPoint.class);

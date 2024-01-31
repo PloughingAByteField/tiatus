@@ -33,7 +33,7 @@ import java.util.List;
  */
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("races")
+@RequestMapping("/rest/races")
 public class RaceRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceRestPoint.class);

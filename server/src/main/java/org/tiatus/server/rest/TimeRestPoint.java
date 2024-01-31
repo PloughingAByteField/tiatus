@@ -30,7 +30,7 @@ import java.util.List;
  * Created by johnreynolds on 08/02/2017.
  */
 @RestController
-@RequestMapping("time")
+@RequestMapping("/rest/time")
 public class TimeRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimeRestPoint.class);

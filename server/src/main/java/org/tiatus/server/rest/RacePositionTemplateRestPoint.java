@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 // @Path("racePositionTemplates")
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("racePositionTemplates")
+@RequestMapping("/rest/racePositionTemplates")
 public class RacePositionTemplateRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateRestPoint.class);

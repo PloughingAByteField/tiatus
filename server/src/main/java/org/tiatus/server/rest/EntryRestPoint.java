@@ -38,7 +38,7 @@ import java.util.Set;
  */
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("entries")
+@RequestMapping("/rest/entries")
 public class EntryRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntryRestPoint.class);

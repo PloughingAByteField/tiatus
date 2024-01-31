@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("disqualifications")
+@RequestMapping("/rest/disqualifications")
 public class DisqualificationRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(DisqualificationRestPoint.class);

@@ -11,9 +11,9 @@ CREATE SEQUENCE role_id_sequence
     CACHE 1;
 
 COPY role (id, role) FROM stdin;
-1	ADMIN
-2	TIMING
-3	ADJUDICATOR
+1	ROLE_ADMIN
+2	ROLE_TIMING
+3	ROLE_ADJUDICATOR
 \.
 
 SELECT setval('role_id_sequence', max(id)) FROM role;

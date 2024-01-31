@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 // @Path("keepalive")
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("keepalive")
+@RequestMapping("/rest/keepalive")
 public class KeepAlive {
 
     private static final Logger LOG = LoggerFactory.getLogger(KeepAlive.class);

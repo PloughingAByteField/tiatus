@@ -38,7 +38,7 @@ import jakarta.servlet.http.HttpSession;
 // @Path("config")
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("config")
+@RequestMapping("/rest/config")
 public class ConfigRestPoint {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConfigRestPoint.class);

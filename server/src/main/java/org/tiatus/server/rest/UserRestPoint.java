@@ -2,22 +2,21 @@ package org.tiatus.server.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.entity.Role;
 import org.tiatus.entity.User;
-import org.tiatus.role.Role;
 import org.tiatus.service.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.annotation.security.RolesAllowed;
 
-// import javax.annotation.security.RolesAllowed;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 // @Path("users")
 // @SuppressWarnings("squid:S1166")
 @RestController
-@RequestMapping("users")
+@RequestMapping("/rest/users")
 public class UserRestPoint extends RestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserRestPoint.class);
@@ -46,7 +45,7 @@ public class UserRestPoint extends RestBase {
     //  * Get users
     //  * @return response containing list of users
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<User> getUsers() {
         try {
@@ -59,7 +58,7 @@ public class UserRestPoint extends RestBase {
         return new ArrayList<>();
     }
 
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed({"ROLE_ADMIN"})
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "roles")
     public List<org.tiatus.entity.Role> getUserRoles() {
         try {
@@ -78,7 +77,7 @@ public class UserRestPoint extends RestBase {
     //  * @param user to add
     //  * @return 201 response with location containing uri of newly created user or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public User addUser(@RequestBody User user, HttpSession session) {
         LOG.debug("Adding user " + user);
@@ -97,7 +96,7 @@ public class UserRestPoint extends RestBase {
     //  * @param id of user to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    // @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removeUser(@PathVariable("id") Long id, HttpSession session) {
@@ -119,7 +118,7 @@ public class UserRestPoint extends RestBase {
     //  * @param user to update
     //  * @return 204 response or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    // @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
     public User updateUser(@PathVariable("id") Long id, @RequestBody User user, HttpSession session, HttpServletResponse response) {
         LOG.debug("updating user");
