@@ -43,7 +43,8 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "baseHref":  "/login/"
                     },
                     "configurations": {
                         "production": {
@@ -142,7 +143,8 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "baseHref":  "/results/"
                     },
                     "configurations": {
                         "production": {
@@ -241,7 +243,8 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "baseHref":  "/admin/"
                     },
                     "configurations": {
                         "production": {
@@ -340,7 +343,8 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "baseHref":  "/adjudicator/"
                     },
                     "configurations": {
                         "production": {
@@ -439,7 +443,8 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "baseHref":  "/timing/"
                     },
                     "configurations": {
                         "production": {
@@ -538,7 +543,8 @@
                         "buildOptimizer": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true
+                        "namedChunks": true,
+                        "baseHref":  "/setup/"
                     },
                     "configurations": {
                         "production": {
