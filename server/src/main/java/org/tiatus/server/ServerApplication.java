@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @SpringBootApplication
 @ComponentScan(basePackages = "org.tiatus.*")
 @EnableJpaRepositories("org.tiatus.*")
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @EntityScan("org.tiatus.*")
 public class ServerApplication {
 
