@@ -46,15 +46,16 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
     protected String determineTargetUrl(final Authentication authentication) {
         String url = "/results";
+        String roleAppend = "ROLE_";
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals(Role.ADJUDICATOR)) {
+            if (grantedAuthority.getAuthority().equals(roleAppend + Role.ADJUDICATOR)) {
                 url = "/adjudicator/index.html";
                 break;
-            } else if (grantedAuthority.getAuthority().equals(Role.ADMIN)) {
+            } else if (grantedAuthority.getAuthority().equals(roleAppend + Role.ADMIN)) {
                url = "/admin/index.html";
                 break;
-            }else if (grantedAuthority.getAuthority().equals(Role.TIMING)) {
+            }else if (grantedAuthority.getAuthority().equals(roleAppend + Role.TIMING)) {
                 url = "/timing/index.html";
                 break;
             }
