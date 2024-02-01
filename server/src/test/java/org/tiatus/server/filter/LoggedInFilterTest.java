@@ -30,7 +30,7 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 public class LoggedInFilterTest {
 
-    private LoggedInFilter filter;
+    // private LoggedInFilter filter;
 
     // @Mock
     // private HttpServletRequest httpServletRequestMock;
