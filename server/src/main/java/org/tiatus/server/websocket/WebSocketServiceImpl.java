@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 // import org.tiatus.auth.TiatusSecurityContext;
 // import org.tiatus.auth.UserPrincipal;
 // import org.tiatus.entity.*;
@@ -13,6 +15,10 @@ import org.slf4j.LoggerFactory;
 // import org.tiatus.service.MessageType;
 // import org.tiatus.service.WebSocketService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.tiatus.server.rest.SetupRestPoint;
 import org.tiatus.service.Message;
 import org.tiatus.service.WebSocketService;
 
@@ -22,6 +28,7 @@ import org.tiatus.service.WebSocketService;
 // import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.SocketHandler;
 
 /**
  * Created by johnreynolds on 06/04/2017.
@@ -31,12 +38,21 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class WebSocketServiceImpl implements WebSocketService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(WebSocketServiceImpl.class);
+
+    @Autowired
+    protected WebsocketHandlerText ws;
+
     @Override
     public void sendMessage(Message message) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sendMessage'");
+        LOG.debug("Have ws send message call");
+        try {
+            ws.sendMessage(message);
+        } catch (IOException e) {
+            LOG.warn(e.getMessage());
+        }
     }
-    // private static final Logger LOG = LoggerFactory.getLogger(WebSocketServiceImpl.class);
+
 
     // private static ConcurrentHashMap<Session, HttpSession> clients = new ConcurrentHashMap<>();
     // private static ConcurrentHashMap<Session, ClientDetails> connectedDetails = new ConcurrentHashMap<>();
