@@ -33,7 +33,7 @@ public class RaceDaoImpl implements RaceDao {
     public Race addRace(Race race) throws DaoException {
         LOG.debug("Adding race " + race);
         try {
-            if (!repository.existsById(race.getId())) {
+            if (race.getId() == null) {
                 return repository.save(race);
 
             } else {
@@ -68,7 +68,26 @@ public class RaceDaoImpl implements RaceDao {
     @Override
     public Race updateRace(Race race) throws DaoException {
         try {
-            return repository.save(race);
+            Race existing = null;
+            if (race.getId() != null) {
+                existing = repository.findById(race.getId()).orElse(null);
+            }
+            
+            if (existing != null) {
+                existing.setActive(race.isActive());
+                existing.setClosed(race.isClosed());
+                existing.setDrawLocked(race.isDrawLocked());
+                existing.setName(race.getName());
+                existing.setRaceOrder(race.getRaceOrder());
+                existing.setStartTime(race.getStartTime());
+
+                return repository.save(race);
+
+            } else {
+                LOG.warn("No such race of id " + race.getId());
+            }
+
+            return race;
 
         } catch (Exception e) {
             LOG.warn("Failed to update race", e);

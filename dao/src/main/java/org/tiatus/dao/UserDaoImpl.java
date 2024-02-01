@@ -40,10 +40,6 @@ public class UserDaoImpl implements UserDao {
         try {
             if (user.getId() == null) {
                 return repository.save(user);
-            } 
-
-            if (!repository.existsById(user.getId())) {
-                return repository.save(user);
 
             } else {
                 String message = "Failed to add user due to existing user with same id " + user.getId();
