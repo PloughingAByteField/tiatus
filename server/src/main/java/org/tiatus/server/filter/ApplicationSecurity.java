@@ -52,7 +52,7 @@ public class ApplicationSecurity {
     JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
     jdbcUserDetailsManager.setUsersByUsernameQuery("select user_name, password, true from app_user where user_name=?");
     jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
-        "select user_name, role from role r, app_user u where r.id in (select role_id from user_role where user_id in (select id from app_user where user_name=?))");
+        "select u.user_name, r.role from user_role ur, app_user u, role r where ur.user_id = u.id and ur.role_id = r.id and u.user_name=?");
     return jdbcUserDetailsManager;
   }
 
