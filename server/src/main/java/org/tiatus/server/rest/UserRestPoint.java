@@ -3,6 +3,7 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.entity.User;
+import org.tiatus.role.Role;
 import org.tiatus.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,7 +47,7 @@ public class UserRestPoint extends RestBase {
     //  * Get users
     //  * @return response containing list of users
     //  */
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed(Role.ADMIN)
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<User> getUsers() {
         try {
@@ -59,7 +60,7 @@ public class UserRestPoint extends RestBase {
         return new ArrayList<>();
     }
 
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed(Role.ADMIN)
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "roles")
     public List<org.tiatus.entity.Role> getUserRoles() {
         try {
@@ -78,7 +79,7 @@ public class UserRestPoint extends RestBase {
     //  * @param user to add
     //  * @return 201 response with location containing uri of newly created user or an error code
     //  */
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed(Role.ADMIN)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<Void> addUser(@RequestBody User user, HttpSession session, HttpServletRequest request) {
         try {
@@ -100,7 +101,7 @@ public class UserRestPoint extends RestBase {
     //  * @param id of user to remove
     //  * @return response with 204
     //  */
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removeUser(@PathVariable("id") Long id, HttpSession session) {
@@ -122,7 +123,7 @@ public class UserRestPoint extends RestBase {
     //  * @param user to update
     //  * @return 204 response or an error code
     //  */
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed(Role.ADMIN)
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
     public ResponseEntity<Void> updateUser(@PathVariable("id") Long id, @RequestBody User user, HttpSession session) {
         LOG.debug("updating user");
