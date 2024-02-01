@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
@@ -12,8 +12,12 @@ import { subscribeOn } from 'rxjs/operators';
 @Injectable()
 export class AdminUsersHttpService extends CachedHttpService {
 
-    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     private endPoint: string = '/rest/users';
+
+    private httpHeader = {
+        observe: 'response' as const,
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      };
 
     constructor(protected http: HttpClient) {
         super(http);
@@ -25,10 +29,11 @@ export class AdminUsersHttpService extends CachedHttpService {
 
     public createUser(user: User): Promise<User> {
         return this.http
-            .post(this.endPoint,
-            { headers: this.headers })
+            .post(this.endPoint, 
+                user,
+                this.httpHeader)
             .toPromise()
-            .then((res: Response) => {
+            .then((res: HttpResponse<User>) => {
                 if (res.status === 201) {
                     const location: string = res.headers.get('location');
                     const locationParts = location.split('/');
@@ -53,7 +58,7 @@ export class AdminUsersHttpService extends CachedHttpService {
     public updateUser(user: User): Promise<User> {
         return this.http
             .put(this.endPoint + '/' + user.id,
-            { headers: this.headers })
+            this.httpHeader)
             .toPromise()
             .then(() => {
                 return user;
