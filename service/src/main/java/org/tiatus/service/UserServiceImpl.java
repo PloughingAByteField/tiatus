@@ -109,8 +109,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user, String sessionId) throws ServiceException {
         try {
-            String password = passwordEncoder.encode(user.getPassword());
-            user.setPassword(password);
+            if (user.getPassword() != null) {
+                String password = passwordEncoder.encode(user.getPassword());
+                user.setPassword(password);
+            }
             User updatedUser = dao.updateUser(user);
             Message message = Message.createMessage(updatedUser, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
