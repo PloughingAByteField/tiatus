@@ -57,7 +57,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 export function createTranslateLoader(http: HttpClient) {
-    return new TranslateHttpLoader(http, 'results/i18n/', '.json');
+    return new TranslateHttpLoader(http, 'i18n/', '.json');
 }
 
 @NgModule({

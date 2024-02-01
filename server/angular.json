@@ -124,7 +124,7 @@
                             {
                                 "glob": "**/*",
                                 "input": "src/main/typescript/results/i18n",
-                                "output": "results/i18n/"
+                                "output": "i18n/"
                             },
                             {
                                 "glob": "favicon.ico",
