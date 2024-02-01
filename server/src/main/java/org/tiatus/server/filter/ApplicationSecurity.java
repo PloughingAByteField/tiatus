@@ -32,7 +32,7 @@ public class ApplicationSecurity {
             .requestMatchers("/rest/logout").permitAll()
             .anyRequest().authenticated())
         .httpBasic(Customizer.withDefaults())
-        .formLogin(Customizer.withDefaults())
+        .formLogin((formLogin) -> formLogin.successHandler(successHandler()))
         .logout((logout) -> logout.logoutSuccessUrl("/rest/logout"));
 
     return http.build();

@@ -59,7 +59,7 @@ public class UserAuthenticationSuccessHandler implements AuthenticationSuccessHa
                 break;
             }
         }
-        LOG.debug("XX Redirecting to " + url);
+        LOG.debug("Redirecting to " + url);
         return url;
     }
 
