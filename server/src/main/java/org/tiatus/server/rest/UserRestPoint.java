@@ -82,13 +82,13 @@ public class UserRestPoint extends RestBase {
     //  */
     @RolesAllowed({"ROLE_ADMIN"})
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public ResponseEntity<User> addUser(@RequestBody User user, HttpSession session, HttpServletRequest request) {
+    public ResponseEntity<Void> addUser(@RequestBody User user, HttpSession session, HttpServletRequest request) {
         try {
             User newUser = service.addUser(user, session.getId());
             URI location = URI.create(request.getRequestURI() + "/"+ newUser.getId());
             HttpHeaders headers = new HttpHeaders();
             headers.add("location", location.toString());
-            return new ResponseEntity<>(newUser, headers, HttpStatus.CREATED);
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
@@ -126,23 +126,23 @@ public class UserRestPoint extends RestBase {
     //  */
     @RolesAllowed({"ROLE_ADMIN"})
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    @ResponseBody
-    public User updateUser(@PathVariable("id") Long id, @RequestBody User user, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<Void> updateUser(@PathVariable("id") Long id, @RequestBody User user, HttpSession session) {
         LOG.debug("updating user");
         try {
             User existing = service.getUserForId(id);
             if (existing == null) {
                 LOG.warn("Failed to get user for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return user;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return service.updateUser(user, session.getId());
+            service.updateUser(user, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return user;
+        return ResponseEntity.internalServerError().build();
     }
 }
