@@ -124,9 +124,9 @@ public class UserRestPoint extends RestBase {
     //  * @return 204 response or an error code
     //  */
     @RolesAllowed(Role.ADMIN)
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
     public ResponseEntity<Void> updateUser(@PathVariable("id") Long id, @RequestBody User user, HttpSession session) {
-        LOG.debug("updating user");
+        LOG.debug("updating user with id " + id);
         try {
             User existing = service.getUserForId(id);
             if (existing == null) {

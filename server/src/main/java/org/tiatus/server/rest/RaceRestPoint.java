@@ -3,8 +3,10 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,14 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.tiatus.entity.Race;
+import org.tiatus.role.Role;
 import org.tiatus.service.RaceService;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.server.PathParam;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -54,18 +57,22 @@ public class RaceRestPoint extends RestBase {
     //  * @param race to add
     //  * @return 201 response with location containing uri of newly created race or an error code
     //  */
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed(Role.ADMIN)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Race addRace(@RequestBody Race race, HttpSession session) {
+    public ResponseEntity<Void> addRace(@RequestBody Race race, HttpSession session, HttpServletRequest request) {
         LOG.debug("Adding race " + race);
         try {
-            return service.addRace(race, session.getId());
+            Race newRace = service.addRace(race, session.getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newRace.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return race;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -73,7 +80,7 @@ public class RaceRestPoint extends RestBase {
     //  * @param id of race to remove
     //  * @return response with 204
     //  */
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removeRace(@PathVariable("id") Long id, HttpSession session) {
@@ -95,24 +102,24 @@ public class RaceRestPoint extends RestBase {
     //  * @param race of race to update
     //  * @return response with 204
     //  */
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_ADJUDICATOR"})
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public Race updateRace(@PathParam("id") Long id, @RequestBody Race race, HttpSession session, HttpServletResponse response) {
-        LOG.debug("Updating race with id " + id);
+    @RolesAllowed({Role.ADMIN, Role.ADJUDICATOR})
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public ResponseEntity<Void> updateRace(@PathVariable("id") Long id, @RequestBody Race race, HttpSession session) {
+        LOG.debug("Updating race with id " + id + " race " + race.getId());
         try {
             Race existing = service.getRaceForId(id);
             if (existing == null) {
                 LOG.warn("Failed to get race for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return race;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return service.updateRace(race, session.getId());
+            service.updateRace(race, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return race;
+        return ResponseEntity.internalServerError().build();
     }
 }
