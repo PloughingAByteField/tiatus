@@ -7,12 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tiatus.service.ConfigService;
 
-// import javax.inject.Inject;
-// import javax.servlet.http.HttpServletRequest;
-// import javax.ws.rs.*;
-// import javax.ws.rs.core.Context;
-// import javax.ws.rs.core.MultivaluedMap;
-// import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,12 +15,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties.Tomcat.Resource;
-import org.springframework.boot.system.ApplicationHome;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -38,13 +28,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 /**
  * Created by johnreynolds on 04/09/2016.
  */
-// @Path("config")
 // @SuppressWarnings("squid:S1166")
 @RestController
 @RequestMapping("/rest/config")
@@ -58,6 +48,7 @@ public class ConfigRestPoint {
     @Autowired
     protected Environment environment;
 
+    @PermitAll
     @GetMapping(path = "config", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody ByteArrayResource getFileViaByteArrayResource() throws IOException, URISyntaxException {
         Path path = Paths.get(environment.getProperty("tiatus.files") + "/tiatus/" + "config/config.json");

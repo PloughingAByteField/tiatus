@@ -15,17 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.tiatus.entity.Race;
-import org.tiatus.role.Role;
 import org.tiatus.service.RaceService;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.server.PathParam;
 
-// import javax.annotation.security.PermitAll;
-// import javax.annotation.security.RolesAllowed;
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -45,7 +42,7 @@ public class RaceRestPoint extends RestBase {
     //  * Get races
     //  * @return response containing list of races
     //  */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<Race> getRaces() {
         return service.getRaces();
@@ -57,7 +54,7 @@ public class RaceRestPoint extends RestBase {
     //  * @param race to add
     //  * @return 201 response with location containing uri of newly created race or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed({"ROLE_ADMIN"})
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
     public Race addRace(@RequestBody Race race, HttpSession session) {
         LOG.debug("Adding race " + race);
@@ -76,7 +73,7 @@ public class RaceRestPoint extends RestBase {
     //  * @param id of race to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed({"ROLE_ADMIN"})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removeRace(@PathVariable("id") Long id, HttpSession session) {
@@ -98,7 +95,7 @@ public class RaceRestPoint extends RestBase {
     //  * @param race of race to update
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN, Role.ADJUDICATOR})
+    @RolesAllowed({"ROLE_ADMIN", "ROLE_ADJUDICATOR"})
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
     public Race updateRace(@PathParam("id") Long id, @RequestBody Race race, HttpSession session, HttpServletResponse response) {
         LOG.debug("Updating race with id " + id);
