@@ -30,8 +30,8 @@ public class ApplicationSecurity {
     http
         .authorizeHttpRequests((authorize) -> authorize
             .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
-            .requestMatchers("/rest/login").permitAll()
-            .requestMatchers("/rest/logout").permitAll()
+            .requestMatchers("/rest/**").permitAll()
+            .requestMatchers("/results/**").permitAll()
             .anyRequest().authenticated())
         // TODO add csrf support see https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html#:~:text=JavaScript%20Applications,-JavaScript%20applications%20typically&text=In%20order%20to%20obtain%20the,as%20an%20HTTP%20request%20header.
         .csrf(AbstractHttpConfigurer::disable)
