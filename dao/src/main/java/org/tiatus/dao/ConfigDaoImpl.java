@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -20,7 +22,8 @@ import java.io.InputStream;
 public class ConfigDaoImpl implements ConfigDao {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigDaoImpl.class);
 
-    private static final String JBOSS_HOME_DIR = "jboss.home.dir";
+    @Autowired
+    protected Environment environment;
 
     @Override
     public void setEventFooter(String footer) throws DaoException {
@@ -47,7 +50,8 @@ public class ConfigDaoImpl implements ConfigDao {
     @Override
     public String setEventLogo(InputStream stream, String fileName) throws DaoException {
         String logoFileName = "/tiatus/" + fileName;
-        File logoFile = new File(System.getProperty(JBOSS_HOME_DIR) + logoFileName);
+
+        File logoFile = new File(environment.getProperty("tiatus.files") + logoFileName);
         logoFile.getParentFile().mkdirs();
         try (FileOutputStream fop = new FileOutputStream(logoFile)) {
             IOUtils.copy(stream, fop);
@@ -74,7 +78,7 @@ public class ConfigDaoImpl implements ConfigDao {
     }
 
     private File getConfigFile() {
-        return new File(System.getProperty(JBOSS_HOME_DIR) + "/tiatus/" + "config/config.json");
+        return new File(environment.getProperty("tiatus.files") + "/tiatus/" + "config/config.json");
     }
 
     private String getKeyFromConfig(String key) {

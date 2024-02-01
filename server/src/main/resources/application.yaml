@@ -16,3 +16,5 @@ logging:
       org:
         tiatus: DEBUG
       root: DEBUG
+tiatus:
+  files: /Users/johnreynolds/tiatus

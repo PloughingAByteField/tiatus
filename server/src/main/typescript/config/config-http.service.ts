@@ -7,7 +7,7 @@ import { Data } from '../model/data.model';
 
 @Injectable()
 export class ConfigHttpService extends CachedHttpService {
-    protected endPoint: string = '/tiatus/config/config.json';
+    protected endPoint: string = '/rest/config/config';
 
     constructor(protected http: HttpClient) {
         super(http);
