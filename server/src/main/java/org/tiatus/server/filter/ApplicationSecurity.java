@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,12 +26,15 @@ public class ApplicationSecurity {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    
     http
         .authorizeHttpRequests((authorize) -> authorize
             .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
             .requestMatchers("/rest/login").permitAll()
             .requestMatchers("/rest/logout").permitAll()
             .anyRequest().authenticated())
+        // TODO add csrf support see https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html#:~:text=JavaScript%20Applications,-JavaScript%20applications%20typically&text=In%20order%20to%20obtain%20the,as%20an%20HTTP%20request%20header.
+        .csrf(AbstractHttpConfigurer::disable)
         .httpBasic(Customizer.withDefaults())
         .formLogin((formLogin) -> formLogin.successHandler(successHandler()))
         .logout((logout) -> logout.logoutSuccessUrl("/rest/logout"));
