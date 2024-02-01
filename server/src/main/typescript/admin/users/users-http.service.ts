@@ -58,8 +58,8 @@ export class AdminUsersHttpService extends CachedHttpService {
     public updateUser(user: User): Promise<User> {
         return this.http
             .put(this.endPoint + '/' + user.id,
-            user,
-            this.httpHeader)
+                user,
+                this.httpHeader)
             .toPromise()
             .then(() => {
                 return user;
