@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Penalty } from '../../penalties/penalty.model';
@@ -8,7 +8,11 @@ import { PenaltiesHttpService } from '../../penalties/penalties-http.service';
 
 @Injectable()
 export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+  
+  private httpHeader = {
+    observe: 'response' as const,
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   constructor(protected http: HttpClient) {
     super(http);
@@ -17,9 +21,10 @@ export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
   public createPenalty(penalty: Penalty): Promise<Penalty> {
     return this.http
       .post(this.endPoint,
-       JSON.stringify(penalty), {headers: this.headers})
+        penalty,
+        this.httpHeader)
       .toPromise()
-      .then((res: Response) => {
+      .then((res: HttpResponse<Penalty>) => {
         if (res.status === 201) {
           const location: string = res.headers.get('location');
           const locationParts = location.split('/');
@@ -44,7 +49,8 @@ export class AdjudicatorHttpPenaltiesService extends PenaltiesHttpService {
   public updatePenalty(penalty: Penalty): Promise<Penalty> {
     return this.http
        .put(this.endPoint + '/' + penalty.id,
-        JSON.stringify(penalty), {headers: this.headers})
+          penalty,
+          this.httpHeader)
       .toPromise()
       .then(() => {
         return penalty;

@@ -10,18 +10,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-// import javax.annotation.security.PermitAll;
-// import javax.annotation.security.RolesAllowed;
-// import javax.inject.Inject;
-// import javax.servlet.http.HttpServletRequest;
-// import javax.ws.rs.*;
-// import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +48,7 @@ public class DisqualificationRestPoint extends RestBase {
      * Get disqualifications
      * @return response containing list of disqualifications
      */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<Disqualification>  getDisqualifications() {
         return service.getDisqualifications();
@@ -61,19 +60,22 @@ public class DisqualificationRestPoint extends RestBase {
     //  * @param disqualification to add
     //  * @return 201 response with location containing uri of newly created disqualification or an error code
     //  */
-    // @RolesAllowed({Role.ADJUDICATOR})
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public URI addDisqualification(@RequestBody Disqualification disqualification, HttpServletRequest request) {
+    @RolesAllowed(Role.ADJUDICATOR)
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Void>  addDisqualification(@RequestBody Disqualification disqualification, HttpServletRequest request) {
         LOG.debug("Adding disqualification " + disqualification);
         try {
-            Disqualification saved = service.addDisqualification(disqualification, request.getSession().getId());
-            return URI.create(request.getServletContext().getContextPath() + "/"+ saved.getId());
+            Disqualification newDisqualification = service.addDisqualification(disqualification, request.getSession().getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newDisqualification.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return null;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -81,20 +83,26 @@ public class DisqualificationRestPoint extends RestBase {
     //  * @param id of disqualification to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADJUDICATOR})
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RolesAllowed(Role.ADJUDICATOR)
     @DeleteMapping(path = "{id}")
-    public void removeDisqualification(@PathVariable("id") Long id, HttpSession session) {
+    public ResponseEntity<Void> removeDisqualification(@PathVariable("id") Long id, HttpSession session) {
         LOG.debug("Removing disqualification with id " + id);
         try {
             Disqualification disqualification = service.getDisqualificationForId(id);
             if (disqualification != null) {
                 service.deleteDisqualification(disqualification, session.getId());
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                
+            } else {
+                LOG.warn("Failed to get event for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-
+ 
         } catch (Exception e) {
             logError(e);
         }
+
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -103,24 +111,25 @@ public class DisqualificationRestPoint extends RestBase {
     //  * @param disqualification to update
     //  * @return 200 response or an error code
     //  */
-    // @RolesAllowed({Role.ADJUDICATOR})
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public Disqualification updateDisqualification(@PathVariable("id") Long id, @RequestBody Disqualification disqualification, HttpSession session, HttpServletResponse response) {
+    @RolesAllowed(Role.ADJUDICATOR)
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public ResponseEntity<Void> updateDisqualification(@PathVariable("id") Long id, @RequestBody Disqualification disqualification, HttpSession session, HttpServletResponse response) {
         LOG.debug("updating disqualification");
         try {
             Disqualification existing = service.getDisqualificationForId(id);
             if (existing == null) {
                 LOG.warn("Failed to get disqualification for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return disqualification;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return service.updateDisqualification(disqualification, session.getId());
+            service.updateDisqualification(disqualification, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
-        return disqualification;
+        
+        return ResponseEntity.internalServerError().build();
     }
 
 }

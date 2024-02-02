@@ -22,7 +22,9 @@ import org.tiatus.service.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-// import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,8 @@ public class TimeRestPoint extends RestBase {
     @Autowired
     protected PositionService positionService;
 
-     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "position/{positionId}/race/{raceId}")
+    @PermitAll
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "position/{positionId}/race/{raceId}")
     public List<EntryPositionTime> getListOfEntriesAndTimesForPositionInRace(@PathVariable("positionId") Long positionId, @PathVariable("raceId") Long raceId, HttpServletResponse response) {
         try {
             Race race = raceService.getRaceForId(raceId);
@@ -67,7 +70,7 @@ public class TimeRestPoint extends RestBase {
         return new ArrayList<>();
     }
 
-    // @RolesAllowed({Role.TIMING})
+    @RolesAllowed(Role.TIMING)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "position/{positionId}/entry/{entryId}")
     public EntryPositionTime saveTime(@PathVariable("positionId") Long positionId, @PathVariable("entryId") Long entryId, @RequestBody EntryPositionTime entryPositionTime, HttpSession session, HttpServletResponse response) {
         try {
@@ -91,7 +94,7 @@ public class TimeRestPoint extends RestBase {
         return entryPositionTime;
     }
 
-    // @RolesAllowed({Role.TIMING})
+    @RolesAllowed(Role.TIMING)
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "position/{positionId}/entry/{entryId}")
     public EntryPositionTime updateTime(@PathVariable("positionId") Long positionId, @PathVariable("entryId") Long entryId, @RequestBody EntryPositionTime entryPositionTime, HttpSession session) {
         try {
@@ -108,6 +111,7 @@ public class TimeRestPoint extends RestBase {
         return entryPositionTime;
     }
 
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "race/{raceId}")
     public List<EntryPositionTime> getListOfTimesForRace(@PathVariable("raceId") Long raceId, HttpServletResponse response) {
         try {
@@ -127,7 +131,7 @@ public class TimeRestPoint extends RestBase {
         return new ArrayList<>();
     }
 
-    // @RolesAllowed({Role.ADJUDICATOR})
+    @RolesAllowed(Role.ADJUDICATOR)
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "race/{raceId}/full")
     public List<EntryPositionTime> getListOfFullTimesForRace(@PathVariable("raceId") Long raceId, HttpServletResponse response) {
         try {

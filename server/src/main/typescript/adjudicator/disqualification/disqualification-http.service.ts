@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { Disqualification } from '../../disqualification/disqualification.model';
@@ -8,7 +8,11 @@ import { DisqualificationHttpService } from '../../disqualification/disqualifica
 
 @Injectable()
 export class AdjudicatorHttpDisqualificationsService extends DisqualificationHttpService {
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+  private httpHeader = {
+    observe: 'response' as const,
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   constructor(protected http: HttpClient) {
     super(http);
@@ -17,9 +21,10 @@ export class AdjudicatorHttpDisqualificationsService extends DisqualificationHtt
   public disqualify(disqualification: Disqualification): Promise<Disqualification> {
     return this.http
       .post(this.endPoint,
-        JSON.stringify(disqualification), {headers: this.headers})
+        disqualification,
+        this.httpHeader)
       .toPromise()
-      .then((res: Response) => {
+      .then((res: HttpResponse<Disqualification>) => {
         if (res.status === 201) {
           const location: string = res.headers.get('location');
           const locationParts = location.split('/');
@@ -45,7 +50,8 @@ export class AdjudicatorHttpDisqualificationsService extends DisqualificationHtt
   public updateDisqualification(disqualification: Disqualification): Promise<Disqualification> {
     return this.http
        .put(this.endPoint + '/' + disqualification.id,
-        JSON.stringify(disqualification), {headers: this.headers})
+          disqualification,
+          this.httpHeader)
       .toPromise()
       .then(() => {
         return disqualification;

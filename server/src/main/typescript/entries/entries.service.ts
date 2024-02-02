@@ -55,12 +55,13 @@ export class EntriesService {
         const subject: RaceEntriesSubject
             = this.raceEntries.filter((s: RaceEntriesSubject) => {
                 if (s.race.id === race.id) {
-                    return;
+                    return s;
                 }
             }).shift();
 
         if (subject) {
             return subject.subject;
+
         } else {
             // create new RaceEntriesSubject
             const raceEntriesSubject: RaceEntriesSubject = new RaceEntriesSubject();

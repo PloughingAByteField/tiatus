@@ -3,8 +3,10 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.tiatus.entity.Disqualification;
 import org.tiatus.entity.Entry;
 import org.tiatus.entity.Race;
 import org.tiatus.role.Role;
@@ -25,8 +26,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-// import javax.annotation.security.PermitAll;
-// import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,13 +54,13 @@ public class EntryRestPoint extends RestBase {
      * Get entries
      * @return response containing list of entries
      */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<Entry> getEntries() {
         return service.getEntries();
     }
 
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "race/{raceId}")
     public List<Entry> getEntriesForRace(@PathVariable("raceId") Long raceId, HttpSession session, HttpServletResponse response) {
         Race race = raceService.getRaceForId(raceId);
@@ -78,19 +79,22 @@ public class EntryRestPoint extends RestBase {
     //  * @param entry to add
     //  * @return 201 response with location containing uri of newly created entry or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public URI addEntry(@RequestBody Entry entry, HttpServletRequest request) {
+    @RolesAllowed(Role.ADMIN)
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Void> addEntry(@RequestBody Entry entry, HttpServletRequest request) {
         LOG.debug("Adding entry " + entry);
         try {
-            Entry saved = service.addEntry(entry, request.getSession().getId());
-            return URI.create(request.getServletContext().getContextPath() + "/"+ saved.getId());
+            Entry newEntry = service.addEntry(entry, request.getSession().getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newEntry.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return null;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -98,7 +102,7 @@ public class EntryRestPoint extends RestBase {
     //  * @param id of entry to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removeEntry(@PathVariable("id") Long id, HttpSession session) {
@@ -119,25 +123,25 @@ public class EntryRestPoint extends RestBase {
     //  * @param entry to update
     //  * @return 404 if entity does not exist else return 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public Entry updateEntry(@PathVariable("id") Long id, @RequestBody Entry entry, HttpSession session, HttpServletResponse response) {
+    @RolesAllowed(Role.ADMIN)
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public ResponseEntity<Void> updateEntry(@PathVariable("id") Long id, @RequestBody Entry entry, HttpSession session) {
         LOG.debug("Updating entry " + id);
         try {
             Entry existing = service.getEntryForId(id);
             if (existing == null) {
                 LOG.warn("Failed to get entry for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return entry;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return service.updateEntry(entry, session.getId());
+            service.updateEntry(entry, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return entry;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -145,52 +149,55 @@ public class EntryRestPoint extends RestBase {
     //  * @param entries to update
     //  * @return 201 response with location containing uri of newly created entry or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "updates")
-    public void updateEntries(@RequestBody List<Entry> entries, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<Void> updateEntries(@RequestBody List<Entry> entries, HttpSession session) {
         LOG.debug("Updating " + entries.size() + " entries");
         try {
             if (entries.size() == 0) {
                 LOG.warn("Got empty entries updates");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+
             Set<Race> races = new HashSet<>();
             for (Entry entry: entries) {
                 Entry existing = service.getEntryForId(entry.getId());
                 if (existing == null) {
                     LOG.warn("Failed to get entry for supplied id");
-                    response.setStatus(HttpStatus.NOT_FOUND.value());
-                    return;
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
                 races.add(entry.getRace());
             }
 
             service.updateEntries(entries, session.getId());
-            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
+
+        return ResponseEntity.internalServerError().build();
     }
 
-    // @RolesAllowed({Role.ADJUDICATOR})
+    @RolesAllowed(Role.ADJUDICATOR)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "swapEntries/{fromId}/{toId}")
-    public void swapEntries(@PathVariable("fromId") Long fromId, @PathVariable("toId") Long toId, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<Void> swapEntries(@PathVariable("fromId") Long fromId, @PathVariable("toId") Long toId, HttpSession session, HttpServletResponse response) {
         try {
             Entry from = service.getEntryForId(fromId);
             Entry to = service.getEntryForId(toId);
             if (from == null || to == null) {
                 LOG.warn("Failed to get entry for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
             service.swapEntryNumbers(from, to, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
+
+        return ResponseEntity.internalServerError().build();
     }
 
 }

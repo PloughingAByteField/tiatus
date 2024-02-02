@@ -67,7 +67,7 @@ public class DisqualificationServiceImpl implements DisqualificationService {
         LOG.debug("Update disqualification " + disqualification.getId());
         try {
             Disqualification updated = dao.updateDisqualification(disqualification);
-            Message message = Message.createMessage(disqualification, MessageType.UPDATE, sessionId);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
 
             return updated;

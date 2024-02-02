@@ -8,7 +8,11 @@ import { RacesHttpService } from '../../races/races-http.service';
 
 @Injectable()
 export class AdjudicatorRacesHttpService extends RacesHttpService {
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+
+  private httpHeader = {
+    observe: 'response' as const,
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   constructor(protected http: HttpClient) {
     super(http);
@@ -17,9 +21,10 @@ export class AdjudicatorRacesHttpService extends RacesHttpService {
   public updateRace(race: Race): Promise<Race> {
     return this.http
       .put(this.endPoint + '/' + race.id,
-        JSON.stringify(race), {headers: this.headers})
+        race,
+        this.httpHeader)
       .toPromise()
-      .then((res: Response) => {
+      .then(() => {
         return race;
       })
       .catch((err) => Promise.reject(err));

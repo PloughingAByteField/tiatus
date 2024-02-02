@@ -118,8 +118,14 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         if (this.race) {
             this.raceEntriesSubscription = this.entriesService.getEntriesForRace(this.race)
                 .subscribe((raceEntries: Entry[]) => {
+                    if (raceEntries === undefined) {
+                        // call may not have completed yet
+                        return;
+                    }
+
                     this.entriesForRace = raceEntries;
                     this.eventsAtPositions = new Array<EventsAtPositions>();
+
                     for (const entry of raceEntries) {
                         const event: Event = this.eventsService.getEventForId(entry.event);
                         if (event === null) {

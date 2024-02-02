@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.tiatus.entity.Race;
 import org.tiatus.role.Role;
@@ -81,19 +80,25 @@ public class RaceRestPoint extends RestBase {
     //  * @return response with 204
     //  */
     @RolesAllowed(Role.ADMIN)
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
-    public void removeRace(@PathVariable("id") Long id, HttpSession session) {
+    public ResponseEntity<Void> removeRace(@PathVariable("id") Long id, HttpSession session) {
         LOG.debug("Removing race with id " + id);
         try {
             Race race = service.getRaceForId(id);
             if (race != null) {
                 service.deleteRace(race, session.getId());
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+            } else {
+                LOG.warn("Failed to get event for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
         } catch (Exception e) {
             logError(e);
         }
+
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**

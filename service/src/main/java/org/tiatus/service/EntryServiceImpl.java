@@ -35,10 +35,10 @@ public class EntryServiceImpl implements EntryService {
     public Entry addEntry(Entry entry, String sessionId) throws ServiceException {
         LOG.debug("Adding entry " + entry);
         try {
-            Entry daoEntry = dao.addEntry(entry);
-            Message message = Message.createMessage(daoEntry, MessageType.ADD, sessionId);
+            Entry newEntry = dao.addEntry(entry);
+            Message message = Message.createMessage(newEntry, MessageType.ADD, sessionId);
             sender.sendMessage(message);
-            return daoEntry;
+            return newEntry;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

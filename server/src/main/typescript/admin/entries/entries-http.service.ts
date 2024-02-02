@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Entry, convertObjectToEntry } from '../../entries/entry.model';
 
@@ -8,7 +8,11 @@ import { EntriesHttpService } from '../../entries/entries-http.service';
 @Injectable()
 export class AdminEntriesHttpService extends EntriesHttpService {
 
-    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    private httpHeader = {
+        observe: 'response' as const,
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
+
     private endPoint: string = '/rest/entries';
 
     constructor(protected http: HttpClient) {
@@ -18,9 +22,10 @@ export class AdminEntriesHttpService extends EntriesHttpService {
     public createEntry(entry: Entry): Promise<Entry> {
         return this.http
             .post(this.endPoint,
-            JSON.stringify(entry), { headers: this.headers })
+                entry,
+                this.httpHeader)
             .toPromise()
-            .then((res: Response) => {
+            .then((res: HttpResponse<Entry>) => {
                 if (res.status === 201) {
                     const location: string = res.headers.get('location');
                     const locationParts = location.split('/');
@@ -45,9 +50,10 @@ export class AdminEntriesHttpService extends EntriesHttpService {
     public updateEntry(entry: Entry): Promise<Entry> {
         return this.http
             .put(this.endPoint + '/' + entry.id,
-            JSON.stringify(entry), { headers: this.headers })
+                entry,
+                this.httpHeader)
             .toPromise()
-            .then((res: Response) => {
+            .then(() => {
                 return entry;
             })
             .catch((err) => Promise.reject(err));
@@ -56,9 +62,10 @@ export class AdminEntriesHttpService extends EntriesHttpService {
     public updateEntries(entries: Entry[]): Promise<Entry[]> {
         return this.http
             .put(this.endPoint + '/updates',
-            JSON.stringify(entries), { headers: this.headers })
+                entries,
+                this.httpHeader)
             .toPromise()
-            .then((res: Response) => {
+            .then(() => {
                 return entries;
             })
             .catch((err) => Promise.reject(err));

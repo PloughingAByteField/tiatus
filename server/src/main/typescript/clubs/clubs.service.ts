@@ -64,9 +64,11 @@ export class ClubsService {
     }
 
     public getClubForId(clubId: number): Club {
-        for (const club of this.clubs) {
-            if (club.id === clubId) {
-                return club;
+        if (this.clubs !== undefined) {
+            for (const club of this.clubs) {
+                if (club.id === clubId) {
+                    return club;
+                }
             }
         }
         return null;

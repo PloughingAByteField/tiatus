@@ -30,7 +30,6 @@ export class ResultsComponent implements OnInit {
     this.translate.setDefaultLang('en');
     this.translate.use('en');
     this.races = this.racesService.getRaces();
-    console.log(this.races);
   }
 
   public setTitle(newTitle: string) {

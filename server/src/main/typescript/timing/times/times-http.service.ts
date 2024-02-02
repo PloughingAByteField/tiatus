@@ -16,7 +16,11 @@ export class TimingTimesHttpService extends TimesHttpService {
 
   protected timeEndPoint: string = '/rest/time/race/';
 
-  private headers = new HttpHeaders({'Content-Type': 'application/json'});
+  private httpHeader = {
+    observe: 'response' as const,
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
   private timePositionEndPoint: string = '/rest/time/position/';
   private entryEndPoint: string = '/entry/';
   private raceEndPoint: string = '/race/';
@@ -29,7 +33,8 @@ public setTimeForEntryAtPosition(
       entry: Entry, position: Position, positionTime: PositionTime): Promise<PositionTime> {
     return this.http
       .post(this.timePositionEndPoint + position.id + this.entryEndPoint + entry.id,
-        JSON.stringify({time: positionTime.time}), {headers: this.headers})
+          positionTime.time, 
+          this.httpHeader)
       .toPromise()
       .then(() => {
         positionTime.synced = true;
@@ -42,7 +47,8 @@ public setTimeForEntryAtPosition(
       entry: Entry, position: Position, positionTime: PositionTime): Promise<PositionTime> {
     return this.http
       .put(this.timePositionEndPoint + position.id + this.entryEndPoint + entry.id,
-        JSON.stringify({time: positionTime.time}), {headers: this.headers})
+          positionTime.time,
+          this.httpHeader)
       .toPromise()
       .then(() => {
         positionTime.synced = true;
