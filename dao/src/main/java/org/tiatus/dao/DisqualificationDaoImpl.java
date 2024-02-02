@@ -27,11 +27,7 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
     public Disqualification addDisqualification(Disqualification disqualification) throws DaoException {
         LOG.debug("Adding disqualification for entry " + disqualification.getEntry().getId());
         try {
-            boolean exists = false;
-            if (disqualification.getId() != null) {
-                exists = repository.existsById(disqualification.getId());
-            }
-            if (!exists) {
+            if (disqualification.getId() == null) {
                 return repository.save(disqualification);
 
             } else {
@@ -49,16 +45,15 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
     @Override
     public void removeDisqualification(Disqualification disqualification) throws DaoException {
         try {
-            boolean exists = false;
-            if (disqualification.getId() != null) {
-                exists = repository.existsById(disqualification.getId());
-            }
-            if (exists) {
+            if (repository.existsById(disqualification.getId())) {
                 repository.delete(disqualification);
 
             } else {
-                LOG.warn("No such disqualification of id " + disqualification.getId());
+                String message = "No such disqualification of id " + disqualification.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
+
         } catch (Exception e) {
             LOG.warn("Failed to delete disqualification", e.getMessage());
             throw new DaoException(e);
@@ -68,7 +63,25 @@ public class DisqualificationDaoImpl implements DisqualificationDao {
     @Override
     public Disqualification updateDisqualification(Disqualification disqualification) throws DaoException {
         try {
-            return repository.save(disqualification);
+            Disqualification existing = null;
+            if (disqualification.getId() != null) {
+                existing = repository.findById(disqualification.getId()).orElse(null);
+            }
+
+            if (existing != null) {
+                if (disqualification.getEntry() != null) {
+                    existing.setEntry(disqualification.getEntry());
+                }
+                existing.setComment(disqualification.getComment());
+                existing.setNote(disqualification.getNote());
+                
+                return repository.save(disqualification);
+
+            } else {
+                String message = "No such disqualification of id " + disqualification.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
+            }
 
         } catch (Exception e) {
             LOG.warn("Failed to update disqualification", e.getMessage());
