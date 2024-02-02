@@ -13,13 +13,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-// import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.RolesAllowed;
 import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,7 +53,7 @@ public class RacePositionTemplateRestPoint extends RestBase {
     //  * Get templates restricted to Admin users
     //  * @return response containing list of templates
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<RacePositionTemplate> getTemplates() {
         return service.getRacePositionTemplates();
@@ -63,18 +65,22 @@ public class RacePositionTemplateRestPoint extends RestBase {
     //  * @param template to add
     //  * @return 201 response with location containing uri of newly created template or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public RacePositionTemplate addTemplate(@RequestBody RacePositionTemplate template, HttpSession session) {
+    @RolesAllowed(Role.ADMIN)
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Void>  addTemplate(@RequestBody RacePositionTemplate template, HttpSession session, HttpServletRequest request) {
         LOG.debug("Adding template " + template.getName());
         try {
-            return service.addRacePositionTemplate(template, session.getId());
+            RacePositionTemplate newRacePositionTemplate = service.addRacePositionTemplate(template, session.getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newRacePositionTemplate.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return template;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -82,7 +88,7 @@ public class RacePositionTemplateRestPoint extends RestBase {
     //  * @param id of template to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void deleteTemplate(@PathVariable("id") Long id, HttpSession session) {
@@ -104,27 +110,28 @@ public class RacePositionTemplateRestPoint extends RestBase {
     //  * @param template of template to update
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public RacePositionTemplate updateTemplate(@PathVariable("id") Long id, @RequestBody RacePositionTemplate template, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<Void> updateTemplate(@PathVariable("id") Long id, @RequestBody RacePositionTemplate template, HttpSession session) {
         LOG.debug("Updating template with id " + id);
         try {
             RacePositionTemplate templateToUpdate = service.getTemplateForId(id);
             if (template == null) {
                 LOG.warn("Failed to get template for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return template;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
             templateToUpdate.setName(template.getName());
             templateToUpdate.setDefaultTemplate(template.getDefaultTemplate());
-            return service.updateRacePositionTemplate(templateToUpdate, session.getId());
+            service.updateRacePositionTemplate(templateToUpdate, session.getId());
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return template;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -133,22 +140,34 @@ public class RacePositionTemplateRestPoint extends RestBase {
     //  * @param entry to add
     //  * @return 201 response with location containing uri of newly created template or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "entry")
-    public RacePositionTemplateEntry addTemplateEntry(@RequestBody RacePositionTemplateEntry entry, HttpSession session) {
+    @RolesAllowed(Role.ADMIN)
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "entry")
+    public ResponseEntity<Void> addTemplateEntry(@RequestBody RacePositionTemplateEntry entry, HttpSession session, HttpServletRequest request) {
         LOG.debug("Adding template " + entry.getTemplate().getId() + " at position " + entry.getPosition().getId());
         try {
             Position position = positionService.getPositionForId(entry.getPositionId());
+            if (position == null) {
+                LOG.warn("Failed to get position for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             entry.setPosition(position);
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
+            if (template == null) {
+                LOG.warn("Failed to get template for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             entry.setTemplate(template);
-            return service.addTemplateEntry(entry, session.getId());
+            RacePositionTemplateEntry newEntry = service.addTemplateEntry(entry, session.getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newEntry.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return entry;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -157,24 +176,36 @@ public class RacePositionTemplateRestPoint extends RestBase {
     //  * @param positionId id of position in entry
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RolesAllowed(Role.ADMIN)
     @DeleteMapping(path = "entry/template/{templateId}/position/{positionId}")
-    public void deleteTemplateEntry(@PathVariable("templateId") Long templateId, @PathVariable("positionId") Long positionId, HttpSession session) {
+    public ResponseEntity<Void> deleteTemplateEntry(@PathVariable("templateId") Long templateId, @PathVariable("positionId") Long positionId, HttpSession session) {
         LOG.debug("Removing template with templateId " + templateId + " and positionId " + positionId);
         try {
             RacePositionTemplateEntry entry = new RacePositionTemplateEntry();
             Position position = positionService.getPositionForId(positionId);
+            if (position == null) {
+                LOG.warn("Failed to get position for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             entry.setPosition(position);
+
             RacePositionTemplate template = service.getTemplateForId(templateId);
+            if (template == null) {
+                LOG.warn("Failed to get template for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
             entry.setTemplate(template);
             if (position != null && template != null) {
                 service.deleteTemplateEntry(entry, session.getId());
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
         } catch (Exception e) {
             logError(e);
         }
+
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -182,22 +213,34 @@ public class RacePositionTemplateRestPoint extends RestBase {
     //  * @param entry entry to update
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "entry")
-    public RacePositionTemplateEntry updateTemplateEntry(@RequestBody RacePositionTemplateEntry entry, HttpSession session) {
+    @RolesAllowed(Role.ADMIN)
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "entry")
+    public ResponseEntity<Void> updateTemplateEntry(@RequestBody RacePositionTemplateEntry entry, HttpSession session) {
         LOG.debug("Updating template entry with id " + entry.getTemplate().getId());
         try {
             Position position = positionService.getPositionForId(entry.getPositionId());
+            if (position == null) {
+                LOG.warn("Failed to get position for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
             entry.setPosition(position);
+
             RacePositionTemplate template = service.getTemplateForId(entry.getTemplateId());
+            if (template == null) {
+                LOG.warn("Failed to get template for supplied id");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             entry.setTemplate(template);
-            return service.updateTemplateEntry(entry, session.getId());
+            
+            service.updateTemplateEntry(entry, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return entry;
+        return ResponseEntity.internalServerError().build();
     }
 
 }

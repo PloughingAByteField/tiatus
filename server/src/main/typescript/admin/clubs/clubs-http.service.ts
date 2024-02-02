@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Club } from '../../clubs/club.model';
 import { ClubsHttpService } from '../../clubs/clubs-http.service';
@@ -7,7 +7,10 @@ import { ClubsHttpService } from '../../clubs/clubs-http.service';
 @Injectable()
 export class AdminClubsHttpService extends ClubsHttpService {
 
-    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    private httpHeader = {
+        observe: 'response' as const,
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
 
     constructor(protected http: HttpClient) {
         super(http);
@@ -16,9 +19,10 @@ export class AdminClubsHttpService extends ClubsHttpService {
    public createClub(club: Club): Promise<Club> {
         return this.http
             .post(this.endPoint,
-            JSON.stringify(club), { headers: this.headers })
+                club,
+                this.httpHeader)
             .toPromise()
-            .then((res: Response) => {
+            .then((res: HttpResponse<Club>) => {
                 if (res.status === 201) {
                     const location: string = res.headers.get('location');
                     const locationParts = location.split('/');
@@ -43,7 +47,8 @@ export class AdminClubsHttpService extends ClubsHttpService {
     public updateClub(club: Club): Promise<Club> {
         return this.http
             .put(this.endPoint + '/' + club.id,
-            JSON.stringify(club), { headers: this.headers })
+                club, 
+                this.httpHeader)
             .toPromise()
             .then(() => {
                 return club;

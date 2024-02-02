@@ -33,7 +33,7 @@ public class PositionDaoImpl implements PositionDao {
     public Position addPosition(Position position) throws DaoException {
         LOG.debug("Adding position " + position);
         try {
-            if (!repository.existsById(position.getId())) {
+            if (position.getId() == null) {
                 return repository.save(position);
 
             } else {
@@ -41,7 +41,7 @@ public class PositionDaoImpl implements PositionDao {
                 LOG.warn(message);
                 throw new DaoException(message);
             }
-
+           
         } catch (Exception e) {
             LOG.warn("Failed to persist position", e);
             throw new DaoException(e.getMessage());
@@ -55,8 +55,11 @@ public class PositionDaoImpl implements PositionDao {
                 repository.delete(position);
 
             } else {
-                LOG.warn("No such position of id " + position.getId());
+                String message = "No such position of id " + position.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
+
         } catch (Exception e) {
             LOG.warn("Failed to delete position", e);
             throw new DaoException(e.getMessage());
@@ -64,9 +67,22 @@ public class PositionDaoImpl implements PositionDao {
     }
 
     @Override
-    public void updatePosition(Position position) throws DaoException {
+    public Position updatePosition(Position position) throws DaoException {
         try {
-            repository.save(position);
+            Position existing = null;
+            if (position.getId() != null) {
+                existing = repository.findById(position.getId()).orElse(null);
+            }
+            
+            if (existing != null) {
+                existing.setName(position.getName());
+                return repository.save(existing);
+ 
+            } else {
+                String message = "No such position of id " + position.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
+            }
 
         } catch (Exception e) {
             LOG.warn("Failed to update position", e);

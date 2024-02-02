@@ -3,8 +3,10 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +28,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-// import javax.annotation.security.PermitAll;
-// import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
 import java.net.URI;
 import java.util.List;
@@ -48,30 +50,34 @@ public class EventRestPoint extends RestBase {
     @Autowired
     protected PositionService positionService;
 
-
     // /**
     //  * Add event, restricted to Admin users
     //  * @param uriInfo location details
     //  * @param event to add
     //  * @return 201 response with location containing uri of newly created event or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Event createEvent(@RequestBody Event event, HttpSession session) {
-        // call service which will place in db and queue
+    @RolesAllowed(Role.ADMIN)
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Void> createEvent(@RequestBody Event event, HttpSession session, HttpServletRequest request) {
         LOG.debug("Adding event name " + event.getName());
         try {
             for (EventPosition eventPosition: event.getPositions()) {
                 Position position = positionService.getPositionForId(eventPosition.getPositionId());
                 eventPosition.setPosition(position);
             }
-            return service.addEvent(event, session.getId());
+            
+            Event newEvent = service.addEvent(event, session.getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newEvent.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return null;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -80,16 +86,14 @@ public class EventRestPoint extends RestBase {
     //  * @param event to update
     //  * @return 201 response with location containing uri of newly created event or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Event updateEvent(@PathVariable("id") Long id, @RequestBody Event event, HttpSession session, HttpServletResponse response) {
-        // call service which will place in db and queue
+    public ResponseEntity<Void> updateEvent(@PathVariable("id") Long id, @RequestBody Event event, HttpSession session, HttpServletResponse response) {
         LOG.debug("Updating event of id " + event.getId());
         Event existing = service.getEventForId(id);
         if (existing == null) {
             LOG.warn("Failed to get event for supplied id");
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return event;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         try {
@@ -98,13 +102,14 @@ public class EventRestPoint extends RestBase {
                 eventPosition.setPosition(position);
             }
 
-            return service.updateEvent(event, session.getId());
+            service.updateEvent(event, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return event;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -112,11 +117,10 @@ public class EventRestPoint extends RestBase {
     //  * @param id of event to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removeEvent(@PathVariable("id") Long id, HttpSession session) {
-        // call service which will place in db and queue
         LOG.debug("Got event id " + id);
         try {
             Event event = service.getEventForId(id);
@@ -134,11 +138,10 @@ public class EventRestPoint extends RestBase {
     //  * @param id of event to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "unassigned/{id}")
     public void removeUnassignedEvent(@PathVariable("id") Long id, HttpSession session) {
-        // call service which will place in db and queue
         LOG.debug("Got event id " + id);
         removeEvent(id, session);
     }
@@ -147,7 +150,7 @@ public class EventRestPoint extends RestBase {
     //  * Get events
     //  * @return response containing list of events
     //  */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<Event> getEvents() {
         return service.getEvents();
@@ -157,7 +160,7 @@ public class EventRestPoint extends RestBase {
     //  * Get events assigned to races
     //  * @return response containing list of events assigned to races
     //  */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "assigned")
     public List<RaceEvent> getAssignedEvents() {
         return service.getAssignedEvents();
@@ -168,7 +171,7 @@ public class EventRestPoint extends RestBase {
     //  * @param id of assigned event to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "assigned/{id}")
     public void removeAssignedEvent(@PathVariable("id") Long id, HttpSession session) {
@@ -190,7 +193,7 @@ public class EventRestPoint extends RestBase {
     //  * @param raceEvent to add
     //  * @return 201 response with location containing uri of newly created raceEvent or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "assigned")
     public RaceEvent addAssignedEvent(@RequestBody RaceEvent raceEvent, HttpSession session) {
         try {
@@ -208,33 +211,34 @@ public class EventRestPoint extends RestBase {
     //  * @param raceEvents list containing race events to update
     //  * @return 200 response or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "assigned")
-    public void updateAssignedEvents(@RequestBody List<RaceEvent> raceEvents, HttpSession session, HttpServletResponse response) {
+    public ResponseEntity<Void> updateAssignedEvents(@RequestBody List<RaceEvent> raceEvents, HttpSession session, HttpServletResponse response) {
         LOG.debug("updating assigned events");
         try {
             for (RaceEvent raceEventToUpdate : raceEvents) {
                 RaceEvent existing = service.getRaceEventForId(raceEventToUpdate.getId());
                 if (existing == null) {
                     LOG.warn("Failed to get race event for supplied id");
-                    response.setStatus(HttpStatus.NOT_FOUND.value());
-                    return;
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
             }
 
             service.updateRaceEvents(raceEvents, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
-        return;
+        
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
     //  * Get events not assigned to any race
     //  * @return response containing list of events not assigned to any race
     //  */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, path = "unassigned")
     public List<Event>  getUnassignedEvents() {
         return service.getUnassignedEvents();

@@ -67,11 +67,11 @@ public class ClubServiceImpl implements ClubService {
     public Club updateClub(Club club, String sessionId) throws ServiceException {
         LOG.debug("Update club " + club.getId());
         try {
-            club = dao.updateClub(club);
-            Message message = Message.createMessage(club, MessageType.UPDATE, sessionId);
+            Club updated = dao.updateClub(club);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
 
-            return club;
+            return updated;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

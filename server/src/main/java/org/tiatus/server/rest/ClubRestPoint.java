@@ -3,6 +3,7 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,21 +12,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.tiatus.entity.Club;
 import org.tiatus.service.ClubService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-// import org.tiatus.role.Role;
+import org.tiatus.role.Role;
 import org.springframework.web.bind.annotation.RestController;
 
-// import javax.annotation.security.PermitAll;
-// import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -45,7 +48,7 @@ public class ClubRestPoint extends RestBase {
     //  * Get clubs
     //  * @return response containing list of clubs
     //  */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<Club> getClubs() {
         LOG.info("Get clubs");
@@ -59,17 +62,22 @@ public class ClubRestPoint extends RestBase {
     //  * @param club to add
     //  * @return 201 response with location containing uri of newly created club or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Club addClub(@RequestBody Club club, HttpSession session) {
+    @RolesAllowed(Role.ADMIN)
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Void> addClub(@RequestBody Club club, HttpSession session, HttpServletRequest request) {
         LOG.debug("Adding club " + club);
         try {
-            return service.addClub(club, session.getId());
+            Club newClub = service.addClub(club, session.getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newClub.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
         }
-        return club;
+        
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -77,7 +85,7 @@ public class ClubRestPoint extends RestBase {
     //  * @param id of club to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removeClub(@PathVariable("id") Long id, HttpSession session) {
@@ -99,23 +107,24 @@ public class ClubRestPoint extends RestBase {
     //  * @param club to update
     //  * @return 200 response or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public Club updateClub(@PathVariable("id") Long id, @RequestBody Club club, HttpSession session, HttpServletResponse response) {
+    @RolesAllowed(Role.ADMIN)
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public ResponseEntity<Void> updateClub(@PathVariable("id") Long id, @RequestBody Club club, HttpSession session) {
         LOG.debug("updating club of id " + id);
         try {
             Club existing = service.getClubForId(id);
             if (existing == null) {
                 LOG.warn("Failed to get club for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return null;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            return service.updateClub(club, session.getId());
+            service.updateClub(club, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
            logError(e);
         }
-        return club;
+        
+        return ResponseEntity.internalServerError().build();
     }
 }

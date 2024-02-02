@@ -3,8 +3,10 @@ package org.tiatus.server.rest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,16 +16,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.tiatus.entity.Penalty;
 import org.tiatus.entity.Position;
 import org.tiatus.role.Role;
 import org.tiatus.service.PositionService;
 
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-// import javax.annotation.security.PermitAll;
-// import javax.annotation.security.RolesAllowed;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+
 import java.net.URI;
 import java.util.List;
 
@@ -44,9 +46,9 @@ public class PositionRestPoint extends RestBase {
     //  * Get positions
     //  * @return response containing list of positions
     //  */
-    // @PermitAll
+    @PermitAll
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
-    public List<Position>  getPositions() {
+    public List<Position> getPositions() {
         return service.getPositions();
     }
 
@@ -56,18 +58,22 @@ public class PositionRestPoint extends RestBase {
     //  * @param position to add
     //  * @return 201 response with location containing uri of newly created position or an error code
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    public Position addPosition(@RequestBody Position position, HttpSession session) {
+    @RolesAllowed(Role.ADMIN)
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<Void> addPosition(@RequestBody Position position, HttpSession session, HttpServletRequest request) {
         LOG.debug("Adding position " + position);
         try {
-            return service.addPosition(position, session.getId());
+            Position newPosition = service.addPosition(position, session.getId());
+            URI location = URI.create(request.getRequestURI() + "/"+ newPosition.getId());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("location", location.toString());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return position;
+        return ResponseEntity.internalServerError().build();
     }
 
     // /**
@@ -75,7 +81,7 @@ public class PositionRestPoint extends RestBase {
     //  * @param id of position to remove
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
+    @RolesAllowed(Role.ADMIN)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "{id}")
     public void removePosition(@PathVariable("id") Long id, HttpSession session) {
@@ -97,24 +103,24 @@ public class PositionRestPoint extends RestBase {
     //  * @param position to update
     //  * @return response with 204
     //  */
-    // @RolesAllowed({Role.ADMIN})
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
-    public Position updatePosition(@PathVariable("id") Long id, @RequestBody Position position, HttpSession session, HttpServletResponse response) {
+    @RolesAllowed(Role.ADMIN)
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
+    public ResponseEntity<Void> updatePosition(@PathVariable("id") Long id, @RequestBody Position position, HttpSession session) {
         LOG.debug("Updating position with id " + id);
         try {
             Position existing = service.getPositionForId(id);
             if (existing == null) {
                 LOG.warn("Failed to get position for supplied id");
-                response.setStatus(HttpStatus.NOT_FOUND.value());
-                return position;
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
             service.updatePosition(position, session.getId());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
         } catch (Exception e) {
             logError(e);
         }
 
-        return position;
+        return ResponseEntity.internalServerError().build();
     }
 }

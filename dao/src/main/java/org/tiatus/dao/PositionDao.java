@@ -40,6 +40,6 @@ public interface PositionDao {
      * @param position Position to update
      * @throws DaoException on error
      */
-    void updatePosition(Position position) throws DaoException;
+    Position updatePosition(Position position) throws DaoException;
 
 }

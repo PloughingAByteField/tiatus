@@ -55,7 +55,9 @@ public class RaceDaoImpl implements RaceDao {
                 repository.delete(race);
 
             } else {
-                LOG.warn("No such race of id " + race.getId());
+                String message = "No such race of id " + race.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
 
         } catch (Exception e) {
@@ -84,10 +86,10 @@ public class RaceDaoImpl implements RaceDao {
                 return repository.save(race);
 
             } else {
-                LOG.warn("No such race of id " + race.getId());
+                String message = "No such race of id " + race.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
-
-            return race;
 
         } catch (Exception e) {
             LOG.warn("Failed to update race", e);

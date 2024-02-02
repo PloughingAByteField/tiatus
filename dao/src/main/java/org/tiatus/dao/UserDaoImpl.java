@@ -60,8 +60,11 @@ public class UserDaoImpl implements UserDao {
                 repository.delete(user);
 
             } else {
-                LOG.warn("No such user of id " + user.getId());
+                String message = "No such user of id " + user.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
+
         } catch (Exception e) {
             LOG.warn("Failed to delete user", e.getMessage());
             throw new DaoException(e);
@@ -101,10 +104,10 @@ public class UserDaoImpl implements UserDao {
                 return repository.save(existing);
 
             } else {
-                LOG.warn("No such user of id " + user.getId());
+                String message = "No such user of id " + user.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
-
-            return user;
 
         } catch (Exception e) {
             LOG.warn("Failed to update user", e.getMessage());

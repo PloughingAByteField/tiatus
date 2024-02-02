@@ -32,7 +32,7 @@ public class RaceEventDaoImpl implements RaceEventDao {
     public RaceEvent addRaceEvent(RaceEvent raceEvent) throws DaoException {
         LOG.debug("Adding raceEvent " + raceEvent);
         try {
-            if (!repository.existsById(raceEvent.getId())) {
+            if (raceEvent.getId() == null) {
                 List<RaceEvent> raceEvents = getRaceEventsForRace(raceEvent.getRace());
                 for (RaceEvent re: raceEvents) {
                     if (re.getEvent().getName().equals(raceEvent.getEvent().getName())) {

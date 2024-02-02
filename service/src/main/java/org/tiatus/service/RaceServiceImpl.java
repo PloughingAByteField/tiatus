@@ -35,10 +35,10 @@ public class RaceServiceImpl implements RaceService {
     public Race addRace(Race race, String sessionId) throws ServiceException {
         LOG.debug("Adding race " + race);
         try {
-            Race r = dao.addRace(race);
-            Message message = Message.createMessage(race, MessageType.ADD, sessionId);
+            Race newRace = dao.addRace(race);
+            Message message = Message.createMessage(newRace, MessageType.ADD, sessionId);
             sender.sendMessage(message);
-            return r;
+            return newRace;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");

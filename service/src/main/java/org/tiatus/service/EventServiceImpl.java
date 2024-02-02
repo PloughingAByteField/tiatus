@@ -38,10 +38,10 @@ public class EventServiceImpl implements EventService {
     public Event addEvent(Event event, String sessionId) throws ServiceException {
         LOG.debug("Adding event " + event);
         try {
-            Event daoEvent = dao.addEvent(event);
-            Message message = Message.createMessage(daoEvent, MessageType.ADD, sessionId);
+            Event newEvent = dao.addEvent(event);
+            Message message = Message.createMessage(newEvent, MessageType.ADD, sessionId);
             sender.sendMessage(message);
-            return daoEvent;
+            return newEvent;
 
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
@@ -57,10 +57,10 @@ public class EventServiceImpl implements EventService {
     public RaceEvent addRaceEvent(RaceEvent raceEvent, String sessionId) throws ServiceException {
         LOG.debug("Adding raceEvent " + raceEvent);
         try {
-            RaceEvent daoRaceEvent = raceEventDao.addRaceEvent(raceEvent);
-            Message message = Message.createMessage(daoRaceEvent, MessageType.ADD, sessionId);
+            RaceEvent newRaceEvent = raceEventDao.addRaceEvent(raceEvent);
+            Message message = Message.createMessage(newRaceEvent, MessageType.ADD, sessionId);
             sender.sendMessage(message);
-            return daoRaceEvent;
+            return newRaceEvent;
 
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);
@@ -76,10 +76,10 @@ public class EventServiceImpl implements EventService {
     public Event updateEvent(Event event, String sessionId) throws ServiceException {
         LOG.debug("Updating event " + event);
         try {
-            Event daoEvent =  dao.updateEvent(event);
-            Message message = Message.createMessage(daoEvent, MessageType.UPDATE, sessionId);
+            Event updated =  dao.updateEvent(event);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
-            return daoEvent;
+            return updated;
 
         } catch (DaoException e) {
             LOG.warn(DAO_EXCEPTION);

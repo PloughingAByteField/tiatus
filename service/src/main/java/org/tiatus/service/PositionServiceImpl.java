@@ -30,10 +30,10 @@ public class PositionServiceImpl implements PositionService {
     public Position addPosition(Position position, String sessionId) throws ServiceException {
         LOG.debug("Adding position " + position);
         try {
-            Position daoPosition = dao.addPosition(position);
-            Message message = Message.createMessage(daoPosition, MessageType.ADD, sessionId);
+            Position newPosition = dao.addPosition(position);
+            Message message = Message.createMessage(newPosition, MessageType.ADD, sessionId);
             sender.sendMessage(message);
-            return daoPosition;
+            return newPosition;
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -76,8 +76,8 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public void updatePosition(Position position, String sessionId) throws ServiceException {
         try {
-            dao.updatePosition(position);
-            Message message = Message.createMessage(position, MessageType.UPDATE, sessionId);
+            Position updated = dao.updatePosition(position);
+            Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
 
         } catch (DaoException e) {

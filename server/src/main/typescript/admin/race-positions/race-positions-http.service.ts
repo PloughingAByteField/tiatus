@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { RacePositionTemplate } from './race-position-template.model';
@@ -12,8 +12,11 @@ export class RacePositionsHttpService extends CachedHttpService {
     public templates: RacePositionTemplate[];
 
     private endPoint: string = '/rest/racePositionTemplates';
-    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
+    private httpHeader = {
+        observe: 'response' as const,
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
     constructor(protected http: HttpClient) {
         super(http);
     }
@@ -21,9 +24,10 @@ export class RacePositionsHttpService extends CachedHttpService {
     public createTemplate(template: RacePositionTemplate): Promise<RacePositionTemplate> {
         return this.http
             .post(this.endPoint,
-                JSON.stringify(template), { headers: this.headers })
+                    template, 
+                    this.httpHeader)
             .toPromise()
-            .then((res: Response) => {
+            .then((res: HttpResponse<RacePositionTemplate>) => {
                 if (res.status === 201) {
                     const location: string = res.headers.get('location');
                     const locationParts = location.split('/');
@@ -48,7 +52,8 @@ export class RacePositionsHttpService extends CachedHttpService {
     public updateTemplate(template: RacePositionTemplate): Promise<RacePositionTemplate> {
         return this.http
             .put(this.endPoint,
-            { headers: this.headers })
+                template,
+                this.httpHeader)
             .toPromise()
             .then(() => {
                 return template;

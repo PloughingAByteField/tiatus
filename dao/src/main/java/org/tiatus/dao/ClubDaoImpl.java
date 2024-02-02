@@ -59,8 +59,11 @@ public class ClubDaoImpl implements ClubDao {
                 repository.delete(club);
 
             } else {
-                LOG.warn("No such club of id " + club.getId());
+                String message = "No such club of id " + club.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
+            
         } catch (Exception e) {
             LOG.warn("Failed to delete club", e.getMessage());
             throw new DaoException(e);
@@ -70,7 +73,18 @@ public class ClubDaoImpl implements ClubDao {
     @Override
     public Club updateClub(Club club) throws DaoException {
         try {
-            return repository.save(club);
+            Club existing = null;
+            if (club.getId() != null) {
+                existing = repository.findById(club.getId()).orElse(null);
+            }
+            if (existing != null) {
+                return repository.save(club);
+
+            } else {
+                String message = "No such club of id " + club.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
+            }
 
         } catch (Exception e) {
             LOG.warn("Failed to update club", e.getMessage());

@@ -27,7 +27,7 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     public RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         LOG.debug("Adding RacePositionTemplate " + template.getName());
         try {
-            if (!repository.existsById(template.getId())) {
+            if (template.getId() == null) {
                 return repository.save(template);
 
             } else {
@@ -55,7 +55,9 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
                 repository.delete(template);
 
             } else {
-                LOG.warn("No such RacePositionTemplate of id " + template.getId());
+                String message = "No such RacePositionTemplate of id " + template.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
 
         } catch (Exception e) {
@@ -67,7 +69,24 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public RacePositionTemplate updateRacePositionTemplate(RacePositionTemplate template) throws DaoException {
         try {
-            return repository.save(template);
+            RacePositionTemplate existing = null;
+            if (template.getId() != null) {
+                existing = repository.findById(template.getId()).orElse(null);
+            }
+
+            if (existing != null) {
+                existing.setDefaultTemplate(template.getDefaultTemplate());
+                existing.setName(template.getName());
+                existing.setRace(template.getRace());
+                existing.setTemplates(template.getTemplates());
+
+                return repository.save(existing);
+
+            } else {
+                String message = "No such template of id " + template.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
+            }
 
         } catch(Exception e) {
             LOG.warn("Failed to update RacePositionTemplate", e);
@@ -88,11 +107,18 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public RacePositionTemplateEntry addTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
-            if (racePositionTemplateEntryRepository.findByTemplateAndPosition(entry.getTemplate(), entry.getPosition()) == null) {
-                return racePositionTemplateEntryRepository.save(entry);
+            if (entry.getId() == null) {
+                if (racePositionTemplateEntryRepository.findByTemplateAndPosition(entry.getTemplate(), entry.getPosition()) == null) {
+                    return racePositionTemplateEntryRepository.save(entry);
+
+                } else {
+                    String message = "Failed to add template entry due to existing template entry with same template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId();
+                    LOG.warn(message);
+                    throw new DaoException(message);
+                }
 
             } else {
-                String message = "Failed to add template entry due to existing template entry with same template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId();
+                String message = "Failed to add template entry due to existing template entry with same id " + entry.getId();
                 LOG.warn(message);
                 throw new DaoException(message);
             }
@@ -106,13 +132,17 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public void deleteTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
-            RacePositionTemplateEntry existing = racePositionTemplateEntryRepository.findByTemplateAndPosition(entry.getTemplate(), entry.getPosition());
+            // RacePositionTemplateEntry existing = racePositionTemplateEntryRepository.findByTemplateAndPosition(entry.getTemplate(), entry.getPosition());
+            RacePositionTemplateEntry existing = racePositionTemplateEntryRepository.findById(entry.getId()).orElse(null);
             if (existing != null) {
                 racePositionTemplateEntryRepository.delete(existing);
 
             } else {
-                LOG.warn("No such template entry of template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId());
+                String message = "No such template entry of template id " + entry.getTemplate().getId() + " and position id " + entry.getPosition().getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
+
         } catch (Exception e) {
             LOG.warn("Failed to delete template entry", e);
             throw new DaoException(e.getMessage());
@@ -122,7 +152,29 @@ public class RacePositionTemplateDaoImpl implements RacePositionTemplateDao {
     @Override
     public RacePositionTemplateEntry updateTemplateEntry(RacePositionTemplateEntry entry) throws DaoException {
         try {
-            return racePositionTemplateEntryRepository.save(entry);
+            RacePositionTemplateEntry existing = null;
+            if (entry.getId() != null) {
+                existing = racePositionTemplateEntryRepository.findById(entry.getId()).orElse(null);
+            }
+            
+            if (existing != null) {
+                if (entry.getPosition() != null){
+                    existing.setPosition(entry.getPosition());
+                }
+                if (entry.getPositionOrder() != null) {
+                    existing.setPositionOrder(entry.getPositionOrder());
+                }
+                if (entry.getTemplate() != null) {
+                    existing.setTemplate(entry.getTemplate());
+                }
+
+                return racePositionTemplateEntryRepository.save(existing);
+
+            } else {
+                String message = "No such template entry of id " + entry.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
+            }
 
         } catch(Exception e) {
             LOG.warn("Failed to update template entry", e);

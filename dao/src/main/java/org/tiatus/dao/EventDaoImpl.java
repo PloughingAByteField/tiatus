@@ -31,8 +31,7 @@ public class EventDaoImpl implements EventDao {
     public Event addEvent(Event event) throws DaoException {
         LOG.debug("Adding event " + event);
         try {
-            if (!repository.existsById(event.getId())) {
-                // check to see if name is already used in unassigned
+            if (event.getId() == null) {
                 List<Event> unassignedEvents = getUnassignedEvents();
                 for (Event unassigned: unassignedEvents) {
                     if (unassigned.getName().equals(event.getName())) {
@@ -43,14 +42,6 @@ public class EventDaoImpl implements EventDao {
                 }
 
                 return repository.save(event);
-                // for (EventPosition position: event.getPositions()) {
-                //     position.setEvent(event);
-                //     position.setPosition(em.merge(position.getPosition()));
-                //     em.persist(position);
-                // }
-                // tx.commit();
-
-                // return event;
 
             } else {
                 String message = "Failed to add event due to existing event with same id " + event.getId();
@@ -71,8 +62,11 @@ public class EventDaoImpl implements EventDao {
                 repository.delete(event);
 
             } else {
-                LOG.warn("No such event of id " + event.getId());
+                String message = "No such event of id " + event.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
             }
+
         } catch (Exception e) {
             LOG.warn("Failed to delete event", e);
             throw new DaoException(e.getMessage());
@@ -85,55 +79,63 @@ public class EventDaoImpl implements EventDao {
             List<EventPosition> addedPositions = new ArrayList<>();
             List<EventPosition> deletedPositions = new ArrayList<>();
             List<EventPosition> updatedPositions = new ArrayList<>();
+            
             Event existing = repository.findById(event.getId()).orElse(null);
-            for (EventPosition position: existing.getPositions()) {
-                boolean foundInUpdatedList = false;
-                for (EventPosition updatedPosition: event.getPositions()) {
-                    if (position.getPositionOrder() == updatedPosition.getPositionOrder()) {
-                        foundInUpdatedList = true;
-                        // has position changed
-                        if (position.getPosition().getId() != updatedPosition.getPosition().getId()) {
-                            position.setPosition(updatedPosition.getPosition());
-                            updatedPositions.add(position);
-                        }
-                        break;
-                    }
-                }
-                if (!foundInUpdatedList) {
-                    // lost position
-                    deletedPositions.add(position);
-                }
-            }
-            for (EventPosition updatedPosition: event.getPositions()) {
-                boolean foundInExistingList = false;
+            if (existing != null) {
                 for (EventPosition position: existing.getPositions()) {
-                    if (position.getPositionOrder() == updatedPosition.getPositionOrder()) {
-                        foundInExistingList = true;
-                        break;
+                    boolean foundInUpdatedList = false;
+                    for (EventPosition updatedPosition: event.getPositions()) {
+                        if (position.getPositionOrder() == updatedPosition.getPositionOrder()) {
+                            foundInUpdatedList = true;
+                            // has position changed
+                            if (position.getPosition().getId() != updatedPosition.getPosition().getId()) {
+                                position.setPosition(updatedPosition.getPosition());
+                                updatedPositions.add(position);
+                            }
+                            break;
+                        }
+                    }
+                    if (!foundInUpdatedList) {
+                        // lost position
+                        deletedPositions.add(position);
                     }
                 }
-                if (!foundInExistingList) {
-                    // added position
-                    updatedPosition.setEvent(existing);
-                    addedPositions.add(updatedPosition);
+                for (EventPosition updatedPosition: event.getPositions()) {
+                    boolean foundInExistingList = false;
+                    for (EventPosition position: existing.getPositions()) {
+                        if (position.getPositionOrder() == updatedPosition.getPositionOrder()) {
+                            foundInExistingList = true;
+                            break;
+                        }
+                    }
+                    if (!foundInExistingList) {
+                        // added position
+                        updatedPosition.setEvent(existing);
+                        addedPositions.add(updatedPosition);
+                    }
                 }
-            }
 
-            for (EventPosition position: addedPositions) {
-                eventPositionRepository.save(position);
-            }
-            for (EventPosition position: deletedPositions) {
-                eventPositionRepository.delete(position);
-            }
-            for (EventPosition position: updatedPositions) {
-                eventPositionRepository.save(position);
-            }
-            if (!existing.getName().equals(event.getName())) {
-                existing.setName(event.getName());
-                repository.save(existing);
-            }
+                for (EventPosition position: addedPositions) {
+                    eventPositionRepository.save(position);
+                }
+                for (EventPosition position: deletedPositions) {
+                    eventPositionRepository.delete(position);
+                }
+                for (EventPosition position: updatedPositions) {
+                    eventPositionRepository.save(position);
+                }
+                
+                if (!existing.getName().equals(event.getName())) {
+                    existing.setName(event.getName());
+                }
 
-            return repository.findById(event.getId()).orElse(null);
+                return repository.save(existing);
+
+            } else {
+                String message = "No such event of id " + event.getId();
+                LOG.warn(message);
+                throw new DaoException(message);
+            }
             
         } catch (Exception e) {
             LOG.warn("Failed to update event", e);

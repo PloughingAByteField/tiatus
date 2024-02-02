@@ -8,7 +8,7 @@ import org.tiatus.entity.Event;
 import org.tiatus.entity.RaceEvent;
 
 public interface RaceEventRepository extends JpaRepository<RaceEvent, Long> {
-    @Query(value = "FROM RaceEvent re where re.race.id = :raceId order by raceEventOrder", nativeQuery = true)
+    @Query(value = "select * from race_event re where re.race_id = :raceId order by race_event_order", nativeQuery = true)
     List<RaceEvent> getRaceEventsForRace(Long raceId);
 
     List<RaceEvent> findByOrderByRaceEventOrder();

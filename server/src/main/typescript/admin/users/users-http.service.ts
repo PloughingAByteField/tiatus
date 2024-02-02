@@ -17,7 +17,7 @@ export class AdminUsersHttpService extends CachedHttpService {
     private httpHeader = {
         observe: 'response' as const,
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-      };
+    };
 
     constructor(protected http: HttpClient) {
         super(http);
