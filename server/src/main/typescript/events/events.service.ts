@@ -75,9 +75,11 @@ export class EventsService implements OnDestroy {
     }
 
     public getEventForId(eventId: number): Event {
-        for (const event of this.events) {
-            if (event.id === eventId) {
-                return event;
+        if (this.events != null) {
+            for (const event of this.events) {
+                if (event.id === eventId) {
+                    return event;
+                }
             }
         }
         return null;

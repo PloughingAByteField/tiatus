@@ -133,9 +133,11 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
         });
 
         this.racesSubscription = this.racesService.getRaces().subscribe((races: Race[]) => {
-            this.races = races;
-            if (this.raceId && races.length > 0) {
-                this.setRace(this.raceId);
+            if (races != null) {
+                this.races = races;
+                if (this.raceId && races.length > 0) {
+                    this.setRace(this.raceId);
+                }
             }
         });
 
@@ -404,20 +406,24 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
                     this.entryTimes = data;
                     this.entryTimesForPositions = data.filter((entrytime: EntryTime) => {
                         const event: Event = this.eventsService.getEventForId(entrytime.entry.event);
-                        const eventPositions: EventPosition[] = event.positions;
-                        if (eventPositions.length === 0) {
-                            return false;
+                        if (event != null) {
+                            const eventPositions: EventPosition[] = event.positions;
+                            if (eventPositions.length === 0) {
+                                return false;
+                            }
+                            if (eventPositions[0].position === this.start.id
+                                && eventPositions[eventPositions.length - 1].position
+                                    === this.finish.id) {
+                                    return true;
+                            }
                         }
-                        if (eventPositions[0].position === this.start.id
-                            && eventPositions[eventPositions.length - 1].position
-                                 === this.finish.id) {
-                                return true;
-                        }
+
                         return false;
                     });
-
+                    
                     this.sortTimesByEntryPositionOrder(this.entryTimesForPositions);
                     this.filteredEntryTimes = this.filterEntries();
+                    
             });
         }
     }
