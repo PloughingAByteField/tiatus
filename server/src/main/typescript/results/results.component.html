@@ -1,11 +1,20 @@
 <titlebar></titlebar>
 
-<div class="container-fluid">
-    <div class="row">
+<div class="container-fluid p-0 d-flex h-100">
+    <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 offcanvas-md offcanvas-start"> 
         <sidebar [races]="races"></sidebar>
-        <main>
-            <router-outlet></router-outlet>
-        </main>
+    </div>
+    
+    <div class="flex-fill">
+        <div class="p-4"> 
+            <div class="row">
+                <div class="col">
+                    <main>
+                        <router-outlet></router-outlet>
+                    </main>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
