@@ -8,6 +8,8 @@ public class EntryPositionId implements Serializable {
 
     private Entry entry;
 
+    public EntryPositionId() {}
+    
     public EntryPositionId(Position position, Entry entry) {
         this.position = position;
         this.entry = entry;

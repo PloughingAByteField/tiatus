@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by johnreynolds on 19/06/2016.
  */
-// @Path("penalties")
 // @SuppressWarnings("squid:S1166")
 @RestController
 @RequestMapping("/rest/penalties")

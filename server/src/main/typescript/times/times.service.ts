@@ -20,8 +20,9 @@ export class TimesService {
         const subject: RaceTimesSubject
             = this.raceEntries.filter((s: RaceTimesSubject) => {
                 if (s.race.id === race.id) {
-                    return;
+                    return true;
                 }
+                return false;
             }).shift();
 
         if (subject) {

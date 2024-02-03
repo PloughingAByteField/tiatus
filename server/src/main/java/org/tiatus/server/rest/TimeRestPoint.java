@@ -25,6 +25,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,8 +73,10 @@ public class TimeRestPoint extends RestBase {
 
     @RolesAllowed(Role.TIMING)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "position/{positionId}/entry/{entryId}")
-    public EntryPositionTime saveTime(@PathVariable("positionId") Long positionId, @PathVariable("entryId") Long entryId, @RequestBody EntryPositionTime entryPositionTime, HttpSession session, HttpServletResponse response) {
+    public EntryPositionTime saveTime(@PathVariable("positionId") Long positionId, @PathVariable("entryId") Long entryId, @RequestBody Timestamp time, HttpSession session, HttpServletResponse response) {
         try {
+            EntryPositionTime entryPositionTime = new EntryPositionTime();
+            entryPositionTime.setTime(time);
             Position position = positionService.getPositionForId(positionId);
             entryPositionTime.setPosition(position);
             Entry entry = entryService.getEntryForId(entryId);
@@ -91,13 +94,15 @@ public class TimeRestPoint extends RestBase {
             logError(e);
         }
 
-        return entryPositionTime;
+        return null;
     }
 
     @RolesAllowed(Role.TIMING)
     @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "position/{positionId}/entry/{entryId}")
-    public EntryPositionTime updateTime(@PathVariable("positionId") Long positionId, @PathVariable("entryId") Long entryId, @RequestBody EntryPositionTime entryPositionTime, HttpSession session) {
+    public EntryPositionTime updateTime(@PathVariable("positionId") Long positionId, @PathVariable("entryId") Long entryId, @RequestBody Timestamp time, HttpSession session) {
         try {
+            EntryPositionTime entryPositionTime = new EntryPositionTime();
+            entryPositionTime.setTime(time);
             Position position = positionService.getPositionForId(positionId);
             entryPositionTime.setPosition(position);
             Entry entry = entryService.getEntryForId(entryId);
@@ -108,7 +113,7 @@ public class TimeRestPoint extends RestBase {
             logError(e);
         }
 
-        return entryPositionTime;
+        return null;
     }
 
     @PermitAll

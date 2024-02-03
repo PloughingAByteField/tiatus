@@ -26,9 +26,9 @@ export class TimeEntryComponent implements OnInit {
 
   public onBlur(event: any): void {
     let lostFocus: boolean = true;
-    if (event.relatedTarget) {
-      const currentId: number = event.path[1].id;
-      if (event.relatedTarget.parentNode) {
+    if (event.composedPath() !== undefined && event.composedPath().length >= 1) {
+      const currentId: number = event.composedPath()[1].id;
+      if (event.relatedTarget != null && event.relatedTarget.parentNode != null) {
         const targetId: number = event.relatedTarget.parentNode.id;
         if (currentId === targetId) {
           lostFocus = false;
@@ -52,7 +52,9 @@ export class TimeEntryComponent implements OnInit {
       if (resetFields) {
         this.fillFieldsForTime(this.time);
       } else {
-        this.updateTime();
+        if (this.time != 0) {
+          this.updateTime();
+        }
       }
     }
   }

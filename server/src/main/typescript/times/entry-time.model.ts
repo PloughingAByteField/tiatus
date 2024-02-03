@@ -11,9 +11,41 @@ export function mergeEntriesIntoEntryTimes(entries: Entry[], entryTimes: EntryTi
     entries.forEach((entry: Entry) => {
         const entryTime: EntryTime = new EntryTime();
         const entryTimeForEntry: EntryTime = entryTimes
-            .filter((et: EntryTime) => et.entry.id === entry.id).shift();
+            .filter((et: EntryTime) => {
+                if (et.entry.id === entry.id) {
+                    return true;
+                }
+                return false;
+            }).shift();
         if (entryTimeForEntry) {
             entryTime.times = entryTimeForEntry.times;
+        } else {
+            entryTime.times = new Array<PositionTime>();
+        }
+        entryTime.entry = entry;
+        merged.push(entryTime);
+    });
+    return merged;
+}
+
+export function mergePositionTimesIntoEntryTimes(entries: Entry[], positionTimes: PositionTime[]): EntryTime[] {
+    const merged: EntryTime[] = new Array<EntryTime>();
+    entries.forEach((entry: Entry) => {
+        const entryTime: EntryTime = new EntryTime();
+        const positionTimeForEntry: PositionTime = positionTimes
+            .filter((pt: PositionTime) => {
+                console.log(pt);
+                console.log(entry);
+                if (pt.entry === entry.id) {
+                    return true;
+                }
+                return false;
+            }).shift();
+        if (positionTimeForEntry) {
+            if (entryTime.times === undefined || entryTime.times == null) {
+                entryTime.times = new Array<PositionTime>();
+            }
+            entryTime.times.push(positionTimeForEntry);
         } else {
             entryTime.times = new Array<PositionTime>();
         }

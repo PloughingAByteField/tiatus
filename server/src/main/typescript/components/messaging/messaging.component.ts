@@ -57,7 +57,7 @@ export class MessagingComponent implements OnChanges {
 
   private populateMessagesForPositions(message: ConverstationMessage): void {
     console.log(message);
-    if (message !== undefined) {
+    if (message !== undefined && message !== null) {
       let mp: MessagePosition;
       if (message.to === 'ALL' || message.from === 'me:') {
         mp = this.getMessagePosition(message.to);

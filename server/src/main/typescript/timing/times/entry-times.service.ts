@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { EntriesService } from '../../entries/entries.service';
 import { TimingTimesService } from './times.service';
 
-import { EntryTime, mergeEntriesIntoEntryTimes } from '../../times/entry-time.model';
+import { EntryTime, mergePositionTimesIntoEntryTimes } from '../../times/entry-time.model';
 import { Position } from '../../positions/position.model';
 import { Entry } from '../../entries/entry.model';
 import { Race } from '../../races/race.model';
@@ -50,15 +50,20 @@ export class TimingEntryTimesService extends EntryTimesService {
     public getTimesForPositionInRace(position: Position, race: Race): Subject<EntryTime[]> {
         let entries: Entry[];
         let times: EntryTime[] = new Array<EntryTime>();
+        let positionTimes: PositionTime[];
         const subject: Subject<EntryTime[]> = new BehaviorSubject<EntryTime[]>(times);
         this.entriesService.getEntriesForRace(race).subscribe((entriesData: Entry[]) => {
             entries = entriesData;
             this.timesService.getTimesForPositionInRace(position, race)
             .subscribe((data: Data) => {
-                times = data.data;
-                if (entries) {
-                    times = mergeEntriesIntoEntryTimes(entries, times);
-                    subject.next(times);
+                if (data !== undefined && data.data !== undefined) {
+                    // this is postiontimes not ent
+                    positionTimes = data.data;
+
+                    if (entries) {
+                        times = mergePositionTimesIntoEntryTimes(entries, positionTimes);
+                        subject.next(times);
+                    }
                 }
             });
         });
