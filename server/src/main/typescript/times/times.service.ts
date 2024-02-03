@@ -2,12 +2,12 @@ import { EventEmitter, Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { EntryTime } from './entry-time.model';
 import { Race } from '../races/race.model';
 
 import { TimesHttpService } from './times-http.service';
 import { RaceTimesSubject } from './race-times-subject.model';
 import { Data } from '../model/data.model';
+import { PositionTime } from './postion-time.model';
 
 @Injectable()
 export class TimesService {
@@ -16,7 +16,7 @@ export class TimesService {
 
     constructor(protected service: TimesHttpService) {}
 
-    public getTimesForRace(race: Race): BehaviorSubject<EntryTime[]> {
+    public getTimesForRace(race: Race): BehaviorSubject<PositionTime[]> {
         const subject: RaceTimesSubject
             = this.raceEntries.filter((s: RaceTimesSubject) => {
                 if (s.race.id === race.id) {

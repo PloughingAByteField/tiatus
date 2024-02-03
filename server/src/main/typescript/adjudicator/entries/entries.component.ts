@@ -231,7 +231,7 @@ export class EntriesComponent implements OnInit {
         if (entryTime.times.length > 0) {
             const actualStartPoint: PositionTime = entryTime.times[0];
             const event: Event = this.eventsService.getEventForId(entryTime.entry.event);
-            if (event.positions.length > 0) {
+            if (event != null && event.positions.length > 0) {
                 const eventPositions: EventPosition[] = event.positions;
                 let eventFinishPoint: PositionTime;
                 if (entryTime.times[entryTime.times.length - 1].position

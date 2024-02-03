@@ -52,9 +52,7 @@ export class TimeEntryComponent implements OnInit {
       if (resetFields) {
         this.fillFieldsForTime(this.time);
       } else {
-        if (this.time != 0) {
-          this.updateTime();
-        }
+        this.updateTime();
       }
     }
   }
@@ -99,6 +97,8 @@ export class TimeEntryComponent implements OnInit {
   }
 
   private fireUpdatedTime(): void {
-    this.updatedTime.next(this.time);
+    if (this.time != 0) {
+      this.updatedTime.next(this.time);
+    }
   }
 }

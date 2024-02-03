@@ -32,20 +32,20 @@ export function mergePositionTimesIntoEntryTimes(entries: Entry[], positionTimes
     const merged: EntryTime[] = new Array<EntryTime>();
     entries.forEach((entry: Entry) => {
         const entryTime: EntryTime = new EntryTime();
-        const positionTimeForEntry: PositionTime = positionTimes
+        const positionTimeForEntries: PositionTime[] = positionTimes
             .filter((pt: PositionTime) => {
-                console.log(pt);
-                console.log(entry);
                 if (pt.entry === entry.id) {
                     return true;
                 }
                 return false;
-            }).shift();
-        if (positionTimeForEntry) {
+            });
+        if (positionTimeForEntries.length > 0) {
             if (entryTime.times === undefined || entryTime.times == null) {
                 entryTime.times = new Array<PositionTime>();
             }
-            entryTime.times.push(positionTimeForEntry);
+            for(let positionTimeForEntry of positionTimeForEntries){
+                entryTime.times.push(positionTimeForEntry);
+            }
         } else {
             entryTime.times = new Array<PositionTime>();
         }
