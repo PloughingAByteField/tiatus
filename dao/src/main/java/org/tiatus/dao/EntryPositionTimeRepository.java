@@ -14,7 +14,7 @@ public interface EntryPositionTimeRepository extends JpaRepository<EntryPosition
     @Query(value = "select * from entry_position_time ept where ept.entry_id in (select id from entry where race_id = :raceId) order by ept.position_id", nativeQuery = true)
     List<EntryPositionTime> getAllTimesForRace(Long raceId);
 
-    @Query(value = "select * from entry_position_time ept where ept.entry_id in (select e.id from Entry e, Disqualification d where e.race_id = :raceId and e.id != d.entry_id) order by ept.position_id", nativeQuery = true)
+    @Query(value = "select * from entry_position_time ept where ept.entry_id in (select e.id from entry e where e.race_id = :raceId and e.id not in (select distinct d.entry_id from disqualification d)) order by ept.position_id", nativeQuery = true)
     List<EntryPositionTime> getTimesForRace(Long raceId);
 
     @Query(value = "select * from entry_position_time where position_id = :positionId and entry_id = :entryId", nativeQuery = true)
