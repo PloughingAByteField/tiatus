@@ -1,5 +1,6 @@
 package org.tiatus.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -26,6 +27,7 @@ public class Penalty implements Serializable {
     @Column(name = "comment")
     private String comment;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @Column(name = "time")
     private Timestamp time;
 
