@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators';
+import { interval } from 'rxjs';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -173,8 +173,8 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
             this.penaltyText = res;
         });
 
-        this.polling = Observable.interval(this.pollingPeriod)
-        .map(() => {
+        this.polling = interval(this.pollingPeriod).pipe(
+        map(() => {
             this.racesService.refresh();
             this.positionsService.refresh();
             this.clubsService.refresh();
@@ -184,7 +184,7 @@ export class RaceResultsTableComponent implements OnInit, OnDestroy {
             if (this.race) {
                 this.entryTimesService.refreshForRace(this.race);
             }
-        }).subscribe();
+        })).subscribe();
     }
 
     public ngOnDestroy() {

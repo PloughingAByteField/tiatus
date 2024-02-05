@@ -1,6 +1,4 @@
-import { Subject } from 'rxjs/Subject';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 import { EntryTime, mergePositionTimesIntoEntryTimes } from './entry-time.model';
 import { Entry } from '../entries/entry.model';

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/add/observable/forkJoin';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs';
 

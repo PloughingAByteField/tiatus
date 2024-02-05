@@ -1,6 +1,5 @@
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
-import { EntryTime } from './entry-time.model';
 import { Race } from '../races/race.model';
 import { PositionTime } from './postion-time.model';
 
