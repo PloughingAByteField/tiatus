@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
 import { Race } from '../races/race.model';
-import { CachedHttpService } from '../http/cached-http.service';
-import { Data } from '../model/data.model';
 
 @Injectable()
-export class RacesHttpService extends CachedHttpService {
-   protected endPoint: string = '/rest/races';
+export class RacesHttpService {
+  protected endPoint: string = '/rest/races';
 
-  constructor(protected http: HttpClient) {
-    super(http);
-  }
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
-  public getRaces(): Observable<Data> {
-    return this.getData(this.endPoint);
+  constructor(protected http: HttpClient) { }
+
+  public getRaces(): Observable<Race[]> {
+    return this.http.get<Race[]>(this.endPoint, this.httpOptions);
    }
 }

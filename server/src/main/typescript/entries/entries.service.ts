@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
 import { Entry, convertObjectToEntry } from './entry.model';
 import { RaceEntriesSubject } from './race-entries-subject.model';
 import { Race } from '../races/race.model';
-import { Data } from '../model/data.model';
 
 import { EntriesHttpService } from './entries-http.service';
 
@@ -31,9 +27,9 @@ export class EntriesService {
     }
 
     public refresh(): void {
-        this.service.getEntries().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.entries = data.data;
+        this.service.getEntries().subscribe((entries: Entry[]) => {
+            if (entries !== undefined) {
+                this.entries = entries;
                 this.subject.next(this.entries);
             }
         });
@@ -44,8 +40,8 @@ export class EntriesService {
                 = this.raceEntries.filter((s: RaceEntriesSubject) => s.race.id === race.id).shift();
 
         if (subject) {
-            this.service.getEntriesForRace(race).subscribe((data: Data) => {
-                subject.entries = data.data;
+            this.service.getEntriesForRace(race).subscribe((entries: Entry[]) => {
+                subject.setEntriesForRace(entries);
                 subject.subject.next(subject.entries);
             });
         }
@@ -64,13 +60,12 @@ export class EntriesService {
             return subject.subject;
 
         } else {
-            // create new RaceEntriesSubject
             const raceEntriesSubject: RaceEntriesSubject = new RaceEntriesSubject();
             raceEntriesSubject.race = race;
             this.raceEntries.push(raceEntriesSubject);
-            this.service.getEntriesForRace(race).subscribe((data: Data) => {
-                raceEntriesSubject.entries = data.data;
-                raceEntriesSubject.subject.next(raceEntriesSubject.entries);
+
+            this.service.getEntriesForRace(race).subscribe((entries: Entry[]) => {
+                raceEntriesSubject.setEntriesForRace(entries);
             });
             return raceEntriesSubject.subject;
         }

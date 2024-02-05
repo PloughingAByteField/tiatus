@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Club } from './club.model';
-import { CachedHttpService } from '../http/cached-http.service';
-import { Data } from '../model/data.model';
 
 @Injectable()
-export class ClubsHttpService extends CachedHttpService {
+export class ClubsHttpService {
 
   protected endPoint: string = '/rest/clubs';
 
-  constructor(protected http: HttpClient) {
-    super(http);
-  }
+  protected httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
-  public getClubs(): Observable<Data> {
-    return this.getData(this.endPoint);
+  constructor(protected http: HttpClient) {}
+
+  public getClubs(): Observable<Club[]> {
+    return this.http.get<Club[]>(this.endPoint, this.httpOptions);
   }
 }

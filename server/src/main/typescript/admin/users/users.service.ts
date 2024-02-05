@@ -8,7 +8,6 @@ import { MessageType } from '../../websocket/message-type.model';
 import { User, convertObjectToUser } from './user.model';
 
 import { AdminUsersHttpService } from './users-http.service';
-import { Data } from '../../model/data.model';
 
 @Injectable()
 export class AdminUsersService {
@@ -67,15 +66,8 @@ export class AdminUsersService {
     }
 
     public refresh(): void {
-         this.service.getUsers().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                var users = new Array<User>();
-                data.data.forEach(element => {
-                    var user: User = convertObjectToUser(element);
-                    console.log(user);
-                    users.push(user);
-                });
-        
+         this.service.getUsers().subscribe((users: User[]) => {
+            if (users != null) {
                 this.users = users;
                 this.subject.next(this.users);
             }

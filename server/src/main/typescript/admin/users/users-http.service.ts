@@ -3,14 +3,10 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { User, convertObjectToUser } from './user.model';
-
-import { CachedHttpService } from '../../http/cached-http.service';
-import { Data } from '../../model/data.model';
-import { subscribeOn } from 'rxjs/operators';
+import { User } from './user.model';
 
 @Injectable()
-export class AdminUsersHttpService extends CachedHttpService {
+export class AdminUsersHttpService {
 
     private endPoint: string = '/rest/users';
 
@@ -19,12 +15,14 @@ export class AdminUsersHttpService extends CachedHttpService {
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
 
-    constructor(protected http: HttpClient) {
-        super(http);
-    }
+    private httpOptions = {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
 
-    public getUsers(): Observable<Data> {
-        return this.getData(this.endPoint);
+    constructor(protected http: HttpClient) {}
+
+    public getUsers(): Observable<User[]> {
+        return this.http.get<User[]>(this.endPoint, this.httpOptions);
     }
 
     public createUser(user: User): Promise<User> {

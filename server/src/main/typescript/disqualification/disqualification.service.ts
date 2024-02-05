@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
 import { Disqualification } from './disqualification.model';
-import { Data } from '../model/data.model';
 
 import { DisqualificationHttpService } from './disqualification-http.service';
 
@@ -27,9 +25,9 @@ export class DisqualificationService {
     }
 
     public refresh(): void {
-        this.service.getDisqualifications().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.disqualifications = data.data;
+        this.service.getDisqualifications().subscribe((disqualifications: Disqualification[]) => {
+            if (disqualifications != null) {
+                this.disqualifications = disqualifications;
                 this.disqualificationsSubject.next(this.disqualifications);
             }
         });

@@ -1,13 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { Subscription } from 'rxjs';
 
 import { Event } from '../events/event.model';
-import { Race } from '../races/race.model';
-import { Data } from '../model/data.model';
-
 import { UnassignedEventsHttpService } from './unassigned-events-http.service';
 
 @Injectable()
@@ -39,9 +35,9 @@ export class UnassignedEventsService implements OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
-        this.subscription = this.service.getUnassignedEvents().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.events = data.data;
+        this.subscription = this.service.getUnassignedEvents().subscribe((events: Event[]) => {
+            if (events !== undefined) {
+                this.events = events;
                 this.subject.next(this.events);
             }
         });

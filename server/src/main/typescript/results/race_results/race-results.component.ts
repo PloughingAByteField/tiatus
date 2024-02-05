@@ -131,6 +131,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                         if (event === null) {
                             continue;
                         }
+
                         let finish: Position;
                         let start: Position;
                         if (event.positions.length > 1) {
@@ -194,6 +195,8 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
                                     eventsAtPosition.start.name,
                                     eventsAtPosition.finish.name
                                 ]);
+                            } else {
+                                console.log("Cannot navigate to " + this.race.id);
                             }
                         }
                     }

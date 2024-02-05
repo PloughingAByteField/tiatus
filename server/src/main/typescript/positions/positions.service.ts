@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
 import { Position, convertObjectoPosition } from './position.model';
-import { Data } from '../model/data.model';
 
 import { PositionsHttpService } from './positions-http.service';
 
@@ -30,9 +28,9 @@ export class PositionsService {
     }
 
     public refresh(): void {
-        this.service.getPositions().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.positions = data.data;
+        this.service.getPositions().subscribe((positions: Position[]) => {
+            if (positions !== undefined) {
+                this.positions = positions;
                 this.subject.next(this.positions);
             }
         });

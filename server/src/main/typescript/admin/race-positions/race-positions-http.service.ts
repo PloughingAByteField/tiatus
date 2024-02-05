@@ -3,11 +3,9 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { RacePositionTemplate } from './race-position-template.model';
-import { CachedHttpService } from '../../http/cached-http.service';
-import { Data } from '../../model/data.model';
 
 @Injectable()
-export class RacePositionsHttpService extends CachedHttpService {
+export class RacePositionsHttpService {
 
     public templates: RacePositionTemplate[];
 
@@ -17,9 +15,12 @@ export class RacePositionsHttpService extends CachedHttpService {
         observe: 'response' as const,
         headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    constructor(protected http: HttpClient) {
-        super(http);
-    }
+
+    private httpOptions = {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+      };
+
+    constructor(protected http: HttpClient) { }
 
     public createTemplate(template: RacePositionTemplate): Promise<RacePositionTemplate> {
         return this.http
@@ -62,6 +63,6 @@ export class RacePositionsHttpService extends CachedHttpService {
     }
 
     public getTemplates(): Observable<RacePositionTemplate[]> {
-        return this.http.get<RacePositionTemplate[]>(this.endPoint);
+        return this.http.get<RacePositionTemplate[]>(this.endPoint, this.httpOptions);
     }
 }

@@ -2,21 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-
-import { CachedHttpService } from '../../http/cached-http.service';
-import { Data } from '../../model/data.model';
+import { Role } from './role.model';
 
 @Injectable()
-export class AdminRolesHttpService extends CachedHttpService {
+export class AdminRolesHttpService  {
 
     private endPoint: string = '/rest/users/roles';
 
-    constructor(protected http: HttpClient) {
-        super(http);
-     }
+    private httpOptions = {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
 
-    public getRoles(): Observable<Data> {
-        return this.getData(this.endPoint);
+    constructor(protected http: HttpClient) {}
+
+    public getRoles(): Observable<Role[]> {
+        return this.http.get<Role[]>('/rest/clubs', this.httpOptions);
     }
 
 }

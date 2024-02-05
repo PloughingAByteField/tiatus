@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { Data } from '../../model/data.model';
-
 import { RacesService } from '../../races/races.service';
+import { Race } from '../../races/race.model';
+
 import { ResultsHttpRacesService } from './races-http.service';
+
 
 @Injectable()
 export class ResultsRacesService extends RacesService {
@@ -13,9 +14,9 @@ export class ResultsRacesService extends RacesService {
     }
 
     public refresh(): void {
-        this.service.getRacesData().subscribe((data: Data) => {
-            if (!data.cached) {
-                this.races = data.data;
+        this.service.getRaces().subscribe((races: Race[]) => {
+            if (races != null) {
+                this.races = races;
                 this.racesSubject.next(this.races);
             }
         });

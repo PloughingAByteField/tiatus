@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
 
 import { Event } from '../events/event.model';
-import { CachedHttpService } from '../http/cached-http.service';
-import { Data } from '../model/data.model';
 
 @Injectable()
-export class UnassignedEventsHttpService extends CachedHttpService {
+export class UnassignedEventsHttpService {
 
   protected endPoint: string = '/rest/events/unassigned';
 
-  constructor(protected http: HttpClient) {
-    super(http);
-  }
+  private httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+  
+  constructor(protected http: HttpClient) {}
 
-  public getUnassignedEvents(): Observable<Data> {
-    return this.getData(this.endPoint);
+  public getUnassignedEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(this.endPoint, this.httpOptions);
    }
 }

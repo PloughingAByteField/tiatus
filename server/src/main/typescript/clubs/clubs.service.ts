@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
 import { Club, convertObjectToClub } from './club.model';
 import { ClubsHttpService } from './clubs-http.service';
-import { Data } from '../model/data.model';
 
 import { Message } from '../websocket/message.model';
 import { MessageType } from '../websocket/message-type.model';
@@ -30,9 +26,9 @@ export class ClubsService {
     }
 
     public refresh(): void {
-        this.service.getClubs().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.clubs = data.data;
+        this.service.getClubs().subscribe((clubs: Club[]) => {
+            if (clubs !== undefined) {
+                this.clubs = clubs;
                 this.subject.next(this.clubs);
             }
         });
@@ -64,7 +60,7 @@ export class ClubsService {
     }
 
     public getClubForId(clubId: number): Club {
-        if (this.clubs !== undefined) {
+        if (this.clubs != null) {
             for (const club of this.clubs) {
                 if (club.id === clubId) {
                     return club;

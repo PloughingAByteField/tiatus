@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import 'rxjs/add/observable/forkJoin';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -13,9 +12,7 @@ import { Entry } from '../../entries/entry.model';
 import { Race } from '../../races/race.model';
 import { PositionTime } from '../../times/postion-time.model';
 
-import { RaceEntryTimes } from '../../times/race-entry-times.model';
 import { EntryTimesService } from '../../times/entry-times.service';
-import { Data } from '../../model/data.model';
 
 @Injectable()
 export class TimingEntryTimesService extends EntryTimesService {
@@ -55,10 +52,10 @@ export class TimingEntryTimesService extends EntryTimesService {
         this.entriesService.getEntriesForRace(race).subscribe((entriesData: Entry[]) => {
             entries = entriesData;
             this.timesService.getTimesForPositionInRace(position, race)
-            .subscribe((data: Data) => {
-                if (data !== undefined && data.data !== undefined) {
+            .subscribe((raceTimes: PositionTime[]) => {
+                if (raceTimes != null) {
                     // this is postiontimes not ent
-                    positionTimes = data.data;
+                    positionTimes = raceTimes;
 
                     if (entries) {
                         times = mergePositionTimesIntoEntryTimes(entries, positionTimes);

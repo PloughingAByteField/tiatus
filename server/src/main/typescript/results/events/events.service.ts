@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { Entry } from '../../entries/entry.model';
-
-import { Data } from '../../model/data.model';
-
 import { EventsService } from '../../events/events.service';
 import { ResultsHttpEventsService } from './events-http.service';
 
-import { Message } from '../../websocket/message.model';
-import { MessageType } from '../../websocket/message-type.model';
+import { Event } from '../../events/event.model';
 
 @Injectable()
 export class ResultsEventsService extends EventsService {
@@ -18,9 +13,9 @@ export class ResultsEventsService extends EventsService {
     }
 
     public refresh(): void {
-        this.service.getEventsData().subscribe((data: Data) => {
-            if (!data.cached) {
-                this.events = data.data;
+        this.service.getEvents().subscribe((events: Event[]) => {
+            if (events != null) {
+                this.events = events;
                 this.subject.next(this.events);
             }
         });

@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
 import { Penalty } from './penalty.model';
-import { Data } from '../model/data.model';
-
 import { PenaltiesHttpService } from './penalties-http.service';
 
 @Injectable()
@@ -27,9 +23,9 @@ export class PenaltiesService {
     }
 
     public refresh(): void {
-        this.service.getPenalties().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.penalties = data.data;
+        this.service.getPenalties().subscribe((penalites: Penalty[]) => {
+            if (penalites != null) {
+                this.penalties = penalites;
                 this.penaltiesSubject.next(this.penalties);
             }
         });

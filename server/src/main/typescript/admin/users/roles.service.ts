@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { Role } from './role.model';
-import { Data } from '../../model/data.model';
 
 import { AdminRolesHttpService } from './roles-http.service';
 
@@ -32,9 +31,9 @@ export class AdminRolesService {
     }
 
     public refresh(): void {
-         this.service.getRoles().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.roles = data.data;
+         this.service.getRoles().subscribe((roles: Role[]) => {
+            if (roles != null) {
+                this.roles = roles;
                 this.subject.next(this.roles);
             }
         });

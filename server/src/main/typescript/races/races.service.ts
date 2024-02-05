@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 
 import { Race, convertObjectToRace } from './race.model';
@@ -9,7 +7,6 @@ import { Message } from '../websocket/message.model';
 import { MessageType } from '../websocket/message-type.model';
 
 import { RacesHttpService } from './races-http.service';
-import { Data } from '../model/data.model';
 
 @Injectable()
 export class RacesService {
@@ -34,9 +31,9 @@ export class RacesService {
     }
 
     public refresh(): void {
-         this.service.getRaces().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.races = data.data;
+         this.service.getRaces().subscribe((races: Race[]) => {
+            if (races != null) {
+                this.races = races;
                 this.racesSubject.next(this.races);
             }
         });

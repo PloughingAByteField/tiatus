@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { CachedHttpService } from '../http/cached-http.service';
-import { Data } from '../model/data.model';
 
 @Injectable()
-export class ConfigHttpService extends CachedHttpService {
+export class ConfigHttpService {
     protected endPoint: string = '/rest/config/config';
 
-    constructor(protected http: HttpClient) {
-        super(http);
-    }
+    protected httpOptions = {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
 
-    public getConfig(): Observable<Data> {
-        return this.getData(this.endPoint);
+    constructor(protected http: HttpClient) {}
+
+    public getConfig(): Observable<object> {
+        return this.http.get<object>(this.endPoint, this.httpOptions);
     }
 }

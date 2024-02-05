@@ -1,6 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { Subscription } from 'rxjs';
 
@@ -8,7 +6,6 @@ import { RaceEvent } from './race-event.model';
 import { Race } from '../races/race.model';
 
 import { RaceEventsHttpService } from './race-events-http.service';
-import { Data } from '../model/data.model';
 
 @Injectable()
 export class RaceEventsService implements OnDestroy {
@@ -45,9 +42,9 @@ export class RaceEventsService implements OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
-        this.subscription = this.service.getRaceEvents().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.events = data.data;
+        this.subscription = this.service.getRaceEvents().subscribe((events: RaceEvent[]) => {
+            if (events != null) {
+                this.events = events;
                 this.subject.next(this.events);
             }
         });

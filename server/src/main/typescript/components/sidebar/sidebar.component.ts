@@ -25,6 +25,7 @@ export class SidebarComponent {
     }
 
     @Input() set link(newLink: string) {
+        console.log("link now " + newLink);
         this.raceLink = newLink;
     }
 

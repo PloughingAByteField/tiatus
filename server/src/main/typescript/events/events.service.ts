@@ -1,13 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { Subscription } from 'rxjs';
 
 import { Event, convertObjectToEvent } from './event.model';
-import { Race } from '../races/race.model';
-import { Data } from '../model/data.model';
-
 import { EventsHttpService } from './events-http.service';
 
 import { Message } from '../websocket/message.model';
@@ -39,9 +35,9 @@ export class EventsService implements OnDestroy {
     }
 
     public refresh(): void {
-        this.subscription = this.service.getEvents().subscribe((data: Data) => {
-            if (data.data !== undefined) {
-                this.events = data.data;
+        this.subscription = this.service.getEvents().subscribe((events: Event[]) => {
+            if (events != null) {
+                this.events = events;
                 this.subject.next(this.events);
             }
         });

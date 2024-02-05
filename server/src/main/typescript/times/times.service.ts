@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -6,7 +6,6 @@ import { Race } from '../races/race.model';
 
 import { TimesHttpService } from './times-http.service';
 import { RaceTimesSubject } from './race-times-subject.model';
-import { Data } from '../model/data.model';
 import { PositionTime } from './postion-time.model';
 
 @Injectable()
@@ -31,9 +30,9 @@ export class TimesService {
             const raceTimesSubject: RaceTimesSubject = new RaceTimesSubject();
             raceTimesSubject.race = race;
             this.raceEntries.push(raceTimesSubject);
-            this.service.getTimesForRace(race).subscribe((data: Data) => {
-                if (data.data !== undefined) {
-                    raceTimesSubject.times = data.data;
+            this.service.getTimesForRace(race).subscribe((times: PositionTime[]) => {
+                if (times != null) {
+                    raceTimesSubject.times = times;
                     raceTimesSubject.subject.next(raceTimesSubject.times);
                 }
             });
@@ -45,9 +44,9 @@ export class TimesService {
         const subject: RaceTimesSubject
                 = this.raceEntries.filter((s: RaceTimesSubject) => s.race.id === race.id).shift();
         if (subject) {
-            this.service.getTimesForRace(race).subscribe((data: Data) => {
-                if (data.data !== undefined) {
-                    subject.times = data.data;
+            this.service.getTimesForRace(race).subscribe((times: PositionTime[]) => {
+                if (times != null) {
+                    subject.times = times;
                     subject.subject.next(subject.times);
                 }
             });
