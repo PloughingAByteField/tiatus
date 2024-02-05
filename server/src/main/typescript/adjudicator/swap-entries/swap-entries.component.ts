@@ -64,7 +64,7 @@ export class SwapEntriesComponent implements OnInit {
     }
 
     public getEntriesForRace(): Entry[] {
-        if (this.entries) {
+        if (this.entries != null && this.race != null) {
             return this.entries.filter((entry: Entry) => entry.race === this.race.id);
         }
         return [];
