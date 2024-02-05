@@ -72,11 +72,6 @@ export class SwapEntriesComponent implements OnInit {
 
     public swapEntries(): void {
         this.swapService.swapEntries(this.from, this.to);
-        // force refresh as server has done lots of work behind the sences
-        this.penaltiesService.refresh();
-        this.disqualificationService.refresh();
-        this.entriesService.refreshForRace(this.racesService.getRaceForId(this.from.race));
-        this.timesService.refreshForRace(this.racesService.getRaceForId(this.from.race));
     }
 
     public isSwapEnabled(): boolean {

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
 
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
@@ -20,6 +19,8 @@ import { AdjudicatorDisqualificationService } from '../disqualification/disquali
 import { AdjudicatorPenaltiesService } from '../penalties/penalties.service';
 import { EventsService } from '../../events/events.service';
 import { ClubsService } from '../../clubs/clubs.service';
+import { EntriesService } from '../../entries/entries.service';
+import { TimesService } from '../../times/times.service';
 
 @Component({
     selector: 'entries',
@@ -60,13 +61,15 @@ export class EntriesComponent implements OnInit {
         private disqualificationService: AdjudicatorDisqualificationService,
         private clubsService: ClubsService,
         private eventsService: EventsService,
-        private penaltiesService: AdjudicatorPenaltiesService
+        private penaltiesService: AdjudicatorPenaltiesService,
+        private timesService: TimesService,
+        private entriesService: EntriesService
     ) {}
 
     public ngOnInit() {
         this.racesService.getRaces().subscribe((races: Race[]) => {
             this.races = races;
-            if (this.raceId) {
+            if (this.raceId != null && this.raceId > 0) {
                 this.setRaceForRaceId(this.raceId);
             }
         });
@@ -250,6 +253,10 @@ export class EntriesComponent implements OnInit {
     private setRaceForRaceId(raceId: number): void {
         if (this.races) {
             this.race = this.racesService.getRaceForId(this.raceId);
+            // force refresh as server has done lots of work behind the sences
+            this.entriesService.refreshForRace(this.race);
+            this.timesService.refreshForRace(this.race);
+            this.entryTimesService.refreshForRace(this.race);
             this.getTimesForRace(this.race);
         }
     }
@@ -257,8 +264,8 @@ export class EntriesComponent implements OnInit {
     private getTimesForRace(race: Race): void {
         if (race) {
             this.entryTimesService.getEntriesForRace(this.race)
-                .subscribe((data: EntryTime[]) => {
-                    this.entryTimes = data;
+                .subscribe((times: EntryTime[]) => {
+                    this.entryTimes = times;
                     this.filteredEntryTimes = this.entryTimes;
             });
         }
