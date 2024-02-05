@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.tiatus.entity.*;
 
 import java.util.List;
@@ -19,6 +19,15 @@ public class EntryDaoImpl implements EntryDao {
 
     @Autowired
     private EntryRepository repository;
+
+    @Autowired
+    private DisqualificationRepository disqualificationRepository;
+
+    @Autowired
+    private PenaltyRepository penaltyRepository;
+
+    @Autowired
+    private EntryPositionTimeRepository entryPositionTimeRepository;
 
     @Override
     public Entry getEntryForId(Long id) {
@@ -125,9 +134,10 @@ public class EntryDaoImpl implements EntryDao {
      When swapping entry numbers, we must also must update times, penalties and disqualifications applied against the original number
      To do this we use an intermediate entry with id of 0
      */
+    @Transactional
     @Override
     public synchronized void swapEntryNumbers(Entry from, Entry to) throws DaoException {
-        // try {
+        try {
             Integer fromNumber = from.getNumber();
             Integer fromRaceOrder = from.getRaceOrder();
             Integer toNumber = to.getNumber();
@@ -137,49 +147,39 @@ public class EntryDaoImpl implements EntryDao {
             Entry intermediate = new Entry();
             intermediate.setEvent(from.getEvent());
             intermediate.setRace(from.getRace());
-            // intermediate = repository.save(intermediate);
+            intermediate = repository.save(intermediate);
 
-            // // swap from entries in position_time, penalty and disqualification to intermediate entry
-            // em.createQuery("UPDATE EntryPositionTime set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", intermediate.getId()).setParameter("from_id", from.getId()).executeUpdate();
-            // em.createQuery("UPDATE Penalty set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", intermediate.getId()).setParameter("from_id", from.getId()).executeUpdate();
-            // em.createQuery("UPDATE Disqualification set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", intermediate.getId()).setParameter("from_id", from.getId()).executeUpdate();
+            // swap from entries in position_time, penalty and disqualification to intermediate entry
+            entryPositionTimeRepository.updatePostionTimeEntryId(from.getId(), intermediate.getId());
+            penaltyRepository.updatePenaltyEntryId(from.getId(), intermediate.getId());
+            disqualificationRepository.updateDisqualificationEntryId(from.getId(), intermediate.getId());
 
-            // // swap to entries in position_time, penalty and disqualification to the from entry
-            // em.createQuery("UPDATE EntryPositionTime set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", from.getId()).setParameter("from_id", to.getId()).executeUpdate();
-            // em.createQuery("UPDATE Penalty set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", from.getId()).setParameter("from_id", to.getId()).executeUpdate();
-            // em.createQuery("UPDATE Disqualification set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", from.getId()).setParameter("from_id", to.getId()).executeUpdate();
+            // swap to entries in position_time, penalty and disqualification to the from entry
+            entryPositionTimeRepository.updatePostionTimeEntryId(to.getId(), from.getId());
+            penaltyRepository.updatePenaltyEntryId(to.getId(), from.getId());
+            disqualificationRepository.updateDisqualificationEntryId(to.getId(), from.getId());
 
-            // // swap intermediate entries in position_time, penalty and disqualification to the to entry
-            // em.createQuery("UPDATE EntryPositionTime set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", to.getId()).setParameter("from_id", intermediate.getId()).executeUpdate();
-            // em.createQuery("UPDATE Penalty set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", to.getId()).setParameter("from_id", intermediate.getId()).executeUpdate();
-            // em.createQuery("UPDATE Disqualification set entry_id = :to_id where entry_id = :from_id")
-            //         .setParameter("to_id", to.getId()).setParameter("from_id", intermediate.getId()).executeUpdate();
+            // swap intermediate entries in position_time, penalty and disqualification to the to entry
+            entryPositionTimeRepository.updatePostionTimeEntryId(intermediate.getId(), to.getId());
+            penaltyRepository.updatePenaltyEntryId(intermediate.getId(), to.getId());
+            disqualificationRepository.updateDisqualificationEntryId(intermediate.getId(), to.getId());
 
-            // // delete intermediate
-            // em.remove(em.contains(intermediate) ? intermediate : em.merge(intermediate));
+            // delete intermediate
+            repository.delete(intermediate);
 
-            // // swap entry numbers
-            // from.setNumber(toNumber);
-            // from.setRaceOrder(toRaceOrder);
-            // to.setNumber(fromNumber);
-            // to.setRaceOrder(fromRaceOrder);
+            // swap entry numbers
+            from.setNumber(toNumber);
+            from.setRaceOrder(toRaceOrder);
+            to.setNumber(fromNumber);
+            to.setRaceOrder(fromRaceOrder);
 
-            // em.merge(from);
-            // em.merge(to);
+            repository.save(from);
+            repository.save(to);
 
-        // } catch (Exception e) {
-        //     LOG.warn("Failed to swap entries", e);
-            // throw new DaoException(e.getMessage());
-        // }
+        } catch (Exception e) {
+            LOG.warn("Failed to swap entries", e);
+            throw new DaoException(e.getMessage());
+        }
 
-        throw new DaoException("Not supported yet");
     }
 }

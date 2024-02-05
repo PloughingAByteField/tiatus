@@ -3,6 +3,7 @@ package org.tiatus.dao;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.tiatus.entity.EntryPositionId;
 import org.tiatus.entity.EntryPositionTime;
@@ -19,5 +20,9 @@ public interface EntryPositionTimeRepository extends JpaRepository<EntryPosition
 
     @Query(value = "select * from entry_position_time where position_id = :positionId and entry_id = :entryId", nativeQuery = true)
     List<EntryPositionTime> getTimesForEntryAtPosition(Long entryId, Long positionId);
+
+    @Modifying
+    @Query(value = "update entry_position_time set entry_id = :toId where entry_id = :fromId", nativeQuery = true)
+    void updatePostionTimeEntryId(Long fromId, Long toId);
 }
 
