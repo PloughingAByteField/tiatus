@@ -1,9 +1,13 @@
 package org.tiatus.server.filter;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import jakarta.servlet.Filter;
 
 @Configuration
 @EnableTransactionManagement
@@ -16,4 +20,8 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addViewController("/results/").setViewName("forward:/results/index.html");
     }
 
+    @Bean
+    public Filter shallowEtagHeaderFilter() {
+        return new ShallowEtagHeaderFilter();
+    }
 }

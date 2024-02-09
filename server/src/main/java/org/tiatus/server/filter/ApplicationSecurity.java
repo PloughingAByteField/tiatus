@@ -35,10 +35,12 @@ public class ApplicationSecurity {
             .anyRequest().authenticated())
         // TODO add csrf support see https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html#:~:text=JavaScript%20Applications,-JavaScript%20applications%20typically&text=In%20order%20to%20obtain%20the,as%20an%20HTTP%20request%20header.
         .csrf(AbstractHttpConfigurer::disable)
+        .headers(headers -> headers
+          .cacheControl(cache -> cache.disable())
+        )
         .httpBasic(Customizer.withDefaults())
         .formLogin((formLogin) -> formLogin.successHandler(successHandler()))
         .logout((logout) -> logout.logoutSuccessUrl("/rest/logout"));
-
     return http.build();
   }
 

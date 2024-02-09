@@ -10,7 +10,6 @@ import org.tiatus.service.PositionService;
 import org.tiatus.service.RacePositionTemplateService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import jakarta.annotation.security.RolesAllowed;
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Created by johnreynolds on 19/06/2016.
  */
-// @Path("racePositionTemplates")
 // @SuppressWarnings("squid:S1166")
 @RestController
 @RequestMapping("/rest/racePositionTemplates")
