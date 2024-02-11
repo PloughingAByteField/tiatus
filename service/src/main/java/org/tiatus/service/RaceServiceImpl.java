@@ -3,6 +3,8 @@ package org.tiatus.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RaceDao;
@@ -26,7 +28,11 @@ public class RaceServiceImpl implements RaceService {
     @Autowired
     protected MessageSenderService sender;
 
+    @Autowired
+    protected CacheManager cacheManager;
+
     @Override
+    @Cacheable(value = "race", key = "#id")
     public Race getRaceForId(Long id) {
         return dao.getRaceForId(id);
     }
@@ -38,6 +44,7 @@ public class RaceServiceImpl implements RaceService {
             Race newRace = dao.addRace(race);
             Message message = Message.createMessage(newRace, MessageType.ADD, sessionId);
             sender.sendMessage(message);
+            cacheManager.getCache("races").clear();
             return newRace;
 
         } catch (DaoException e) {
@@ -57,6 +64,8 @@ public class RaceServiceImpl implements RaceService {
             dao.removeRace(race);
             Message message = Message.createMessage(race, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
+            cacheManager.getCache("race").evictIfPresent(race.getId());
+            cacheManager.getCache("races").clear();
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -75,6 +84,8 @@ public class RaceServiceImpl implements RaceService {
             Race updated = dao.updateRace(race);
             Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            cacheManager.getCache("race").evictIfPresent(race.getId());
+            cacheManager.getCache("races").clear();
 
             return updated;
 
@@ -89,6 +100,7 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
+    @Cacheable(value = "races")
     public List<Race> getRaces() {
         return dao.getRaces();
     }

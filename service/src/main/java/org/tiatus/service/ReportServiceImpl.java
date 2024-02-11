@@ -15,6 +15,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.tiatus.entity.*;
 import org.tiatus.entity.Event;
@@ -56,6 +57,9 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     protected TimesService timesService;
 
+    @Autowired
+    protected CacheManager cacheManager;
+    
     private List<Disqualification> disqualifications;
     private List<Penalty> penalties;
     private List<RaceEvent> raceEvents;

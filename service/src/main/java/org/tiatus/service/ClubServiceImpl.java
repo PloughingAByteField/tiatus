@@ -3,6 +3,8 @@ package org.tiatus.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.ClubDao;
@@ -26,6 +28,9 @@ public class ClubServiceImpl implements ClubService {
     @Autowired
     protected MessageSenderService sender;
 
+    @Autowired
+    protected CacheManager cacheManager;
+
     @Override
     public Club addClub(Club club, String sessionId) throws ServiceException {
         LOG.debug("Adding club " + club);
@@ -33,6 +38,7 @@ public class ClubServiceImpl implements ClubService {
             Club c = dao.addClub(club);
             Message message = Message.createMessage(club, MessageType.ADD, sessionId);
             sender.sendMessage(message);
+            cacheManager.getCache("clubs").clear();
             return c;
 
         } catch (DaoException e) {
@@ -52,6 +58,8 @@ public class ClubServiceImpl implements ClubService {
             dao.removeClub(club);
             Message message = Message.createMessage(club, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
+            cacheManager.getCache("club").evictIfPresent(club.getId());
+            cacheManager.getCache("clubs").clear();
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -70,6 +78,8 @@ public class ClubServiceImpl implements ClubService {
             Club updated = dao.updateClub(club);
             Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            cacheManager.getCache("club").evictIfPresent(club.getId());
+            cacheManager.getCache("clubs").clear();
 
             return updated;
 
@@ -84,11 +94,13 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Cacheable(value = "club", key = "#id")
     public Club getClubForId(Long id) {
         return dao.getClubForId(id);
     }
 
     @Override
+    @Cacheable(value = "clubs")
     public List<Club> getClubs() {
         return dao.getClubs();
     }
