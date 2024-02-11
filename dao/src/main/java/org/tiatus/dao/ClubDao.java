@@ -37,5 +37,5 @@ public interface ClubDao {
      */
     Club updateClub(Club club) throws DaoException;
 
-    Club getClubForId(Long id);
+    Club getClubForId(long id);
 }

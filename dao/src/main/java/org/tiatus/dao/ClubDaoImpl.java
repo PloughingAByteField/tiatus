@@ -31,7 +31,7 @@ public class ClubDaoImpl implements ClubDao {
         try {
             boolean exists = false;
             if (club.getId() != null) {
-                exists = repository.existsById(club.getId());
+                exists = existsById(club.getId());
             }
             if (!exists) {
                 return repository.save(club);
@@ -53,7 +53,7 @@ public class ClubDaoImpl implements ClubDao {
         try {
             boolean exists = false;
             if (club.getId() != null) {
-                exists = repository.existsById(club.getId());
+                exists = existsById(club.getId());
             }
             if (exists) {
                 repository.delete(club);
@@ -75,7 +75,7 @@ public class ClubDaoImpl implements ClubDao {
         try {
             Club existing = null;
             if (club.getId() != null) {
-                existing = repository.findById(club.getId()).orElse(null);
+                existing = getClubForId(club.getId());
             }
             if (existing != null) {
                 return repository.save(club);
@@ -93,7 +93,11 @@ public class ClubDaoImpl implements ClubDao {
     }
 
     @Override
-    public Club getClubForId(Long id) {
+    public Club getClubForId(long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    private boolean existsById(long id) {
+        return repository.existsById(id);
     }
 }
