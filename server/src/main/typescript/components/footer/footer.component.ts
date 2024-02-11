@@ -11,16 +11,13 @@ export class FooterComponent implements OnInit {
 
   public footer: string;
 
-  private tiatus: string = 'Tiatus';
 
-  constructor(private configService: ConfigService) {
-    this.footer = this.tiatus;
-  }
+  constructor(private configService: ConfigService) {}
 
   public ngOnInit() {
     this.configService.getFooter().subscribe((data: string) => {
       if (data) {
-        this.footer = this.tiatus + ' / ' + data;
+        this.footer = ' / ' + data;
       }
     });
   }
