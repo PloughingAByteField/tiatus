@@ -3,6 +3,7 @@ package org.tiatus.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class ClubServiceImpl implements ClubService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClubServiceImpl.class);
 
+    protected final static String CACHE_LIST_NAME = "clubs";
+    protected final static String CACHE_ENTRY_NAME = "club";
+
     @Autowired
     protected ClubDao dao;
 
@@ -38,7 +42,8 @@ public class ClubServiceImpl implements ClubService {
             Club c = dao.addClub(club);
             Message message = Message.createMessage(club, MessageType.ADD, sessionId);
             sender.sendMessage(message);
-            cacheManager.getCache("clubs").clear();
+            clearCache();
+
             return c;
 
         } catch (DaoException e) {
@@ -58,8 +63,7 @@ public class ClubServiceImpl implements ClubService {
             dao.removeClub(club);
             Message message = Message.createMessage(club, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
-            cacheManager.getCache("club").evictIfPresent(club.getId());
-            cacheManager.getCache("clubs").clear();
+            updateCache(club);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -78,8 +82,7 @@ public class ClubServiceImpl implements ClubService {
             Club updated = dao.updateClub(club);
             Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
-            cacheManager.getCache("club").evictIfPresent(club.getId());
-            cacheManager.getCache("clubs").clear();
+            updateCache(club);
 
             return updated;
 
@@ -94,14 +97,30 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    @Cacheable(value = "club", key = "#id")
+    @Cacheable(value = CACHE_ENTRY_NAME, key = "#id")
     public Club getClubForId(Long id) {
         return dao.getClubForId(id);
     }
 
     @Override
-    @Cacheable(value = "clubs")
+    @Cacheable(value = CACHE_LIST_NAME)
     public List<Club> getClubs() {
         return dao.getClubs();
+    }
+
+    private void updateCache(Club club) {
+        Cache cache = cacheManager.getCache(CACHE_ENTRY_NAME);
+        if (cache != null) {
+            cache.evictIfPresent(club.getId().longValue());
+        }
+
+        clearCache();
+    }
+
+    private void clearCache() {
+        Cache cache = cacheManager.getCache(CACHE_LIST_NAME);
+        if (cache != null) {
+            cache.clear();
+        }
     }
 }

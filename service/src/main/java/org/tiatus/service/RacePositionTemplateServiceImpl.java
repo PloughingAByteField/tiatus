@@ -3,6 +3,9 @@ package org.tiatus.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RacePositionTemplateDao;
@@ -18,13 +21,20 @@ import java.util.List;
  */
 @Service
 public class RacePositionTemplateServiceImpl implements RacePositionTemplateService {
+    
     private static final Logger LOG = LoggerFactory.getLogger(RacePositionTemplateServiceImpl.class);
+
+    protected final static String CACHE_LIST_NAME = "position_templates";
+    protected final static String CACHE_ENTRY_NAME = "position_template";
 
     @Autowired
     protected RacePositionTemplateDao dao;
 
     @Autowired
     protected MessageSenderService sender;
+
+    @Autowired
+    protected CacheManager cacheManager;    
 
     @Override
     public RacePositionTemplate addRacePositionTemplate(RacePositionTemplate template, String sessionId) throws ServiceException {
@@ -33,6 +43,8 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
             RacePositionTemplate rpt = dao.addRacePositionTemplate(template);
             Message message = Message.createMessage(rpt, MessageType.ADD, sessionId);
             sender.sendMessage(message);
+            clearCache();
+
             return rpt;
 
         } catch (DaoException e) {
@@ -52,6 +64,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
             dao.deleteRacePositionTemplate(template);
             Message message = Message.createMessage(template, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
+            updateCache(template);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -70,6 +83,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
             RacePositionTemplate updated = dao.updateRacePositionTemplate(template);
             Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            updateCache(template);
 
             return updated;
 
@@ -84,11 +98,13 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
     }
 
     @Override
+    @Cacheable(value = CACHE_LIST_NAME)
     public List<RacePositionTemplate> getRacePositionTemplates() {
         return dao.getRacePositionTemplates();
     }
 
     @Override
+    @Cacheable(value = CACHE_ENTRY_NAME, key = "#id")
     public RacePositionTemplate getTemplateForId(Long id) {
         return dao.getTemplateForId(id);
     }
@@ -99,6 +115,8 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
             RacePositionTemplateEntry rpte = dao.addTemplateEntry(entry);
             Message message = Message.createMessage(rpte, MessageType.ADD, sessionId);
             sender.sendMessage(message);
+            updateCache(entry.getTemplate());
+
             return rpte;
 
         } catch (DaoException e) {
@@ -117,6 +135,7 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
             dao.deleteTemplateEntry(entry);
             Message message = Message.createMessage(entry, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
+            updateCache(entry.getTemplate());
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -134,6 +153,8 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
             RacePositionTemplateEntry updated = dao.updateTemplateEntry(entry);
             Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            updateCache(entry.getTemplate());
+
             return updated;
 
         } catch (DaoException e) {
@@ -143,6 +164,22 @@ public class RacePositionTemplateServiceImpl implements RacePositionTemplateServ
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
+        }
+    }
+
+    private void updateCache(RacePositionTemplate template) {
+        Cache cache = cacheManager.getCache(CACHE_ENTRY_NAME);
+        if (cache != null) {
+            cache.evictIfPresent(template.getId().longValue());
+        }
+
+        clearCache();
+    }
+
+    private void clearCache() {
+        Cache cache = cacheManager.getCache(CACHE_LIST_NAME);
+        if (cache != null) {
+            cache.clear();
         }
     }
 }

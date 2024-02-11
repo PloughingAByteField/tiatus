@@ -3,6 +3,7 @@ package org.tiatus.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class RaceServiceImpl implements RaceService {
 
     private static final Logger LOG = LoggerFactory.getLogger(RaceServiceImpl.class);
 
+    protected final static String CACHE_LIST_NAME = "races";
+    protected final static String CACHE_ENTRY_NAME = "race";
+
     @Autowired
     protected RaceDao dao;
 
@@ -32,7 +36,7 @@ public class RaceServiceImpl implements RaceService {
     protected CacheManager cacheManager;
 
     @Override
-    @Cacheable(value = "race", key = "#id")
+    @Cacheable(value = CACHE_ENTRY_NAME, key = "#id")
     public Race getRaceForId(Long id) {
         return dao.getRaceForId(id);
     }
@@ -44,7 +48,8 @@ public class RaceServiceImpl implements RaceService {
             Race newRace = dao.addRace(race);
             Message message = Message.createMessage(newRace, MessageType.ADD, sessionId);
             sender.sendMessage(message);
-            cacheManager.getCache("races").clear();
+            clearCache();
+
             return newRace;
 
         } catch (DaoException e) {
@@ -64,8 +69,7 @@ public class RaceServiceImpl implements RaceService {
             dao.removeRace(race);
             Message message = Message.createMessage(race, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
-            cacheManager.getCache("race").evictIfPresent(race.getId());
-            cacheManager.getCache("races").clear();
+            updateCache(race);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -84,8 +88,7 @@ public class RaceServiceImpl implements RaceService {
             Race updated = dao.updateRace(race);
             Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
-            cacheManager.getCache("race").evictIfPresent(race.getId());
-            cacheManager.getCache("races").clear();
+            updateCache(race);
 
             return updated;
 
@@ -100,8 +103,24 @@ public class RaceServiceImpl implements RaceService {
     }
 
     @Override
-    @Cacheable(value = "races")
+    @Cacheable(value = CACHE_LIST_NAME)
     public List<Race> getRaces() {
         return dao.getRaces();
+    }
+
+    private void updateCache(Race race) {
+        Cache cache = cacheManager.getCache(CACHE_ENTRY_NAME);
+        if (cache != null) {
+            cache.evictIfPresent(race.getId().longValue());
+        }
+
+        clearCache();
+    }
+
+    private void clearCache() {
+        Cache cache = cacheManager.getCache(CACHE_LIST_NAME);
+        if (cache != null) {
+            cache.clear();
+        }
     }
 }

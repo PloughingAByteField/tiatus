@@ -3,6 +3,9 @@ package org.tiatus.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.EntryDao;
@@ -20,13 +23,20 @@ public class EntryServiceImpl implements EntryService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntryServiceImpl.class);
 
+    protected final static String CACHE_LIST_NAME = "entries";
+    protected final static String CACHE_ENTRY_NAME = "entry";
+
     @Autowired
     protected EntryDao dao;
 
     @Autowired
     protected MessageSenderService sender;
 
+    @Autowired
+    protected CacheManager cacheManager;
+
     @Override
+    @Cacheable(value = CACHE_ENTRY_NAME, key = "#id")
     public Entry getEntryForId(Long id) {
         return dao.getEntryForId(id);
     }
@@ -38,6 +48,8 @@ public class EntryServiceImpl implements EntryService {
             Entry newEntry = dao.addEntry(entry);
             Message message = Message.createMessage(newEntry, MessageType.ADD, sessionId);
             sender.sendMessage(message);
+            clearCache();
+
             return newEntry;
 
         } catch (DaoException e) {
@@ -57,6 +69,7 @@ public class EntryServiceImpl implements EntryService {
             dao.removeEntry(entry);
             Message message = Message.createMessage(entry, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
+            updateCache(entry);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -75,6 +88,7 @@ public class EntryServiceImpl implements EntryService {
             Entry updated = dao.updateEntry(entry);
             Message message = Message.createMessage(updated, MessageType.UPDATE, sessionId);
             sender.sendMessage(message);
+            updateCache(entry);
 
             return updated;
 
@@ -96,6 +110,7 @@ public class EntryServiceImpl implements EntryService {
                 dao.updateEntry(entry);
                 Message message = Message.createMessage(entries, MessageType.UPDATE, sessionId);
                 sender.sendMessage(message);
+                updateCache(entry);
 
             } catch (DaoException e) {
                 LOG.warn("Got dao exception");
@@ -109,11 +124,13 @@ public class EntryServiceImpl implements EntryService {
     }
 
     @Override
+    @Cacheable(value = CACHE_LIST_NAME)
     public List<Entry> getEntries() {
         return dao.getEntries();
     }
 
     @Override
+    @Cacheable(value = CACHE_LIST_NAME + "_for_race", key = "#race.id")
     public List<Entry> getEntriesForRace(Race race) {
         return dao.getEntriesForRace(race);
     }
@@ -137,8 +154,11 @@ public class EntryServiceImpl implements EntryService {
             dao.swapEntryNumbers(from, to);
             Message messageFrom = Message.createMessage(from, MessageType.UPDATE, sessionId);
             sender.sendMessage(messageFrom);
+            updateCache(from);
+
             Message messageTo = Message.createMessage(to, MessageType.UPDATE, sessionId);
             sender.sendMessage(messageTo);
+            updateCache(to);
 
         } catch (DaoException e) {
             LOG.warn("Got dao exception");
@@ -147,6 +167,27 @@ public class EntryServiceImpl implements EntryService {
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
             throw new ServiceException(e);
+        }
+    }
+
+    private void updateCache(Entry entry) {
+        Cache cache = cacheManager.getCache(CACHE_ENTRY_NAME);
+        if (cache != null) {
+            cache.evictIfPresent(entry.getId().longValue());
+        }
+
+        cache = cacheManager.getCache(CACHE_LIST_NAME + "_for_race");
+        if (cache != null) {
+            cache.evictIfPresent(entry.getRace().getId().longValue());
+        }
+
+        clearCache();
+    }
+
+    private void clearCache() {
+        Cache cache = cacheManager.getCache(CACHE_LIST_NAME);
+        if (cache != null) {
+            cache.clear();
         }
     }
 }
