@@ -1,5 +1,7 @@
 package org.tiatus.server.filter;
 
+import java.io.IOException;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.web.csrf.CsrfFilter ;
+import org.springframework.security.web.csrf.CsrfToken;
 
 import jakarta.servlet.DispatcherType;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -26,15 +39,21 @@ public class ApplicationSecurity {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    
+    CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+    requestHandler.setCsrfRequestAttributeName("_csrf");
     http
         .authorizeHttpRequests((authorize) -> authorize
             .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
             .requestMatchers("/rest/**").permitAll()
             .requestMatchers("/results/**").permitAll()
             .anyRequest().authenticated())
-        // TODO add csrf support see https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html#:~:text=JavaScript%20Applications,-JavaScript%20applications%20typically&text=In%20order%20to%20obtain%20the,as%20an%20HTTP%20request%20header.
-        .csrf(AbstractHttpConfigurer::disable)
+        .cors((cors) -> cors.disable())
+        .csrf((csrf) -> csrf
+			.csrfTokenRepository(getCsrfTokenRepository())
+			.csrfTokenRequestHandler(requestHandler)
+		)
+		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+
         .headers(headers -> headers
           .cacheControl(cache -> cache.disable())
         )
@@ -61,5 +80,25 @@ public class ApplicationSecurity {
   @Bean
   AuthenticationSuccessHandler successHandler() {
     return new UserAuthenticationSuccessHandler();
+  }
+
+  private CsrfTokenRepository getCsrfTokenRepository() {
+    CookieCsrfTokenRepository csrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+    csrfTokenRepository.setCookiePath("/");
+    return csrfTokenRepository;
+  }
+
+  // see https://docs.spring.io/spring-security/reference/5.8/migration/servlet/exploits.html#_i_am_using_a_single_page_application_with_cookiecsrftokenrepository
+  private static final class CsrfCookieFilter extends OncePerRequestFilter {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+        throws ServletException, IOException {
+      CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+      // Render the token value to a cookie by causing the deferred token to be loaded
+      csrfToken.getToken();
+
+      filterChain.doFilter(request, response);
+    }
+
   }
 }
