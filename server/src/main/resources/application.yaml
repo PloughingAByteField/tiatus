@@ -11,6 +11,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  web:
+    resources:
+      static-locations: classpath:/public,file:/Users/johnreynolds/tiatus
 logging:
   level:
       org:

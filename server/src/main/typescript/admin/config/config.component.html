@@ -3,7 +3,7 @@
         {{ 'CURRENT_EVENT_TITLE' | translate }}: {{ title }}
     </div>
 
-    <label>{{ 'NEW_EVENT_LOGO' | translate }}:</label>
+    <label>{{ 'NEW_EVENT_TITLE' | translate }}:</label>
     <input type="text" [(ngModel)]="newTitle"/>
     <div *ngIf="newTitle && newTitle.length > 2 && newTitle.length < 251">
         <button class="btn primary" (click)="uploadTitle()">{{ 'UPLOAD_TITLE' | translate }}</button>

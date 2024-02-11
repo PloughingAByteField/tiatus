@@ -15,6 +15,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.tiatus.entity.*;
 import org.tiatus.entity.Event;
@@ -36,7 +37,6 @@ import java.util.List;
 public class ReportServiceImpl implements ReportService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReportServiceImpl.class);
-    private static final String JBOSS_HOME_DIR = "jboss.home.dir";
 
     @Autowired
     protected ConfigService configService;
@@ -55,6 +55,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     protected TimesService timesService;
+
+    @Autowired
+    protected Environment environment;
 
     private List<Disqualification> disqualifications;
     private List<Penalty> penalties;
@@ -93,7 +96,7 @@ public class ReportServiceImpl implements ReportService {
     private void createPdfReports(Race race, Date now) throws ServiceException, IOException, URISyntaxException {
 
         String logoFileName = configService.getEventLogo();
-        File logoFile = new File(System.getProperty(JBOSS_HOME_DIR) + logoFileName);
+        File logoFile = new File(environment.getProperty("tiatus.files") + logoFileName);
         String title = configService.getEventTitle() + " " + race.getName();
 
         // create array of entries by starting and end position
@@ -155,7 +158,8 @@ public class ReportServiceImpl implements ReportService {
 
     private void createByTimePdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
         String fileName = "/tiatus/results/" + race.getName() + "_ByTime.pdf";
-        File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
+
+        File resultsFile = new File(environment.getProperty("tiatus.files") + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by time
         for (EntriesForEventPositions e: entriesByEventPositions) {
@@ -171,7 +175,7 @@ public class ReportServiceImpl implements ReportService {
 
     private void createByEventPdfReport(String title, File logoFile, Race race, Date now, List<EntriesForEventPositions> entriesByEventPositions) throws ServiceException, IOException, URISyntaxException {
         String fileName = "/tiatus/results/" + race.getName() + "_ByEvent.pdf";
-        File resultsFile = new File(System.getProperty(JBOSS_HOME_DIR) + fileName);
+        File resultsFile = new File(environment.getProperty("tiatus.files") + fileName);
         resultsFile.getParentFile().mkdirs();
         // sort by event
         for (EntriesForEventPositions e: entriesByEventPositions) {
