@@ -16,16 +16,19 @@ export class AdminUsersService {
     protected subject: BehaviorSubject<User[]>
         = new BehaviorSubject<User[]>(this.users);
 
-    constructor(private service: AdminUsersHttpService) {
-        this.refresh();
-    }
+    protected requested: boolean = false;
+
+    constructor(private service: AdminUsersHttpService) {}
 
     public getRaceForId(id: number): User {
       return this.users.filter((user: User) => user.id === id).shift();
     }
 
     public getUsers(): BehaviorSubject<User[]> {
-        console.log(this.users);
+        if (!this.requested) {
+            this.requested = true;
+            this.refresh();
+        }
         return this.subject;
     }
 
@@ -68,7 +71,13 @@ export class AdminUsersService {
     public refresh(): void {
          this.service.getUsers().subscribe((users: User[]) => {
             if (users != null) {
-                this.users = users;
+                var userList = new Array<User>();
+                users.forEach(u => {
+                    var user: User = convertObjectToUser(u);
+                    console.log(user);
+                    userList.push(user);
+                });
+                this.users = userList;
                 this.subject.next(this.users);
             }
         });

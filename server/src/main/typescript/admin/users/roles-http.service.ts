@@ -16,7 +16,7 @@ export class AdminRolesHttpService  {
     constructor(protected http: HttpClient) {}
 
     public getRoles(): Observable<Role[]> {
-        return this.http.get<Role[]>('/rest/clubs', this.httpOptions);
+        return this.http.get<Role[]>(this.endPoint, this.httpOptions);
     }
 
 }
