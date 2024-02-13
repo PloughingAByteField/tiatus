@@ -120,6 +120,24 @@ public class TimesServiceImpl implements TimesService {
         }
     }
 
+    @Override
+    public void clearCaches() {
+        Cache cache = cacheManager.getCache(CACHE_LIST_NAME);
+        if (cache != null) {
+            cache.clear();
+        }
+
+        cache = cacheManager.getCache(ALL_CACHE_LIST_NAME);
+        if (cache != null) {
+            cache.clear();
+        }
+
+        cache = cacheManager.getCache(FOR_POSITION_CACHE_LIST_NAME);
+        if (cache != null) {
+            cache.clear();
+        }
+    }
+
     private void clearCache(EntryPositionTime entryPositionTime) {
         Cache cache = cacheManager.getCache(CACHE_LIST_NAME);
         if (cache != null) {

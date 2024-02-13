@@ -14,4 +14,6 @@ public interface TimesService {
     List<EntryPositionTime> getPositionTimesForPositionInRace(Race race, Position position) throws ServiceException;
     List<EntryPositionTime> getTimesForRace(Race race) throws ServiceException;
     List<EntryPositionTime> getAllTimesForRace(Race race) throws ServiceException;
+
+    void clearCaches();
 }

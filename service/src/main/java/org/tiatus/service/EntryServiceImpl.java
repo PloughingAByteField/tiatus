@@ -30,6 +30,9 @@ public class EntryServiceImpl implements EntryService {
     protected EntryDao dao;
 
     @Autowired
+    protected TimesService timesService;
+
+    @Autowired
     protected MessageSenderService sender;
 
     @Autowired
@@ -46,8 +49,10 @@ public class EntryServiceImpl implements EntryService {
         LOG.debug("Adding entry " + entry);
         try {
             Entry newEntry = dao.addEntry(entry);
-            Message message = Message.createMessage(newEntry, MessageType.ADD, sessionId);
-            sender.sendMessage(message);
+            if (sessionId != null) {
+                Message message = Message.createMessage(newEntry, MessageType.ADD, sessionId);
+                sender.sendMessage(message);
+            }
             clearCache();
 
             return newEntry;
@@ -69,6 +74,7 @@ public class EntryServiceImpl implements EntryService {
             dao.removeEntry(entry);
             Message message = Message.createMessage(entry, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
+            timesService.clearCaches();
             updateCache(entry);
 
         } catch (DaoException e) {
@@ -77,6 +83,21 @@ public class EntryServiceImpl implements EntryService {
 
         } catch (JMSException e) {
             LOG.warn("Got jms exception", e);
+            throw new ServiceException(e);
+        }
+    }
+
+    @Override
+    public void deleteEntriesForRace(Race race) throws ServiceException {
+        LOG.debug("Delete entries for race " + race.getId());
+        try {
+            dao.removeEntriesForRace(race);
+            timesService.clearCaches();
+            clearCache();
+            
+            
+        } catch (DaoException e) {
+            LOG.warn("Got dao exception");
             throw new ServiceException(e);
         }
     }

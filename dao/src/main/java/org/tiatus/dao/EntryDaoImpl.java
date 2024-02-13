@@ -75,6 +75,7 @@ public class EntryDaoImpl implements EntryDao {
                 exists = repository.existsById(entry.getId());
             }
             if (exists) {
+                entryPositionTimeRepository.deletePostionTimesForEntry(entry.getId());
                 repository.delete(entry);
 
             } else {
@@ -85,6 +86,12 @@ public class EntryDaoImpl implements EntryDao {
             LOG.warn("Failed to remove entry", e);
             throw new DaoException(e.getMessage());
         }
+    }
+
+    @Override
+    public void removeEntriesForRace(Race race) throws DaoException {
+        entryPositionTimeRepository.deletePostionTimesForRace(race.getId());
+        repository.deleteEntriesForRace(race.getId());
     }
 
     @Override

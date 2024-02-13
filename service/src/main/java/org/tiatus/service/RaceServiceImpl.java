@@ -30,6 +30,9 @@ public class RaceServiceImpl implements RaceService {
     protected RaceDao dao;
 
     @Autowired
+    private EntryService entriesService;
+
+    @Autowired
     protected MessageSenderService sender;
 
     @Autowired
@@ -66,6 +69,8 @@ public class RaceServiceImpl implements RaceService {
     public void deleteRace(Race race, String sessionId) throws ServiceException {
         LOG.debug("Delete race " + race.getId());
         try {
+            entriesService.deleteEntriesForRace(race);
+            
             dao.removeRace(race);
             Message message = Message.createMessage(race, MessageType.DELETE, sessionId);
             sender.sendMessage(message);

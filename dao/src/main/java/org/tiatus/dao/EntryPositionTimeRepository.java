@@ -24,5 +24,13 @@ public interface EntryPositionTimeRepository extends JpaRepository<EntryPosition
     @Modifying
     @Query(value = "update entry_position_time set entry_id = :toId where entry_id = :fromId", nativeQuery = true)
     void updatePostionTimeEntryId(Long fromId, Long toId);
+
+    @Modifying
+    @Query(value = "delete from entry_position_time ept where ept.entry_id in (select id from entry where race_id = :raceId)", nativeQuery = true)
+    void deletePostionTimesForRace(Long raceId);
+
+    @Modifying
+    @Query(value = "delete from entry_position_time ept where ept.entry_id = :entryId)", nativeQuery = true)
+    void deletePostionTimesForEntry(Long entryId);
 }
 

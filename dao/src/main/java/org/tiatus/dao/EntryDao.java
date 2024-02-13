@@ -43,6 +43,12 @@ public interface EntryDao {
      */
     void removeEntry(Entry entry) throws DaoException;
 
+     /**
+     * Remove Entries for race
+     * @throws DaoException on error
+     */
+    void removeEntriesForRace(Race race) throws DaoException;
+
     /**
      * Update a Entry
      * @param entry Entry to update

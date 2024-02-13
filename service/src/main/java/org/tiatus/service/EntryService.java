@@ -57,6 +57,13 @@ public interface EntryService {
     List<Entry> getEntriesForRace(Race race);
 
     /**
+     * Remove entries for a Race
+     * @param race Race to remove
+     * @throws ServiceException on error
+     */
+    void deleteEntriesForRace(Race race) throws ServiceException;
+
+    /**
      * Swap the numbers of two entries
      * @param from entry to switch number from
      * @param to entry to switch number to
