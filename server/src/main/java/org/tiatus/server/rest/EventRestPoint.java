@@ -87,7 +87,7 @@ public class EventRestPoint extends RestBase {
     //  * @return 201 response with location containing uri of newly created event or an error code
     //  */
     @RolesAllowed(Role.ADMIN)
-    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "{id}")
     public ResponseEntity<Void> updateEvent(@PathVariable("id") Long id, @RequestBody Event event, HttpSession session, HttpServletResponse response) {
         LOG.debug("Updating event of id " + event.getId());
         Event existing = service.getEventForId(id);
