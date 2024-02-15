@@ -2,6 +2,7 @@ package org.tiatus.server.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tiatus.role.Role;
 import org.tiatus.service.ConfigService;
 
 import io.netty.handler.codec.http.HttpResponse;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
@@ -55,6 +57,7 @@ public class ConfigRestPoint {
         return resource;
     }
 
+    @RolesAllowed(Role.ADMIN)
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, path = "logo")
     public void uploadEventLogo(
 			@RequestParam("file") MultipartFile file, HttpSession session, HttpResponse response) {
@@ -69,6 +72,7 @@ public class ConfigRestPoint {
         }
     }
 
+    @RolesAllowed(Role.ADMIN)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "title")
     public void uploadEventTitle(@RequestBody String title, HttpServletResponse response) {
         try {
@@ -82,6 +86,7 @@ public class ConfigRestPoint {
         }
     }
 
+    @RolesAllowed(Role.ADMIN)
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, path = "footer")
     public void uploadEventFooter(@RequestBody String footer, HttpServletResponse response) {
         try {
