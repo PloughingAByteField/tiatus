@@ -1,6 +1,6 @@
 CREATE TABLE entry (
     id bigint NOT NULL PRIMARY KEY,
-    crew character varying(255),
+    name character varying(255),
     is_fixed_number boolean,
     number integer,
     race_order integer,
