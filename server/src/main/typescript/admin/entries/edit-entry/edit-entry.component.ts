@@ -62,7 +62,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.editEntryForm = this.fb.group({
-      crew: this.fb.control('', [
+      name: this.fb.control('', [
         Validators.minLength(1),
         Validators.maxLength(250),
       ]),
@@ -183,7 +183,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
     }
     entry.event = value.event.id;
     entry.race = value.race.id;
-    entry.crew = value.crew;
+    entry.name = value.name;
     entry.fixedNumber = value.fixedNumber;
     if (value.fixedNumber) {
       entry.number = value.fixedNumber;
@@ -192,7 +192,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
       this.entry.clubs = entry.clubs;
       this.entry.event = entry.event;
       this.entry.race = entry.race;
-      this.entry.crew = entry.crew;
+      this.entry.name = entry.name;
       this.entry.fixedNumber = entry.fixedNumber;
       if (entry.fixedNumber) {
         this.entry.number = entry.number;
@@ -330,7 +330,7 @@ export class EditEntryComponent implements OnInit, OnDestroy {
       const event: Event = this.eventsService.getEventForId(entry.event);
       this.editEntryForm.get('race').setValue(race);
       this.editEntryForm.get('event').setValue(event);
-      this.editEntryForm.get('crew').setValue(entry.crew);
+      this.editEntryForm.get('name').setValue(entry.name);
       const clubs: Club[] = new Array<Club>();
       for (const clubId of entry.clubs) {
         const club = this.clubsService.getClubForId(clubId);

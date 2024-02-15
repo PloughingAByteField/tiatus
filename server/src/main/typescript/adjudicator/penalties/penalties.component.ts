@@ -2,20 +2,16 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Observable } from 'rxjs';
-
 import { Race } from '../../races/race.model';
 import { Club } from '../../clubs/club.model';
 import { Penalty } from '../../penalties/penalty.model';
 import { Entry } from '../../entries/entry.model';
 import { Event } from '../../events/event.model';
-import { convertToTimeStamp, convertFromTimeStamp } from '../../times/postion-time.model';
 
 import { ClubsService } from '../../clubs/clubs.service';
 import { EntriesService } from '../../entries/entries.service';
 import { EventsService } from '../../events/events.service';
 import { AdjudicatorRacesService } from '../races/races.service';
-import { AdjudicatorHttpPenaltiesService } from './penalties-http.service';
 import { AdjudicatorPenaltiesService } from './penalties.service';
 
 @Component({

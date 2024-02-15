@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
-import { Entry, convertObjectToEntry } from '../../entries/entry.model';
+import { Entry } from '../../entries/entry.model';
 
 import { EntriesHttpService } from '../../entries/entries-http.service';
+import { FileProcessingResult } from './FileProcessingResult.model';
 
 @Injectable()
 export class AdminEntriesHttpService extends EntriesHttpService {
@@ -65,9 +66,29 @@ export class AdminEntriesHttpService extends EntriesHttpService {
                 entries,
                 this.httpHeader)
             .toPromise()
-            .then(() => {
+            .then((res) => {
+                console.log(res);
                 return entries;
             })
             .catch((err) => Promise.reject(err));
+    }
+
+    public uploadDraw(file: File): Promise<FileProcessingResult> {
+        const formData: FormData = new FormData();
+        formData.append('file', file, file.name);
+        return this.http
+            .post(this.endPoint + '/upload', formData)
+            .toPromise()
+            .then((res: FileProcessingResult) => {
+                return res;
+            })
+            .catch((err) => {
+                console.log(err);
+                Promise.reject(err);
+                let result: FileProcessingResult = new FileProcessingResult();
+                result.code = 500;
+                result.data = 'Processing error';
+                return result;
+        });
     }
 }

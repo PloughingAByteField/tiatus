@@ -237,7 +237,7 @@ public class EventServiceImpl implements EventService {
         if (cache != null) {
             cache.clear();
         }
-        
+        clearCache();
     }
 
     private void clearCache() {

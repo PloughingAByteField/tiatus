@@ -8,7 +8,7 @@
             <th *ngIf="!reverseNumberSort">{{ 'NUMBER' | translate }} <span (click)="sortByNumber('down')" class="fa fa-caret-down"></span></th>
             <th>{{ 'CLUB' | translate }}</th>
             <th>{{ 'EVENT' | translate }}</th>
-            <th>{{ 'CREW' | translate }}</th>
+            <th>{{ 'NAME' | translate }}</th>
             <th *ngFor="let position of getPositions() | slice:1:-1">{{ position.name }}</th>
             <th *ngIf="reverseAdjustedTimeSort">{{ 'ADJUSTED_TIME' | translate }} <span (click)="sortByAdjustedTime('up')" class="fa fa-caret-up"></span></th>
             <th *ngIf="!reverseAdjustedTimeSort">{{ 'ADJUSTED_TIME' | translate }} <span (click)="sortByAdjustedTime('down')" class="fa fa-caret-down"></span></th>

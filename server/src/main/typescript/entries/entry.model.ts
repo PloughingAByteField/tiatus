@@ -1,6 +1,6 @@
 
 export class Entry {
-    public crew: string;
+    public name: string;
     public number: number;
     public raceOrder: number;
     public fixedNumber: boolean;
@@ -16,7 +16,7 @@ export function convertObjectToEntry(obj: any): Entry {
     entry.clubs = new Array<number>();
     obj.clubs.forEach((club: number) => entry.clubs.push(club));
     entry.number = obj.number;
-    entry.crew = obj.crew;
+    entry.name = obj.name;
     entry.id = obj.id;
     entry.event = obj.event;
     entry.race = obj.race;

@@ -148,6 +148,7 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       event.positions.push(eventPosition);
     }
     if (value.isNonRaceAssigned) {
+      console.log("non race assigned");
       this.eventsService.createEvent(event).then((newEvent: Event) => {
         console.log(newEvent);
         this.unassignedEventsService.addEvent(newEvent);
@@ -159,7 +160,9 @@ export class CreateEventComponent implements OnInit, OnDestroy {
       raceEvent.race = this.selectedRace.id;
       raceEvent.event = event;
       raceEvent.raceEventOrder = this.eventsForRace.length + 1;
-      this.raceEventsService.createRaceEvent(raceEvent).subscribe((newRaceEvent: RaceEvent) => {
+      this.raceEventsService.createRaceEvent(raceEvent).then((newRaceEvent: RaceEventPojo) => {
+        this.eventsService.refresh();
+        this.raceEventsService.refresh();
         this.goBack();
       });
     }

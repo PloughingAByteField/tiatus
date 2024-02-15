@@ -2,11 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
-import { Observable } from 'rxjs';
-
 import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
-import { convertToTimeStamp, convertFromTimeStamp } from '../../times/postion-time.model';
 
 import { SwapEntriesHttpService } from './swap-entries-http.service';
 import { SwapEntriesService } from './swap-entries.service';

@@ -59,7 +59,7 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.addEntryForm = this.fb.group({
-      crew: this.fb.control('', [
+      name: this.fb.control('', [
         Validators.minLength(1),
         Validators.maxLength(250),
       ]),
@@ -136,8 +136,8 @@ export class CreateEntryComponent implements OnInit, OnDestroy {
     for (const club of value.clubs) {
       entry.clubs.push(club.id);
     }
-    if (value.crew.length > 0) {
-      entry.crew = value.crew;
+    if (value.name.length > 0) {
+      entry.name = value.name;
     }
     entry.fixedNumber = value.fixedNumber;
     if (value.isFixedNumber === true) {

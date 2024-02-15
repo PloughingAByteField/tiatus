@@ -4,6 +4,18 @@ hello from draw
     <option *ngFor="let race of races" [ngValue]="race">{{ race.name }}</option>
 </select>
 
+     
+
+<label>{{ 'UPLOAD_DRAW' | translate }}:</label>
+<input type="file" (change)="onFileChange($event)"/>
+<div *ngIf="newDraw">
+    <button class="btn primary" (click)="uploadDraw()">{{ 'UPLOAD_DRAW' | translate }}</button>
+    <div *ngIf="uploadDrawError">
+        {{ uploadDrawError }}
+    </div>
+</div>
+
+
 <div *ngIf="entriesForRace.length > 0">
     <h4>
         {{ 'ENTRIES_FOR_RACE' | translate }} {{ selectedRace.name }}

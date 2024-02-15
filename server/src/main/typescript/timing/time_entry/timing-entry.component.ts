@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 
 import { TimingTimesService } from '../times/times.service';
 import { RacesService } from '../../races/races.service';
@@ -10,7 +9,7 @@ import { Entry } from '../../entries/entry.model';
 import { Event } from '../../events/event.model';
 import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
-import { PositionTime, convertFromTimeStamp, convertToTimeStamp } from '../../times/postion-time.model';
+import { PositionTime, convertFromTimeStamp } from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
 
 import { TimingPositionService } from '../times/timing-position.service';

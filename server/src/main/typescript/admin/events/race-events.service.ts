@@ -18,17 +18,10 @@ export class AdminRaceEventsService extends RaceEventsService {
             super(service);
     }
 
-    public createRaceEvent(pojo: RaceEventPojo): Observable<RaceEvent> {
-        return this.service.createRaceEvent(pojo);
-        // return new Promise((resolve) => this.service.createRaceEvent(pojo)
-        //     .then((e: RaceEvent) => {
-        //         pojo.event.id = e.event;
-        //         this.eventsService.addEvent(pojo.event);
-        //         this.events.push(e);
-        //         this.subject.next(this.events);
-        //         resolve(e);
-        //     })
-        // );
+    public createRaceEvent(raceEvent: RaceEventPojo): Promise<RaceEventPojo> {
+        return new Promise((resolve) => this.service.createRaceEvent(raceEvent).then((raceEventPojo: RaceEventPojo) => {
+            resolve(raceEventPojo);
+        }));
     }
 
     public removeRaceEvent(raceEvent: RaceEvent): void {

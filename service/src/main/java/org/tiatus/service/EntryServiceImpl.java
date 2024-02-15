@@ -89,7 +89,7 @@ public class EntryServiceImpl implements EntryService {
 
     @Override
     public void deleteEntriesForRace(Race race) throws ServiceException {
-        LOG.debug("Delete entries for race " + race.getId());
+        LOG.debug("Delete entries for race " + race.getName() + " id " + + race.getId());
         try {
             dao.removeEntriesForRace(race);
             timesService.clearCaches();

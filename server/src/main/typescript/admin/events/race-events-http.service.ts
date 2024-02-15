@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
@@ -11,28 +11,31 @@ import { RaceEventsHttpService } from '../../race-events/race-events-http.servic
 @Injectable()
 export class AdminRaceEventsHttpService extends RaceEventsHttpService {
 
-    private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    private httpHeader = {
+        observe: 'response' as const,
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    };
 
     constructor(protected http: HttpClient) {
         super(http);
     }
 
-    public createRaceEvent(pojo: RaceEventPojo): Observable<RaceEvent> {
+    public createRaceEvent(raceEvent: RaceEventPojo): Promise<RaceEventPojo> {
         return this.http
-            .post<RaceEvent>(this.endPoint,
-            JSON.stringify(pojo), { headers: this.headers });
-            // .toPromise()
-            // .then((res: Response) => {
-            //     const event: RaceEvent = convertJsonToRaceEvent(res);
-            //     if (res.status === 201) {
-            //         const location: string = res.headers.get('location');
-            //         const locationParts = location.split('/');
-            //         const id: number = +locationParts[locationParts.length - 1];
-            //         event.id = id;
-            //     }
-            //     return event;
-            // })
-            // .catch((err) => Promise.reject(err));
+            .post(this.endPoint,
+                raceEvent,
+                this.httpHeader)
+            .toPromise()
+            .then((res: HttpResponse<RaceEvent>) => {
+                if (res.status === 201) {
+                    const location: string = res.headers.get('location');
+                    const locationParts = location.split('/');
+                    const id: number = +locationParts[locationParts.length - 1];
+                    raceEvent.id = id;
+                }
+                return raceEvent;
+            })
+            .catch((err) => Promise.reject(err));
     }
 
     public removeRaceEvent(raceEvent: RaceEvent): Promise<RaceEvent> {

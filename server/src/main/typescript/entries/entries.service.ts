@@ -90,7 +90,7 @@ export class EntriesService {
             const updatedEntry: Entry = this.getEntryForId(entry.id);
             if (updatedEntry !== null) {
                 updatedEntry.clubs = entry.clubs;
-                updatedEntry.crew = entry.crew;
+                updatedEntry.name = entry.name;
                 updatedEntry.event = entry.event;
                 updatedEntry.fixedNumber = entry.fixedNumber;
                 updatedEntry.number = entry.number;

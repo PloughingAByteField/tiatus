@@ -7,7 +7,7 @@ import { Entry } from '../../entries/entry.model';
 import { Event } from '../../events/event.model';
 import { Penalty } from '../../penalties/penalty.model';
 import { Disqualification } from '../../disqualification/disqualification.model';
-import { PositionTime, convertFromTimeStamp, convertToTimeStamp } from '../../times/postion-time.model';
+import { PositionTime, convertFromTimeStamp } from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
 import { EventPosition } from '../../events/event-positions.model';
 

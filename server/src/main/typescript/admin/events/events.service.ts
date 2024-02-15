@@ -16,6 +16,7 @@ export class AdminEventsService extends EventsService {
     }
 
     public createEvent(event: Event): Promise<Event> {
+        console.log("Have create event " + event.name);
         return new Promise((resolve) => this.service.createEvent(event).then((e: Event) => {
             this.events.push(e);
             this.subject.next(this.events);

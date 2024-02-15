@@ -13,6 +13,7 @@ import { AdminEventsService } from '../events/events.service';
 import { AdminClubsService } from '../clubs/clubs.service';
 
 import { AdminDrawService } from './draw.service';
+import { FileProcessingResult } from '../entries/FileProcessingResult.model';
 
 @Component({
   selector: 'draw',
@@ -33,6 +34,9 @@ export class DrawComponent implements OnInit, OnDestroy {
   private clubs: Club[] = new Array<Club>();
   private events: Event[] = new Array<Event>();
   private draggedEntry: Entry;
+
+  public newDraw: File = null;
+  public uploadDrawError: String = null;
 
   constructor(
     private racesService: AdminRacesService,
@@ -104,6 +108,32 @@ export class DrawComponent implements OnInit, OnDestroy {
     console.log('dragstart');
     console.log(entry);
     this.draggedEntry = entry;
+  }
+
+  public onFileChange(event: any): void {
+    console.log(event);
+    console.log(event.srcElement.files);
+    if (event && event.srcElement && event.srcElement.files && event.srcElement.files.length > 0) {
+      this.newDraw = event.srcElement.files[0];
+      console.log(this.newDraw);
+    } else {
+      this.newDraw = null;
+    }
+  }
+
+  public uploadDraw(): void {
+    console.log("will try upload of " + this.newDraw);
+    this.entriesService.uploadDraw(this.newDraw).then((status: FileProcessingResult) => {
+      if (status.code == 200) {
+        this.newDraw = null;
+        this.uploadDrawError = null;
+        this.clubsService.refresh();
+        this.entriesService.refresh();
+      } else {
+        this.uploadDrawError = status.data;
+        console.log(status.data);
+      }
+    });
   }
 
   public getEventNameForEntry(entry: Entry): string {

@@ -45,6 +45,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
+    console.log("onInit");
     this.selectedRace = this.selectedRaceService.getSelectedRace.value;
     this.racesSubscription = this.racesService.getRaces()
       .subscribe((races: Race[]) => {
@@ -71,13 +72,22 @@ export class EventsComponent implements OnInit, OnDestroy {
     });
 
     this.eventsSubscription = this.eventsService.getEvents()
-      .subscribe((events: Event[]) => this.events = events);
+      .subscribe((events: Event[]) => {
+        console.log("Got events ");
+        console.log(events);
+        this.events = events;
+        if (this.selectedRace) {
+          this.getEventsForRace(this.selectedRace.id);
+        }
+      });
 
     this.raceEventsSubscription = this.raceEventsService.getEvents()
       .subscribe((events: RaceEvent[]) => {
+        console.log("race events " + events.length);
         if (events.length > 0) {
           this.raceEventsFromService = events;
           if (this.selectedRace) {
+            console.log("have selected race " + this.selectedRace.name);
             this.getEventsForRace(this.selectedRace.id);
           }
         }
@@ -171,6 +181,7 @@ export class EventsComponent implements OnInit, OnDestroy {
   }
 
   private getEventsForRace(raceId: number): void {
+    console.log("events for race " + raceId);
     if (raceId !== 0) {
       const race: Race = this.racesService.getRaceForId(raceId);
       console.log(raceId);

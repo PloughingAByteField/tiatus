@@ -417,14 +417,14 @@ public class ReportServiceImpl implements ReportService {
         int numberWidth = (int)(10 * onePercentWidth);
         int eventWidth = (int)(20 * onePercentWidth);
         int clubWidth = (int)(20 * onePercentWidth);
-        int crewWidth = (int)(10 * onePercentWidth);
+        int nameWidth = (int)(10 * onePercentWidth);
         int positionWidth = (int)(10 * onePercentWidth);
         int commentWidth = (int)(20 * onePercentWidth);
         int left;
         if (numberOfPositions > 0) {
-            left = 100 - (numberWidth + eventWidth + clubWidth + crewWidth + commentWidth + (positionWidth * numberOfPositions));
+            left = 100 - (numberWidth + eventWidth + clubWidth + nameWidth + commentWidth + (positionWidth * numberOfPositions));
         } else {
-            left = 100 - (numberWidth + eventWidth + clubWidth + crewWidth + commentWidth);
+            left = 100 - (numberWidth + eventWidth + clubWidth + nameWidth + commentWidth);
         }
         commentWidth += left;
 
@@ -432,7 +432,7 @@ public class ReportServiceImpl implements ReportService {
         addHeaderCell(numberWidth, messages.getString("number"), headerRow);
         addHeaderCell(eventWidth, messages.getString("event"), headerRow);
         addHeaderCell(clubWidth, messages.getString("club"), headerRow);
-        addHeaderCell(crewWidth, messages.getString("details"), headerRow);
+        addHeaderCell(nameWidth, messages.getString("details"), headerRow);
         if (numberOfPositions > 0) {
             for (int i = 1; i <= numberOfPositions; i++) {
                 Position position = positions.get(i).getPosition();
@@ -459,7 +459,7 @@ public class ReportServiceImpl implements ReportService {
             Cell<PDPage> number = createCellForRow(row, numberWidth, entry.getNumber().toString(), fastestInSection);
             Cell<PDPage> event = createCellForRow(row, eventWidth, entry.getEvent().getName(), fastestInSection);
             Cell<PDPage> club = createCellForRow(row, clubWidth, getClubsForEntry(entry), fastestInSection);
-            Cell<PDPage> crew = createCellForRow(row, crewWidth, entry.getCrew(), fastestInSection);
+            Cell<PDPage> name = createCellForRow(row, nameWidth, entry.getName(), fastestInSection);
             if (entry.getEvent().getPositions().size() > 0) {
                 List<EntryPositionTime> entryTimes = getPositionTimesForEntryByPosition(entry, times);
                 Position startingPosition = entry.getEvent().getPositions().get(0).getPosition();

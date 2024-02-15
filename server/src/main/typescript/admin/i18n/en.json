@@ -131,5 +131,6 @@
     "CREATE_ENTRY_SUBMIT": "Create entry",
     "UPDATE_ENTRY_SUBMIT": "Update entry",
     "ENTRY_BACK_TO": "Go back",
-    "ENTRIES_FOR_RACE": "Entries for race"
+    "ENTRIES_FOR_RACE": "Entries for race",
+    "UPLOAD_DRAW": "Upload new draw"
 }

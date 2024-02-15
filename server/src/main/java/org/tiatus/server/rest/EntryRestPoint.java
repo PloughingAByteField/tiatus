@@ -14,14 +14,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.tiatus.entity.Entry;
 import org.tiatus.entity.Race;
 import org.tiatus.role.Role;
+import org.tiatus.service.CSVEntriesLoader;
 import org.tiatus.service.EntryService;
+import org.tiatus.service.FileProcessingResult;
 import org.tiatus.service.RaceService;
 
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -49,6 +55,9 @@ public class EntryRestPoint extends RestBase {
 
     @Autowired
     protected RaceService raceService;
+
+    @Autowired
+    protected CSVEntriesLoader csvEntriesLoader;
 
     /**
      * Get entries
@@ -198,6 +207,27 @@ public class EntryRestPoint extends RestBase {
         }
 
         return ResponseEntity.internalServerError().build();
+    }
+
+    @RolesAllowed(Role.ADMIN)
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE }, path = "upload")
+    public FileProcessingResult uploadEventLogo(
+			@RequestParam("file") MultipartFile file, HttpSession session, HttpResponse response) {
+        try {
+            String originalName = file.getOriginalFilename();
+            FileProcessingResult result = csvEntriesLoader.processEntriesFile(file.getInputStream(), originalName);
+            response.setStatus(HttpResponseStatus.OK);
+
+            return result;
+
+        } catch (Exception e) {
+            LOG.warn("File upload failed", e);
+            response.setStatus(HttpResponseStatus.BAD_REQUEST);
+        }
+
+        FileProcessingResult failed = new FileProcessingResult();
+        failed.setCode(500);
+        return failed;
     }
 
 }
