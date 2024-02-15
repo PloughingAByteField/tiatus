@@ -20,8 +20,8 @@ public class Entry implements Serializable {
 	@JoinTable(name = "entry_club_xref", joinColumns = { @JoinColumn(name = "entry_id") }, inverseJoinColumns = { @JoinColumn(name = "club_id") })
 	private Set<Club> clubs = new HashSet<>();
 
-	@Column(name = "crew")
-	private String crew;
+	@Column(name = "name")
+	private String name;
 
     @Column(name = "weighting")
     private String weighting;
@@ -61,7 +61,7 @@ public class Entry implements Serializable {
 	}
 
 	public Entry(Entry entry) {
-		crew = entry.crew;
+		name = entry.name;
 		id = entry.id;
 		event = entry.event;
 		weighting = entry.weighting;
@@ -148,12 +148,12 @@ public class Entry implements Serializable {
 		this.race = race;
 	}
 	
-	public String getCrew() {
-		return crew;
+	public String getName() {
+		return name;
 	}
 	
-	public void setCrew(String crew) {
-		this.crew = crew;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public boolean isTimeOnly() {
@@ -175,7 +175,7 @@ public class Entry implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((crew == null) ? 0 : crew.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((event == null) ? 0 : event.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((number == null) ? 0 : number.hashCode());
@@ -193,10 +193,10 @@ public class Entry implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Entry other = (Entry) obj;
-		if (crew == null) {
-			if (other.crew != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!crew.equals(other.crew))
+		} else if (!name.equals(other.name))
 			return false;
 		if (event == null) {
 			if (other.event != null)

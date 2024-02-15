@@ -89,8 +89,13 @@ public class EntryDaoImpl implements EntryDao {
     }
 
     @Override
+    @Transactional
     public void removeEntriesForRace(Race race) throws DaoException {
+        LOG.debug("Delete entries for race " + race.getName());
         entryPositionTimeRepository.deletePostionTimesForRace(race.getId());
+        repository.deleteClubEntriesXrefForRace(race.getId());
+        repository.deleteDisqualificationsForRace(race.getId());
+        repository.deletePenaltiesForRace(race.getId());
         repository.deleteEntriesForRace(race.getId());
     }
 
@@ -111,8 +116,8 @@ public class EntryDaoImpl implements EntryDao {
                 if (entry.getEvent() != null) {
                     existing.setEvent(entry.getEvent());
                 }
-                if (entry.getCrew() != null) {
-                    existing.setCrew(entry.getCrew());
+                if (entry.getName() != null) {
+                    existing.setName(entry.getName());
                 }
                 if (entry.isFixedNumber()) {
                     existing.setFixedNumber(entry.isFixedNumber());
