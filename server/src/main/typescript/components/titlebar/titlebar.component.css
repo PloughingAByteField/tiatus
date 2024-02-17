@@ -1,3 +1,8 @@
 .titlebar {
-    color: black;
+    color: white;
+    margin-top: -100px;
+}
+
+#topBlackBar {
+  border-top: 100px solid #000;
 }
