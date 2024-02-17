@@ -34,7 +34,6 @@ export class ResultsComponent implements OnInit {
 
   public setTitle(newTitle: string) {
     this.translate.get(newTitle).subscribe((res: string) => {
-      console.log('res is ', res);
       this.titleService.setTitle( res );
     });
   }

@@ -1,23 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Position } from '../../positions/position.model';
 import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
 import { Event } from '../../events/event.model';
-import { PositionTime, convertFromTimeStamp } from '../../times/postion-time.model';
 import { EntryTime } from '../../times/entry-time.model';
-import { EventPosition } from '../../events/event-positions.model';
 
 import { ResultsPositionsService } from '../positions/positions.service';
 import { ResultsRacesService } from '../races/races.service';
 import { EntriesService } from '../../entries/entries.service';
 import { EntryTimesService } from '../../times/entry-times.service';
 import { ResultsEventsService } from '../events/events.service';
-import { TimesPositions } from './time-positions.model';
 import { EventsAtPositions } from './events-at-positions.model';
 
 @Component({
