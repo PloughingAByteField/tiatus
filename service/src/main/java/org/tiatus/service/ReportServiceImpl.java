@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.tiatus.entity.*;
 import org.tiatus.entity.Event;
@@ -77,6 +78,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    @Async
     public void createReportForRace(Race race) {
         LOG.debug("Got report creation request for race " + race.getName());
         try {
@@ -182,7 +184,7 @@ public class ReportServiceImpl implements ReportService {
             e.getEntries().sort(new Comparator<Entry>() {
                 @Override
                 public int compare(Entry e1, Entry e2) {
-                    if (e1.getEvent().getId() == e2.getEvent().getId()) {
+                    if (e1.getEvent().getId().equals(e2.getEvent().getId())) {
                         return compareEntries(e1, e2);
                     } else {
                         if (getRaceOrderForEvent(e1.getEvent()) < getRaceOrderForEvent(e2.getEvent())) {
@@ -257,7 +259,7 @@ public class ReportServiceImpl implements ReportService {
 
     private Integer getRaceOrderForEvent(Event event) {
         for (RaceEvent raceEvent: raceEvents) {
-            if (event.getId() == raceEvent.getEvent().getId()) {
+            if (event.getId().equals(raceEvent.getEvent().getId())) {
                 return raceEvent.getRaceEventOrder();
             }
         }
@@ -276,7 +278,6 @@ public class ReportServiceImpl implements ReportService {
         int fontSize = 12;
         float center = page.getMediaBox().getWidth() / 2;
         PDType1Font helvericaBoldFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-        PDType1Font helvericaFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
         float titleWidth = helvericaBoldFont.getStringWidth(title) / 1000 * fontSize;
         contentStream.beginText();
         contentStream.setFont(helvericaBoldFont, fontSize);
@@ -292,6 +293,7 @@ public class ReportServiceImpl implements ReportService {
         contentStream.showText(report);
         contentStream.endText();
 
+        PDType1Font helvericaFont = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
         int correctAsFontSize = 10;
         String correct = messages.getString("correct_as_of") + " " + now;
         float correctWidth = helvericaFont.getStringWidth(correct) / 1000 * correctAsFontSize;
@@ -506,7 +508,7 @@ public class ReportServiceImpl implements ReportService {
 
     private boolean isEntryDisqualified(Entry entry) {
         for (Disqualification disqualification: disqualifications) {
-            if (disqualification.getEntry().getId() == entry.getId()) {
+            if (disqualification.getEntry().getId().equals(entry.getId())) {
                 return true;
             }
         }
@@ -515,7 +517,7 @@ public class ReportServiceImpl implements ReportService {
 
     private boolean hasEntryPenalties(Entry entry) {
         for (Penalty penalty: penalties) {
-            if (penalty.getEntry().getId() == entry.getId()) {
+            if (penalty.getEntry().getId().equals(entry.getId())) {
                 return true;
             }
         }
@@ -525,7 +527,7 @@ public class ReportServiceImpl implements ReportService {
     private List<Penalty> getPenaltiesForEntry(Entry entry) {
         List<Penalty> penaltiesForEntry = new ArrayList<>();
         for (Penalty penalty: penalties) {
-            if (penalty.getEntry().getId() == entry.getId()) {
+            if (penalty.getEntry().getId().equals(entry.getId())) {
                 penaltiesForEntry.add(penalty);
             }
         }
@@ -555,7 +557,7 @@ public class ReportServiceImpl implements ReportService {
 
     private Timestamp getTimeForPosition(Position position, List<EntryPositionTime> entryTimes) {
         for (EntryPositionTime entryPositionTime: entryTimes) {
-            if (entryPositionTime.getPosition().getId() == position.getId()) {
+            if (entryPositionTime.getPosition().getId().equals(position.getId())) {
                 return entryPositionTime.getTime();
             }
         }
@@ -565,7 +567,8 @@ public class ReportServiceImpl implements ReportService {
     private List<EntryPositionTime> getPositionTimesForEntryByPosition(Entry entry, List<EntryPositionTime> times) {
         List<EntryPositionTime> entryPositionTimes = new ArrayList<>();
         for (EntryPositionTime time: times) {
-            if (time.getEntry().getId() == entry.getId()) {
+            LOG.debug("time " + time.getEntry().getId() + " with entry id " + entry.getId());
+            if (time.getEntry().getId().equals(entry.getId())) {
                 entryPositionTimes.add(time);
             }
         }
@@ -577,10 +580,10 @@ public class ReportServiceImpl implements ReportService {
                 Integer t1PositionOrder = 0;
                 Integer t2PositionOrder = 0;
                 for (EventPosition eventPosition : eventPositions) {
-                    if (eventPosition.getPosition().getId() == t1.getPosition().getId()) {
+                    if (eventPosition.getPosition().getId().equals(t1.getPosition().getId())) {
                         t1PositionOrder = eventPosition.getPositionOrder();
                     }
-                    if (eventPosition.getPosition().getId() == t2.getPosition().getId()) {
+                    if (eventPosition.getPosition().getId().equals(t2.getPosition().getId())) {
                         t2PositionOrder = eventPosition.getPositionOrder();
                     }
                 }
