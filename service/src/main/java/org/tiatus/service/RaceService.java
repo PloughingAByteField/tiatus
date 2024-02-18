@@ -41,4 +41,6 @@ public interface RaceService {
      * @return list of races
      */
     List<Race> getRaces();
+
+    boolean areRacePDFResultsReady(Race race);
 }

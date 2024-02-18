@@ -50,6 +50,24 @@ public class RaceRestPoint extends RestBase {
         return service.getRaces();
     }
 
+
+    @PermitAll
+    @GetMapping(path = "{id}/pdfReady")
+    public boolean areRacePDFResultsReady(@PathVariable("id") Long id) {
+        LOG.debug("Checking results pdfs are ready for race with id " + id);
+        try {
+            Race race = service.getRaceForId(id);
+            if (race != null) {
+                return service.areRacePDFResultsReady(race);
+            }
+
+        } catch (Exception e) {
+            logError(e);
+        }
+
+        return false;
+    }
+
     // /**
     //  * Add race, restricted to Admin users
     //  * @param uriInfo location details

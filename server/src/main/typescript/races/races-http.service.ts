@@ -17,5 +17,9 @@ export class RacesHttpService {
 
   public getRaces(): Observable<Race[]> {
     return this.http.get<Race[]>(this.endPoint, this.httpOptions);
-   }
+  }
+
+  public areRacePDFResultsReady(id: number): Observable<boolean> {
+    return this.http.get<boolean>(this.endPoint + "/" + id + "/pdfReady", this.httpOptions);
+  }
 }

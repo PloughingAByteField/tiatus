@@ -25,6 +25,7 @@ import { EventsAtPositions } from './events-at-positions.model';
 export class RaceResultsComponent implements OnInit, OnDestroy {
     public positions: Position[];
     public race: Race;
+    public displayPdfResults = false;
     public reverseNumberSort = false;
     public reverseAdjustedTimeSort = false;
 
@@ -203,6 +204,16 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     private setRaceForRaceId(raceId: number): void {
         if (this.races) {
             this.race = this.racesService.getRaceForId(this.raceId);
+            if (this.race.closed) {
+                this.racesService.areRacePDFResultsReady(this.raceId).subscribe((state: boolean) => {
+                    console.log(state);
+                    if (state != null) {
+                        this.displayPdfResults = state;
+                    }
+                });
+        
+                console.log(this.displayPdfResults);
+            }
             this.populateEventsAtPositionsForRace(this.race);
         }
     }

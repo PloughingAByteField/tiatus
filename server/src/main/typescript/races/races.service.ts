@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Race, convertObjectToRace } from './race.model';
 
@@ -22,6 +22,10 @@ export class RacesService {
       return this.races.filter((race: Race) => race.id === id).shift();
     }
 
+    public areRacePDFResultsReady(id: number): Observable<boolean> {
+        return this.service.areRacePDFResultsReady(id)
+    }
+    
     public getRaces(): BehaviorSubject<Race[]> {
         if (!this.requested) {
             this.requested = true;

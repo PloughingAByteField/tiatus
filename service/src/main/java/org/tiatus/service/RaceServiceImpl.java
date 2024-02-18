@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.tiatus.dao.DaoException;
 import org.tiatus.dao.RaceDao;
@@ -13,6 +14,7 @@ import org.tiatus.entity.Race;
 
 import jakarta.jms.JMSException;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -37,6 +39,12 @@ public class RaceServiceImpl implements RaceService {
 
     @Autowired
     protected CacheManager cacheManager;
+
+    @Autowired
+    protected ReportService reportService;
+
+    @Autowired
+    protected Environment environment;
 
     @Override
     @Cacheable(value = CACHE_ENTRY_NAME, key = "#id")
@@ -70,7 +78,7 @@ public class RaceServiceImpl implements RaceService {
         LOG.debug("Delete race " + race.getId());
         try {
             entriesService.deleteEntriesForRace(race);
-            
+
             dao.removeRace(race);
             Message message = Message.createMessage(race, MessageType.DELETE, sessionId);
             sender.sendMessage(message);
@@ -95,6 +103,10 @@ public class RaceServiceImpl implements RaceService {
             sender.sendMessage(message);
             updateCache(race);
 
+            if (race.isClosed()) {
+                reportService.createReportForRace(race);
+            }
+
             return updated;
 
         } catch (DaoException e) {
@@ -113,6 +125,20 @@ public class RaceServiceImpl implements RaceService {
         return dao.getRaces();
     }
 
+    @Override
+    public boolean areRacePDFResultsReady(Race race) {
+
+        String fileName = "/tiatus/results/" + race.getName() + "_ByEvent.pdf";
+        File resultsFile = new File(environment.getProperty("tiatus.files") + fileName);
+        if (!resultsFile.exists()) {
+            return false;
+        }
+
+        fileName = "/tiatus/results/" + race.getName() + "_ByTime.pdf";
+        resultsFile = new File(environment.getProperty("tiatus.files") + fileName);
+        return resultsFile.exists();
+    }
+    
     private void updateCache(Race race) {
         Cache cache = cacheManager.getCache(CACHE_ENTRY_NAME);
         if (cache != null) {
