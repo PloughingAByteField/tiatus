@@ -201,38 +201,47 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private int compareEntries(Entry entry1, Entry entry2) {
+        LOG.debug("Comparing entry1: " + entry1.getNumber() + " and entry2: " + entry2.getNumber());
         List<EntryPositionTime> entry1Times = getPositionTimesForEntryByPosition(entry1, times);
         List<EntryPositionTime> entry2Times = getPositionTimesForEntryByPosition(entry2, times);
-        if (entry1Times.size() == 0 && entry2Times.size() > 0) {
-            return 1;
-        }
-        if (entry1Times.size() > 0 && entry2Times.size() == 0) {
-            return -1;
-        }
 
         boolean isEntry1Disqualified = isEntryDisqualified(entry1);
         boolean isEntry2Disqualified = isEntryDisqualified(entry2);
         if (isEntry1Disqualified != isEntry2Disqualified) {
+            LOG.debug("have mismatch on disqualifed");
             if (isEntry1Disqualified) {
+                LOG.debug("entry1 disqualifed");
                 return 1;
             } else {
+                LOG.debug("entry2 disqualifed");
                 return -1;
             }
         }
 
-        List<EventPosition> positions = entry1.getEvent().getPositions();
-        int numberOfPositions = positions.size();
-        if (entry1Times.size() < numberOfPositions && entry2Times.size() == numberOfPositions) {
+        List<EventPosition> entry1Positions = entry1.getEvent().getPositions();
+        List<EventPosition> entry2Positions = entry2.getEvent().getPositions();
+        // do we have the same number of timing positions -- hence same start and finish
+        if (entry1Positions.size() < entry2Positions.size()) {
+            LOG.debug("entry1 has less positions");
             return 1;
         }
-        if (entry1Times.size() == numberOfPositions && entry2Times.size() < numberOfPositions) {
+        if (entry1Positions.size() > entry2Positions.size()) {
+            LOG.debug("entry2 has less positions");
             return -1;
         }
 
         Duration entry1Time = getDurationForEntry(entry1, entry1Times);
         Duration entry2Time = getDurationForEntry(entry2, entry2Times);
         if (entry1Time != null && entry2Time != null) {
-            return entry1Time.compareTo(entry2Time);
+            int value = entry1Time.compareTo(entry2Time);
+            LOG.debug("For entry1: " + entry1.getNumber() + " time: " + entry1Time.getSeconds() + " For entry2: " + entry2.getNumber() + " time: " + entry2Time.getSeconds() + " value: " + value);
+            return value;
+        } else if (entry1Time != null) {
+            LOG.debug("For entry1: " + entry1.getNumber() + " time: " + entry1Time.getSeconds() + " For entry2: " + entry2.getNumber() + " time: null" );
+            return -1;
+        } else if (entry2Time != null) {
+            LOG.debug("For entry1: " + entry1.getNumber() + " time: null For entry2: " + entry2.getNumber() + " time: " + entry2Time.getSeconds());
+            return 1;
         }
 
         return 0;
@@ -243,8 +252,25 @@ public class ReportServiceImpl implements ReportService {
         if (positions.size() == 0) {
             return null;
         }
-        Position startingPosition = positions.get(0).getPosition();
-        Position finishingPosition = positions.get(positions.size() - 1).getPosition();
+        int largestRaceOrder = 0;
+        Position startingPosition = null;
+        Position finishingPosition = null;
+        for(EventPosition eventPosition : positions) {
+            
+            if (eventPosition.getPositionOrder() == 1) {
+                startingPosition = eventPosition.getPosition();
+            }
+            if (eventPosition.getPositionOrder() > largestRaceOrder) {
+                largestRaceOrder = eventPosition.getPositionOrder();
+                finishingPosition = eventPosition.getPosition();
+            }
+        }
+        
+        if (startingPosition == null || finishingPosition == null) {
+            LOG.debug("Do not have time");
+            return null;
+        }
+
         Timestamp startTimestamp = getTimeForPosition(startingPosition, timesForEntry);
         Timestamp finishTimestamp = getTimeForPosition(finishingPosition, timesForEntry);
         if (startTimestamp != null && finishTimestamp != null) {
@@ -567,7 +593,6 @@ public class ReportServiceImpl implements ReportService {
     private List<EntryPositionTime> getPositionTimesForEntryByPosition(Entry entry, List<EntryPositionTime> times) {
         List<EntryPositionTime> entryPositionTimes = new ArrayList<>();
         for (EntryPositionTime time: times) {
-            LOG.debug("time " + time.getEntry().getId() + " with entry id " + entry.getId());
             if (time.getEntry().getId().equals(entry.getId())) {
                 entryPositionTimes.add(time);
             }
