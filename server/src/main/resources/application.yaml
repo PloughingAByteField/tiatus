@@ -15,6 +15,8 @@ spring:
     resources:
       static-locations: classpath:/public,file:/Users/johnreynolds/tiatus
 logging:
+  file:
+    name: server.log
   level:
       org:
         tiatus: DEBUG
