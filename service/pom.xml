@@ -58,6 +58,7 @@
             <version>3.0.1</version>
         </dependency>
 
+        <!-- use local built version from fork at https://github.com/PloughingAByteField/boxable.git-->
         <dependency>
             <groupId>com.github.dhorions</groupId>
             <artifactId>boxable</artifactId>
