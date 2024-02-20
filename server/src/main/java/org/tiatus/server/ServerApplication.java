@@ -4,9 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.tiatus.entity.User;
+import org.tiatus.service.UserService;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "org.tiatus.*")
@@ -17,7 +20,36 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 public class ServerApplication {
 
     public static void main(String[] args) {
-            SpringApplication.run(ServerApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(ServerApplication.class, args);
+
+        String adminUser = null;
+        String adminPwd = null;
+      
+        for (String arg : args) {
+            if (arg.startsWith("admin.user=")){
+                String[] s = arg.split("admin.user=");
+                if (s.length > 1) {
+                    adminUser = s[1];
+                }
+            }
+            if (arg.startsWith("admin.pwd=")){
+                String[] s = arg.split("admin.pwd=");
+                if (s.length > 1) {
+                    adminPwd = s[1];
+                }
+            }
+        }
+
+        if (adminUser != null && adminPwd != null) {
+            User user = new User();
+            user.setUserName(adminUser);
+            user.setPassword(adminPwd);
+            try {
+                context.getBean(UserService.class).addAdminUser(user, null, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

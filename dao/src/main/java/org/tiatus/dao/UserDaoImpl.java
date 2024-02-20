@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class UserDaoImpl implements UserDao {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RaceDaoImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserDaoImpl.class);
 
     @Autowired 
     private UserRepository repository;
@@ -48,7 +48,7 @@ public class UserDaoImpl implements UserDao {
             }
 
         } catch (Exception e) {
-            LOG.warn("Failed to persist user", e.getMessage());
+            LOG.warn("Failed to persist user", e);
             throw new DaoException(e);
         }
     }

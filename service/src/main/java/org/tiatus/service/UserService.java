@@ -22,6 +22,8 @@ public interface UserService {
      */
     User addAdminUser(User user, String sessionId) throws ServiceException;
 
+    User addAdminUser(User user, String sessionId, boolean ignoreExisting) throws ServiceException;
+
     /**
      * Add a user to the system
      * @param user to add

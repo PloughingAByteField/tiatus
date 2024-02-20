@@ -53,8 +53,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addAdminUser(User user, String sessionId) throws ServiceException {
+        return addAdminUser(user, sessionId, false);
+    }
+
+    @Override
+    public User addAdminUser(User user, String sessionId, boolean ignoreExisting) throws ServiceException {
         // do we have an existing user
-        if (hasAdminUser()) {
+        if (!ignoreExisting && hasAdminUser()) {
             LOG.warn("Already have an admin user ");
             throw new ServiceException("Existing user");
         }
@@ -63,7 +68,7 @@ public class UserServiceImpl implements UserService {
         try {
             UserRole userRole = new UserRole();
             // get role for admin from db
-            Role role = dao.getRoleForRole(org.tiatus.role.Role.ADMIN);
+            Role role = dao.getRoleForRole("ROLE_" + org.tiatus.role.Role.ADMIN);
             userRole.setRole(role);
             userRole.setUser(user);
             Set<UserRole> userRoleList = new HashSet<>();
@@ -71,7 +76,7 @@ public class UserServiceImpl implements UserService {
             user.setRoles(userRoleList);
             String password = passwordEncoder.encode(user.getPassword());
             user.setPassword(password);
-
+            
             return dao.addUser(user);
 
         } catch (DaoException e) {
