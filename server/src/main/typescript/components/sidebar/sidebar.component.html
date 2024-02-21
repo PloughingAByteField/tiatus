@@ -1,18 +1,16 @@
 
 <nav class="sidebar" role="navigation">
     <ul class="nav nav-pills flex-column ">
-        <div *ngFor="let race of races | async">
-            <li class="nav-item">
-                <a class="nav-link" [routerLink]="[link, race.id]" routerLinkActive="active">{{race.name}}</a>
-            </li>
-        </div>
+        <li class="nav-item" *ngFor="let race of races | async">
+           <a class="nav-link" [routerLink]="[link, race.id]" routerLinkActive="active">{{race.name}}</a>
+        </li>
 
-        <div *ngIf="showBack">
-            <li><a class="nav-link" routerLink="/">{{ 'POSITION' | translate }}</a></li>
-        </div>
-        <div *ngIf="showLogout">
-            <li><a class="nav-link" href="/rest/logout">{{ 'LOGOUT' | translate }}</a></li>
-        </div>
+        <li *ngIf="showBack">
+            <a class="nav-link" routerLink="/">{{ 'POSITION' | translate }}</a>
+        </li>
+
+        <li *ngIf="showLogout">
+            <a class="nav-link" href="/rest/logout">{{ 'LOGOUT' | translate }}</a>
+        </li>
     </ul>
-
 </nav>
