@@ -1,607 +1,775 @@
 {
-    "$schema": "./node_modules/@angular-devkit/core/src/workspace/workspace-schema.json",
-    "version": 1,
-    "newProjectRoot": "src",
-    "projects": {
-        "login": {
-            "root": "src/main/typescript",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist",
-                        "main": "src/main/typescript/login/main.ts",
-                        "tsConfig": "src/main/typescript/login/tsconfig.app.json",
-                        "serviceWorker": false,
-                        "index": "src/main/typescript/login/index.html",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/assets",
-                                "output": "assets"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/login/i18n",
-                                "output": "login/i18n/"
-                            },
-                            {
-                                "glob": "favicon.ico",
-                                "input": "src/main/typescript",
-                                "output": "favicon.ico"
-                            }
-                        ],
-                        "styles": [
-                            "src/main/typescript/styles.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
-                        ],
-                        "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "baseHref":  "/login/"
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "src": "src/main/typescript/environments/environment.ts",
-                                    "replaceWith": "src/main/typescript/environments/environment.prod.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
-                        }
-                    },
-                    "defaultConfiguration": ""
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/main/typescript/test.ts",
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/test/typescript/karma.conf.js",
-                        "styles": [],
-                        "scripts": [],
-                        "assets": []
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                      "buildTarget": "login:build",
-                      "proxyConfig": "src/main/typescript/proxy.conf.json"
-                    },
-                    "configurations": {
-                        "production": {
-                          "buildTarget": "login:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "login:build"
-                    }
+  "$schema": "./node_modules/@angular-devkit/core/src/workspace/workspace-schema.json",
+  "version": 1,
+  "newProjectRoot": "src",
+  "projects": {
+    "login": {
+      "root": "src/main/typescript",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist",
+            "main": "src/main/typescript/login/main.ts",
+            "tsConfig": "src/main/typescript/login/tsconfig.app.json",
+            "serviceWorker": false,
+            "index": "src/main/typescript/login/index.html",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/login/i18n",
+                "output": "login/i18n/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/main/typescript",
+                "output": "favicon.ico"
+              }
+            ],
+            "styles": [
+              "src/main/typescript/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [],
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "baseHref": "/login/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
+              ],
+              "fileReplacements": [
+                {
+                  "src": "src/main/typescript/environments/environment.ts",
+                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
+          },
+          "defaultConfiguration": ""
         },
-        "results": {
-            "root": "src/main/typescript",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/results",
-                        "main": "src/main/typescript/results/main.ts",
-                        "tsConfig": "src/main/typescript/results/tsconfig.app.json",
-                        "serviceWorker": false,
-                        "index": "src/main/typescript/results/index.html",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/assets",
-                                "output": "assets"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/results/i18n",
-                                "output": "i18n/"
-                            },
-                            {
-                                "glob": "favicon.ico",
-                                "input": "src/main/typescript",
-                                "output": "favicon.ico"
-                            }
-                        ],
-                        "styles": [
-                            "src/main/typescript/styles.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
-                        ],
-                        "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "baseHref":  "/results/"
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "src": "src/main/typescript/environments/environment.ts",
-                                    "replaceWith": "src/main/typescript/environments/environment.prod.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
-                        }
-                    },
-                    "defaultConfiguration": ""
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/main/typescript/test.ts",
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/test/typescript/karma.conf.js",
-                        "styles": [],
-                        "scripts": [],
-                        "assets": []
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                      "buildTarget": "results:build",
-                      "proxyConfig": "src/main/typescript/proxy.conf.json"
-                    },
-                    "configurations": {
-                        "production": {
-                          "buildTarget": "results:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "results:build"
-                    }
-                }
-            }
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/typescript/test.ts",
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "tsConfig": "src/main/typescript/tsconfig.spec.json",
+            "karmaConfig": "src/test/typescript/karma.conf.js",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
         },
-        "admin": {
-            "root": "src/main/typescript",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/admin",
-                        "main": "src/main/typescript/admin/main.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.app.json",
-                        "serviceWorker": false,
-                        "index": "src/main/typescript/admin/index.html",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/assets",
-                                "output": "assets"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/admin/i18n",
-                                "output": "i18n/"
-                            },
-                            {
-                                "glob": "favicon.ico",
-                                "input": "src/main/typescript",
-                                "output": "favicon.ico"
-                            }
-                        ],
-                        "styles": [
-                            "src/main/typescript/styles.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
-                        ],
-                        "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "baseHref":  "/admin/"
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "src": "src/main/typescript/environments/environment.ts",
-                                    "replaceWith": "src/main/typescript/environments/environment.prod.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
-                        }
-                    },
-                    "defaultConfiguration": ""
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/main/typescript/test.ts",
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/test/typescript/karma.conf.js",
-                        "styles": [],
-                        "scripts": [],
-                        "assets": []
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                      "buildTarget": "admin:build",
-                      "proxyConfig": "src/main/typescript/proxy.conf.json"
-                    },
-                    "configurations": {
-                        "production": {
-                          "buildTarget": "admin:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "admin:build"
-                    }
-                }
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "login:build",
+            "proxyConfig": "src/main/typescript/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "login:build:production"
             }
+          }
         },
-        "adjudicator": {
-            "root": "src/main/typescript",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/adjudicator",
-                        "main": "src/main/typescript/adjudicator/main.ts",
-                        "tsConfig": "src/main/typescript/adjudicator/tsconfig.app.json",
-                        "serviceWorker": false,
-                        "index": "src/main/typescript/adjudicator/index.html",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/assets",
-                                "output": "assets"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/adjudicator/i18n",
-                                "output": "adjudicator/i18n/"
-                            },
-                            {
-                                "glob": "favicon.ico",
-                                "input": "src/main/typescript",
-                                "output": "favicon.ico"
-                            }
-                        ],
-                        "styles": [
-                            "src/main/typescript/styles.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
-                        ],
-                        "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "baseHref":  "/adjudicator/"
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "src": "src/main/typescript/environments/environment.ts",
-                                    "replaceWith": "src/main/typescript/environments/environment.prod.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
-                        }
-                    },
-                    "defaultConfiguration": ""
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/main/typescript/test.ts",
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/test/typescript/karma.conf.js",
-                        "styles": [],
-                        "scripts": [],
-                        "assets": []
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                      "buildTarget": "adjudicator:build",
-                      "proxyConfig": "src/main/typescript/proxy.conf.json"
-                    },
-                    "configurations": {
-                        "production": {
-                          "buildTarget": "adjudicator:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "adjudicator:build"
-                    }
-                }
-            }
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "login:build"
+          }
         },
-        "timing": {
-            "root": "src/main/typescript",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/timing",
-                        "main": "src/main/typescript/timing/main.ts",
-                        "tsConfig": "src/main/typescript/timing/tsconfig.app.json",
-                        "serviceWorker": false,
-                        "index": "src/main/typescript/timing/index.html",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/assets",
-                                "output": "assets"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/timing/i18n",
-                                "output": "timing/i18n/"
-                            },
-                            {
-                                "glob": "favicon.ico",
-                                "input": "src/main/typescript",
-                                "output": "favicon.ico"
-                            }
-                        ],
-                        "styles": [
-                            "src/main/typescript/styles.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
-                        ],
-                        "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "baseHref":  "/timing/"
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "src": "src/main/typescript/environments/environment.ts",
-                                    "replaceWith": "src/main/typescript/environments/environment.prod.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
-                        }
-                    },
-                    "defaultConfiguration": ""
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/main/typescript/test.ts",
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/test/typescript/karma.conf.js",
-                        "styles": [],
-                        "scripts": [],
-                        "assets": []
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                      "buildTarget": "timing:build",
-                      "proxyConfig": "src/main/typescript/proxy.conf.json"
-                    },
-                    "configurations": {
-                        "production": {
-                          "buildTarget": "timing:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "timing:build"
-                    }
-                }
+        "nightwatch-run": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "login:serve",
+            "tsConfig": "src/test/e2e/login/tsconfig.json",
+            "config": "src/test/e2e/login/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "login:serve:production"
             }
+          }
         },
-        "setup": {
-            "root": "src/main/typescript",
-            "projectType": "application",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/setup",
-                        "main": "src/main/typescript/setup/main.ts",
-                        "tsConfig": "src/main/typescript/setup/tsconfig.app.json",
-                        "serviceWorker": false,
-                        "index": "src/main/typescript/setup/index.html",
-                        "assets": [
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/assets",
-                                "output": "assets"
-                            },
-                            {
-                                "glob": "**/*",
-                                "input": "src/main/typescript/setup/i18n",
-                                "output": "setup/i18n/"
-                            },
-                            {
-                                "glob": "favicon.ico",
-                                "input": "src/main/typescript",
-                                "output": "favicon.ico"
-                            }
-                        ],
-                        "styles": [
-                            "src/main/typescript/styles.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css"
-                        ],
-                        "scripts": [],
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "vendorChunk": true,
-                        "extractLicenses": false,
-                        "buildOptimizer": false,
-                        "sourceMap": true,
-                        "optimization": false,
-                        "namedChunks": true,
-                        "baseHref":  "/setup/"
-                    },
-                    "configurations": {
-                        "production": {
-                            "budgets": [
-                                {
-                                    "type": "anyComponentStyle",
-                                    "maximumWarning": "6kb"
-                                }
-                            ],
-                            "fileReplacements": [
-                                {
-                                    "src": "src/main/typescript/environments/environment.ts",
-                                    "replaceWith": "src/main/typescript/environments/environment.prod.ts"
-                                }
-                            ],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": false,
-                            "namedChunks": false,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
-                        }
-                    },
-                    "defaultConfiguration": ""
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "src/main/typescript/test.ts",
-                        "polyfills": "src/main/typescript/polyfills.ts",
-                        "tsConfig": "src/main/typescript/tsconfig.spec.json",
-                        "karmaConfig": "src/test/typescript/karma.conf.js",
-                        "styles": [],
-                        "scripts": [],
-                        "assets": []
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                      "buildTarget": "setup:build",
-                      "proxyConfig": "src/main/typescript/proxy.conf.json"
-                    },
-                    "configurations": {
-                        "production": {
-                          "buildTarget": "setup:build:production"
-                        }
-                    }
-                },
-                "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                      "buildTarget": "setup:build"
-                    }
-                }
+        "e2e": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "login:serve",
+            "tsConfig": "src/test/e2e/login/tsconfig.json",
+            "config": "src/test/e2e/login/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "login:serve:production"
             }
+          }
         }
+      }
+    },
+    "results": {
+      "root": "src/main/typescript",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/results",
+            "main": "src/main/typescript/results/main.ts",
+            "tsConfig": "src/main/typescript/results/tsconfig.app.json",
+            "serviceWorker": false,
+            "index": "src/main/typescript/results/index.html",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/results/i18n",
+                "output": "i18n/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/main/typescript",
+                "output": "favicon.ico"
+              }
+            ],
+            "styles": [
+              "src/main/typescript/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [],
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "baseHref": "/results/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "src": "src/main/typescript/environments/environment.ts",
+                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/typescript/test.ts",
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "tsConfig": "src/main/typescript/tsconfig.spec.json",
+            "karmaConfig": "src/test/typescript/karma.conf.js",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "results:build",
+            "proxyConfig": "src/main/typescript/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "results:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "results:build"
+          }
+        },
+        "nightwatch-run": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "results:serve",
+            "tsConfig": "src/test/e2e/results/tsconfig.json",
+            "config": "src/test/e2e/results/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "results:serve:production"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "results:serve",
+            "tsConfig": "src/test/e2e/results/tsconfig.json",
+            "config": "src/test/e2e/results/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "results:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "admin": {
+      "root": "src/main/typescript",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/admin",
+            "main": "src/main/typescript/admin/main.ts",
+            "tsConfig": "src/main/typescript/tsconfig.app.json",
+            "serviceWorker": false,
+            "index": "src/main/typescript/admin/index.html",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/admin/i18n",
+                "output": "i18n/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/main/typescript",
+                "output": "favicon.ico"
+              }
+            ],
+            "styles": [
+              "src/main/typescript/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [],
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "baseHref": "/admin/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "src": "src/main/typescript/environments/environment.ts",
+                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/typescript/test.ts",
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "tsConfig": "src/main/typescript/tsconfig.spec.json",
+            "karmaConfig": "src/test/typescript/karma.conf.js",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "admin:build",
+            "proxyConfig": "src/main/typescript/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "admin:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "admin:build"
+          }
+        },
+        "nightwatch-run": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "admin:serve",
+            "tsConfig": "src/test/e2e/admin/tsconfig.json",
+            "config": "src/test/e2e/admin/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "admin:serve:production"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "admin:serve",
+            "tsConfig": "src/test/e2e/admin/tsconfig.json",
+            "config": "src/test/e2e/admin/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "admin:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "adjudicator": {
+      "root": "src/main/typescript",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/adjudicator",
+            "main": "src/main/typescript/adjudicator/main.ts",
+            "tsConfig": "src/main/typescript/adjudicator/tsconfig.app.json",
+            "serviceWorker": false,
+            "index": "src/main/typescript/adjudicator/index.html",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/adjudicator/i18n",
+                "output": "adjudicator/i18n/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/main/typescript",
+                "output": "favicon.ico"
+              }
+            ],
+            "styles": [
+              "src/main/typescript/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [],
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "baseHref": "/adjudicator/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "src": "src/main/typescript/environments/environment.ts",
+                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/typescript/test.ts",
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "tsConfig": "src/main/typescript/tsconfig.spec.json",
+            "karmaConfig": "src/test/typescript/karma.conf.js",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "adjudicator:build",
+            "proxyConfig": "src/main/typescript/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "adjudicator:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "adjudicator:build"
+          }
+        },
+        "nightwatch-run": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "adjudicator:serve",
+            "tsConfig": "src/test/e2e/adjudicator/tsconfig.json",
+            "config": "src/test/e2e/adjudicator/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "adjudicator:serve:production"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "adjudicator:serve",
+            "tsConfig": "src/test/e2e/adjudicator/tsconfig.json",
+            "config": "src/test/e2e/adjudicator/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "adjudicator:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "timing": {
+      "root": "src/main/typescript",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/timing",
+            "main": "src/main/typescript/timing/main.ts",
+            "tsConfig": "src/main/typescript/timing/tsconfig.app.json",
+            "serviceWorker": false,
+            "index": "src/main/typescript/timing/index.html",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/timing/i18n",
+                "output": "timing/i18n/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/main/typescript",
+                "output": "favicon.ico"
+              }
+            ],
+            "styles": [
+              "src/main/typescript/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [],
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "baseHref": "/timing/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "src": "src/main/typescript/environments/environment.ts",
+                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/typescript/test.ts",
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "tsConfig": "src/main/typescript/tsconfig.spec.json",
+            "karmaConfig": "src/test/typescript/karma.conf.js",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "timing:build",
+            "proxyConfig": "src/main/typescript/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "timing:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "timing:build"
+          }
+        },
+        "nightwatch-run": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "timing:serve",
+            "tsConfig": "src/test/e2e/timing/tsconfig.json",
+            "config": "src/test/e2e/timing/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "timing:serve:production"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "timing:serve",
+            "tsConfig": "src/test/e2e/timing/tsconfig.json",
+            "config": "src/test/e2e/timing/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "timing:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "setup": {
+      "root": "src/main/typescript",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/setup",
+            "main": "src/main/typescript/setup/main.ts",
+            "tsConfig": "src/main/typescript/setup/tsconfig.app.json",
+            "serviceWorker": false,
+            "index": "src/main/typescript/setup/index.html",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/typescript/setup/i18n",
+                "output": "setup/i18n/"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/main/typescript",
+                "output": "favicon.ico"
+              }
+            ],
+            "styles": [
+              "src/main/typescript/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [],
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true,
+            "baseHref": "/setup/"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "src": "src/main/typescript/environments/environment.ts",
+                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/typescript/test.ts",
+            "polyfills": "src/main/typescript/polyfills.ts",
+            "tsConfig": "src/main/typescript/tsconfig.spec.json",
+            "karmaConfig": "src/test/typescript/karma.conf.js",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "setup:build",
+            "proxyConfig": "src/main/typescript/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "setup:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "setup:build"
+          }
+        },
+        "nightwatch-run": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "setup:serve",
+            "tsConfig": "src/test/e2e/setup/tsconfig.json",
+            "config": "src/test/e2e/setup/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "setup:serve:production"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@nightwatch/schematics:nightwatch",
+          "options": {
+            "devServerTarget": "setup:serve",
+            "tsConfig": "src/test/e2e/setup/tsconfig.json",
+            "config": "src/test/e2e/setup/nightwatch.conf.js",
+            "env": "chrome"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "setup:serve:production"
+            }
+          }
+        }
+      }
     }
+  }
 }

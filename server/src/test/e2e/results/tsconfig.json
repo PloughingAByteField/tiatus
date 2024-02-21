@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig_e2e.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["jest", "node"],
+    "outDir": "./nightwatch",
+    "baseUrl": "./"
+  },
+  "ts-node": {
+    "transpileOnly": true
+  },
+  "include": ["./src/*.ts"],
+  "exclude": ["../../../../node_modules"]
+}
