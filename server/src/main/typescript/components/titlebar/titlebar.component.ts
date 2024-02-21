@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs';
 
@@ -16,7 +17,7 @@ export class TitlebarComponent implements OnInit, OnDestroy {
   private logoSubscription: Subscription;
   private titleSubscription: Subscription;
 
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService, private titleService: Title) {}
 
   public ngOnInit() {
     if ( !this.logo) {
@@ -27,6 +28,7 @@ export class TitlebarComponent implements OnInit, OnDestroy {
     if ( !this.eventTitle) {
       this.titleSubscription = this.configService.getEventTitle().subscribe((data: string) => {
         this.eventTitle = data;
+        this.titleService.setTitle(this.eventTitle);
       });
     }
   }
