@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -8,6 +9,7 @@ import { Race } from '../../races/race.model';
 import { Entry } from '../../entries/entry.model';
 import { Event } from '../../events/event.model';
 import { EntryTime } from '../../times/entry-time.model';
+import { ConfigService } from '../../config/config.service';
 
 import { ResultsPositionsService } from '../positions/positions.service';
 import { ResultsRacesService } from '../races/races.service';
@@ -49,6 +51,10 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     private translatePenaltySubscription: Subscription;
     private isDefaulting = false;
 
+    private eventTitle: string;
+
+    private titleSubscription: Subscription;
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
@@ -56,10 +62,19 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         private positionsService: ResultsPositionsService,
         private entryTimesService: EntryTimesService,
         private entriesService: EntriesService,
-        private eventsService: ResultsEventsService
+        private eventsService: ResultsEventsService,
+        private titleService: Title,
+        private configService: ConfigService
     ) {}
 
     public ngOnInit() {
+        if ( !this.eventTitle) {
+            this.titleSubscription = this.configService.getEventTitle().subscribe((data: string) => {
+              this.eventTitle = data;
+              this.titleService.setTitle(this.eventTitle);
+            });
+          }
+
         this.positionsSubscription = this.positionsService.getPositions()
             .subscribe((positions: Position[]) => {
                 this.positions = positions;
@@ -100,6 +115,9 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
         this.eventsSubscription.unsubscribe();
         if (this.raceEntriesSubscription) {
             this.raceEntriesSubscription.unsubscribe();
+        }
+        if (this.titleSubscription) {
+            this.titleSubscription.unsubscribe();
         }
     }
 
@@ -204,6 +222,7 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     private setRaceForRaceId(raceId: number): void {
         if (this.races) {
             this.race = this.racesService.getRaceForId(this.raceId);
+            this.titleService.setTitle(this.eventTitle + " - " + this.race.name);
             if (this.race.closed) {
                 this.racesService.areRacePDFResultsReady(this.raceId).subscribe((state: boolean) => {
                     console.log(state);
