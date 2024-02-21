@@ -5,4 +5,7 @@
 /server/node_modules/
 /server/bower_components/
 */target/*
+*/ts_target/*
+*/js_target/*
 /.history/
+/server/src/test/e2e/*/nightwatch/*
