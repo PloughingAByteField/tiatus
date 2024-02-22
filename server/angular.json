@@ -8,7 +8,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist",
             "main": "src/main/typescript/login/main.ts",
@@ -56,8 +56,8 @@
               ],
               "fileReplacements": [
                 {
-                  "src": "src/main/typescript/environments/environment.ts",
-                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                  "replace": "src/main/typescript/environments/environment.ts",
+                  "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -136,7 +136,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/results",
             "main": "src/main/typescript/results/main.ts",
@@ -184,8 +184,8 @@
               ],
               "fileReplacements": [
                 {
-                  "src": "src/main/typescript/environments/environment.ts",
-                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                  "replace": "src/main/typescript/environments/environment.ts",
+                  "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -234,8 +234,9 @@
           "options": {
             "devServerTarget": "results:serve",
             "tsConfig": "src/test/e2e/results/tsconfig.json",
-            "config": "src/test/e2e/results/nightwatch.conf.js",
-            "env": "chrome"
+            "config": "src/test/e2e/results/nightwatch.conf.ts",
+            "env": "chrome",
+            "output": "target/e2e/results"
           },
           "configurations": {
             "production": {
@@ -248,8 +249,9 @@
           "options": {
             "devServerTarget": "results:serve",
             "tsConfig": "src/test/e2e/results/tsconfig.json",
-            "config": "src/test/e2e/results/nightwatch.conf.js",
-            "env": "chrome"
+            "config": "src/test/e2e/results/nightwatch.conf.ts",
+            "env": "chrome",
+            "output": "target/e2e/results"
           },
           "configurations": {
             "production": {
@@ -264,7 +266,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/admin",
             "main": "src/main/typescript/admin/main.ts",
@@ -312,8 +314,8 @@
               ],
               "fileReplacements": [
                 {
-                  "src": "src/main/typescript/environments/environment.ts",
-                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                  "replace": "src/main/typescript/environments/environment.ts",
+                  "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -392,7 +394,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/adjudicator",
             "main": "src/main/typescript/adjudicator/main.ts",
@@ -440,8 +442,8 @@
               ],
               "fileReplacements": [
                 {
-                  "src": "src/main/typescript/environments/environment.ts",
-                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                  "replace": "src/main/typescript/environments/environment.ts",
+                  "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -520,7 +522,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/timing",
             "main": "src/main/typescript/timing/main.ts",
@@ -568,8 +570,8 @@
               ],
               "fileReplacements": [
                 {
-                  "src": "src/main/typescript/environments/environment.ts",
-                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                  "replace": "src/main/typescript/environments/environment.ts",
+                  "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -648,7 +650,7 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/setup",
             "main": "src/main/typescript/setup/main.ts",
@@ -696,8 +698,8 @@
               ],
               "fileReplacements": [
                 {
-                  "src": "src/main/typescript/environments/environment.ts",
-                  "replaceWith": "src/main/typescript/environments/environment.prod.ts"
+                  "replace": "src/main/typescript/environments/environment.ts",
+                  "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
