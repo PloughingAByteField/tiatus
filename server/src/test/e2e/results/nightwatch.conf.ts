@@ -45,7 +45,8 @@ module.exports = {
             webdriver: {
                 start_process: true,
                 server_path: ''
-            }
+            },
+            output_folder: 'test_run'
         },
         safari: {
             desiredCapabilities: {
@@ -95,6 +96,7 @@ module.exports = {
                     ]
                 }
             },
+            output_folder: 'test_run',
             webdriver: {
                 start_process: true,
                 server_path: '',
