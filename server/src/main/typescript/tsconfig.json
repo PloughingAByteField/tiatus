@@ -6,8 +6,9 @@
     "declaration": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "target": "es2015",
-    "module": "es2020",
+    "target": "es2022",
+    "module": "es2022",
+    "useDefineForClassFields": true,
     "lib": [
       "es2017",
       "dom"
