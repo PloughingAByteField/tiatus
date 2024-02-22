@@ -222,17 +222,17 @@ export class RaceResultsComponent implements OnInit, OnDestroy {
     private setRaceForRaceId(raceId: number): void {
         if (this.races) {
             this.race = this.racesService.getRaceForId(this.raceId);
-            this.titleService.setTitle(this.eventTitle + " - " + this.race.name);
-            if (this.race.closed) {
+            if (this.eventTitle != null && this.race != null) {
+                this.titleService.setTitle(this.eventTitle + " - " + this.race.name);
+            }
+            if (this.race != null && this.race.closed) {
                 this.racesService.areRacePDFResultsReady(this.raceId).subscribe((state: boolean) => {
-                    console.log(state);
                     if (state != null) {
                         this.displayPdfResults = state;
                     }
                 });
-        
-                console.log(this.displayPdfResults);
             }
+
             this.populateEventsAtPositionsForRace(this.race);
         }
     }
