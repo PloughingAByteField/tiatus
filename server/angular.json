@@ -25,11 +25,6 @@
                 "glob": "**/*",
                 "input": "src/main/typescript/login/i18n",
                 "output": "login/i18n/"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/main/typescript",
-                "output": "favicon.ico"
               }
             ],
             "styles": [
@@ -153,11 +148,6 @@
                 "glob": "**/*",
                 "input": "src/main/typescript/results/i18n",
                 "output": "i18n/"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/main/typescript",
-                "output": "favicon.ico"
               }
             ],
             "styles": [
@@ -283,11 +273,6 @@
                 "glob": "**/*",
                 "input": "src/main/typescript/admin/i18n",
                 "output": "i18n/"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/main/typescript",
-                "output": "favicon.ico"
               }
             ],
             "styles": [
@@ -411,11 +396,6 @@
                 "glob": "**/*",
                 "input": "src/main/typescript/adjudicator/i18n",
                 "output": "adjudicator/i18n/"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/main/typescript",
-                "output": "favicon.ico"
               }
             ],
             "styles": [
@@ -539,11 +519,6 @@
                 "glob": "**/*",
                 "input": "src/main/typescript/timing/i18n",
                 "output": "timing/i18n/"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/main/typescript",
-                "output": "favicon.ico"
               }
             ],
             "styles": [
@@ -667,11 +642,6 @@
                 "glob": "**/*",
                 "input": "src/main/typescript/setup/i18n",
                 "output": "setup/i18n/"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src/main/typescript",
-                "output": "favicon.ico"
               }
             ],
             "styles": [
