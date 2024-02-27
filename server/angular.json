@@ -55,7 +55,14 @@
                   "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -94,20 +101,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "login:build"
-          }
-        },
-        "nightwatch-run": {
-          "builder": "@nightwatch/schematics:nightwatch",
-          "options": {
-            "devServerTarget": "login:serve",
-            "tsConfig": "src/test/e2e/login/tsconfig.json",
-            "config": "src/test/e2e/login/nightwatch.conf.js",
-            "env": "chrome"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "login:serve:production"
-            }
           }
         },
         "e2e": {
@@ -178,7 +171,14 @@
                   "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -217,21 +217,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "results:build"
-          }
-        },
-        "nightwatch-run": {
-          "builder": "@nightwatch/schematics:nightwatch",
-          "options": {
-            "devServerTarget": "results:serve",
-            "tsConfig": "src/test/e2e/results/tsconfig.json",
-            "config": "src/test/e2e/results/nightwatch.conf.ts",
-            "env": "chrome",
-            "output": "target/e2e/results"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "results:serve:production"
-            }
           }
         },
         "e2e": {
@@ -303,7 +288,14 @@
                   "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -342,20 +334,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "admin:build"
-          }
-        },
-        "nightwatch-run": {
-          "builder": "@nightwatch/schematics:nightwatch",
-          "options": {
-            "devServerTarget": "admin:serve",
-            "tsConfig": "src/test/e2e/admin/tsconfig.json",
-            "config": "src/test/e2e/admin/nightwatch.conf.js",
-            "env": "chrome"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "admin:serve:production"
-            }
           }
         },
         "e2e": {
@@ -426,7 +404,14 @@
                   "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -465,20 +450,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "adjudicator:build"
-          }
-        },
-        "nightwatch-run": {
-          "builder": "@nightwatch/schematics:nightwatch",
-          "options": {
-            "devServerTarget": "adjudicator:serve",
-            "tsConfig": "src/test/e2e/adjudicator/tsconfig.json",
-            "config": "src/test/e2e/adjudicator/nightwatch.conf.js",
-            "env": "chrome"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "adjudicator:serve:production"
-            }
           }
         },
         "e2e": {
@@ -549,7 +520,14 @@
                   "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -588,20 +566,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "timing:build"
-          }
-        },
-        "nightwatch-run": {
-          "builder": "@nightwatch/schematics:nightwatch",
-          "options": {
-            "devServerTarget": "timing:serve",
-            "tsConfig": "src/test/e2e/timing/tsconfig.json",
-            "config": "src/test/e2e/timing/nightwatch.conf.js",
-            "env": "chrome"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "timing:serve:production"
-            }
           }
         },
         "e2e": {
@@ -672,7 +636,14 @@
                   "with": "src/main/typescript/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -711,20 +682,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "setup:build"
-          }
-        },
-        "nightwatch-run": {
-          "builder": "@nightwatch/schematics:nightwatch",
-          "options": {
-            "devServerTarget": "setup:serve",
-            "tsConfig": "src/test/e2e/setup/tsconfig.json",
-            "config": "src/test/e2e/setup/nightwatch.conf.js",
-            "env": "chrome"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "setup:serve:production"
-            }
           }
         },
         "e2e": {
