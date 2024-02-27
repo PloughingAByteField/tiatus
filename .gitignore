@@ -4,6 +4,8 @@
 /server/node/
 /server/node_modules/
 /server/bower_components/
+/server/dist/
+/server/target/
 */target/*
 */ts_target/*
 */js_target/*
