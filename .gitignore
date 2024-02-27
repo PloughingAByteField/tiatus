@@ -11,3 +11,5 @@
 */js_target/*
 /.history/
 /server/src/test/e2e/*/nightwatch/*
+.vscode/*
+/server/.vscode/*
