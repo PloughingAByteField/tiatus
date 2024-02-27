@@ -207,7 +207,7 @@
                         <phase>integration-test</phase>
                         <configuration>
                             <skip>${docker.skip}</skip>
-                            <arguments>run e2e:results</arguments>
+                            <arguments>run e2e</arguments>
                         </configuration>
                     </execution>
                 </executions>
