@@ -102,15 +102,48 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                        <scripts>
+                            <script><![CDATA[
+                            java.net.DatagramSocket socket = new java.net.DatagramSocket()
+                            socket.connect(java.net.InetAddress.getByName('google.com'), 80)
+                            project.properties['host.address'] = socket.getLocalAddress().getHostAddress()
+                            ]]></script>
+                        </scripts>
+                    </configuration>
+                <dependencies>
+                    <dependency>
+                    <groupId>org.apache.groovy</groupId>
+                    <artifactId>groovy</artifactId>
+                    <version>4.0.15</version>
+                    <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.11</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>get-local-ip</id>
                         <goals>
                             <goal>local-ip</goal>
                         </goals>
+                        <configuration>
+                            <localIpProperty>local.ip</localIpProperty>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -159,17 +192,17 @@
                         </configuration>
                     </execution>
 
-                    <!--<execution>-->
-                    <!--<id>npm run integration tests</id>-->
-                    <!--<phase>integration-test</phase>-->
-                    <!--<goals>-->
-                    <!--<goal>npm</goal>-->
-                    <!--</goals>-->
-                    <!--<configuration>-->
-                    <!--<skip>${docker.skip}</skip>-->
-                    <!--<arguments>run integration-test &#45;&#45; &#45;&#45;baseUrl=http://${local.ip}:7080</arguments>-->
-                    <!--</configuration>-->
-                    <!--</execution>-->
+                    <execution>
+                        <id>npm run integration tests</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${docker.skip}</skip>
+                            <arguments>run e2e:results</arguments>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -189,6 +222,9 @@
                                 <dockerFileDir>postgresql</dockerFileDir>
                             </build>
                             <run>
+                                <env>
+                                    <POSTGRES_PASSWORD>password</POSTGRES_PASSWORD>
+                                </env>
                                 <ports>
                                     <port>6432:5432</port>
                                 </ports>
@@ -203,60 +239,49 @@
                             </run>
                         </image>
                         <image>
-                            <alias>activemq-artemis</alias>
-                            <name>jreynolds/activemq-artemis-tiatus</name>
-                            <build>
-                                <dockerFileDir>activemq-artemis</dockerFileDir>
+                            <alias>spring-boot</alias>
+                            <name>jreynolds/spring-boot-tiatus</name>
+                             <build>
+                                <dockerFileDir>spring-boot</dockerFileDir>
+                                <assembly>
+                                    <mode>dir</mode>
+                                    <inline xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                            xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+                                            xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+                                        <id>server-it</id>
+                                        <dependencySets>
+                                            <dependencySet>
+                                                <useProjectArtifact>true</useProjectArtifact>
+                                                <includes>
+                                                    <include>${project.groupId}:${project.artifactId}</include>
+                                                </includes>
+                                                <outputDirectory>.</outputDirectory>
+                                                <outputFileNameMapping>
+                                                    ${project.build.finalName}.${artifact.extension}
+                                                </outputFileNameMapping>
+                                            </dependencySet>
+                                        </dependencySets>
+                                    </inline>
+                                </assembly>
                             </build>
                             <run>
+                                <env>
+                                    <spring.datasource.url>jdbc:postgresql://${host.address}:6432/tiatus</spring.datasource.url>
+                                </env>
                                 <ports>
-                                    <port>61616:61616</port>
+                                    <port>8080:8080</port>
                                 </ports>
                                 <wait>
-                                    <log>HTTP Server started at</log>
-                                    <time>300000</time>
+                                    <log>Started ServerApplication</log>
+                                    <time>60000</time>
                                 </wait>
                                 <log>
-                                    <prefix>MQ</prefix>
-                                    <color>yellow</color>
+                                    <prefix>APP</prefix>
+                                    <color>green</color>
                                 </log>
                                 <links>
                                     <link>postgres:db</link>
                                 </links>
-                            </run>
-                        </image>
-                        <image>
-                            <alias>selenium</alias>
-                            <name>jreynolds/selenium</name>
-                            <build>
-                                <from>elgalu/selenium</from>
-                            </build>
-                            <run>
-                                <log>
-                                    <prefix>Selenium</prefix>
-                                    <color>yellow</color>
-                                </log>
-
-                                <!--<env>-->
-                                <!--<VIDEO>true</VIDEO>-->
-                                <!--<WAIT_TIMEOUT>60s</WAIT_TIMEOUT>-->
-                                <!--</env>-->
-
-                                <!-- Add only if chrome crashes -->
-                                <!--<privileged>true</privileged>-->
-                                <!--<shmSize>256000000</shmSize>-->
-
-                                <ports>
-                                    <port>4444:24444</port>
-                                    <port>5900:25900</port>
-                                </ports>
-
-                                <!-- add if we need to upload files -->
-                                <!--<volumes>-->
-                                <!--<bind>-->
-                                <!--<volume>${project.basedir}/src/test/e2e:/protractor</volume>-->
-                                <!--</bind>-->
-                                <!--</volumes>-->
                             </run>
                         </image>
                     </images>
@@ -287,7 +312,7 @@
                 <version>4.0.3</version>
                 <configuration>
                     <baselineOnMigrate>true</baselineOnMigrate>
-                    <url>jdbc:postgresql://${local.ip}:6432/tiatus</url>
+                    <url>jdbc:postgresql://${host.address}:6432/tiatus</url>
                     <user>tiatus</user>
                     <password>tiatus</password>
                     <locations>
@@ -325,8 +350,8 @@
             </plugin>
 
             <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

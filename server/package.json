@@ -13,7 +13,7 @@
     "build:adjudicator": "ng build adjudicator --output-path ${TARGET}/adjudicator --configuration production",
     "build:timing": "ng build timing --output-path ${TARGET}/timing --configuration production",
     "build:setup": "ng build setup --output-path ${TARGET}/setup --configuration production",
-    "build": "npm run build:login && npm run build:results && npm run build:admin && npm run build:adjudicator && npm run build:timing && npm run build:setup",
+    "build": "npm run build:results && npm run build:admin && npm run build:adjudicator && npm run build:timing && npm run build:setup",
     "e2e:adjudicator": "tsc -p src/test/e2e/adjudicator && ng e2e adjudicator",
     "e2e:admin": "tsc -p src/test/e2e/admin && ng e2e admin",
     "e2e:results": "tsc -p src/test/e2e/results && ng e2e results",

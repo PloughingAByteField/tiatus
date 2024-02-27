@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:6432/tiatus
+    url: jdbc:postgresql://127.0.0.1:6432/tiatus
     username: tiatus
     password: tiatus
     driverClassName: org.postgresql.Driver
