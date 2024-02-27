@@ -53,7 +53,13 @@ public class ConfigRestPoint {
     @GetMapping(path = "config", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody ByteArrayResource getConfigFile() throws IOException, URISyntaxException {
         Path path = Paths.get(environment.getProperty("tiatus.files") + "/tiatus/" + "config/config.json");
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+        if (Files.exists(path)) {
+            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+            return resource;
+        }
+
+        String defaultConfig = "{\"title\":\"Tiatus Timing System\",\"footer\":\"Tiatus\",\"logo\":\"/results/assets/img/stopwatch.svg\"}";
+        ByteArrayResource resource = new ByteArrayResource(defaultConfig.getBytes());
         return resource;
     }
 
