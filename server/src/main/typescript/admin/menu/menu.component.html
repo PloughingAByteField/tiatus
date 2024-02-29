@@ -1,7 +1,5 @@
 
   <ul class="d-flex nav nav-pills flex-column">
-
-    <div>
       <li><a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ 'MENU_HOME' | translate }}</a></li>
       <li><a class="nav-link" routerLink="config" routerLinkActive="active">{{ 'MENU_CONFIG' | translate }}</a></li>
       <li><a class="nav-link" routerLink="races" routerLinkActive="active">{{ 'MENU_RACE' | translate }}</a></li>
@@ -12,8 +10,5 @@
       <li><a class="nav-link" routerLink="entries" routerLinkActive="active">{{ 'MENU_ENTRY' | translate }}</a></li>
       <li><a class="nav-link" routerLink="draw" routerLinkActive="active">{{ 'MENU_DRAW' | translate }}</a></li>
       <li><a class="nav-link" routerLink="users" routerLinkActive="active">{{ 'MENU_USER' | translate }}</a></li>
-    </div>
-    <div>
       <li><a class="nav-link" href="/rest/logout">{{ 'LOGOUT' | translate }}</a></li>
-    </div>
   </ul>
