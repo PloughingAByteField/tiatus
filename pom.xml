@@ -39,6 +39,7 @@
         <flyway.skip>false</flyway.skip>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <build.output>target</build.output>
     </properties>
 
     <dependencyManagement>
@@ -157,6 +158,7 @@
     </modules>
 
     <build>
+        <directory>${build.output}</directory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -349,6 +351,14 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+        </profile>
+        <profile>
+            <activation>
+                <property><name>m2e.version</name></property>
+            </activation>
+            <properties>
+                <build.output>target-ide</build.output>
+            </properties>
         </profile>
     </profiles>
 </project>
