@@ -36,7 +36,6 @@
         <surefireArgLine/>
         <!-- <jackson-version>2.3.2</jackson-version> -->
         <docker.skip>true</docker.skip>
-        <flyway.skip>false</flyway.skip>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <build.output>target</build.output>
@@ -149,7 +148,6 @@
     </dependencyManagement>
 
     <modules>
-        <!-- <module>flyway</module> -->
         <module>entities</module>
         <module>dao</module>
         <module>service</module>
