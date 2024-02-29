@@ -27,7 +27,7 @@ module.exports = {
     globals_path: '',
     webdriver: {},
     test_workers: {
-        enabled: true,
+        enabled: false,
         workers: 'auto'
     },
     test_settings: {
