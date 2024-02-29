@@ -75,7 +75,7 @@
     "@angular-devkit/build-angular": "^17.1.0",
     "@angular/compiler-cli": "^17.1.0",
     "@nightwatch/angular": "3.0.0",
-    "@nightwatch/schematics": "^1.2.1",
+    "@nightwatch/schematics": "git+https://github.com/PloughingAByteField/nightwatch-schematics.git",
     "@types/core-js": "^0.9.43",
     "@types/hammerjs": "^2.0.35",
     "@types/jasmine": "~3.6.0",

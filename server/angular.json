@@ -342,7 +342,10 @@
             "devServerTarget": "admin:serve",
             "tsConfig": "src/test/e2e/admin/tsconfig.json",
             "config": "src/test/e2e/admin/nightwatch.conf.js",
-            "env": "chrome"
+            "env": "chrome",
+            "output": "target/e2e/admin",
+            "serial": true,
+            "reuse-browser": true
           },
           "configurations": {
             "production": {
