@@ -2,7 +2,7 @@ import { NightwatchAPI, NightwatchTests } from 'nightwatch';
 
 const home: NightwatchTests = {
   'Results Landing Page': () => {
-    browser.url('http://127.0.0.1:4200/results/').assert.titleEquals('Tribesmen RC Head of the River 2024');
+    browser.url('http://127.0.0.1:8080/results/').assert.titleEquals('Tribesmen RC Head of the River 2024');
   },
 
   'Race 1 Nav Link': () => {
