@@ -32,4 +32,16 @@ export class ConfigService {
     public getEventTitle(): Subject<string> {
         return this.title;
     }
+
+    public setTitle(title: string): void {
+        this.title.next(title);
+    }
+
+    public setFooter(footer: string): void {
+        this.footer.next(footer);
+    }
+
+    public setLogo(logo: string): void {
+        this.logo.next(location.origin + logo);
+    }
 }

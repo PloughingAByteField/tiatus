@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { AdminConfigService } from './config.service';
+import { ConfigService } from '../../config/config.service';
 
 @Component({
   selector: 'config',
@@ -22,7 +23,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
   private logoSubscription: Subscription;
   private titleSubscription: Subscription;
 
-  constructor(private configService: AdminConfigService) {}
+  constructor(private configService: AdminConfigService, private configServiceParent: ConfigService) {}
 
   public ngOnInit() {
     if ( !this.logo) {
@@ -59,7 +60,6 @@ export class ConfigComponent implements OnInit, OnDestroy {
     console.log(event.srcElement.files);
     if (event && event.srcElement && event.srcElement.files && event.srcElement.files.length > 0) {
       this.newLogo = event.srcElement.files[0];
-      console.log(this.newLogo);
     } else {
       this.newLogo = null;
     }
@@ -68,18 +68,21 @@ export class ConfigComponent implements OnInit, OnDestroy {
   public uploadLogo(): void {
     this.configService.uploadLogo(this.newLogo).then((fileName: string) => {
       this.newLogo = null;
+      this.configServiceParent.setLogo(fileName);
     });
   }
 
   public uploadFooter(): void {
     this.configService.uploadFooter(this.newFooter).then((footer: string) => {
       this.newFooter = null;
+      this.configServiceParent.setFooter(footer);
     });
   }
 
   public uploadTitle(): void {
     this.configService.uploadTitle(this.newTitle).then((title: string) => {
       this.newTitle = null;
+      this.configServiceParent.setTitle(title);
     });
   }
 }

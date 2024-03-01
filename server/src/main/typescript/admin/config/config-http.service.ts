@@ -42,7 +42,7 @@ export class AdminConfigHttpService extends ConfigHttpService {
             .post(this.restEndPoint + '/logo', formData)
             .toPromise()
             .then((res: Response) => {
-                return res.text();
+                return "/tiatus/" + file.name;
             })
             .catch((err) => Promise.reject(err));
     }
