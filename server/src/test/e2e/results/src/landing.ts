@@ -2,7 +2,7 @@ import { NightwatchAPI, NightwatchTests } from 'nightwatch';
 
 const home: NightwatchTests = {
   'Results Landing Page': () => {
-    browser.url('http://127.0.0.1:8080/results/').assert.titleEquals('Tribesmen RC Head of the River 2024');
+    browser.url('http://127.0.0.1:8080/results/').assert.titleEquals('Tiatus Timing System Test');
   },
 
   'Race 1 Nav Link': () => {
@@ -14,7 +14,7 @@ const home: NightwatchTests = {
       .pause(1000)
       .assert.visible('main race-results race-results-table')
       .assert.textContains('race-results-table', 'Results for Race 1 from Start to Finish')
-      .assert.titleEquals('Tribesmen RC Head of the River 2024 - Race 1')
+      .assert.titleEquals('Tiatus Timing System Test - Race 1')
   },
 
   'Race 2 Nav Link': () => {
@@ -23,7 +23,7 @@ const home: NightwatchTests = {
       .pause(1000)
       .assert.visible('main race-results race-results-table')
       .assert.textContains('race-results-table', 'Results for Race 2 from Start to Finish')
-      .assert.titleEquals('Tribesmen RC Head of the River 2024 - Race 2')
+      .assert.titleEquals('Tiatus Timing System Test - Race 2')
   },
 
   'Race 3 Nav Link': () => {
@@ -32,7 +32,7 @@ const home: NightwatchTests = {
       .pause(1000)
       .assert.visible('main race-results race-results-table')
       .assert.textContains('race-results-table', 'Results for Race 3 from Start to Finish')
-      .assert.titleEquals('Tribesmen RC Head of the River 2024 - Race 3')
+      .assert.titleEquals('Tiatus Timing System Test - Race 3')
   }
 };
 
