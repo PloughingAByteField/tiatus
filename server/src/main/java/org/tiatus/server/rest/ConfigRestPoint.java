@@ -10,13 +10,9 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,17 +46,32 @@ public class ConfigRestPoint {
     protected Environment environment;
 
     @PermitAll
-    @GetMapping(path = "config", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public @ResponseBody ByteArrayResource getConfigFile() throws IOException, URISyntaxException {
-        Path path = Paths.get(environment.getProperty("tiatus.files") + "/tiatus/" + "config/config.json");
-        if (Files.exists(path)) {
-            ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-            return resource;
+    @GetMapping(path = "config", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody ConfigDto getConfigFile() throws IOException, URISyntaxException {
+        String title = service.getEventTitle();
+        String logo = service.getEventLogo();
+        String footer = service.getEventFooter();
+
+        ConfigDto dto = new ConfigDto();
+        if (title != null) {
+            dto.setTitle(title);
+        } else {
+            dto.setTitle("Tiatus Timing System");
         }
 
-        String defaultConfig = "{\"title\":\"Tiatus Timing System\",\"footer\":\"Tiatus\",\"logo\":\"/results/assets/img/stopwatch.svg\"}";
-        ByteArrayResource resource = new ByteArrayResource(defaultConfig.getBytes());
-        return resource;
+        if (logo != null) {
+            dto.setLogo(logo);
+        } else {
+            dto.setLogo("/results/assets/img/stopwatch.svg");
+        }
+
+        if (footer != null) {
+            dto.setFooter(footer);
+        } else {
+            dto.setFooter("Tiatus");
+        }
+
+        return dto;
     }
 
     @RolesAllowed(Role.ADMIN)

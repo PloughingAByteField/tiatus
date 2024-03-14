@@ -11,4 +11,5 @@ public interface ConfigDao {
     String setEventLogo(InputStream stream, String fileName) throws DaoException;
     String getEventTitle();
     String getEventLogo();
+    String getEventFooter();
 }

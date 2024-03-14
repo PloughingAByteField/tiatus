@@ -77,12 +77,22 @@ public class ConfigDaoImpl implements ConfigDao {
         return getKeyFromConfig("logo");
     }
 
+    @Override
+    public String getEventFooter() {
+        return getKeyFromConfig("footer");
+    }
+
     private File getConfigFile() {
         return new File(environment.getProperty("tiatus.files") + "/tiatus/" + "config/config.json");
     }
 
     private String getKeyFromConfig(String key) {
         File configFile = getConfigFile();
+        if (!configFile.exists()) {
+            LOG.info("Config file not created yet");
+            return null;
+        }
+
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root;
         try {
