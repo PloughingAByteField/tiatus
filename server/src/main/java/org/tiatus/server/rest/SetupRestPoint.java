@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tiatus.entity.User;
 import org.tiatus.service.ConfigService;
-import org.tiatus.service.ServiceException;
 import org.tiatus.service.UserService;
 
 import jakarta.servlet.ServletContext;
@@ -19,7 +18,6 @@ import jakarta.servlet.http.HttpSession;
 // import javax.annotation.security.PermitAll;
 
 import java.io.InputStream;
-import java.net.URI;
 
 /**
  * Created by johnreynolds on 04/09/2016.
