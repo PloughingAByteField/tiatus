@@ -109,7 +109,8 @@
             "devServerTarget": "login:serve",
             "tsConfig": "src/test/e2e/login/tsconfig.json",
             "config": "src/test/e2e/login/nightwatch.conf.js",
-            "env": "chrome"
+            "env": "chrome",
+            "output": "target/e2e/login"
           },
           "configurations": {
             "production": {
@@ -461,7 +462,8 @@
             "devServerTarget": "adjudicator:serve",
             "tsConfig": "src/test/e2e/adjudicator/tsconfig.json",
             "config": "src/test/e2e/adjudicator/nightwatch.conf.js",
-            "env": "chrome"
+            "env": "chrome",
+            "output": "target/e2e/adjudicator"
           },
           "configurations": {
             "production": {
@@ -577,7 +579,8 @@
             "devServerTarget": "timing:serve",
             "tsConfig": "src/test/e2e/timing/tsconfig.json",
             "config": "src/test/e2e/timing/nightwatch.conf.js",
-            "env": "chrome"
+            "env": "chrome",
+            "output": "target/e2e/timing"
           },
           "configurations": {
             "production": {
@@ -693,7 +696,8 @@
             "devServerTarget": "setup:serve",
             "tsConfig": "src/test/e2e/setup/tsconfig.json",
             "config": "src/test/e2e/setup/nightwatch.conf.js",
-            "env": "chrome"
+            "env": "chrome",
+            "output": "target/e2e/setup"
           },
           "configurations": {
             "production": {
