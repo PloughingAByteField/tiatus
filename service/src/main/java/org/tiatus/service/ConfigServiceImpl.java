@@ -62,4 +62,9 @@ public class ConfigServiceImpl implements ConfigService {
     public String getEventLogo() {
         return dao.getEventLogo();
     }
+
+    @Override
+    public String getEventFooter() {
+        return dao.getEventFooter();
+    }
 }

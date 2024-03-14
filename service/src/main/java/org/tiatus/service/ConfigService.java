@@ -8,4 +8,5 @@ public interface ConfigService {
    String setEventLogo(InputStream stream, String fileName) throws ServiceException;
    String getEventTitle();
    String getEventLogo();
+   String getEventFooter();
 }
