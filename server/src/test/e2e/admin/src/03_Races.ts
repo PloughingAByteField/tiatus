@@ -39,6 +39,7 @@ const races: NightwatchTests = {
     .pause(1000)
     .assert.elementsCount('races table tr', 3)
   }
+
 };
 
 export default races;
